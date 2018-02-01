@@ -11,6 +11,7 @@ It is extremely important to not solely rely on ESI.NET. You may need to refer t
 
 ## ESI.NET on NuGet
 https://www.nuget.org/packages/ESI.NET/0.9.0.1
+
 `dotnet add package ESI.NET --version 0.9.0.1 `
 
 ## Public Endpoint Example
