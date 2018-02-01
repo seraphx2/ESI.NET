@@ -9,6 +9,10 @@
 
 It is extremely important to not solely rely on ESI.NET. You may need to refer to the official specifications to understand what data is expected to be provided. For example, in some instances, ESI.NET will ask for specific values in the endpoint method and construct the JSON object that needs to be sent in the POST request body because it is a simple object that requires a few values. Some of the more complex objects will need to be constructed with anonymous objects by the developer and this can be determined when the endpoint method requires an `object` instead of an `int` or a `string`. Refer to the official documentation and construct the anonymous object to reflect what is expected.
 
+## ESI.NET on NuGet
+https://www.nuget.org/packages/ESI.NET/0.9.0.1
+`dotnet add package ESI.NET --version 0.9.0.1 `
+
 ## Public Endpoint Example
 Accessing a public endpoint is extremely simple. Instantiate an instance of the client.
 ```
