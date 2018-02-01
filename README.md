@@ -29,7 +29,16 @@ For your protection, please provide a user_agent value. This can be your charact
 
 ## SSO Example
 
-Coming Soon!
+### Initial SSO Token Request
+```
+SSOToken token = await SSO.GetToken(clientId, secretKey, GrantType.authorization_code, code);
+AuthorizedCharacter auth_char = await SSO.Verify(token.Value, true);
+```
+### Refresh Token Request
+```
+SSOToken token = await SSO.GetToken(clientId, secretKey, GrantType.refresh_token, auth_char.RefreshToken);
+```
+
 
 ## Authenticated Endpoint Example
 
