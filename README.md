@@ -4,6 +4,7 @@
 
 ### Resources
 * [Tweetfleet - #esi](https://tweetfleet.slack.com/messages/C30KX8UUX/) - This is the official slack channel to speak with CCP devs (and developers) concerning ESI.
+* [ESI Application Keys](https://developers.eveonline.com/)
 * [ESI Swagger Definition](https://esi.tech.ccp.is/swagger.json)
 * [Third-party Documentation](https://eveonline-third-party-documentation.readthedocs.io/en/latest/) - This is the best-known documentation concerning the SSO process.
 
