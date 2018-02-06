@@ -1,6 +1,3 @@
-<span style="color: #ff0000">Test</span>
-
-
 # What is ESI.NET?
 
 **ESI.NET** is a .NET wrapper for the [Eve Online ESI API](https://esi.tech.ccp.is/latest/). This wrapper simplifies the process of integrating ESI into your .NET application.
