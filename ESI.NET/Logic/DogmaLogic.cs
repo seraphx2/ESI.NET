@@ -1,12 +1,12 @@
-﻿using ESI.NET.Models.Dogma;
-using ESI.NET.Models.Opportunities;
+﻿using ESI.NET.Logic.Interfaces;
+using ESI.NET.Models.Dogma;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using static ESI.NET.ApiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class DogmaLogic
+    public class DogmaLogic : IDogmaLogic
     {
         private ESIConfig _config;
 

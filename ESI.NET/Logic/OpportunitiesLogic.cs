@@ -1,11 +1,12 @@
-﻿using model = ESI.NET.Models.Opportunities;
+﻿using ESI.NET.Logic.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using static ESI.NET.ApiRequest;
+using model = ESI.NET.Models.Opportunities;
 
 namespace ESI.NET.Logic
 {
-    public class OpportunitiesLogic
+    public class OpportunitiesLogic : IOpportunitiesLogic
     {
         private ESIConfig _config;
         private int character_id;
