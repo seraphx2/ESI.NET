@@ -42,6 +42,7 @@ namespace ESI.NET
             Bookmarks = new BookmarksLogic(_config);
             Character = new CharacterLogic(_config);
             Corporation = new CorporationLogic(_config);
+            Dogma = new DogmaLogic(_config);
             Fleets = new FleetsLogic(_config);
             Incursions = new IncursionsLogic(_config);
             Industry = new IndustryLogic(_config);
@@ -49,6 +50,7 @@ namespace ESI.NET
             Killmails = new KillmailsLogic(_config);
             Mail = new MailLogic(_config);
             Market = new MarketLogic(_config);
+            Opportunities = new OpportunitiesLogic(_config);
             PlanetaryInteraction = new PlanetaryInteractionLogic(_config);
             Routes = new RoutesLogic(_config);
             Search = new SearchLogic(_config);
@@ -64,6 +66,7 @@ namespace ESI.NET
         public BookmarksLogic Bookmarks { get; set; }
         public CharacterLogic Character { get; set; }
         public CorporationLogic Corporation { get; set; }
+        public DogmaLogic Dogma { get; set; }
         public FleetsLogic Fleets { get; set; }
         public IncursionsLogic Incursions { get; set; }
         public IndustryLogic Industry { get; set; }
@@ -71,6 +74,7 @@ namespace ESI.NET
         public KillmailsLogic Killmails { get; set; }
         public MailLogic Mail { get; set; }
         public MarketLogic Market { get; set; }
+        public OpportunitiesLogic Opportunities { get; set; }
         public PlanetaryInteractionLogic PlanetaryInteraction { get; set; }
         public RoutesLogic Routes { get; set; }
         public SearchLogic Search { get; set; }

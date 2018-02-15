@@ -6,6 +6,7 @@ namespace ESI.NET.Logic.Interfaces
 {
     public interface IUniverseLogic
     {
+        Task<ApiResponse<List<Ancestry>>> Ancestries();
         Task<ApiResponse<List<Bloodline>>> Bloodlines();
         Task<ApiResponse<List<int>>> Categories();
         Task<ApiResponse<Category>> Category(int category_id);

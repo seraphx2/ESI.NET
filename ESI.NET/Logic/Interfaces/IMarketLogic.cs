@@ -7,7 +7,9 @@ namespace ESI.NET.Logic.Interfaces
 {
     public interface IMarketLogic
     {
+        Task<ApiResponse<List<Order>>> CharacterOrderHistory(int page = 1);
         Task<ApiResponse<List<Order>>> CharacterOrders();
+        Task<ApiResponse<List<Order>>> CorporationOrderHistory(int page = 1);
         Task<ApiResponse<List<Order>>> CorporationOrders(int page = 1);
         Task<ApiResponse<Group>> Group(int market_group_id);
         Task<ApiResponse<List<int>>> Groups();

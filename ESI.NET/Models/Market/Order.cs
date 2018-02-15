@@ -63,6 +63,12 @@ namespace ESI.NET.Models.Market
         public bool IsCorp { get; set; }
 
         /// <summary>
+        /// Only returned in /characters/{character_id}/orders/history/
+        /// </summary>
+        [JsonProperty("is_corporation")]
+        public bool IsCorporation { get; set; }
+
+        /// <summary>
         /// Returned in /characters/{character_id}/orders/ and /corporations/{corporation_id}/orders/
         /// </summary>
         [JsonProperty("escrow")]

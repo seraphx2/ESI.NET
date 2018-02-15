@@ -305,10 +305,10 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="type_id"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<Models.Universe.Type>> Type(int type_id)
+        public async Task<ApiResponse<Type>> Type(int type_id)
         {
             var endpoint = $"/universe/types/{type_id}/";
-            var response = await Execute<Models.Universe.Type>(_config, RequestSecurity.Public, RequestMethod.GET, endpoint);
+            var response = await Execute<Type>(_config, RequestSecurity.Public, RequestMethod.GET, endpoint);
 
             return response;
         }
@@ -359,6 +359,18 @@ namespace ESI.NET.Logic
         {
             var endpoint = $"/universe/stars/{star_id}/";
             var response = await Execute<Star>(_config, RequestSecurity.Public, RequestMethod.GET, endpoint);
+
+            return response;
+        }
+
+        /// <summary>
+        /// /universe/ancestries/
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ApiResponse<List<Ancestry>>> Ancestries()
+        {
+            var endpoint = $"/universe/ancestries/";
+            var response = await Execute<List<Ancestry>>(_config, RequestSecurity.Public, RequestMethod.GET, endpoint);
 
             return response;
         }

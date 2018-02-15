@@ -133,6 +133,22 @@ namespace ESI.NET.Logic
         }
 
         /// <summary>
+        /// /characters/{character_id}/orders/history/
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        public async Task<ApiResponse<List<Order>>> CharacterOrderHistory(int page = 1)
+        {
+            var endpoint = $"/characters/{character_id}/orders/history/";
+            var response = await Execute<List<Order>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, endpoint, new string[]
+            {
+                $"page={page}"
+            });
+
+            return response;
+        }
+
+        /// <summary>
         /// /markets/{region_id}/types/
         /// </summary>
         /// <param name="region_id"></param>
@@ -157,6 +173,22 @@ namespace ESI.NET.Logic
         public async Task<ApiResponse<List<Order>>> CorporationOrders(int page = 1)
         {
             var endpoint = $"/corporations/{corporation_id}/orders/";
+            var response = await Execute<List<Order>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, endpoint, new string[]
+            {
+                $"page={page}"
+            });
+
+            return response;
+        }
+
+        /// <summary>
+        /// /corporations/{corporation_id}/orders/
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        public async Task<ApiResponse<List<Order>>> CorporationOrderHistory(int page = 1)
+        {
+            var endpoint = $"/corporations/{corporation_id}/orders/history/";
             var response = await Execute<List<Order>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, endpoint, new string[]
             {
                 $"page={page}"
