@@ -32,14 +32,14 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/skills/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<SkillDetails>>> Skills()
-            => await Execute<List<SkillDetails>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/skills/");
+        public async Task<ApiResponse<SkillDetails>> List()
+            => await Execute<SkillDetails>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/skills/");
 
         /// <summary>
         /// /characters/{character_id}/skillqueue/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<SkillQueueItem>>> SkillQueue()
+        public async Task<ApiResponse<List<SkillQueueItem>>> Queue()
             => await Execute<List<SkillQueueItem>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/skillqueue/");
     }
 }
