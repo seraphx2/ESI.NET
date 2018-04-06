@@ -43,6 +43,7 @@ namespace ESI.NET
             Character = new CharacterLogic(_config);
             Corporation = new CorporationLogic(_config);
             Dogma = new DogmaLogic(_config);
+            FactionWarfare = new FactionWarfareLogic(_config);
             Fleets = new FleetsLogic(_config);
             Incursions = new IncursionsLogic(_config);
             Industry = new IndustryLogic(_config);
@@ -68,6 +69,7 @@ namespace ESI.NET
         public CharacterLogic Character { get; set; }
         public CorporationLogic Corporation { get; set; }
         public DogmaLogic Dogma { get; set; }
+        public FactionWarfareLogic FactionWarfare { get; set; }
         public FleetsLogic Fleets { get; set; }
         public IncursionsLogic Incursions { get; set; }
         public IndustryLogic Industry { get; set; }

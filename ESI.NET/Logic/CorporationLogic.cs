@@ -17,9 +17,7 @@ namespace ESI.NET.Logic
             _config = config;
 
             if (_config.AuthorizedCharacter != null)
-            {
                 corporation_id = _config.AuthorizedCharacter.CorporationID;
-            }
         }
 
         /// <summary>

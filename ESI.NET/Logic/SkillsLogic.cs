@@ -6,7 +6,7 @@ using static ESI.NET.ApiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class SkillsLogic
+    public class SkillsLogic : ISkillsLogic
     {
         private ESIConfig _config;
         private int character_id;
@@ -16,9 +16,7 @@ namespace ESI.NET.Logic
             _config = config;
 
             if (_config.AuthorizedCharacter != null)
-            {
                 character_id = _config.AuthorizedCharacter.CharacterID;
-            }
         }
 
         /// <summary>
