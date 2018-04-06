@@ -37,8 +37,7 @@ namespace ESI.NET.Logic
             if (connections != null)
                 parameters.Add($"&connections={string.Join(",", connections)}");
 
-            var endpoint = $"/route/{origin}/{destination}/";
-            var response = await Execute<int[]>(_config, RequestSecurity.Public, RequestMethod.GET, endpoint, parameters.ToArray());
+            var response = await Execute<int[]>(_config, RequestSecurity.Public, RequestMethod.GET, $"/route/{origin}/{destination}/", parameters.ToArray());
 
             return response;
         }

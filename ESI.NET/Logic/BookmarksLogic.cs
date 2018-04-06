@@ -27,59 +27,39 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<Bookmark>>> ForCharacter(int page = 1)
-        {
-            var endpoint = $"/characters/{character_id}/bookmarks/";
-            var response = await Execute<List<Bookmark>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, endpoint, new string[]
+            => await Execute<List<Bookmark>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/bookmarks/", new string[]
             {
                 $"page={page}"
             });
-
-            return response;
-        }
 
         /// <summary>
         /// /characters/{character_id}/bookmarks/folders/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<Folder>>> FoldersForCharacter(int page = 1)
-        {
-            var endpoint = $"/characters/{character_id}/bookmarks/folders/";
-            var response = await Execute<List<Folder>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, endpoint, new string[]
+            => await Execute<List<Folder>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/bookmarks/folders/", new string[]
             {
                 $"page={page}"
             });
-
-            return response;
-        }
 
         /// <summary>
         /// /corporations/{corporation_id}/bookmarks/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<Bookmark>>> ForCorporation(int page = 1)
-        {
-            var endpoint = $"/corporations/{corporation_id}/bookmarks/";
-            var response = await Execute<List<Bookmark>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, endpoint, new string[]
+            => await Execute<List<Bookmark>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/bookmarks/", new string[]
             {
                 $"page={page}"
             });
-
-            return response;
-        }
 
         /// <summary>
         /// /corporations/{corporation_id}/bookmarks/folders/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<Folder>>> FoldersForCorporation(int page = 1)
-        {
-            var endpoint = $"/corporations/{corporation_id}/bookmarks/folders/";
-            var response = await Execute<List<Folder>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, endpoint, new string[]
+            => await Execute<List<Folder>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/bookmarks/folders/", new string[]
             {
                 $"page={page}"
             });
-
-            return response;
-        }
     }
 }

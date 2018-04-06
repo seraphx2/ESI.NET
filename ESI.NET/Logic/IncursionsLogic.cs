@@ -17,11 +17,6 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<Incursion>>> All()
-        {
-            var endpoint = "/incursions/";
-            var response = await Execute<List<Incursion>>(_config, RequestSecurity.Public, RequestMethod.GET, endpoint);
-
-            return response;
-        }
+            => await Execute<List<Incursion>>(_config, RequestSecurity.Public, RequestMethod.GET, "/incursions/");
     }
 }

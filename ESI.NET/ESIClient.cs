@@ -54,6 +54,7 @@ namespace ESI.NET
             PlanetaryInteraction = new PlanetaryInteractionLogic(_config);
             Routes = new RoutesLogic(_config);
             Search = new SearchLogic(_config);
+            Skills = new SkillsLogic(_config);
             Sovereignty = new SovereigntyLogic(_config);
             Status = new StatusLogic(_config);
             Universe = new UniverseLogic(_config);
@@ -78,6 +79,7 @@ namespace ESI.NET
         public PlanetaryInteractionLogic PlanetaryInteraction { get; set; }
         public RoutesLogic Routes { get; set; }
         public SearchLogic Search { get; set; }
+        public SkillsLogic Skills { get; set; }
         public StatusLogic Status { get; set; }
         public SovereigntyLogic Sovereignty { get; set; }
         public UniverseLogic Universe { get; set; }

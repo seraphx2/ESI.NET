@@ -28,15 +28,10 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<ApiResponse<List<Item>>> ForCharacter(int page = 1)
-        {
-            var endpoint = $"/characters/{character_id}/assets/";
-            var response = await Execute<List<Item>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, endpoint, new string[]
+            => await Execute<List<Item>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/assets/", new string[]
             {
                 $"page={page}"
             });
-
-            return response;
-        }
 
         /// <summary>
         /// /characters/{character_id}/assets/locations/
@@ -44,12 +39,7 @@ namespace ESI.NET.Logic
         /// <param name="item_ids"></param>
         /// <returns></returns>
         public async Task<ApiResponse<List<ItemLocation>>> LocationsForCharacter(List<long> item_ids)
-        {
-            var endpoint = $"/characters/{character_id}/assets/locations/";
-            var response = await Execute<List<ItemLocation>>(_config, RequestSecurity.Authenticated, RequestMethod.POST, endpoint, body: item_ids.ToArray());
-
-            return response;
-        }
+            => await Execute<List<ItemLocation>>(_config, RequestSecurity.Authenticated, RequestMethod.POST, $"/characters/{character_id}/assets/locations/", body: item_ids.ToArray());
 
         /// <summary>
         /// /characters/{character_id}/assets/names/
@@ -57,12 +47,7 @@ namespace ESI.NET.Logic
         /// <param name="item_ids"></param>
         /// <returns></returns>
         public async Task<ApiResponse<List<ItemName>>> NamesForCharacter(List<long> item_ids)
-        {
-            var endpoint = $"/characters/{character_id}/assets/names/";
-            var response = await Execute<List<ItemName>>(_config, RequestSecurity.Authenticated, RequestMethod.POST, endpoint, body: item_ids.ToArray());
-
-            return response;
-        }
+            => await Execute<List<ItemName>>(_config, RequestSecurity.Authenticated, RequestMethod.POST, $"/characters/{character_id}/assets/names/", body: item_ids.ToArray());
 
 
         /// <summary>
@@ -71,15 +56,10 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<ApiResponse<List<Item>>> ForCorporation(int page = 1)
-        {
-            var endpoint = $"/corporations/{corporation_id}/assets/";
-            var response = await Execute<List<Item>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, endpoint, new string[]
+            => await Execute<List<Item>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/assets/", new string[]
             {
                 $"page={page}"
             });
-
-            return response;
-        }
 
         /// <summary>
         /// /corporations/{corporation_id}/assets/locations/
@@ -87,12 +67,7 @@ namespace ESI.NET.Logic
         /// <param name="item_ids"></param>
         /// <returns></returns>
         public async Task<ApiResponse<List<ItemLocation>>> LocationsForCorporation(List<long> item_ids)
-        {
-            var endpoint = $"/corporations/{corporation_id}/assets/locations/";
-            var response = await Execute<List<ItemLocation>>(_config, RequestSecurity.Authenticated, RequestMethod.POST, endpoint, body: item_ids.ToArray());
-
-            return response;
-        }
+            => await Execute<List<ItemLocation>>(_config, RequestSecurity.Authenticated, RequestMethod.POST, $"/corporations/{corporation_id}/assets/locations/", body: item_ids.ToArray());
 
         /// <summary>
         /// /corporations/{corporation_id}/assets/names/
@@ -100,11 +75,6 @@ namespace ESI.NET.Logic
         /// <param name="item_ids"></param>
         /// <returns></returns>
         public async Task<ApiResponse<List<ItemName>>> NamesForCorporation(List<long> item_ids)
-        {
-            var endpoint = $"/corporations/{corporation_id}/assets/names/";
-            var response = await Execute<List<ItemName>>(_config, RequestSecurity.Authenticated, RequestMethod.POST, endpoint, body: item_ids.ToArray());
-
-            return response;
-        }
+            => await Execute<List<ItemName>>(_config, RequestSecurity.Authenticated, RequestMethod.POST, $"/corporations/{corporation_id}/assets/names/", body: item_ids.ToArray());
     }
 }

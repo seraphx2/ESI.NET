@@ -17,35 +17,20 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<Campaign>>> Campaigns()
-        {
-            var url = "/sovereignty/campaigns/";
-            var response = await Execute<List<Campaign>>(_config, RequestSecurity.Public, RequestMethod.GET, url);
-
-            return response;
-        }
+            => await Execute<List<Campaign>>(_config, RequestSecurity.Public, RequestMethod.GET, "/sovereignty/campaigns/");
 
         /// <summary>
         /// /sovereignty/map/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<SystemSovereignty>>> Systems()
-        {
-            var url = "/sovereignty/map/";
-            var response = await Execute<List<SystemSovereignty>>(_config, RequestSecurity.Public, RequestMethod.GET, url);
-
-            return response;
-        }
+            => await Execute<List<SystemSovereignty>>(_config, RequestSecurity.Public, RequestMethod.GET, "/sovereignty/map/");
 
         /// <summary>
         /// /sovereignty/structures/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<Structure>>> Structures()
-        {
-            var url = "/sovereignty/structures/";
-            var response = await Execute<List<Structure>>(_config, RequestSecurity.Public, RequestMethod.GET, url);
-
-            return response;
-        }
+            => await Execute<List<Structure>>(_config, RequestSecurity.Public, RequestMethod.GET, "/sovereignty/structures/");
     }
 }

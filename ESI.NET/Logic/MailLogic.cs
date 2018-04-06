@@ -36,8 +36,7 @@ namespace ESI.NET.Logic
             if (last_mail_id > 0)
                 parameters.Add($"last_mail_id={last_mail_id}");
 
-            var endpoint = $"/characters/{character_id}/mail/";
-            var response = await Execute<List<Header>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, endpoint, parameters.ToArray());
+            var response = await Execute<List<Header>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/mail/", parameters.ToArray());
 
             return response;
         }
@@ -52,8 +51,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<ApiResponse<int>> New(object[] recipients, string subject, string body, int approved_cost = 0)
         {
-            var endpoint = $"/characters/{character_id}/mail/";
-            var response = await Execute<int>(_config, RequestSecurity.Authenticated, RequestMethod.POST, endpoint, body: new
+            var response = await Execute<int>(_config, RequestSecurity.Authenticated, RequestMethod.POST, $"/characters/{character_id}/mail/", body: new
             {
                 recipients = recipients,
                 subject = subject,
@@ -72,12 +70,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<LabelCounts>> Labels()
-        {
-            var endpoint = $"/characters/{character_id}/mail/labels/";
-            var response = await Execute<LabelCounts>(_config, RequestSecurity.Authenticated, RequestMethod.GET, endpoint);
-
-            return response;
-        }
+            => await Execute<LabelCounts>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/mail/labels/");
 
         /// <summary>
         /// /characters/{character_id}/mail/labels/
@@ -87,8 +80,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<ApiResponse<long>> NewLabel(string name, string color)
         {
-            var endpoint = $"/characters/{character_id}/mail/labels/";
-            var response = await Execute<long>(_config, RequestSecurity.Authenticated, RequestMethod.POST, endpoint, body: new
+            var response = await Execute<long>(_config, RequestSecurity.Authenticated, RequestMethod.POST, $"/characters/{character_id}/mail/labels/", body: new
             {
                 name = name,
                 color = color
@@ -107,8 +99,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<ApiResponse<string>> DeleteLabel(long label_id)
         {
-            var endpoint = $"/characters/{character_id}/mail/labels/{label_id}/";
-            var response = await Execute<string>(_config, RequestSecurity.Authenticated, RequestMethod.DELETE, endpoint);
+            var response = await Execute<string>(_config, RequestSecurity.Authenticated, RequestMethod.DELETE, $"/characters/{character_id}/mail/labels/{label_id}/");
 
             if (response.StatusCode == HttpStatusCode.NoContent)
                 response.Message = Dictionaries.NoContentMessages["DELETE|/characters/{character_id}/mail/labels/{label_id}/"];
@@ -118,12 +109,7 @@ namespace ESI.NET.Logic
 
 
         public async Task<ApiResponse<List<MailingList>>> MailingLists()
-        {
-            var endpoint = $"/characters/{character_id}/mail/lists/";
-            var response = await Execute<List<MailingList>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, endpoint);
-
-            return response;
-        }
+            => await Execute<List<MailingList>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/mail/lists/");
 
         /// <summary>
         /// /characters/{character_id}/mail/{mail_id}/
@@ -131,12 +117,7 @@ namespace ESI.NET.Logic
         /// <param name="mail_id"></param>
         /// <returns></returns>
         public async Task<ApiResponse<Message>> Retrieve(int mail_id)
-        {
-            var endpoint = $"/characters/{character_id}/mail/{mail_id}/";
-            var response = await Execute<Message>(_config, RequestSecurity.Authenticated, RequestMethod.GET, endpoint);
-
-            return response;
-        }
+            => await Execute<Message>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/mail/{mail_id}/");
 
         /// <summary>
         /// /characters/{character_id}/mail/{mail_id}/
@@ -172,8 +153,7 @@ namespace ESI.NET.Logic
                 };
             }
 
-            var endpoint = $"/characters/{character_id}/mail/{mail_id}/";
-            var response = await Execute<Message>(_config, RequestSecurity.Authenticated, RequestMethod.PUT, endpoint, body: body);
+            var response = await Execute<Message>(_config, RequestSecurity.Authenticated, RequestMethod.PUT, $"/characters/{character_id}/mail/{mail_id}/", body: body);
 
             if (response.StatusCode == HttpStatusCode.NoContent)
                 response.Message = Dictionaries.NoContentMessages["PUT|/characters/{character_id}/mail/{mail_id}/"];
@@ -188,8 +168,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<ApiResponse<Message>> Delete(int mail_id)
         {
-            var endpoint = $"/characters/{character_id}/mail/{mail_id}/";
-            var response = await Execute<Message>(_config, RequestSecurity.Authenticated, RequestMethod.DELETE, endpoint);
+            var response = await Execute<Message>(_config, RequestSecurity.Authenticated, RequestMethod.DELETE, $"/characters/{character_id}/mail/{mail_id}/");
 
             if (response.StatusCode == HttpStatusCode.NoContent)
                 response.Message = Dictionaries.NoContentMessages["DELETE|/characters/{character_id}/mail/{mail_id}/"];

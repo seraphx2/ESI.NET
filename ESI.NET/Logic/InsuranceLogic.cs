@@ -17,11 +17,6 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<Insurance>>> Levels()
-        {
-            var endpoint = "/insurance/prices/";
-            var response = await Execute<List<Insurance>>(_config, RequestSecurity.Public, RequestMethod.GET, endpoint);
-
-            return response;
-        }
+            => await Execute<List<Insurance>>(_config, RequestSecurity.Public, RequestMethod.GET, "/insurance/prices/");
     }
 }

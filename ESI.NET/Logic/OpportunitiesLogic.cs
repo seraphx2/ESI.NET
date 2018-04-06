@@ -26,12 +26,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<int>>> Groups()
-        {
-            var endpoint = "/opportunities/groups/";
-            var response = await Execute<List<int>>(_config, RequestSecurity.Public, RequestMethod.GET, endpoint);
-
-            return response;
-        }
+            => await Execute<List<int>>(_config, RequestSecurity.Public, RequestMethod.GET, "/opportunities/groups/");
 
         /// <summary>
         /// /opportunities/groups/{group_id}/
@@ -39,24 +34,14 @@ namespace ESI.NET.Logic
         /// <param name="group_id"></param>
         /// <returns></returns>
         public async Task<ApiResponse<model.Group>> Group(int group_id)
-        {
-            var endpoint = $"/opportunities/groups/{group_id}/";
-            var response = await Execute<model.Group>(_config, RequestSecurity.Public, RequestMethod.GET, endpoint);
-
-            return response;
-        }
+            => await Execute<model.Group>(_config, RequestSecurity.Public, RequestMethod.GET, $"/opportunities/groups/{group_id}/");
 
         /// <summary>
         /// /opportunities/tasks/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<int>>> Tasks()
-        {
-            var endpoint = "/opportunities/tasks/";
-            var response = await Execute<List<int>>(_config, RequestSecurity.Public, RequestMethod.GET, endpoint);
-
-            return response;
-        }
+            => await Execute<List<int>>(_config, RequestSecurity.Public, RequestMethod.GET, "/opportunities/tasks/");
 
         /// <summary>
         /// /opportunities/tasks/{task_id}/
@@ -64,12 +49,7 @@ namespace ESI.NET.Logic
         /// <param name="task_id"></param>
         /// <returns></returns>
         public async Task<ApiResponse<model.Task>> Task(int task_id)
-        {
-            var endpoint = $"/opportunities/tasks/{task_id}/";
-            var response = await Execute<model.Task>(_config, RequestSecurity.Public, RequestMethod.GET, endpoint);
-
-            return response;
-        }
+            => await Execute<model.Task>(_config, RequestSecurity.Public, RequestMethod.GET, $"/opportunities/tasks/{task_id}/");
 
         /// <summary>
         /// /characters/{character_id}/opportunities/
@@ -77,11 +57,6 @@ namespace ESI.NET.Logic
         /// <param name="character_id"></param>
         /// <returns></returns>
         public async Task<ApiResponse<List<model.CompletedTask>>> CompletedTasks()
-        {
-            var endpoint = $"/characters/{character_id}/opportunities/";
-            var response = await Execute<List<model.CompletedTask>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, endpoint);
-
-            return response;
-        }
+            => await Execute<List<model.CompletedTask>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/opportunities/");
     }
 }

@@ -27,24 +27,14 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<Facility>>> Facilities()
-        {
-            var endpoint = "/industry/facilities/";
-            var response = await Execute<List<Facility>>(_config, RequestSecurity.Public, RequestMethod.GET, endpoint);
-
-            return response;
-        }
+            => await Execute<List<Facility>>(_config, RequestSecurity.Public, RequestMethod.GET, "/industry/facilities/");
 
         /// <summary>
         /// /industry/systems/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<SolarSystem>>> SolarSystemCostIndices()
-        {
-            var endpoint = "/industry/systems/";
-            var response = await Execute<List<SolarSystem>>(_config, RequestSecurity.Public, RequestMethod.GET, endpoint);
-
-            return response;
-        }
+            => await Execute<List<SolarSystem>>(_config, RequestSecurity.Public, RequestMethod.GET, "/industry/systems/");
 
         /// <summary>
         /// /characters/{character_id}/industry/jobs/
@@ -52,15 +42,10 @@ namespace ESI.NET.Logic
         /// <param name="include_completed"></param>
         /// <returns></returns>
         public async Task<ApiResponse<List<Job>>> JobsForCharacter(bool include_completed = false)
-        {
-            var endpoint = $"/characters/{character_id}/industry/jobs/";
-            var response = await Execute<List<Job>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, endpoint, new string[]
+            => await Execute<List<Job>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/industry/jobs/", new string[]
             {
                 $"include_completed={include_completed}"
             });
-
-            return response;
-        }
 
         /// <summary>
         /// /characters/{character_id}/mining/
@@ -68,15 +53,10 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<ApiResponse<List<Entry>>> MiningLedger(int page = 1)
-        {
-            var endpoint = $"/characters/{character_id}/mining/";
-            var response = await Execute<List<Entry>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, endpoint, new string[]
+            => await Execute<List<Entry>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/mining/", new string[]
             {
                 $"page={page}"
             });
-
-            return response;
-        }
 
         /// <summary>
         /// /corporation/{corporation_id}/mining/observers/
@@ -84,15 +64,10 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<ApiResponse<List<Observer>>> Observers(int page = 1)
-        {
-            var endpoint = $"/corporation/{corporation_id}/mining/observers/";
-            var response = await Execute<List<Observer>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, endpoint, new string[]
+            => await Execute<List<Observer>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporation/{corporation_id}/mining/observers/", new string[]
             {
                 $"page={page}"
             });
-
-            return response;
-        }
 
         /// <summary>
         /// /corporation/{corporation_id}/mining/observers/{observer_id}/
@@ -101,15 +76,11 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<ApiResponse<List<ObserverInfo>>> ObservedMining(int observer_id, int page = 1)
-        {
-            var endpoint = $"/corporation/{corporation_id}/mining/observers/{observer_id}/";
-            var response = await Execute<List<ObserverInfo>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, endpoint, new string[]
+            => await Execute<List<ObserverInfo>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporation/{corporation_id}/mining/observers/{observer_id}/", new string[]
             {
                 $"page={page}"
             });
 
-            return response;
-        }
         /// <summary>
         /// /corporations/{corporation_id}/industry/jobs/
         /// </summary>
@@ -117,27 +88,17 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<ApiResponse<List<Job>>> JobsForCorporation(bool include_completed = false, int page = 1)
-        {
-            var endpoint = $"/corporations/{corporation_id}/industry/jobs/";
-            var response = await Execute<List<Job>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, endpoint, new string[]
+            => await Execute<List<Job>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/industry/jobs/", new string[]
             {
                 $"include_completed={include_completed}",
                 $"page={page}"
             });
-
-            return response;
-        }
 
         /// <summary>
         /// /corporation/{corporation_id}/mining/extractions/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<Extraction>>> Extractions()
-        {
-            var endpoint = $"/corporation/{corporation_id}/mining/extractions/";
-            var response = await Execute<List<Extraction>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, endpoint);
-
-            return response;
-        }
+            => await Execute<List<Extraction>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporation/{corporation_id}/mining/extractions/");
     }
 }

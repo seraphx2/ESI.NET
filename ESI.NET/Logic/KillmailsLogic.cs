@@ -35,8 +35,7 @@ namespace ESI.NET.Logic
             if (max_kill_id > 0)
                 parameters.Add($"max_kill_id={max_kill_id}");
 
-            var endpoint = $"/characters/{character_id}/killmails/recent/";
-            var response = await Execute<List<Killmail>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, endpoint, parameters.ToArray());
+            var response = await Execute<List<Killmail>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/killmails/recent/", parameters.ToArray());
 
             return response;
         }
@@ -53,8 +52,7 @@ namespace ESI.NET.Logic
             if (max_kill_id > 0)
                 parameters.Add($"max_kill_id={max_kill_id}");
 
-            var endpoint = $"/corporations/{corporation_id}/killmails/recent/";
-            var response = await Execute<List<Killmail>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, endpoint, parameters.ToArray());
+            var response = await Execute<List<Killmail>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/killmails/recent/", parameters.ToArray());
 
             return response;
         }
@@ -66,11 +64,6 @@ namespace ESI.NET.Logic
         /// <param name="killmail_id">The killmail ID to be queried</param>
         /// <returns></returns>
         public async Task<ApiResponse<Information>> Information(string killmail_hash, int killmail_id)
-        {
-            var endpoint = $"/killmails/{killmail_id}/{killmail_hash}/";
-            var response = await Execute<Information>(_config, RequestSecurity.Public, RequestMethod.GET, endpoint);
-
-            return response;
-        }
+            => await Execute<Information>(_config, RequestSecurity.Public, RequestMethod.GET, $"/killmails/{killmail_id}/{killmail_hash}/");
     }
 }

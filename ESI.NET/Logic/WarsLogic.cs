@@ -23,8 +23,7 @@ namespace ESI.NET.Logic
             if (max_war_id > 0)
                 parameters.Add($"max_war_id={max_war_id}");
 
-            var endpoint = "/wars/";
-            var response = await Execute<List<int>>(_config, RequestSecurity.Public, RequestMethod.GET, endpoint, parameters.ToArray());
+            var response = await Execute<List<int>>(_config, RequestSecurity.Public, RequestMethod.GET, "/wars/", parameters.ToArray());
 
             return response;
         }
@@ -35,12 +34,7 @@ namespace ESI.NET.Logic
         /// <param name="war_id"></param>
         /// <returns></returns>
         public async Task<ApiResponse<Information>> Information(int war_id)
-        {
-            var endpoint = $"/wars/{war_id}/";
-            var response = await Execute<Information>(_config, RequestSecurity.Public, RequestMethod.GET, endpoint);
-
-            return response;
-        }
+            => await Execute<Information>(_config, RequestSecurity.Public, RequestMethod.GET, $"/wars/{war_id}/");
 
         /// <summary>
         /// /wars/{warId}/killmails/
@@ -49,14 +43,9 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<ApiResponse<List<Models.Killmails.Killmail>>> Kills(int war_id, int page = 1)
-        {
-            var endpoint = $"/wars/{war_id}/killmails/";
-            var response = await Execute<List<Models.Killmails.Killmail>>(_config, RequestSecurity.Public, RequestMethod.GET, endpoint, new string[]
+            => await Execute<List<Models.Killmails.Killmail>>(_config, RequestSecurity.Public, RequestMethod.GET, $"/wars/{war_id}/killmails/", new string[]
             {
                 $"page={page}"
             });
-
-            return response;
-        }
     }
 }

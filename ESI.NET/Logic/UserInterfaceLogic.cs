@@ -16,15 +16,10 @@ namespace ESI.NET.Logic
         /// <param name="type_id"></param>
         /// <returns></returns>
         public async Task<ApiResponse<string>> MarketDetails(int type_id)
-        {
-            var endpoint = "/ui/openwindow/marketdetails/";
-            var response = await Execute<string>(_config, RequestSecurity.Authenticated, RequestMethod.POST, endpoint, new string[]
+            => await Execute<string>(_config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/openwindow/marketdetails/", new string[]
             {
                 $"type_id={type_id}"
             });
-
-            return response;
-        }
 
         /// <summary>
         /// /ui/openwindow/contract/
@@ -32,15 +27,10 @@ namespace ESI.NET.Logic
         /// <param name="contract_id"></param>
         /// <returns></returns>
         public async Task<ApiResponse<string>> Contract(int contract_id)
-        {
-            var endpoint = "/ui/openwindow/contract/";
-            var response = await Execute<string>(_config, RequestSecurity.Authenticated, RequestMethod.POST, endpoint, new string[]
+            => await Execute<string>(_config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/openwindow/contract/", new string[]
             {
                 $"contract_id={contract_id}"
             });
-
-            return response;
-        }
 
         /// <summary>
         /// /ui/openwindow/information/
@@ -48,15 +38,10 @@ namespace ESI.NET.Logic
         /// <param name="target_id"></param>
         /// <returns></returns>
         public async Task<ApiResponse<string>> Information(int target_id)
-        {
-            var endpoint = "/ui/openwindow/information/";
-            var response = await Execute<string>(_config, RequestSecurity.Authenticated, RequestMethod.POST, endpoint, new string[]
+            => await Execute<string>(_config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/openwindow/information/", new string[]
             {
                 $"target_id={target_id}"
             });
-
-            return response;
-        }
 
         /// <summary>
         /// /ui/autopilot/waypoint/
@@ -66,17 +51,12 @@ namespace ESI.NET.Logic
         /// <param name="clear_other_waypoints"></param>
         /// <returns></returns>
         public async Task<ApiResponse<string>> Waypoint(long destination_id, bool add_to_beginning = false, bool clear_other_waypoints = false)
-        {
-            var endpoint = "/ui/autopilot/waypoint/";
-            var response = await Execute<string>(_config, RequestSecurity.Authenticated, RequestMethod.POST, endpoint, new string[]
+            => await Execute<string>(_config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/autopilot/waypoint/", new string[]
             {
                 $"destination_id={destination_id}",
                 $"add_to_beginning={add_to_beginning}",
                 $"clear_other_waypoints={clear_other_waypoints}"
             });
-
-            return response;
-        }
 
         /// <summary>
         /// /ui/openwindow/newmail/
@@ -88,16 +68,11 @@ namespace ESI.NET.Logic
         /// <param name="to_corp_or_alliance_id"></param>
         /// <returns></returns>
         public async Task<ApiResponse<string>> NewMail(string subject, string body, int[] recipients)
-        {
-            var endpoint = "/ui/openwindow/newmail/";
-            var response = await Execute<string>(_config, RequestSecurity.Authenticated, RequestMethod.POST, endpoint, body: new
+            => await Execute<string>(_config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/openwindow/newmail/", body: new
             {
                 subject = subject,
                 body = body,
                 recipients = recipients
             });
-
-            return response;
-        }
     }
 }

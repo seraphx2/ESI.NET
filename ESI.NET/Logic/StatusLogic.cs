@@ -12,11 +12,6 @@ namespace ESI.NET.Logic
         public StatusLogic(ESIConfig config) { _config = config; }
 
         public async Task<ApiResponse<Status>> Retrieve()
-        {
-            var url = "/status/";
-            var response = await Execute<Status>(_config, RequestSecurity.Public, RequestMethod.GET, url);
-
-            return response;
-        }
+            => await Execute<Status>(_config, RequestSecurity.Public, RequestMethod.GET, "/status/");
     }
 }

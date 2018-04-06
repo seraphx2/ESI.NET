@@ -17,12 +17,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<int>>> Attributes()
-        {
-            var endpoint = "/dogma/attributes/";
-            var response = await Execute<List<int>>(_config, RequestSecurity.Public, RequestMethod.GET, endpoint);
-
-            return response;
-        }
+            => await Execute<List<int>>(_config, RequestSecurity.Public, RequestMethod.GET, "/dogma/attributes/");
 
         /// <summary>
         /// /dogma/attributes/{attribute_id}/
@@ -30,24 +25,14 @@ namespace ESI.NET.Logic
         /// <param name="attribute_id"></param>
         /// <returns></returns>
         public async Task<ApiResponse<Attribute>> Attribute(int attribute_id)
-        {
-            var endpoint = $"/dogma/attributes/{attribute_id}/";
-            var response = await Execute<Attribute>(_config, RequestSecurity.Public, RequestMethod.GET, endpoint);
-
-            return response;
-        }
+            => await Execute<Attribute>(_config, RequestSecurity.Public, RequestMethod.GET, $"/dogma/attributes/{attribute_id}/");
 
         /// <summary>
         /// /dogma/effects/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<int>>> Effects()
-        {
-            var endpoint = "/dogma/effects/";
-            var response = await Execute<List<int>>(_config, RequestSecurity.Public, RequestMethod.GET, endpoint);
-
-            return response;
-        }
+            => await Execute<List<int>>(_config, RequestSecurity.Public, RequestMethod.GET, "/dogma/effects/");
 
         /// <summary>
         /// /dogma/effects/{effect_id}/
@@ -55,11 +40,6 @@ namespace ESI.NET.Logic
         /// <param name="effect_id"></param>
         /// <returns></returns>
         public async Task<ApiResponse<Effect>> Effect(int effect_id)
-        {
-            var endpoint = $"/dogma/effects/{effect_id}/";
-            var response = await Execute<Effect>(_config, RequestSecurity.Public, RequestMethod.GET, endpoint);
-
-            return response;
-        }
+            => await Execute<Effect>(_config, RequestSecurity.Public, RequestMethod.GET, $"/dogma/effects/{effect_id}/");
     }
 }
