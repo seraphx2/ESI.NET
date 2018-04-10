@@ -41,6 +41,7 @@ namespace ESI.NET
             Assets = new AssetsLogic(_config);
             Bookmarks = new BookmarksLogic(_config);
             Character = new CharacterLogic(_config);
+            Contacts = new ContactsLogic(_config);
             Corporation = new CorporationLogic(_config);
             Dogma = new DogmaLogic(_config);
             FactionWarfare = new FactionWarfareLogic(_config);
@@ -67,6 +68,7 @@ namespace ESI.NET
         public AssetsLogic Assets { get; set; }
         public BookmarksLogic Bookmarks { get; set; }
         public CharacterLogic Character { get; set; }
+        public ContactsLogic Contacts { get; set; }
         public CorporationLogic Corporation { get; set; }
         public DogmaLogic Dogma { get; set; }
         public FactionWarfareLogic FactionWarfare { get; set; }

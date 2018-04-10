@@ -11,6 +11,6 @@ namespace ESI.NET.Logic.Interfaces
         Task<ApiResponse<List<int>>> Corporations(int alliance_id);
         Task<ApiResponse<Images>> Icons(int alliance_id);
         Task<ApiResponse<Information>> Information(int alliance_id);
-        Task<ApiResponse<List<Alliance>>> Names(List<int> alliance_ids);
+        Task<ApiResponse<List<Alliance>>> Names(int[] alliance_ids);
     }
 }

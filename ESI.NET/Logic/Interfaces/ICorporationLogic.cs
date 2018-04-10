@@ -20,7 +20,7 @@ namespace ESI.NET.Logic.Interfaces
         Task<ApiResponse<List<Member>>> Members();
         Task<ApiResponse<List<MemberTitles>>> MemberTitles();
         Task<ApiResponse<List<MemberInfo>>> MemberTracking();
-        Task<ApiResponse<List<Corporation>>> Names(List<int> corporation_ids);
+        Task<ApiResponse<List<Corporation>>> Names(int[] corporation_ids);
         Task<ApiResponse<List<int>>> NpcCorps();
         Task<ApiResponse<Outpost>> Outpost(int outpost_id);
         Task<ApiResponse<int[]>> Outposts(int page = 1);

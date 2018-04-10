@@ -25,15 +25,15 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="characterIds">dynamic = long</param>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Affiliation>>> Affiliation(List<int> character_ids)
-            => await Execute<List<Affiliation>>(_config, RequestSecurity.Public, RequestMethod.POST, "/characters/affiliation/", body: character_ids.ToArray());
+        public async Task<ApiResponse<List<Affiliation>>> Affiliation(int[] character_ids)
+            => await Execute<List<Affiliation>>(_config, RequestSecurity.Public, RequestMethod.POST, "/characters/affiliation/", body: character_ids);
 
         /// <summary>
         /// /characters/names/
         /// </summary>
         /// <param name="characterIds"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Character>>> Names(List<int> character_ids)
+        public async Task<ApiResponse<List<Character>>> Names(int[] character_ids)
             => await Execute<List<Character>>(_config, RequestSecurity.Public, RequestMethod.GET, "/characters/names/", new string[]
             {
                 $"character_ids={string.Join(",", character_ids)}"

@@ -11,6 +11,10 @@ namespace ESI.NET
         /// </summary>
         public static Dictionary<string, string> NoContentMessages = new Dictionary<string, string>()
         {
+            //Contacts
+            {"PUT|/characters/{character_id}/contacts/", "Contacts updated"},
+            {"DELETE|/characters/{character_id}/contacts/", "Contacts deleted"},
+
             //Corporations
             {"PUT|/corporations/{corporation_id}/structures/{structure_id}/", "Structure vulnerability window updated"},
 

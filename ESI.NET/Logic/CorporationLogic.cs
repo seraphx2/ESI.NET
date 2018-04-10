@@ -41,7 +41,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="corporation_ids"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Corporation>>> Names(List<int> corporation_ids)
+        public async Task<ApiResponse<List<Corporation>>> Names(int[] corporation_ids)
             => await Execute<List<Corporation>>(_config, RequestSecurity.Public, RequestMethod.GET, "/corporations/names/", new string[]
             {
                 $"corporation_ids={string.Join(",", corporation_ids)}"

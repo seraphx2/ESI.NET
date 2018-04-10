@@ -62,7 +62,7 @@ namespace ESI.NET
             if (getExtendedData)
             {
                 var manager = new ESIClient(DataSource.tranquility, "ESI.NET Psianna Archeia");
-                var characterResponse = manager.Character.Affiliation(new List<int>() { authCharacter.CharacterID }).Result;
+                var characterResponse = manager.Character.Affiliation(new int[] { authCharacter.CharacterID }).Result;
             
                 if (characterResponse.StatusCode == System.Net.HttpStatusCode.OK)
                 {

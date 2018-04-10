@@ -25,7 +25,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="alliance_ids"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Alliance>>> Names(List<int> alliance_ids)
+        public async Task<ApiResponse<List<Alliance>>> Names(int[] alliance_ids)
             => await Execute<List<Alliance>>(_config, RequestSecurity.Public, RequestMethod.GET, "/alliances/names/", new string[]
             {
                 $"alliance_ids={string.Join(",", alliance_ids)}"

@@ -7,7 +7,7 @@ namespace ESI.NET.Logic.Interfaces
 {
     public interface ICharacterLogic
     {
-        Task<ApiResponse<List<Affiliation>>> Affiliation(List<int> character_ids);
+        Task<ApiResponse<List<Affiliation>>> Affiliation(int[] character_ids);
         Task<ApiResponse<List<Agent>>> AgentsResearch();
         Task<ApiResponse<List<Blueprint>>> Blueprints(int page = 1);
         Task<ApiResponse<CSPA>> CalculateCSPA(object character_ids);
@@ -17,7 +17,7 @@ namespace ESI.NET.Logic.Interfaces
         Task<ApiResponse<Fatigue>> Fatigue();
         Task<ApiResponse<Information>> Information(int character_id);
         Task<ApiResponse<List<Medal>>> Medals();
-        Task<ApiResponse<List<Character>>> Names(List<int> character_ids);
+        Task<ApiResponse<List<Character>>> Names(int[] character_ids);
         Task<ApiResponse<List<Notification>>> Notifications();
         Task<ApiResponse<Images>> Portrait(int character_id);
         Task<ApiResponse<List<string>>> Roles();
