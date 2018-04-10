@@ -41,6 +41,7 @@ namespace ESI.NET
             Assets = new AssetsLogic(_config);
             Bookmarks = new BookmarksLogic(_config);
             Character = new CharacterLogic(_config);
+            Clones = new ClonesLogic(_config);
             Contacts = new ContactsLogic(_config);
             Corporation = new CorporationLogic(_config);
             Dogma = new DogmaLogic(_config);
@@ -50,6 +51,8 @@ namespace ESI.NET
             Industry = new IndustryLogic(_config);
             Insurance = new InsuranceLogic(_config);
             Killmails = new KillmailsLogic(_config);
+            Location = new LocationLogic(_config);
+            Loyalty = new LoyaltyLogic(_config);
             Mail = new MailLogic(_config);
             Market = new MarketLogic(_config);
             Opportunities = new OpportunitiesLogic(_config);
@@ -68,6 +71,7 @@ namespace ESI.NET
         public AssetsLogic Assets { get; set; }
         public BookmarksLogic Bookmarks { get; set; }
         public CharacterLogic Character { get; set; }
+        public ClonesLogic Clones { get; set; }
         public ContactsLogic Contacts { get; set; }
         public CorporationLogic Corporation { get; set; }
         public DogmaLogic Dogma { get; set; }
@@ -77,6 +81,8 @@ namespace ESI.NET
         public IndustryLogic Industry { get; set; }
         public InsuranceLogic Insurance { get; set; }
         public KillmailsLogic Killmails { get; set; }
+        public LocationLogic Location { get; set; }
+        public LoyaltyLogic Loyalty { get; set; }
         public MailLogic Mail { get; set; }
         public MarketLogic Market { get; set; }
         public OpportunitiesLogic Opportunities { get; set; }
