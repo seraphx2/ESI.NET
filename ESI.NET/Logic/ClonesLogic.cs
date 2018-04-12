@@ -8,7 +8,7 @@ namespace ESI.NET.Logic
     public class ClonesLogic : IClones
     {
         private ESIConfig _config;
-        private int character_id, corporation_id, alliance_id;
+        private int character_id;
 
         public ClonesLogic(ESIConfig config)
         {

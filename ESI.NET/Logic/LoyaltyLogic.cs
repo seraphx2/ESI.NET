@@ -9,7 +9,7 @@ namespace ESI.NET.Logic
     public class LoyaltyLogic : ILoyaltyLogic
     {
         private ESIConfig _config;
-        private int character_id, corporation_id, alliance_id;
+        private int character_id;
 
         public LoyaltyLogic(ESIConfig config)
         {

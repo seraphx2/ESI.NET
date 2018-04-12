@@ -43,6 +43,7 @@ namespace ESI.NET
             Character = new CharacterLogic(_config);
             Clones = new ClonesLogic(_config);
             Contacts = new ContactsLogic(_config);
+            Contracts = new ContractsLogic(_config);
             Corporation = new CorporationLogic(_config);
             Dogma = new DogmaLogic(_config);
             FactionWarfare = new FactionWarfareLogic(_config);
@@ -64,6 +65,7 @@ namespace ESI.NET
             Status = new StatusLogic(_config);
             Universe = new UniverseLogic(_config);
             UserInterface = new UserInterfaceLogic(_config);
+            Wallet = new WalletLogic(_config);
             Wars = new WarsLogic(_config);
         }
 
@@ -73,6 +75,7 @@ namespace ESI.NET
         public CharacterLogic Character { get; set; }
         public ClonesLogic Clones { get; set; }
         public ContactsLogic Contacts { get; set; }
+        public ContractsLogic Contracts { get; set; }
         public CorporationLogic Corporation { get; set; }
         public DogmaLogic Dogma { get; set; }
         public FactionWarfareLogic FactionWarfare { get; set; }
@@ -94,6 +97,7 @@ namespace ESI.NET
         public SovereigntyLogic Sovereignty { get; set; }
         public UniverseLogic Universe { get; set; }
         public UserInterfaceLogic UserInterface { get; set; }
+        public WalletLogic Wallet { get; set; }
         public WarsLogic Wars { get; set; }
 
 

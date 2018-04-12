@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace ESI.NET.Models.Location
 {
@@ -8,10 +9,10 @@ namespace ESI.NET.Models.Location
         public bool Online { get; set; }
 
         [JsonProperty("last_login")]
-        public string LastLogin { get; set; }
+        public DateTime LastLogin { get; set; }
 
         [JsonProperty("last_logout")]
-        public string LastLogout { get; set; }
+        public DateTime LastLogout { get; set; }
 
         [JsonProperty("logins")]
         public int Logins { get; set; }

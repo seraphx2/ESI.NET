@@ -8,13 +8,13 @@ namespace ESI.NET.Models.Clones
     public class Clones
     {
         [JsonProperty("last_clone_jump_date")]
-        public string LastCloneJumpDate { get; set; }
+        public DateTime LastCloneJumpDate { get; set; }
 
         [JsonProperty("home_location")]
         public HomeLocation HomeLocation { get; set; }
 
         [JsonProperty("last_station_change_date")]
-        public string LastStationChangeDate { get; set; }
+        public DateTime LastStationChangeDate { get; set; }
 
         [JsonProperty("jump_clones")]
         public List<JumpClone> JumpClones { get; set; }
