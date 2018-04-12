@@ -48,6 +48,7 @@ namespace ESI.NET
             Corporation = new CorporationLogic(_config);
             Dogma = new DogmaLogic(_config);
             FactionWarfare = new FactionWarfareLogic(_config);
+            Fittings = new FittingsLogic(_config);
             Fleets = new FleetsLogic(_config);
             Incursions = new IncursionsLogic(_config);
             Industry = new IndustryLogic(_config);
@@ -82,6 +83,7 @@ namespace ESI.NET
         public DogmaLogic Dogma { get; set; }
         public FactionWarfareLogic FactionWarfare { get; set; }
         public FleetsLogic Fleets { get; set; }
+        public FittingsLogic Fittings { get; set; }
         public IncursionsLogic Incursions { get; set; }
         public IndustryLogic Industry { get; set; }
         public InsuranceLogic Insurance { get; set; }

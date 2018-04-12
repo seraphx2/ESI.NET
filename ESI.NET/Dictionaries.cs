@@ -21,6 +21,9 @@ namespace ESI.NET
             //Corporations
             {"PUT|/corporations/{corporation_id}/structures/{structure_id}/", "Structure vulnerability window updated"},
 
+            //Fittings
+            {"DELETE|/characters/{character_id}/fittings/{fitting_id}/", ""},
+
             //Fleets
             {"PUT|/fleets/{fleet_id}/", "Fleet updated"},
             {"POST|/fleets/{fleet_id}/members/", "Fleet invitation sent"},

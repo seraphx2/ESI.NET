@@ -25,14 +25,14 @@ namespace ESI.NET.Logic
         }
 
         /// <summary>
-        /// 
+        /// /characters/{character_id}/calendar/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<Event>>> Events()
             => await Execute<List<Event>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/calendar/");
 
         /// <summary>
-        /// 
+        /// /characters/{character_id}/calendar/{event_id}/
         /// </summary>
         /// <param name="contract_id"></param>
         /// <returns></returns>
@@ -40,7 +40,7 @@ namespace ESI.NET.Logic
             => await Execute<Event>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/calendar/{event_id}/");
 
         /// <summary>
-        /// 
+        /// /characters/{character_id}/calendar/{event_id}/
         /// </summary>
         /// <param name="event_id"></param>
         /// <param name="response"></param>
