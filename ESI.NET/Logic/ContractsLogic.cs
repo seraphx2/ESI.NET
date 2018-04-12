@@ -1,11 +1,12 @@
-﻿using ESI.NET.Models.Contracts;
+﻿using ESI.NET.Logic.Interfaces;
+using ESI.NET.Models.Contracts;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using static ESI.NET.ApiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class ContractsLogic
+    public class ContractsLogic : IContractsLogic
     {
         private ESIConfig _config;
         private int character_id, corporation_id;

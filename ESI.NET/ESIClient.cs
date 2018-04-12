@@ -40,6 +40,7 @@ namespace ESI.NET
             Alliance = new AllianceLogic(_config);
             Assets = new AssetsLogic(_config);
             Bookmarks = new BookmarksLogic(_config);
+            Calendar = new CalendarLogic(_config);
             Character = new CharacterLogic(_config);
             Clones = new ClonesLogic(_config);
             Contacts = new ContactsLogic(_config);
@@ -72,6 +73,7 @@ namespace ESI.NET
         public AllianceLogic Alliance { get; set; }
         public AssetsLogic Assets { get; set; }
         public BookmarksLogic Bookmarks { get; set; }
+        public CalendarLogic Calendar { get; set; }
         public CharacterLogic Character { get; set; }
         public ClonesLogic Clones { get; set; }
         public ContactsLogic Contacts { get; set; }

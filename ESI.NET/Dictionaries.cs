@@ -11,6 +11,9 @@ namespace ESI.NET
         /// </summary>
         public static Dictionary<string, string> NoContentMessages = new Dictionary<string, string>()
         {
+            //Calendar
+            {"PUT|/characters/{character_id}/calendar/{event_id}/", "Event updated"},
+
             //Contacts
             {"PUT|/characters/{character_id}/contacts/", "Contacts updated"},
             {"DELETE|/characters/{character_id}/contacts/", "Contacts deleted"},

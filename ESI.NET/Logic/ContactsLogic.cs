@@ -1,5 +1,5 @@
-﻿using ESI.NET.Models.Contacts;
-using ESI.NET.Models.Fleets;
+﻿using ESI.NET.Logic.Interfaces;
+using ESI.NET.Models.Contacts;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -7,7 +7,7 @@ using static ESI.NET.ApiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class ContactsLogic
+    public class ContactsLogic : IContactsLogic
     {
         private ESIConfig _config;
         private int character_id, corporation_id, alliance_id;

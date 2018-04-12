@@ -1,11 +1,12 @@
-﻿using ESI.NET.Models.Wallet;
+﻿using ESI.NET.Logic.Interfaces;
+using ESI.NET.Models.Wallet;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using static ESI.NET.ApiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class WalletLogic
+    public class WalletLogic : IWalletLogic
     {
         private ESIConfig _config;
         private int character_id, corporation_id;
