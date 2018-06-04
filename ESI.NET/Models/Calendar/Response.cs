@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using ESI.NET.Enumerations;
+using Newtonsoft.Json;
 
 namespace ESI.NET.Models.Calendar
 {
@@ -8,6 +9,6 @@ namespace ESI.NET.Models.Calendar
         public int CharacterId { get; set; }
 
         [JsonProperty("event_response")]
-        public string EventResponse { get; set; }
+        public EventResponse EventResponse { get; set; }
     }
 }

@@ -1,76 +1,67 @@
-﻿using ESI.NET.Enumerations;
-using ESI.NET.Logic;
+﻿using ESI.NET.Logic;
+using ESI.NET.Models.SSO;
+using Microsoft.Extensions.Options;
 using System;
+using System.Net.Http;
 
 namespace ESI.NET
 {
-    public class ESIClient
+    public class ESIClient : IESIClient
     {
-        private ESIConfig _config;
-
-        /// <summary>
-        /// If you are accessing an endpoint that requires Authorization, you must provide both an SSOToken and AuthorizedCharacter object
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="user_agent"></param>
-        /// <param name="token"></param>
-        /// <param name="auth_char"></param>
-        public ESIClient(DataSource source, string user_agent, string token = null, AuthorizedCharacter auth_char = null)
-            : this(new ESIConfig {
-                DataSource = source,
-                UserAgent = user_agent,
-                Token = token,
-                AuthorizedCharacter = auth_char
-            }) { }
-        public ESIClient() : this(new ESIConfig()) { }
+        HttpClient client;
+        ESIConfig config;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="config"></param>
-        public ESIClient(ESIConfig config)
+        public ESIClient(IOptions<ESIConfig> _config)
         {
-            _config = config;
+            config = _config.Value;
+            client = new HttpClient();
 
-            if (config.Token != null && config.AuthorizedCharacter != null)
-                _config.AuthorizedCharacter = config.AuthorizedCharacter;
-            else if (config.Token != null && config.AuthorizedCharacter == null)
-                throw new Exception("If providing a token, you must provide authorized character data.");
+            // Enforce user agent value
+            if (string.IsNullOrEmpty(config.UserAgent))
+                throw new Exception("For your protection, please provide an X-User-Agent value. This can be your character name and/or project name. CCP will be more likely to contact you rather than just cut off access to ESI if you provide something that can identify you within the New Eden galaxy.");
+            else
+                client.DefaultRequestHeaders.Add("X-User-Agent", config.UserAgent);
 
-            Alliance = new AllianceLogic(_config);
-            Assets = new AssetsLogic(_config);
-            Bookmarks = new BookmarksLogic(_config);
-            Calendar = new CalendarLogic(_config);
-            Character = new CharacterLogic(_config);
-            Clones = new ClonesLogic(_config);
-            Contacts = new ContactsLogic(_config);
-            Contracts = new ContractsLogic(_config);
-            Corporation = new CorporationLogic(_config);
-            Dogma = new DogmaLogic(_config);
-            FactionWarfare = new FactionWarfareLogic(_config);
-            Fittings = new FittingsLogic(_config);
-            Fleets = new FleetsLogic(_config);
-            Incursions = new IncursionsLogic(_config);
-            Industry = new IndustryLogic(_config);
-            Insurance = new InsuranceLogic(_config);
-            Killmails = new KillmailsLogic(_config);
-            Location = new LocationLogic(_config);
-            Loyalty = new LoyaltyLogic(_config);
-            Mail = new MailLogic(_config);
-            Market = new MarketLogic(_config);
-            Opportunities = new OpportunitiesLogic(_config);
-            PlanetaryInteraction = new PlanetaryInteractionLogic(_config);
-            Routes = new RoutesLogic(_config);
-            Search = new SearchLogic(_config);
-            Skills = new SkillsLogic(_config);
-            Sovereignty = new SovereigntyLogic(_config);
-            Status = new StatusLogic(_config);
-            Universe = new UniverseLogic(_config);
-            UserInterface = new UserInterfaceLogic(_config);
-            Wallet = new WalletLogic(_config);
-            Wars = new WarsLogic(_config);
+            SSO = new SSOLogic(client, config);
+            Alliance = new AllianceLogic(client, config);
+            Assets = new AssetsLogic(client, config);
+            Bookmarks = new BookmarksLogic(client, config);
+            Calendar = new CalendarLogic(client, config);
+            Character = new CharacterLogic(client, config);
+            Clones = new ClonesLogic(client, config);
+            Contacts = new ContactsLogic(client, config);
+            Contracts = new ContractsLogic(client, config);
+            Corporation = new CorporationLogic(client, config);
+            Dogma = new DogmaLogic(client, config);
+            FactionWarfare = new FactionWarfareLogic(client, config);
+            Fittings = new FittingsLogic(client, config);
+            Fleets = new FleetsLogic(client, config);
+            Incursions = new IncursionsLogic(client, config);
+            Industry = new IndustryLogic(client, config);
+            Insurance = new InsuranceLogic(client, config);
+            Killmails = new KillmailsLogic(client, config);
+            Location = new LocationLogic(client, config);
+            Loyalty = new LoyaltyLogic(client, config);
+            Mail = new MailLogic(client, config);
+            Market = new MarketLogic(client, config);
+            Opportunities = new OpportunitiesLogic(client, config);
+            PlanetaryInteraction = new PlanetaryInteractionLogic(client, config);
+            Routes = new RoutesLogic(client, config);
+            Search = new SearchLogic(client, config);
+            Skills = new SkillsLogic(client, config);
+            Sovereignty = new SovereigntyLogic(client, config);
+            Status = new StatusLogic(client, config);
+            Universe = new UniverseLogic(client, config);
+            UserInterface = new UserInterfaceLogic(client, config);
+            Wallet = new WalletLogic(client, config);
+            Wars = new WarsLogic(client, config);
         }
 
+        public SSOLogic SSO { get; set; }
         public AllianceLogic Alliance { get; set; }
         public AssetsLogic Assets { get; set; }
         public BookmarksLogic Bookmarks { get; set; }
@@ -105,10 +96,31 @@ namespace ESI.NET
         public WarsLogic Wars { get; set; }
 
 
-        public async void SetNewCharacter(string token)
+        public void SetCharacterData(AuthorizedCharacterData data)
         {
-            _config.Token = token;
-            _config.AuthorizedCharacter = await SSO.Verify(token, true);
+            Assets = new AssetsLogic(client, config, data);
+            Bookmarks = new BookmarksLogic(client, config, data);
+            Calendar = new CalendarLogic(client, config, data);
+            Character = new CharacterLogic(client, config, data);
+            Clones = new ClonesLogic(client, config, data);
+            Contacts = new ContactsLogic(client, config, data);
+            Contracts = new ContractsLogic(client, config, data);
+            Corporation = new CorporationLogic(client, config, data);
+            FactionWarfare = new FactionWarfareLogic(client, config, data);
+            Fittings = new FittingsLogic(client, config, data);
+            Fleets = new FleetsLogic(client, config, data);
+            Industry = new IndustryLogic(client, config, data);
+            Killmails = new KillmailsLogic(client, config, data);
+            Location = new LocationLogic(client, config, data);
+            Loyalty = new LoyaltyLogic(client, config, data);
+            Mail = new MailLogic(client, config, data);
+            Market = new MarketLogic(client, config, data);
+            Opportunities = new OpportunitiesLogic(client, config, data);
+            PlanetaryInteraction = new PlanetaryInteractionLogic(client, config, data);
+            Search = new SearchLogic(client, config, data);
+            Skills = new SkillsLogic(client, config, data);
+            Wallet = new WalletLogic(client, config, data);
+            Wars = new WarsLogic(client, config);
         }
     }
 }

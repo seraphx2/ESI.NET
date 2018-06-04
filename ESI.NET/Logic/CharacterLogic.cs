@@ -1,23 +1,28 @@
-﻿using ESI.NET.Logic.Interfaces;
-using ESI.NET.Models;
+﻿using ESI.NET.Models;
 using ESI.NET.Models.Character;
+using ESI.NET.Models.SSO;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.ApiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class CharacterLogic : ICharacterLogic
+    public class CharacterLogic
     {
+        private HttpClient _client;
         private ESIConfig _config;
+        private AuthorizedCharacterData _data;
         private int character_id;
 
-        public CharacterLogic(ESIConfig config)
+        public CharacterLogic(HttpClient client, ESIConfig config, AuthorizedCharacterData data = null)
         {
+            _client = client;
             _config = config;
+            _data = data;
 
-            if (_config.AuthorizedCharacter != null)
-                character_id = _config.AuthorizedCharacter.CharacterID;
+            if (data != null)
+                character_id = data.CharacterID;
         }
 
         /// <summary>
@@ -26,7 +31,7 @@ namespace ESI.NET.Logic
         /// <param name="characterIds">dynamic = long</param>
         /// <returns></returns>
         public async Task<ApiResponse<List<Affiliation>>> Affiliation(int[] character_ids)
-            => await Execute<List<Affiliation>>(_config, RequestSecurity.Public, RequestMethod.POST, "/characters/affiliation/", body: character_ids);
+            => await Execute<List<Affiliation>>(_client, _config, RequestSecurity.Public, RequestMethod.POST, "/characters/affiliation/", body: character_ids);
 
         /// <summary>
         /// /characters/names/
@@ -34,7 +39,7 @@ namespace ESI.NET.Logic
         /// <param name="characterIds"></param>
         /// <returns></returns>
         public async Task<ApiResponse<List<Character>>> Names(int[] character_ids)
-            => await Execute<List<Character>>(_config, RequestSecurity.Public, RequestMethod.GET, "/characters/names/", new string[]
+            => await Execute<List<Character>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/characters/names/", new string[]
             {
                 $"character_ids={string.Join(",", character_ids)}"
             });
@@ -45,14 +50,14 @@ namespace ESI.NET.Logic
         /// <param name="character_id"></param>
         /// <returns></returns>
         public async Task<ApiResponse<Information>> Information(int character_id)
-            => await Execute<Information>(_config, RequestSecurity.Public, RequestMethod.GET, $"/characters/{character_id}/");
+            => await Execute<Information>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/characters/{character_id}/");
 
         /// <summary>
         /// /characters/{character_id}/agents_research/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<Agent>>> AgentsResearch()
-            => await Execute<List<Agent>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/agents_research/");
+            => await Execute<List<Agent>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/agents_research/", token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/blueprints/
@@ -60,7 +65,7 @@ namespace ESI.NET.Logic
         /// <param name="page">Which page of results to return</param>
         /// <returns></returns>
         public async Task<ApiResponse<List<Blueprint>>> Blueprints(int page = 1)
-            => await Execute<List<Blueprint>>(_config, RequestSecurity.Public, RequestMethod.GET, $"/characters/{character_id}/blueprints/", new string[]
+            => await Execute<List<Blueprint>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/characters/{character_id}/blueprints/", new string[]
             {
                 $"page={page}"
             });
@@ -70,7 +75,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<ChatChannel>>> ChatChannels()
-            => await Execute<List<ChatChannel>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/chat_channels/");
+            => await Execute<List<ChatChannel>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/chat_channels/", token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/corporationhistory/
@@ -78,7 +83,7 @@ namespace ESI.NET.Logic
         /// <param name="character_id"></param>
         /// <returns></returns>
         public async Task<ApiResponse<List<Corporation>>> CorporationHistory(int character_id)
-            => await Execute<List<Corporation>>(_config, RequestSecurity.Public, RequestMethod.GET, $"/characters/{character_id}/corporationhistory/");
+            => await Execute<List<Corporation>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/characters/{character_id}/corporationhistory/");
 
         /// <summary>
         /// /characters/{character_id}/cspa/
@@ -86,35 +91,35 @@ namespace ESI.NET.Logic
         /// <param name="character_ids">The target characters to calculate the charge for</param>
         /// <returns></returns>
         public async Task<ApiResponse<CSPA>> CalculateCSPA(object character_ids)
-            => await Execute<CSPA>(_config, RequestSecurity.Authenticated, RequestMethod.POST, $"/characters/{character_id}/cspa/", body: character_ids);
+            => await Execute<CSPA>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, $"/characters/{character_id}/cspa/", body: character_ids, token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/fatigue/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<Fatigue>> Fatigue()
-            => await Execute<Fatigue>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/fatigue/");
+            => await Execute<Fatigue>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/fatigue/", token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/medals/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<Medal>>> Medals()
-            => await Execute<List<Medal>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/medals/");
+            => await Execute<List<Medal>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/medals/", token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/notifications/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<Notification>>> Notifications()
-            => await Execute<List<Notification>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/notifications/");
+            => await Execute<List<Notification>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/notifications/", token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/notifications/contacts/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<ContactNotification>>> ContactNotifications()
-            => await Execute<List<ContactNotification>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/notifications/contacts/");
+            => await Execute<List<ContactNotification>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/notifications/contacts/", token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/portrait/
@@ -122,34 +127,34 @@ namespace ESI.NET.Logic
         /// <param name="character_id"></param>
         /// <returns></returns>
         public async Task<ApiResponse<Images>> Portrait(int character_id)
-            => await Execute<Images>(_config, RequestSecurity.Public, RequestMethod.GET, $"/characters/{character_id}/portrait/");
+            => await Execute<Images>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/characters/{character_id}/portrait/");
 
         /// <summary>
         /// /characters/{character_id}/roles/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<string>>> Roles()
-            => await Execute<List<string>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/roles/");
+            => await Execute<List<string>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/roles/", token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/standings/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<Standing>>> Standings()
-            => await Execute<List<Standing>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/standings/");
+            => await Execute<List<Standing>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/standings/", token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/stats/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<Stats>>> Stats()
-            => await Execute<List<Stats>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/stats/");
+            => await Execute<List<Stats>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/stats/", token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/titles/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<Title>>> Titles()
-            => await Execute<List<Title>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/titles/");
+            => await Execute<List<Title>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/titles/", token: _data.Token);
     }
 }

@@ -1,20 +1,21 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace ESI.NET.Enumerations
 {
     [Flags]
     public enum SearchCategory
     {
-        agent = 1,
-        alliance = 2,
-        character = 4,
-        constellation = 8,
-        corporation = 16,
-        faction = 32,
-        inventorytype = 64,
-        region = 128,
-        solarsystem = 256,
-        station = 512,
-        wormhole = 1024
+        [EnumMember(Value="agent")]          /**/ Agent = 1,
+        [EnumMember(Value="alliance")]       /**/ Alliance = 2,
+        [EnumMember(Value="character")]      /**/ Character = 4,
+        [EnumMember(Value="constellation")]  /**/ Constellation = 8,
+        [EnumMember(Value="corporation")]    /**/ Corporation = 16,
+        [EnumMember(Value="faction")]        /**/ Faction = 32,
+        [EnumMember(Value="inventory_type")] /**/ InventoryType = 64,
+        [EnumMember(Value="region")]         /**/ Region = 128,
+        [EnumMember(Value="solar_system")]   /**/ SolarSystem = 256,
+        [EnumMember(Value="station")]        /**/ Station = 512,
+        [EnumMember(Value="wormhole")]       /**/ Wormhole = 1024
     }
 }

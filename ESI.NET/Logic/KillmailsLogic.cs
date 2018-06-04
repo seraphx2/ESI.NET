@@ -1,24 +1,29 @@
-﻿using ESI.NET.Logic.Interfaces;
-using ESI.NET.Models.Killmails;
+﻿using ESI.NET.Models.Killmails;
+using ESI.NET.Models.SSO;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.ApiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class KillmailsLogic : IKillmailsLogic
+    public class KillmailsLogic
     {
+        private HttpClient _client;
         private ESIConfig _config;
+        private AuthorizedCharacterData _data;
         private int character_id, corporation_id;
 
-        public KillmailsLogic(ESIConfig config)
+        public KillmailsLogic(HttpClient client, ESIConfig config, AuthorizedCharacterData data = null)
         {
+            _client = client;
             _config = config;
+            _data = data;
 
-            if (_config.AuthorizedCharacter != null)
+            if (data != null)
             {
-                character_id = _config.AuthorizedCharacter.CharacterID;
-                corporation_id = _config.AuthorizedCharacter.CorporationID;
+                character_id = data.CharacterID;
+                corporation_id = data.CorporationID;
             }
         }
 
@@ -35,7 +40,7 @@ namespace ESI.NET.Logic
             if (max_kill_id > 0)
                 parameters.Add($"max_kill_id={max_kill_id}");
 
-            var response = await Execute<List<Killmail>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/killmails/recent/", parameters.ToArray());
+            var response = await Execute<List<Killmail>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/killmails/recent/", parameters.ToArray(), token: _data.Token);
 
             return response;
         }
@@ -52,7 +57,7 @@ namespace ESI.NET.Logic
             if (max_kill_id > 0)
                 parameters.Add($"max_kill_id={max_kill_id}");
 
-            var response = await Execute<List<Killmail>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/killmails/recent/", parameters.ToArray());
+            var response = await Execute<List<Killmail>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/killmails/recent/", parameters.ToArray(), token: _data.Token);
 
             return response;
         }
@@ -64,6 +69,6 @@ namespace ESI.NET.Logic
         /// <param name="killmail_id">The killmail ID to be queried</param>
         /// <returns></returns>
         public async Task<ApiResponse<Information>> Information(string killmail_hash, int killmail_id)
-            => await Execute<Information>(_config, RequestSecurity.Public, RequestMethod.GET, $"/killmails/{killmail_id}/{killmail_hash}/");
+            => await Execute<Information>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/killmails/{killmail_id}/{killmail_hash}/");
     }
 }

@@ -1,22 +1,27 @@
 ﻿using ESI.NET.Enumerations;
-using ESI.NET.Logic.Interfaces;
 using ESI.NET.Models;
+using ESI.NET.Models.SSO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.ApiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class SearchLogic : ISearchLogic
+    public class SearchLogic
     {
+        private HttpClient _client;
         private ESIConfig _config;
+        private AuthorizedCharacterData _data;
         private int character_id;
 
-        public SearchLogic(ESIConfig config)
+        public SearchLogic(HttpClient client, ESIConfig config, AuthorizedCharacterData data = null)
         {
+            _client = client;
             _config = config;
+            _data = data;
 
-            if (_config.AuthorizedCharacter != null)
-                character_id = _config.AuthorizedCharacter.CharacterID;
+            if (data != null)
+                character_id = data.CharacterID;
         }
 
         /// <summary>
@@ -29,18 +34,18 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<ApiResponse<SearchResults>> Query(RequestSecurity security, string search, SearchCategory categories, bool isStrict = false, string language = "en-us")
         {
-            var categoryList = categories.ToString().Replace(" ", "");
+            var categoryList = categories.ToEsiValue();
 
             var endpoint = "/search/";
             if (security == RequestSecurity.Authenticated)
                 endpoint = $"/characters/{character_id}/search/";
 
-            var response = await Execute<SearchResults>(_config, security, RequestMethod.GET, endpoint, new string[] {
+            var response = await Execute<SearchResults>(_client, _config, security, RequestMethod.GET, endpoint, new string[] {
                 $"search={search}",
                 $"categories={categoryList}",
                 $"strict={isStrict}",
                 $"language={language}"
-            });
+            }, token: _data?.Token);
 
             return response;
         }

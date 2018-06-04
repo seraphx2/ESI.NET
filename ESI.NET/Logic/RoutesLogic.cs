@@ -1,17 +1,17 @@
 ﻿using ESI.NET.Enumerations;
-using ESI.NET.Logic.Interfaces;
-using ESI.NET.Models;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.ApiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class RoutesLogic : IRoutesLogic
+    public class RoutesLogic
     {
+        private HttpClient _client;
         private ESIConfig _config;
 
-        public RoutesLogic(ESIConfig config) { _config = config; }
+        public RoutesLogic(HttpClient client, ESIConfig config) { _client = client; _config = config; }
 
         /// <summary>
         /// /route/{origin}/{destination}/
@@ -25,11 +25,11 @@ namespace ESI.NET.Logic
         public async Task<ApiResponse<int[]>> Map(
             int origin, 
             int destination, 
-            RoutesFlag flag = RoutesFlag.shortest, 
+            RoutesFlag flag = RoutesFlag.Shortest, 
             int[] avoid = null, 
             int[] connections = null)
         {
-            var parameters = new List<string>() { $"flag={flag}" };
+            var parameters = new List<string>() { $"flag={flag.ToEsiValue()}" };
 
             if (avoid != null)
                 parameters.Add($"&avoid={string.Join(",", avoid)}");
@@ -37,7 +37,7 @@ namespace ESI.NET.Logic
             if (connections != null)
                 parameters.Add($"&connections={string.Join(",", connections)}");
 
-            var response = await Execute<int[]>(_config, RequestSecurity.Public, RequestMethod.GET, $"/route/{origin}/{destination}/", parameters.ToArray());
+            var response = await Execute<int[]>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/route/{origin}/{destination}/", parameters.ToArray());
 
             return response;
         }

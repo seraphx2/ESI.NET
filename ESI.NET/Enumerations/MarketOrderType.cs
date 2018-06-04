@@ -1,9 +1,13 @@
-﻿namespace ESI.NET.Enumerations
+﻿using Newtonsoft.Json;
+using System.Runtime.Serialization;
+
+namespace ESI.NET.Enumerations
 {
+    [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
     public enum MarketOrderType
     {
-        all,
-        buy,
-        sell
+        [EnumMember(Value="all")]  /**/ All,
+        [EnumMember(Value="buy")]  /**/ Buy,
+        [EnumMember(Value="sell")] /**/ Sell
     }
 }

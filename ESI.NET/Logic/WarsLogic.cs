@@ -1,15 +1,16 @@
-﻿using ESI.NET.Logic.Interfaces;
-using ESI.NET.Models.Wars;
+﻿using ESI.NET.Models.Wars;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.ApiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class WarsLogic : IWarsLogic
+    public class WarsLogic
     {
+        private HttpClient _client;
         private ESIConfig _config;
-        public WarsLogic(ESIConfig config) { _config = config; }
+        public WarsLogic(HttpClient client, ESIConfig config) { _client = client; _config = config; }
 
         /// <summary>
         /// /wars/
@@ -23,7 +24,7 @@ namespace ESI.NET.Logic
             if (max_war_id > 0)
                 parameters.Add($"max_war_id={max_war_id}");
 
-            var response = await Execute<List<int>>(_config, RequestSecurity.Public, RequestMethod.GET, "/wars/", parameters.ToArray());
+            var response = await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/wars/", parameters.ToArray());
 
             return response;
         }
@@ -34,7 +35,7 @@ namespace ESI.NET.Logic
         /// <param name="war_id"></param>
         /// <returns></returns>
         public async Task<ApiResponse<Information>> Information(int war_id)
-            => await Execute<Information>(_config, RequestSecurity.Public, RequestMethod.GET, $"/wars/{war_id}/");
+            => await Execute<Information>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/wars/{war_id}/");
 
         /// <summary>
         /// /wars/{warId}/killmails/
@@ -43,7 +44,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<ApiResponse<List<Models.Killmails.Killmail>>> Kills(int war_id, int page = 1)
-            => await Execute<List<Models.Killmails.Killmail>>(_config, RequestSecurity.Public, RequestMethod.GET, $"/wars/{war_id}/killmails/", new string[]
+            => await Execute<List<Models.Killmails.Killmail>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/wars/{war_id}/killmails/", new string[]
             {
                 $"page={page}"
             });

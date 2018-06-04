@@ -1,8 +1,11 @@
-﻿namespace ESI.NET.Enumerations
+﻿using Newtonsoft.Json;
+using System.Runtime.Serialization;
+
+namespace ESI.NET.Enumerations
 {
     public enum DataSource
     {
-        tranquility,
-        singularity
+        [EnumMember(Value="tranquility")] /**/ Tranquility,
+        [EnumMember(Value="singularity")] /**/ Singularity
     }
 }

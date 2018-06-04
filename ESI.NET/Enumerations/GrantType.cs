@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Newtonsoft.Json;
+using System.Runtime.Serialization;
 
 namespace ESI.NET.Enumerations
 {
     public enum GrantType
     {
-        authorization_code,
-        refresh_token
+        [EnumMember(Value="authorization_code")] /**/ AuthorizationCode,
+        [EnumMember(Value="refresh_token")]      /**/ RefreshToken
     }
 }
