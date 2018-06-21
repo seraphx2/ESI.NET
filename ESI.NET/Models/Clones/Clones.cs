@@ -17,7 +17,7 @@ namespace ESI.NET.Models.Clones
         public DateTime LastStationChangeDate { get; set; }
 
         [JsonProperty("jump_clones")]
-        public List<JumpClone> JumpClones { get; set; }
+        public List<JumpClone> JumpClones { get; set; } = new List<JumpClone>();
     }
 
     public class HomeLocation

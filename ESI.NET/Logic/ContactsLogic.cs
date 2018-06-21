@@ -141,7 +141,21 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/contacts/labels/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Label>>> Labels()
+        public async Task<ApiResponse<List<Label>>> LabelsForCharacter()
             => await Execute<List<Label>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/contacts/labels/", token: _data.Token);
+
+        /// <summary>
+        /// /corporations/{corporation_id}/contacts/labels/
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ApiResponse<List<Label>>> LabelsForCorporation()
+            => await Execute<List<Label>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/contacts/labels/", token: _data.Token);
+
+        /// <summary>
+        /// /alliances/{alliance_id}/contacts/labels/
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ApiResponse<List<Label>>> LabelsForAlliance()
+            => await Execute<List<Label>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/alliances/{alliance_id}/contacts/labels/", token: _data.Token);
     }
 }

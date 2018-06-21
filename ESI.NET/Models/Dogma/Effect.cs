@@ -66,7 +66,13 @@ namespace ESI.NET.Models.Dogma
         public int FalloffAttributeId { get; set; }
 
         [JsonProperty("modifiers")]
-        public List<Modifier> Modifiers { get; set; }
+        public List<Modifier> Modifiers { get; set; } = new List<Modifier>();
+
+        /// <summary>
+        /// Only populated when used in DynamicItem; all other properties except EffectId will be empty
+        /// </summary>
+        [JsonProperty("is_default")]
+        public bool IsDefault { get; set; }
     }
 
     public class Modifier

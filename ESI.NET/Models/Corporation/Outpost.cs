@@ -35,7 +35,7 @@ namespace ESI.NET.Models.Corporation
         public Position Coordinates { get; set; }
 
         [JsonProperty("services")]
-        public List<OutpostService> Services { get; set; }
+        public List<OutpostService> Services { get; set; } = new List<OutpostService>();
     }
 
     public class OutpostService

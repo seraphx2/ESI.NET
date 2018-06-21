@@ -15,7 +15,7 @@ namespace ESI.NET.Models.Mail
         public string Timestamp { get; set; }
 
         [JsonProperty("recipients")]
-        public List<Recipient> Recipients { get; set; }
+        public List<Recipient> Recipients { get; set; } = new List<Recipient>();
 
         [JsonProperty("body")]
         public string Body { get; set; }

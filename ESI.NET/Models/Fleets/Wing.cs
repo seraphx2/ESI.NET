@@ -14,7 +14,7 @@ namespace ESI.NET.Models.Fleets
         public long Id { get; set; }
 
         [JsonProperty("squads")]
-        public List<Squad> Squads { get; set; }
+        public List<Squad> Squads { get; set; } = new List<Squad>();
     }
 
     public class Squad

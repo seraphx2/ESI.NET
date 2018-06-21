@@ -29,7 +29,7 @@ namespace ESI.NET.Models.Universe
         public int ConstellationId { get; set; }
 
         [JsonProperty("planets")]
-        public List<Planet> Planets { get; set; }
+        public List<Planet> Planets { get; set; } = new List<Planet>();
 
         [JsonProperty("stargates")]
         public int[] Stargates { get; set; }

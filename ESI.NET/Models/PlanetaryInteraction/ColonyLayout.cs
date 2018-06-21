@@ -7,13 +7,13 @@ namespace ESI.NET.Models.PlanetaryInteraction
     public class ColonyLayout
     {
         [JsonProperty("links")]
-        public List<Link> Links { get; set; }
+        public List<Link> Links { get; set; } = new List<Link>();
 
         [JsonProperty("pins")]
-        public List<Pin> Pins { get; set; }
+        public List<Pin> Pins { get; set; } = new List<Pin>();
 
         [JsonProperty("routes")]
-        public List<Route> Routes { get; set; }
+        public List<Route> Routes { get; set; } = new List<Route>();
     }
 
     #region Level 1 nested classes
@@ -32,7 +32,7 @@ namespace ESI.NET.Models.PlanetaryInteraction
     public class Pin
     {
         [JsonProperty("contents")]
-        public List<Content> Contents { get; set; }
+        public List<Content> Contents { get; set; } = new List<Content>();
 
         [JsonProperty("expiry_time")]
         public DateTime ExpirationTime { get; set; }
@@ -106,7 +106,7 @@ namespace ESI.NET.Models.PlanetaryInteraction
         public decimal HeadRadius { get; set; }
 
         [JsonProperty("heads")]
-        public List<Head> Heads { get; set; }
+        public List<Head> Heads { get; set; } = new List<Head>();
 
         [JsonProperty("product_type_id")]
         public long ProductTypeId { get; set; }

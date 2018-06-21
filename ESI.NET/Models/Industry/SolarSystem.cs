@@ -9,7 +9,7 @@ namespace ESI.NET.Models.Industry
         public int SolarSystemId { get; set; }
 
         [JsonProperty("cost_indices")]
-        public List<CostIndice> CostIndices { get; set; }
+        public List<CostIndice> CostIndices { get; set; } = new List<CostIndice>();
     }
 
     public class CostIndice
