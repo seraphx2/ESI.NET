@@ -33,5 +33,11 @@ namespace ESI.NET.Models.Dogma
 
         [JsonProperty("high_is_good")]
         public bool HighIsGood { get; set; }
+
+        /// <summary>
+        /// Only populated when used in DynamicItem; all other properties except AttributeId will be empty
+        /// </summary>
+        [JsonProperty("value")]
+        public decimal Value { get; set; }
     }
 }

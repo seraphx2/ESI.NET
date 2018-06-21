@@ -21,7 +21,7 @@ namespace ESI.NET.Models.Mail
         public long[] Labels { get; set; }
 
         [JsonProperty("recipients")]
-        public List<Recipient> Recipients { get; set; }
+        public List<Recipient> Recipients { get; set; } = new List<Recipient>();
 
         [JsonProperty("is_read")]
         public bool IsRead { get; set; }

@@ -48,10 +48,10 @@ namespace ESI.NET.Models.Universe
         public int GraphicId { get; set; }
 
         [JsonProperty("dogma_attributes")]
-        public List<Attribute> DogmaAttributes { get; set; }
+        public List<Attribute> DogmaAttributes { get; set; } = new List<Attribute>();
 
         [JsonProperty("dogma_effects")]
-        public List<Effect> DogmaEffects { get; set; }
+        public List<Effect> DogmaEffects { get; set; } = new List<Effect>();
     }
 
     public class Attribute

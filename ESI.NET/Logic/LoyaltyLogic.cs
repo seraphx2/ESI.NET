@@ -1,22 +1,27 @@
-﻿using ESI.NET.Logic.Interfaces;
-using ESI.NET.Models.Loyalty;
+﻿using ESI.NET.Models.Loyalty;
+using ESI.NET.Models.SSO;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.ApiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class LoyaltyLogic : ILoyaltyLogic
+    public class LoyaltyLogic
     {
+        private HttpClient _client;
         private ESIConfig _config;
+        private AuthorizedCharacterData _data;
         private int character_id;
 
-        public LoyaltyLogic(ESIConfig config)
+        public LoyaltyLogic(HttpClient client, ESIConfig config, AuthorizedCharacterData data = null)
         {
+            _client = client;
             _config = config;
+            _data = data;
 
-            if (_config.AuthorizedCharacter != null)
-                character_id = _config.AuthorizedCharacter.CharacterID;
+            if (data != null)
+                character_id = data.CharacterID;
         }
 
         /// <summary>
@@ -24,13 +29,13 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<Offer>>> Offers(int corporation_id)
-            => await Execute<List<Offer>>(_config, RequestSecurity.Public, RequestMethod.GET, $"/loyalty/stores/{corporation_id}/offers/");
+            => await Execute<List<Offer>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/loyalty/stores/{corporation_id}/offers/");
 
         /// <summary>
         /// /characters/{character_id}/loyalty/points/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<Points>>> Points()
-            => await Execute<List<Points>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/loyalty/points/");
+            => await Execute<List<Points>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/loyalty/points/", token: _data.Token);
     }
 }

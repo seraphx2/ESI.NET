@@ -1,23 +1,28 @@
-﻿using ESI.NET.Logic.Interfaces;
-using ESI.NET.Models;
+﻿using ESI.NET.Models;
 using ESI.NET.Models.Corporation;
+using ESI.NET.Models.SSO;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.ApiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class CorporationLogic : ICorporationLogic
+    public class CorporationLogic
     {
+        private HttpClient _client;
         private ESIConfig _config;
+        private AuthorizedCharacterData _data;
         private int corporation_id;
 
-        public CorporationLogic(ESIConfig config)
+        public CorporationLogic(HttpClient client, ESIConfig config, AuthorizedCharacterData data = null)
         {
+            _client = client;
             _config = config;
+            _data = data;
 
-            if (_config.AuthorizedCharacter != null)
-                corporation_id = _config.AuthorizedCharacter.CorporationID;
+            if (data != null)
+                corporation_id = data.CorporationID;
         }
 
         /// <summary>
@@ -26,7 +31,7 @@ namespace ESI.NET.Logic
         /// <param name="corporation_id"></param>
         /// <returns></returns>
         public async Task<ApiResponse<Information>> Information(int corporation_id)
-            => await Execute<Information>(_config, RequestSecurity.Public, RequestMethod.GET, $"/corporations/{corporation_id}/");
+            => await Execute<Information>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/corporations/{corporation_id}/");
 
         /// <summary>
         /// /corporations/{corporation_id}/alliancehistory/
@@ -34,7 +39,7 @@ namespace ESI.NET.Logic
         /// <param name="corporation_id"></param>
         /// <returns></returns>
         public async Task<ApiResponse<List<AllianceHistory>>> AllianceHistory(int corporation_id)
-            => await Execute<List<AllianceHistory>>(_config, RequestSecurity.Public, RequestMethod.GET, $"/corporations/{corporation_id}/alliancehistory/");
+            => await Execute<List<AllianceHistory>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/corporations/{corporation_id}/alliancehistory/");
 
         /// <summary>
         /// /corporations/names/
@@ -42,7 +47,7 @@ namespace ESI.NET.Logic
         /// <param name="corporation_ids"></param>
         /// <returns></returns>
         public async Task<ApiResponse<List<Corporation>>> Names(int[] corporation_ids)
-            => await Execute<List<Corporation>>(_config, RequestSecurity.Public, RequestMethod.GET, "/corporations/names/", new string[]
+            => await Execute<List<Corporation>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/corporations/names/", new string[]
             {
                 $"corporation_ids={string.Join(",", corporation_ids)}"
             });
@@ -52,21 +57,21 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<Member>>> Members()
-            => await Execute<List<Member>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/members/");
+            => await Execute<List<Member>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/members/", token: _data.Token);
 
         /// <summary>
         /// /corporations/{corporation_id}/roles/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<CharacterRoles>>> Roles()
-            => await Execute<List<CharacterRoles>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/roles/");
+            => await Execute<List<CharacterRoles>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/roles/", token: _data.Token);
 
         /// <summary>
         /// /corporations/{corporation_id}/roles/history/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<CharacterRolesHistory>>> RolesHistory()
-            => await Execute<List<CharacterRolesHistory>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/roles/history/");
+            => await Execute<List<CharacterRolesHistory>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/roles/history/", token: _data.Token);
 
         /// <summary>
         /// /corporations/{corporation_id}/icons/
@@ -74,24 +79,24 @@ namespace ESI.NET.Logic
         /// <param name="corporationId"></param>
         /// <returns></returns>
         public async Task<ApiResponse<Images>> Icons(int corporation_id)
-            => await Execute<Images>(_config, RequestSecurity.Public, RequestMethod.GET, $"/corporations/{corporation_id}/icons/");
+            => await Execute<Images>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/corporations/{corporation_id}/icons/");
 
         /// <summary>
         /// /corporations/npccorps/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<int>>> NpcCorps()
-            => await Execute<List<int>>(_config, RequestSecurity.Public, RequestMethod.GET, "/corporations/npccorps/");
+            => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/corporations/npccorps/");
 
         /// <summary>
         /// /corporations/{corporation_id}/structures/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<Structure>>> Structures(int page = 1)
-            => await Execute<List<Structure>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/structures/", new string[]
+            => await Execute<List<Structure>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/structures/", new string[]
             {
                 $"page={page}"
-            });
+            }, token: _data.Token);
 
         /// <summary>
         /// /corporations/{corporation_id}/structures/{structure_id}/
@@ -99,42 +104,42 @@ namespace ESI.NET.Logic
         /// <param name="structure_id"></param>
         /// <returns></returns>
         public async Task<ApiResponse<string>> UpdateStructureVulnerability(long structure_id, object new_schedule)
-            => await Execute<string>(_config, RequestSecurity.Authenticated, RequestMethod.PUT, $"/corporations/{corporation_id}/structures/{structure_id}/", body: new_schedule);
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.PUT, $"/corporations/{corporation_id}/structures/{structure_id}/", body: new_schedule, token: _data.Token);
 
         /// <summary>
         /// /corporations/{corporation_id}/membertracking/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<MemberInfo>>> MemberTracking()
-            => await Execute<List<MemberInfo>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/membertracking/");
+            => await Execute<List<MemberInfo>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/membertracking/", token: _data.Token);
 
         /// <summary>
         /// /corporations/{corporation_id}/divisions/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<Divisions>> Divisions()
-            => await Execute<Divisions>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/divisions/");
+            => await Execute<Divisions>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/divisions/", token: _data.Token);
 
         /// <summary>
         /// /corporations/{corporation_id}/members/limit/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<int>> MemberLimit()
-            => await Execute<int>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/members/limit/");
+            => await Execute<int>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/members/limit/", token: _data.Token);
 
         /// <summary>
         /// /corporations/{corporation_id}/titles/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<Title>>> Titles()
-            => await Execute<List<Title>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/titles/");
+            => await Execute<List<Title>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/titles/", token: _data.Token);
 
         /// <summary>
         /// /corporations/{corporation_id}/members/titles/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<MemberTitles>>> MemberTitles()
-            => await Execute<List<MemberTitles>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/members/titles/");
+            => await Execute<List<MemberTitles>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/members/titles/", token: _data.Token);
 
         /// <summary>
         /// /corporations/{corporation_id}/blueprints/
@@ -142,10 +147,10 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<ApiResponse<List<Blueprint>>> Blueprints(int page = 1)
-            => await Execute<List<Blueprint>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/blueprints/", new string[]
+            => await Execute<List<Blueprint>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/blueprints/", new string[]
             {
                 $"page={page}"
-            });
+            }, token: _data.Token);
 
         /// <summary>
         /// /corporations/{corporation_id}/standings/
@@ -153,10 +158,10 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<ApiResponse<Standing>> Standings(int page = 1)
-            => await Execute<Standing>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/standings/", new string[]
+            => await Execute<Standing>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/standings/", new string[]
             {
                 $"page={page}"
-            });
+            }, token: _data.Token);
 
         /// <summary>
         /// /corporations/{corporation_id}/starbases/
@@ -164,10 +169,10 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<ApiResponse<List<Starbase>>> Starbases(int page = 1)
-            => await Execute<List<Starbase>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/starbases/", new string[]
+            => await Execute<List<Starbase>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/starbases/", new string[]
             {
                 $"page={page}"
-            });
+            }, token: _data.Token);
 
         /// <summary>
         /// /corporations/{corporation_id}/starbases/{starbase_id}/
@@ -176,10 +181,10 @@ namespace ESI.NET.Logic
         /// <param name="system_id"></param>
         /// <returns></returns>
         public async Task<ApiResponse<StarbaseInfo>> Starbase(int starbase_id, int system_id)
-            => await Execute<StarbaseInfo>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/starbases/{starbase_id}/", new string[]
+            => await Execute<StarbaseInfo>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/starbases/{starbase_id}/", new string[]
             {
                 $"system_id={system_id}"
-            });
+            }, token: _data.Token);
 
         /// <summary>
         /// /corporations/{corporation_id}/containers/logs/
@@ -187,17 +192,17 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<ApiResponse<List<ContainerLog>>> ContainerLogs(int page = 1)
-            => await Execute<List<ContainerLog>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/containers/logs/", new string[]
+            => await Execute<List<ContainerLog>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/containers/logs/", new string[]
             {
                 $"page={page}"
-            });
+            }, token: _data.Token);
 
         /// <summary>
         /// /corporations/{corporation_id}/facilities/
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<Facility>>> Facilities()
-            => await Execute<List<Facility>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/facilities/");
+            => await Execute<List<Facility>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/facilities/", token: _data.Token);
 
         /// <summary>
         /// /corporations/{corporation_id}/medals/
@@ -205,10 +210,10 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<ApiResponse<List<Medal>>> Medals(int page = 1)
-            => await Execute<List<Medal>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/medals/", new string[]
+            => await Execute<List<Medal>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/medals/", new string[]
             {
                 $"page={page}"
-            });
+            }, token: _data.Token);
 
         /// <summary>
         /// /corporations/{corporation_id}/medals/issued/
@@ -216,10 +221,10 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<ApiResponse<List<IssuedMedal>>> MedalsIssued(int page = 1)
-            => await Execute<List<IssuedMedal>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/medals/issued/", new string[]
+            => await Execute<List<IssuedMedal>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/medals/issued/", new string[]
             {
                 $"page={page}"
-            });
+            }, token: _data.Token);
 
         /// <summary>
         /// /corporations/{corporation_id}/outposts/
@@ -227,10 +232,10 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<ApiResponse<int[]>> Outposts(int page = 1)
-            => await Execute<int[]>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/outposts/", new string[]
+            => await Execute<int[]>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/outposts/", new string[]
             {
                 $"page={page}"
-            });
+            }, token: _data.Token);
 
         /// <summary>
         /// /corporations/{corporation_id}/outposts/{outpost_id}/
@@ -238,7 +243,7 @@ namespace ESI.NET.Logic
         /// <param name="outpost_id"></param>
         /// <returns></returns>
         public async Task<ApiResponse<Outpost>> Outpost(int outpost_id)
-            => await Execute<Outpost>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/outposts/{outpost_id}/");
+            => await Execute<Outpost>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/outposts/{outpost_id}/", token: _data.Token);
 
         /// <summary>
         /// /corporations/{corporation_id}/shareholders/
@@ -246,9 +251,9 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<ApiResponse<List<Shareholder>>> Shareholders(int page = 1)
-            => await Execute<List<Shareholder>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/shareholders/", new string[]
+            => await Execute<List<Shareholder>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/shareholders/", new string[]
             {
                 $"page={page}"
-            });
+            }, token: _data.Token);
     }
 }

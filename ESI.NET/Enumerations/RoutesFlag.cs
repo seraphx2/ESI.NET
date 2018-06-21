@@ -1,9 +1,13 @@
-﻿namespace ESI.NET.Enumerations
+﻿using Newtonsoft.Json;
+using System.Runtime.Serialization;
+
+namespace ESI.NET.Enumerations
 {
+    [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
     public enum RoutesFlag
     {
-        shortest,
-        secure,
-        insecure
+        [EnumMember(Value="shortest")] /**/ Shortest,
+        [EnumMember(Value="secure")]   /**/ Secure,
+        [EnumMember(Value="insecure")] /**/ Insecure
     }
 }

@@ -23,16 +23,16 @@ namespace ESI.NET.Models.Corporation
         public int ProfileId { get; set; }
 
         [JsonProperty("current_vul")]
-        public List<Vulnerability> CurrentVul { get; set; }
+        public List<Vulnerability> CurrentVul { get; set; } = new List<Vulnerability>();
 
         [JsonProperty("next_vul")]
-        public List<Vulnerability> NextVul { get; set; }
+        public List<Vulnerability> NextVul { get; set; } = new List<Vulnerability>();
 
         [JsonProperty("fuel_expires")]
         public string FuelExpires { get; set; }
 
         [JsonProperty("services")]
-        public List<Service> Services { get; set; }
+        public List<Service> Services { get; set; } = new List<Service>();
 
         [JsonProperty("state_timer_start")]
         public DateTime StateTimerStart { get; set; }

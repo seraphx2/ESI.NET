@@ -1,26 +1,32 @@
-﻿using ESI.NET.Logic.Interfaces;
-using ESI.NET.Models.Contacts;
+﻿using ESI.NET.Models.Contacts;
+using ESI.NET.Models.SSO;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.ApiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class ContactsLogic : IContactsLogic
+    public class ContactsLogic
     {
+        private HttpClient _client;
         private ESIConfig _config;
+        AuthorizedCharacterData _data;
+
         private int character_id, corporation_id, alliance_id;
 
-        public ContactsLogic(ESIConfig config)
+        public ContactsLogic(HttpClient client, ESIConfig config, AuthorizedCharacterData data = null)
         {
+            _client = client;
             _config = config;
+            _data = data;
 
-            if (_config.AuthorizedCharacter != null)
+            if (_data != null)
             {
-                character_id = _config.AuthorizedCharacter.CharacterID;
-                corporation_id = _config.AuthorizedCharacter.CorporationID;
-                alliance_id = _config.AuthorizedCharacter.CorporationID;
+                character_id = _data.CharacterID;
+                corporation_id = _data.CorporationID;
+                alliance_id = _data.CorporationID;
             }
         }
 
@@ -29,11 +35,11 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Contact>>> List(int page = 1)
-            => await Execute<List<Contact>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/contacts/", new string[]
+        public async Task<ApiResponse<List<Contact>>> ListForCharacter(int page = 1)
+            => await Execute<List<Contact>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/contacts/", new string[]
             {
                 $"page={page}"
-            });
+            }, token: _data.Token);
 
         /// <summary>
         /// /corporations/{corporation_id}/contacts/
@@ -41,10 +47,10 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<ApiResponse<List<Contact>>> ListForCorporation(int page = 1)
-            => await Execute<List<Contact>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/contacts/", new string[]
+            => await Execute<List<Contact>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/contacts/", new string[]
             {
                 $"page={page}"
-            });
+            }, token: _data.Token);
 
         /// <summary>
         /// /alliances/{alliance_id}/contacts/
@@ -52,10 +58,10 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<ApiResponse<List<Contact>>> ListForAlliance(int page = 1)
-            => await Execute<List<Contact>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/alliances/{alliance_id}/contacts/", new string[]
+            => await Execute<List<Contact>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/alliances/{alliance_id}/contacts/", new string[]
             {
                 $"page={page}"
-            });
+            }, token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/contacts/
@@ -77,7 +83,7 @@ namespace ESI.NET.Logic
             if (watched != null)
                 parameters.Add($"watched={watched}");
 
-            var response = await Execute<int[]>(_config, RequestSecurity.Authenticated, RequestMethod.POST, $"/characters/{character_id}/contacts/", body: body, parameters: parameters.ToArray());
+            var response = await Execute<int[]>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, $"/characters/{character_id}/contacts/", body: body, parameters: parameters.ToArray(), token: _data.Token);
 
             if (response.StatusCode == HttpStatusCode.NoContent)
                 response.Message = Dictionaries.NoContentMessages["POST|/characters/{character_id}/contacts/"];
@@ -105,7 +111,7 @@ namespace ESI.NET.Logic
             if (watched != null)
                 parameters.Add($"watched={watched}");
 
-            var response = await Execute<string>(_config, RequestSecurity.Authenticated, RequestMethod.PUT, $"/characters/{character_id}/contacts/", body: body, parameters: parameters.ToArray());
+            var response = await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.PUT, $"/characters/{character_id}/contacts/", body: body, parameters: parameters.ToArray(), token: _data.Token);
 
             if (response.StatusCode == HttpStatusCode.NoContent)
                 response.Message = Dictionaries.NoContentMessages["PUT|/characters/{character_id}/contacts/"];
@@ -120,10 +126,10 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<ApiResponse<string>> Delete(int[] contact_ids)
         {
-            var response = await Execute<string>(_config, RequestSecurity.Authenticated, RequestMethod.DELETE, $"/characters/{character_id}/contacts/", new string[]
+            var response = await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.DELETE, $"/characters/{character_id}/contacts/", new string[]
             {
                 $"contact_ids={string.Join(",", contact_ids)}"
-            });
+            }, token: _data.Token);
 
             if (response.StatusCode == HttpStatusCode.NoContent)
                 response.Message = Dictionaries.NoContentMessages["DELETE|/characters/{character_id}/contacts/"];
@@ -135,7 +141,21 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/contacts/labels/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Label>>> Labels()
-            => await Execute<List<Label>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/contacts/labels/");
+        public async Task<ApiResponse<List<Label>>> LabelsForCharacter()
+            => await Execute<List<Label>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/contacts/labels/", token: _data.Token);
+
+        /// <summary>
+        /// /corporations/{corporation_id}/contacts/labels/
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ApiResponse<List<Label>>> LabelsForCorporation()
+            => await Execute<List<Label>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/contacts/labels/", token: _data.Token);
+
+        /// <summary>
+        /// /alliances/{alliance_id}/contacts/labels/
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ApiResponse<List<Label>>> LabelsForAlliance()
+            => await Execute<List<Label>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/alliances/{alliance_id}/contacts/labels/", token: _data.Token);
     }
 }

@@ -7,7 +7,7 @@ namespace ESI.NET.Models.Killmails
     public class Information
     {
         [JsonProperty("attackers")]
-        public List<Attacker> Attackers { get; set; }
+        public List<Attacker> Attackers { get; set; } = new List<Attacker>();
 
         [JsonProperty("killmail_id")]
         public long KillmailId { get; set; }
@@ -79,7 +79,7 @@ namespace ESI.NET.Models.Killmails
         public int ShipTypeId { get; set; }
 
         [JsonProperty("items")]
-        public List<Item> Items { get; set; }
+        public List<Item> Items { get; set; } = new List<Item>();
 
         [JsonProperty("position")]
         public Position Position { get; set; }

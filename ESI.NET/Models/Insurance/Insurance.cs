@@ -9,7 +9,7 @@ namespace ESI.NET.Models.Insurance
         public int TypeID { get; set; }
 
         [JsonProperty("levels")]
-        public List<Levels> Levels { get; set; }
+        public List<Levels> Levels { get; set; } = new List<Levels>();
     }
 
     public class Levels

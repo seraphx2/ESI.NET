@@ -24,7 +24,7 @@ namespace ESI.NET.Models.Loyalty
         public int AkCost { get; set; }
 
         [JsonProperty("required_items")]
-        public List<Item> RequiredItems { get; set; }
+        public List<Item> RequiredItems { get; set; } = new List<Item>();
     }
 
     public class Item

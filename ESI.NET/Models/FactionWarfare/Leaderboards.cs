@@ -15,13 +15,13 @@ namespace ESI.NET.Models.FactionWarfare
     public class Summary<T>
     {
         [JsonProperty("yesterday")]
-        public List<T> Yesterday { get; set; }
+        public List<T> Yesterday { get; set; } = new List<T>();
 
         [JsonProperty("last_week")]
-        public List<T> LastWeek { get; set; }
+        public List<T> LastWeek { get; set; } = new List<T>();
 
         [JsonProperty("active_total")]
-        public List<T> ActiveTotal { get; set; }
+        public List<T> ActiveTotal { get; set; } = new List<T>();
     }
 
     public class FactionTotal

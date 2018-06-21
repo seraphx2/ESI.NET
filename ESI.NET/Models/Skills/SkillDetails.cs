@@ -6,7 +6,7 @@ namespace ESI.NET.Models.Skills
     public class SkillDetails
     {
         [JsonProperty("skills")]
-        public List<Skill> Skills { get; set; }
+        public List<Skill> Skills { get; set; } = new List<Skill>();
 
         [JsonProperty("total_sp")]
         public long TotalSp { get; set; }

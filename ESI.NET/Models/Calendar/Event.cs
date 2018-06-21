@@ -35,9 +35,6 @@ namespace ESI.NET.Models.Calendar
         [JsonProperty("owner_type")]
         public string OwnerType { get; set; }
 
-
-
-
         [JsonProperty("event_response")]
         private string EventResponse
         {

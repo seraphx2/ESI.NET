@@ -1,26 +1,30 @@
-﻿using ESI.NET.Logic.Interfaces;
+﻿using ESI.NET.Models.SSO;
 using ESI.NET.Models.Wallet;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.ApiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class WalletLogic : IWalletLogic
+    public class WalletLogic
     {
+        private HttpClient _client;
         private ESIConfig _config;
+        private AuthorizedCharacterData _data;
         private int character_id, corporation_id;
 
-        public WalletLogic(ESIConfig config)
+        public WalletLogic(HttpClient client, ESIConfig config, AuthorizedCharacterData data = null)
         {
+            _client = client;
             _config = config;
+            _data = data;
 
-            if (_config.AuthorizedCharacter != null)
+            if (data != null)
             {
-                character_id = _config.AuthorizedCharacter.CharacterID;
-                corporation_id = config.AuthorizedCharacter.CorporationID;
+                character_id = data.CharacterID;
+                corporation_id = data.CorporationID;
             }
-                
         }
 
         /// <summary>
@@ -28,7 +32,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<decimal>> CharacterWallet()
-            => await Execute<decimal>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/wallet/");
+            => await Execute<decimal>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/wallet/", token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/wallet/journal/
@@ -41,7 +45,7 @@ namespace ESI.NET.Logic
             if (from_id != null)
                 parameters.Add($"from_id={from_id}");
 
-            return await Execute<List<JournalEntry>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/wallet/journal/", parameters.ToArray());
+            return await Execute<List<JournalEntry>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/wallet/journal/", parameters.ToArray(), token: _data.Token);
         }
             
 
@@ -56,7 +60,7 @@ namespace ESI.NET.Logic
             if (from_id != null)
                 parameters.Add($"from_id={from_id}");
 
-            return await Execute<List<Transaction>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/wallet/transactions/", parameters.ToArray());
+            return await Execute<List<Transaction>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/wallet/transactions/", parameters.ToArray(), token: _data.Token);
         }
 
         /// <summary>
@@ -64,7 +68,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResponse<List<Wallet>>> CorporationWallets()
-            => await Execute<List<Wallet>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/wallets/");
+            => await Execute<List<Wallet>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/wallets/", token: _data.Token);
 
         /// <summary>
         /// /corporations/{corporation_id}/wallets/{division}/journal/
@@ -78,7 +82,7 @@ namespace ESI.NET.Logic
             if (from_id != null)
                 parameters.Add($"from_id={from_id}");
 
-            return await Execute<List<JournalEntry>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/wallets/{division}/journal/", parameters.ToArray());
+            return await Execute<List<JournalEntry>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/wallets/{division}/journal/", parameters.ToArray(), token: _data.Token);
         }
 
         /// <summary>
@@ -93,7 +97,7 @@ namespace ESI.NET.Logic
             if (from_id != null)
                 parameters.Add($"from_id={from_id}");
 
-            return await Execute<List<Transaction>>(_config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/wallets/{division}/transactions/", parameters.ToArray());
+            return await Execute<List<Transaction>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/wallets/{division}/transactions/", parameters.ToArray(), token: _data.Token);
         }
     }
 }

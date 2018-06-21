@@ -6,36 +6,36 @@ namespace ESI.NET.Models
     public class SearchResults
     {
         [JsonProperty("agent")]
-        public long[] Agent { get; set; }
+        public long[] Agents { get; set; }
 
         [JsonProperty("alliance")]
-        public long[] AllianceId { get; set; }
+        public long[] Alliances { get; set; }
 
         [JsonProperty("character")]
-        public long[] CharacterId { get; set; }
+        public long[] Characters { get; set; }
 
         [JsonProperty("constellation")]
-        public long[] ConstellationId { get; set; }
+        public long[] Constellations { get; set; }
 
         [JsonProperty("corporation")]
-        public long[] CorporationId { get; set; }
+        public long[] Corporations { get; set; }
 
         [JsonProperty("faction")]
-        public long[] FactionId { get; set; }
+        public long[] Factions { get; set; }
 
-        [JsonProperty("inventorytype")]
-        public long[] InventoryTypeId { get; set; }
+        [JsonProperty("inventory_type")]
+        public long[] InventoryTypes { get; set; }
 
         [JsonProperty("region")]
-        public long[] RegionId { get; set; }
+        public long[] Regions { get; set; }
 
-        [JsonProperty("solarsystem")]
-        public long[] SolarSystemId { get; set; }
+        [JsonProperty("solar_system")]
+        public long[] SolarSystems { get; set; }
 
         [JsonProperty("station")]
-        public long[] StationId { get; set; }
+        public long[] Stations { get; set; }
 
         [JsonProperty("wormhole")]
-        public long[] WormholeId { get; set; }
+        public long[] Wormholes { get; set; }
     }
 }

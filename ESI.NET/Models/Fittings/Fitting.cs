@@ -18,7 +18,7 @@ namespace ESI.NET.Models.Fittings
         public int ShipTypeId { get; set; }
 
         [JsonProperty("items")]
-        public List<Item> Items { get; set; }
+        public List<Item> Items { get; set; } = new List<Item>();
     }
 
     public class Item
