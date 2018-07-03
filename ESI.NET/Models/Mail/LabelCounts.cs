@@ -9,7 +9,7 @@ namespace ESI.NET.Models.Mail
         public int TotalUnreadCount { get; set; }
 
         [JsonProperty("labels")]
-        public List<Label> Labels { get; set; }
+        public List<Label> Labels { get; set; } = new List<Label>();
     }
 
     public class Label

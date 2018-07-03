@@ -25,7 +25,7 @@ namespace ESI.NET.Models.Sovereignty
         public string EventType { get; set; }
 
         [JsonProperty("participants")]
-        public List<Participants> Participants { get; set; }
+        public List<Participants> Participants { get; set; } = new List<Participants>();
 
         [JsonProperty("solar_system_id")]
         public int SolarSystemId { get; set; }

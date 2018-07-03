@@ -16,7 +16,7 @@ namespace ESI.NET.Models.Character
         public string Description { get; set; }
 
         [JsonProperty("graphics")]
-        public List<GraphicLayer> Graphics { get; set; }
+        public List<GraphicLayer> Graphics { get; set; } = new List<GraphicLayer>();
 
         [JsonProperty("issuer_id")]
         public long IssuerId { get; set; }

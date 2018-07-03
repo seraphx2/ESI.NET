@@ -45,7 +45,7 @@ namespace ESI.NET.Models.Corporation
         public bool AttackIfAtWar { get; set; }
 
         [JsonProperty("fuels")]
-        public List<Fuel> Fuels { get; set; }
+        public List<Fuel> Fuels { get; set; } = new List<Fuel>();
     }
 
     public class Fuel

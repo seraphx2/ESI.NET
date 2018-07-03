@@ -25,7 +25,7 @@ namespace ESI.NET.Models.Wars
         public bool IsOpenForAllies { get; set; }
 
         [JsonProperty("allies")]
-        public List<Ally> Allies { get; set; }
+        public List<Ally> Allies { get; set; } = new List<Ally>();
 
         [JsonProperty("finished")]
         public string Fin { get; set; }

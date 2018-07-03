@@ -42,5 +42,14 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<ApiResponse<Effect>> Effect(int effect_id)
             => await Execute<Effect>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/dogma/effects/{effect_id}/");
+
+        /// <summary>
+        /// /dogma/dynamic/items/{type_id}/{item_id}/
+        /// </summary>
+        /// <param name="type_id"></param>
+        /// <param name="item_id"></param>
+        /// <returns></returns>
+        public async Task<ApiResponse<Effect>> DynamicItem(int type_id, int item_id)
+            => await Execute<Effect>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/dogma/dynamic/items/{type_id}/{item_id}/");
     }
 }

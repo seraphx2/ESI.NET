@@ -7,10 +7,10 @@ namespace ESI.NET.Models.Character
     public class ChatChannel
     {
         [JsonProperty("allowed")]
-        public List<ChannelUser> Allowed { get; set; }
+        public List<ChannelUser> Allowed { get; set; } = new List<ChannelUser>();
 
         [JsonProperty("blocked")]
-        public List<DeniedUser> Blocked { get; set; }
+        public List<DeniedUser> Blocked { get; set; } = new List<DeniedUser>();
 
         [JsonProperty("channel_id")]
         public long Id { get; set; }
@@ -25,13 +25,13 @@ namespace ESI.NET.Models.Character
         public string MOTD { get; set; }
 
         [JsonProperty("muted")]
-        public List<DeniedUser> Muted { get; set; }
+        public List<DeniedUser> Muted { get; set; } = new List<DeniedUser>();
 
         [JsonProperty("name")]
         public string Name { get; set; }
 
         [JsonProperty("operators")]
-        public List<ChannelUser> Operators { get; set; }
+        public List<ChannelUser> Operators { get; set; } = new List<ChannelUser>();
 
         [JsonProperty("owner_id")]
         public long OwnerId { get; set; }
