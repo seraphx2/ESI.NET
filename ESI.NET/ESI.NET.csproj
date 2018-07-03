@@ -8,8 +8,8 @@
     <Company>Sukebe Corporation</Company>
     <Description>.NET Wrapper for the Eve Online API</Description>
     <RepositoryUrl>https://github.com/seraphx2/ESI.NET</RepositoryUrl>
-    <AssemblyVersion>1.2.0.0</AssemblyVersion>
-    <FileVersion>1.2.0.0</FileVersion>
+    <AssemblyVersion>1.2.0.1</AssemblyVersion>
+    <FileVersion>1.2.0.1</FileVersion>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseUrl>https://github.com/seraphx2/ESI.NET/blob/master/LICENSE.txt</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/seraphx2/ESI.NET</PackageProjectUrl>

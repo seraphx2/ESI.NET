@@ -42,7 +42,7 @@ namespace ESI.NET.Models.Universe
         public int PortionSize { get; set; }
 
         [JsonProperty("mass")]
-        public decimal Mass { get; set; }
+        public double Mass { get; set; }
 
         [JsonProperty("graphic_id")]
         public int GraphicId { get; set; }
