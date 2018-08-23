@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using static ESI.NET.ApiRequest;
+using static ESI.NET.EsiRequest;
 using model = ESI.NET.Models.Opportunities;
 
 namespace ESI.NET.Logic
@@ -28,7 +28,7 @@ namespace ESI.NET.Logic
         /// /opportunities/groups/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<int>>> Groups()
+        public async Task<EsiResponse<List<int>>> Groups()
             => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/opportunities/groups/");
 
         /// <summary>
@@ -36,14 +36,14 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="group_id"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<model.Group>> Group(int group_id)
+        public async Task<EsiResponse<model.Group>> Group(int group_id)
             => await Execute<model.Group>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/opportunities/groups/{group_id}/");
 
         /// <summary>
         /// /opportunities/tasks/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<int>>> Tasks()
+        public async Task<EsiResponse<List<int>>> Tasks()
             => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/opportunities/tasks/");
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="task_id"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<model.Task>> Task(int task_id)
+        public async Task<EsiResponse<model.Task>> Task(int task_id)
             => await Execute<model.Task>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/opportunities/tasks/{task_id}/");
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="character_id"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<List<model.CompletedTask>>> CompletedTasks()
+        public async Task<EsiResponse<List<model.CompletedTask>>> CompletedTasks()
             => await Execute<List<model.CompletedTask>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/opportunities/", token: _data.Token);
     }
 }

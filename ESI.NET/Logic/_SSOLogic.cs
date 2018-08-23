@@ -3,6 +3,7 @@ using ESI.NET.Logic;
 using ESI.NET.Models.SSO;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -25,20 +26,23 @@ namespace ESI.NET
             clientKey = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{config.ClientId}:{config.SecretKey}"));
         }
 
+        public string CreateAuthenticationUrl(List<string> scopes)
+            => $"https://login.eveonline.com/oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}&scope={string.Join(" ", scopes)}";
+
         /// <summary>
         /// SSO Token helper
         /// </summary>
         /// <param name="clientId"></param>
         /// <param name="secretKey"></param>
-        /// <param name="grant_type"></param>
+        /// <param name="grantType"></param>
         /// <param name="code">The authorization_code or the refresh_token</param>
         /// <returns></returns>
-        public async Task<SSOToken> GetToken(GrantType grant_type, string code)
+        public async Task<SSOToken> GetToken(GrantType grantType, string code)
         {
-            var body = $"grant_type={grant_type.ToEsiValue()}";
-            if (grant_type == GrantType.AuthorizationCode)
+            var body = $"grant_type={grantType.ToEsiValue()}";
+            if (grantType == GrantType.AuthorizationCode)
                 body += $"&code={code}";
-            else if (grant_type == GrantType.RefreshToken)
+            else if (grantType == GrantType.RefreshToken)
                 body += $"&refresh_token={code}";
 
             HttpContent postBody = new StringContent(body, Encoding.UTF8, "application/x-www-form-urlencoded");

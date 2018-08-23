@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using static ESI.NET.ApiRequest;
+using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
@@ -35,7 +35,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Contact>>> ListForCharacter(int page = 1)
+        public async Task<EsiResponse<List<Contact>>> ListForCharacter(int page = 1)
             => await Execute<List<Contact>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/contacts/", new string[]
             {
                 $"page={page}"
@@ -46,7 +46,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Contact>>> ListForCorporation(int page = 1)
+        public async Task<EsiResponse<List<Contact>>> ListForCorporation(int page = 1)
             => await Execute<List<Contact>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/contacts/", new string[]
             {
                 $"page={page}"
@@ -57,7 +57,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Contact>>> ListForAlliance(int page = 1)
+        public async Task<EsiResponse<List<Contact>>> ListForAlliance(int page = 1)
             => await Execute<List<Contact>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/alliances/{alliance_id}/contacts/", new string[]
             {
                 $"page={page}"
@@ -71,7 +71,7 @@ namespace ESI.NET.Logic
         /// <param name="label_id"></param>
         /// <param name="watched"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<int[]>> Add(int contact_id, decimal standing, int? label_id = null, bool? watched = null)
+        public async Task<EsiResponse<int[]>> Add(int contact_id, decimal standing, int? label_id = null, bool? watched = null)
         {
             var body = new int[] { contact_id };
 
@@ -99,7 +99,7 @@ namespace ESI.NET.Logic
         /// <param name="label_id"></param>
         /// <param name="watched"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<string>> Update(int contact_id, decimal standing, int? label_id = null, bool? watched = null)
+        public async Task<EsiResponse<string>> Update(int contact_id, decimal standing, int? label_id = null, bool? watched = null)
         {
             var body = new int[] { contact_id };
 
@@ -124,7 +124,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="contact_ids"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<string>> Delete(int[] contact_ids)
+        public async Task<EsiResponse<string>> Delete(int[] contact_ids)
         {
             var response = await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.DELETE, $"/characters/{character_id}/contacts/", new string[]
             {
@@ -141,21 +141,21 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/contacts/labels/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Label>>> LabelsForCharacter()
+        public async Task<EsiResponse<List<Label>>> LabelsForCharacter()
             => await Execute<List<Label>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/contacts/labels/", token: _data.Token);
 
         /// <summary>
         /// /corporations/{corporation_id}/contacts/labels/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Label>>> LabelsForCorporation()
+        public async Task<EsiResponse<List<Label>>> LabelsForCorporation()
             => await Execute<List<Label>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/contacts/labels/", token: _data.Token);
 
         /// <summary>
         /// /alliances/{alliance_id}/contacts/labels/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Label>>> LabelsForAlliance()
+        public async Task<EsiResponse<List<Label>>> LabelsForAlliance()
             => await Execute<List<Label>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/alliances/{alliance_id}/contacts/labels/", token: _data.Token);
     }
 }

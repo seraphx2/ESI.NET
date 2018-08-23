@@ -3,7 +3,7 @@ using ESI.NET.Models.SSO;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using static ESI.NET.ApiRequest;
+using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
@@ -31,7 +31,7 @@ namespace ESI.NET.Logic
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Contract>>> CharacterContracts()
+        public async Task<EsiResponse<List<Contract>>> CharacterContracts()
             => await Execute<List<Contract>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/contracts/", token: _data.Token);
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="contract_id"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<List<ContractItem>>> CharacterContractItems(int contract_id)
+        public async Task<EsiResponse<List<ContractItem>>> CharacterContractItems(int contract_id)
             => await Execute<List<ContractItem>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/contracts/{contract_id}/items/", token: _data.Token);
 
         /// <summary>
@@ -47,14 +47,14 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="contract_id"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Bid>>> CharacterContractBids(int contract_id)
+        public async Task<EsiResponse<List<Bid>>> CharacterContractBids(int contract_id)
             => await Execute<List<Bid>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/contracts/{contract_id}/bids/", token: _data.Token);
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Contract>>> CorporationContracts()
+        public async Task<EsiResponse<List<Contract>>> CorporationContracts()
             => await Execute<List<Contract>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/contracts/", token: _data.Token);
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="contract_id"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<List<ContractItem>>> CorporationContractItems(int contract_id)
+        public async Task<EsiResponse<List<ContractItem>>> CorporationContractItems(int contract_id)
             => await Execute<List<ContractItem>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/contracts/{contract_id}/items/", token: _data.Token);
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="contract_id"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Bid>>> CorporationContractBids(int contract_id)
+        public async Task<EsiResponse<List<Bid>>> CorporationContractBids(int contract_id)
             => await Execute<List<Bid>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/contracts/{contract_id}/bids/", token: _data.Token);
     }
 }

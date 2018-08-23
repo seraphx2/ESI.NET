@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using static ESI.NET.ApiRequest;
+using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
@@ -17,7 +17,7 @@ namespace ESI.NET.Logic
         /// /insurance/prices/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Insurance>>> Levels()
+        public async Task<EsiResponse<List<Insurance>>> Levels()
             => await Execute<List<Insurance>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/insurance/prices/");
     }
 }

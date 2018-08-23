@@ -2,7 +2,7 @@
 using ESI.NET.Models.SSO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using static ESI.NET.ApiRequest;
+using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
@@ -27,14 +27,14 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/clones/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<Clones>> List()
+        public async Task<EsiResponse<Clones>> List()
             => await Execute<Clones>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/clones/", token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/implants/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<int[]>> Implants()
+        public async Task<EsiResponse<int[]>> Implants()
             => await Execute<int[]>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/implants/", token: _data.Token);
     }
 }

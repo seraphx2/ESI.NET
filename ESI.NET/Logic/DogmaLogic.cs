@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using static ESI.NET.ApiRequest;
+using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
@@ -17,7 +17,7 @@ namespace ESI.NET.Logic
         /// /dogma/attributes/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<int>>> Attributes()
+        public async Task<EsiResponse<List<int>>> Attributes()
             => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/dogma/attributes/");
 
         /// <summary>
@@ -25,14 +25,14 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="attribute_id"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<Attribute>> Attribute(int attribute_id)
+        public async Task<EsiResponse<Attribute>> Attribute(int attribute_id)
             => await Execute<Attribute>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/dogma/attributes/{attribute_id}/");
 
         /// <summary>
         /// /dogma/effects/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<int>>> Effects()
+        public async Task<EsiResponse<List<int>>> Effects()
             => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/dogma/effects/");
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="effect_id"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<Effect>> Effect(int effect_id)
+        public async Task<EsiResponse<Effect>> Effect(int effect_id)
             => await Execute<Effect>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/dogma/effects/{effect_id}/");
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace ESI.NET.Logic
         /// <param name="type_id"></param>
         /// <param name="item_id"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<Effect>> DynamicItem(int type_id, int item_id)
+        public async Task<EsiResponse<Effect>> DynamicItem(int type_id, int item_id)
             => await Execute<Effect>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/dogma/dynamic/items/{type_id}/{item_id}/");
     }
 }

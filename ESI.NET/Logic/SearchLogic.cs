@@ -3,7 +3,7 @@ using ESI.NET.Models;
 using ESI.NET.Models.SSO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using static ESI.NET.ApiRequest;
+using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
@@ -32,7 +32,7 @@ namespace ESI.NET.Logic
         /// <param name="isStrict">Whether the search should be a strict match</param>
         /// <param name="language">Language to use in the response</param>
         /// <returns></returns>
-        public async Task<ApiResponse<SearchResults>> Query(RequestSecurity security, string search, SearchCategory categories, bool isStrict = false, string language = "en-us")
+        public async Task<EsiResponse<SearchResults>> Query(RequestSecurity security, string search, SearchCategory categories, bool isStrict = false, string language = "en-us")
         {
             var categoryList = categories.ToEsiValue();
 

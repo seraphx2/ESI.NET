@@ -1,13 +1,13 @@
 ﻿using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http;
-using static ESI.NET.ApiRequest;
+using static ESI.NET.EsiRequest;
 
 namespace ESI.NET
 {
-    public class ApiResponse<T>
+    public class EsiResponse<T>
     {
-        public ApiResponse(HttpResponseMessage response, RequestMethod method, string endpoint)
+        public EsiResponse(HttpResponseMessage response, RequestMethod method, string endpoint)
         {
             StatusCode = response.StatusCode;
 

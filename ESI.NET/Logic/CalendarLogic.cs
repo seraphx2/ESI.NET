@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using static ESI.NET.ApiRequest;
+using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
@@ -33,7 +33,7 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/calendar/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Event>>> Events()
+        public async Task<EsiResponse<List<Event>>> Events()
             => await Execute<List<Event>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/calendar/", token: _data.Token);
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="contract_id"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<Event>> Event(int event_id)
+        public async Task<EsiResponse<Event>> Event(int event_id)
             => await Execute<Event>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/calendar/{event_id}/", token: _data.Token);
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace ESI.NET.Logic
         /// <param name="event_id"></param>
         /// <param name="response"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<Event>> Respond(int event_id, EventResponse eventResponse)
+        public async Task<EsiResponse<Event>> Respond(int event_id, EventResponse eventResponse)
         {
             var response = await Execute<Event>(_client, _config, RequestSecurity.Authenticated, RequestMethod.PUT, $"/characters/{character_id}/calendar/{event_id}/", body: new
             {
@@ -68,7 +68,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="contract_id"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Response>>> Responses(int event_id)
+        public async Task<EsiResponse<List<Response>>> Responses(int event_id)
             => await Execute<List<Response>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/calendar/{event_id}/attendees/", token: _data.Token);
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using static ESI.NET.ApiRequest;
+using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
@@ -29,7 +29,7 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/mail/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Header>>> Headers(long[] labels = null, int last_mail_id = 0)
+        public async Task<EsiResponse<List<Header>>> Headers(long[] labels = null, int last_mail_id = 0)
         {
             var parameters = new List<string>();
 
@@ -52,7 +52,7 @@ namespace ESI.NET.Logic
         /// <param name="body"></param>
         /// <param name="approved_cost"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<int>> New(object[] recipients, string subject, string body, int approved_cost = 0)
+        public async Task<EsiResponse<int>> New(object[] recipients, string subject, string body, int approved_cost = 0)
         {
             var response = await Execute<int>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, $"/characters/{character_id}/mail/", body: new
             {
@@ -72,7 +72,7 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/mail/labels/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<LabelCounts>> Labels()
+        public async Task<EsiResponse<LabelCounts>> Labels()
             => await Execute<LabelCounts>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/mail/labels/", token: _data.Token);
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace ESI.NET.Logic
         /// <param name="name"></param>
         /// <param name="color"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<long>> NewLabel(string name, string color)
+        public async Task<EsiResponse<long>> NewLabel(string name, string color)
         {
             var response = await Execute<long>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, $"/characters/{character_id}/mail/labels/", body: new
             {
@@ -100,7 +100,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="label_id"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<string>> DeleteLabel(long label_id)
+        public async Task<EsiResponse<string>> DeleteLabel(long label_id)
         {
             var response = await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.DELETE, $"/characters/{character_id}/mail/labels/{label_id}/", token: _data.Token);
 
@@ -111,7 +111,7 @@ namespace ESI.NET.Logic
         }
 
 
-        public async Task<ApiResponse<List<MailingList>>> MailingLists()
+        public async Task<EsiResponse<List<MailingList>>> MailingLists()
             => await Execute<List<MailingList>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/mail/lists/", token: _data.Token);
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="mail_id"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<Message>> Retrieve(int mail_id)
+        public async Task<EsiResponse<Message>> Retrieve(int mail_id)
             => await Execute<Message>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/mail/{mail_id}/", token: _data.Token);
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace ESI.NET.Logic
         /// <param name="is_read"></param>
         /// <param name="labels"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<Message>> Update(int mail_id, bool? is_read = null, int[] labels = null)
+        public async Task<EsiResponse<Message>> Update(int mail_id, bool? is_read = null, int[] labels = null)
         {
             dynamic body = null;
 
@@ -153,7 +153,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="mail_id"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<Message>> Delete(int mail_id)
+        public async Task<EsiResponse<Message>> Delete(int mail_id)
         {
             var response = await Execute<Message>(_client, _config, RequestSecurity.Authenticated, RequestMethod.DELETE, $"/characters/{character_id}/mail/{mail_id}/", token: _data.Token);
 

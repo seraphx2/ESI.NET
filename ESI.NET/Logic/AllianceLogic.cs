@@ -3,7 +3,7 @@ using ESI.NET.Models.Alliance;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using static ESI.NET.ApiRequest;
+using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
@@ -18,7 +18,7 @@ namespace ESI.NET.Logic
         /// /alliances/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<int>>> All()
+        public async Task<EsiResponse<List<int>>> All()
             => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/alliances/");
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="alliance_ids"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Alliance>>> Names(int[] alliance_ids)
+        public async Task<EsiResponse<List<Alliance>>> Names(int[] alliance_ids)
             => await Execute<List<Alliance>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/alliances/names/", new string[]
             {
                 $"alliance_ids={string.Join(",", alliance_ids)}"
@@ -37,7 +37,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="allianceId"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<Information>> Information(int alliance_id)
+        public async Task<EsiResponse<Information>> Information(int alliance_id)
             => await Execute<Information>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/alliances/{alliance_id}/");
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="alliance_id"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<List<int>>> Corporations(int alliance_id)
+        public async Task<EsiResponse<List<int>>> Corporations(int alliance_id)
             => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/alliances/{alliance_id}/corporations/");
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="alliance_id"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<Images>> Icons(int alliance_id)
+        public async Task<EsiResponse<Images>> Icons(int alliance_id)
             => await Execute<Images>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/alliances/{alliance_id}/icons/");
     }
 }

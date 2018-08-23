@@ -3,7 +3,7 @@ using ESI.NET.Models.SSO;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using static ESI.NET.ApiRequest;
+using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
@@ -31,14 +31,14 @@ namespace ESI.NET.Logic
         /// /industry/facilities/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Facility>>> Facilities()
+        public async Task<EsiResponse<List<Facility>>> Facilities()
             => await Execute<List<Facility>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/industry/facilities/");
 
         /// <summary>
         /// /industry/systems/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<SolarSystem>>> SolarSystemCostIndices()
+        public async Task<EsiResponse<List<SolarSystem>>> SolarSystemCostIndices()
             => await Execute<List<SolarSystem>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/industry/systems/");
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="include_completed"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Job>>> JobsForCharacter(bool include_completed = false)
+        public async Task<EsiResponse<List<Job>>> JobsForCharacter(bool include_completed = false)
             => await Execute<List<Job>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/industry/jobs/", new string[]
             {
                 $"include_completed={include_completed}"
@@ -57,7 +57,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Entry>>> MiningLedger(int page = 1)
+        public async Task<EsiResponse<List<Entry>>> MiningLedger(int page = 1)
             => await Execute<List<Entry>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/mining/", new string[]
             {
                 $"page={page}"
@@ -68,7 +68,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Observer>>> Observers(int page = 1)
+        public async Task<EsiResponse<List<Observer>>> Observers(int page = 1)
             => await Execute<List<Observer>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporation/{corporation_id}/mining/observers/", new string[]
             {
                 $"page={page}"
@@ -80,7 +80,7 @@ namespace ESI.NET.Logic
         /// <param name="observer_id"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<List<ObserverInfo>>> ObservedMining(int observer_id, int page = 1)
+        public async Task<EsiResponse<List<ObserverInfo>>> ObservedMining(int observer_id, int page = 1)
             => await Execute<List<ObserverInfo>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporation/{corporation_id}/mining/observers/{observer_id}/", new string[]
             {
                 $"page={page}"
@@ -92,7 +92,7 @@ namespace ESI.NET.Logic
         /// <param name="include_completed"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Job>>> JobsForCorporation(bool include_completed = false, int page = 1)
+        public async Task<EsiResponse<List<Job>>> JobsForCorporation(bool include_completed = false, int page = 1)
             => await Execute<List<Job>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/industry/jobs/", new string[]
             {
                 $"include_completed={include_completed}",
@@ -103,7 +103,7 @@ namespace ESI.NET.Logic
         /// /corporation/{corporation_id}/mining/extractions/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Extraction>>> Extractions()
+        public async Task<EsiResponse<List<Extraction>>> Extractions()
             => await Execute<List<Extraction>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporation/{corporation_id}/mining/extractions/", token: _data.Token);
     }
 }

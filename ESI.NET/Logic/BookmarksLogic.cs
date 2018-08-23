@@ -3,7 +3,7 @@ using ESI.NET.Models.SSO;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using static ESI.NET.ApiRequest;
+using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
@@ -31,7 +31,7 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/bookmarks/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Bookmark>>> ForCharacter(int page = 1)
+        public async Task<EsiResponse<List<Bookmark>>> ForCharacter(int page = 1)
             => await Execute<List<Bookmark>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/bookmarks/", new string[]
             {
                 $"page={page}"
@@ -41,7 +41,7 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/bookmarks/folders/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Folder>>> FoldersForCharacter(int page = 1)
+        public async Task<EsiResponse<List<Folder>>> FoldersForCharacter(int page = 1)
             => await Execute<List<Folder>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/bookmarks/folders/", new string[]
             {
                 $"page={page}"
@@ -51,7 +51,7 @@ namespace ESI.NET.Logic
         /// /corporations/{corporation_id}/bookmarks/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Bookmark>>> ForCorporation(int page = 1)
+        public async Task<EsiResponse<List<Bookmark>>> ForCorporation(int page = 1)
             => await Execute<List<Bookmark>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/bookmarks/", new string[]
             {
                 $"page={page}"
@@ -61,7 +61,7 @@ namespace ESI.NET.Logic
         /// /corporations/{corporation_id}/bookmarks/folders/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Folder>>> FoldersForCorporation(int page = 1)
+        public async Task<EsiResponse<List<Folder>>> FoldersForCorporation(int page = 1)
             => await Execute<List<Folder>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/bookmarks/folders/", new string[]
             {
                 $"page={page}"

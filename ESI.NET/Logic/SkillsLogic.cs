@@ -3,7 +3,7 @@ using ESI.NET.Models.SSO;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using static ESI.NET.ApiRequest;
+using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
@@ -28,21 +28,21 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/attributes/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<Attributes>> Attributes()
+        public async Task<EsiResponse<Attributes>> Attributes()
             => await Execute<Attributes>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/attributes/", token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/skills/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<SkillDetails>> List()
+        public async Task<EsiResponse<SkillDetails>> List()
             => await Execute<SkillDetails>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/skills/", token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/skillqueue/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<SkillQueueItem>>> Queue()
+        public async Task<EsiResponse<List<SkillQueueItem>>> Queue()
             => await Execute<List<SkillQueueItem>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/skillqueue/", token: _data.Token);
     }
 }

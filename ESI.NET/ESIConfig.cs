@@ -8,5 +8,6 @@ namespace ESI.NET
         public DataSource DataSource { get; set; }
         public string ClientId { get; set; }
         public string SecretKey { get; set; }
+        public string CallbackUrl { get; set; }
     }
 }

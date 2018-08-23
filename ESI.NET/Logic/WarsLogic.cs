@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using static ESI.NET.ApiRequest;
+using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
@@ -17,7 +17,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="max_war_id">Only return wars with ID smaller than this</param>
         /// <returns></returns>
-        public async Task<ApiResponse<List<int>>> All(long max_war_id = 0)
+        public async Task<EsiResponse<List<int>>> All(long max_war_id = 0)
         {
             var parameters = new List<string>();
 
@@ -34,7 +34,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="war_id"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<Information>> Information(int war_id)
+        public async Task<EsiResponse<Information>> Information(int war_id)
             => await Execute<Information>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/wars/{war_id}/");
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace ESI.NET.Logic
         /// <param name="war_id"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Models.Killmails.Killmail>>> Kills(int war_id, int page = 1)
+        public async Task<EsiResponse<List<Models.Killmails.Killmail>>> Kills(int war_id, int page = 1)
             => await Execute<List<Models.Killmails.Killmail>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/wars/{war_id}/killmails/", new string[]
             {
                 $"page={page}"

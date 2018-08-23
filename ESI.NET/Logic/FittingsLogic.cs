@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using static ESI.NET.ApiRequest;
+using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
@@ -29,7 +29,7 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/fittings/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Fitting>>> List()
+        public async Task<EsiResponse<List<Fitting>>> List()
             => await Execute<List<Fitting>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/fittings/, token: _data.Token");
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="fitting"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<NewFitting>> Add(object fitting)
+        public async Task<EsiResponse<NewFitting>> Add(object fitting)
             => await Execute<NewFitting>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, $"/characters/{character_id}/fittings/", body: fitting, token: _data.Token);
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="fitting_id"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<string>> Delete(int fitting_id)
+        public async Task<EsiResponse<string>> Delete(int fitting_id)
         {
             var response = await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.DELETE, $"/characters/{character_id}/fittings/{fitting_id}/", token: _data.Token);
 

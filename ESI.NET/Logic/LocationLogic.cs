@@ -2,7 +2,7 @@
 using ESI.NET.Models.SSO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using static ESI.NET.ApiRequest;
+using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
@@ -27,21 +27,21 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/location/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<Location>> Location()
+        public async Task<EsiResponse<Location>> Location()
             => await Execute<Location>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/location/", token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/ship/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<Ship>> Ship()
+        public async Task<EsiResponse<Ship>> Ship()
             => await Execute<Ship>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/ship/", token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/online/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<Activity>> Online()
+        public async Task<EsiResponse<Activity>> Online()
             => await Execute<Activity>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/online/", token: _data.Token);
     }
 }

@@ -3,7 +3,7 @@ using ESI.NET.Models.SSO;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using static ESI.NET.ApiRequest;
+using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
@@ -31,56 +31,56 @@ namespace ESI.NET.Logic
         /// /fw/wars/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<War>>> List()
+        public async Task<EsiResponse<List<War>>> List()
             => await Execute<List<War>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/fw/wars/");
 
         /// <summary>
         /// /fw/stats/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Stat>>> Stats()
+        public async Task<EsiResponse<List<Stat>>> Stats()
             => await Execute<List<Stat>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/fw/stats/");
 
         /// <summary>
         /// /fw/systems/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<FactionWarfareSystem>>> Systems()
+        public async Task<EsiResponse<List<FactionWarfareSystem>>> Systems()
             => await Execute<List<FactionWarfareSystem>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/fw/systems/");
 
         /// <summary>
         /// fw/leaderboards/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<Leaderboards<FactionTotal>>> Leaderboads()
+        public async Task<EsiResponse<Leaderboards<FactionTotal>>> Leaderboads()
             => await Execute<Leaderboards<FactionTotal>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/fw/leaderboards/");
 
         /// <summary>
         /// /fw/leaderboards/corporations/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<Leaderboards<CorporationTotal>>> LeaderboardsForCorporations()
+        public async Task<EsiResponse<Leaderboards<CorporationTotal>>> LeaderboardsForCorporations()
             => await Execute<Leaderboards<CorporationTotal>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/fw/leaderboards/corporations/");
 
         /// <summary>
         /// /fw/leaderboards/characters/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<Leaderboards<CharacterTotal>>> LeaderboardsForCharacters()
+        public async Task<EsiResponse<Leaderboards<CharacterTotal>>> LeaderboardsForCharacters()
             => await Execute<Leaderboards<CharacterTotal>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/fw/leaderboards/characters/");
 
         /// <summary>
         /// /corporations/{corporation_id}/fw/stats/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<Stat>> StatsForCorporation()
+        public async Task<EsiResponse<Stat>> StatsForCorporation()
             => await Execute<Stat>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/fw/stats/", token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/fw/stats/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<Stat>> StatsForCharacter()
+        public async Task<EsiResponse<Stat>> StatsForCharacter()
             => await Execute<Stat>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/fw/stats/", token: _data.Token);
     }
 }

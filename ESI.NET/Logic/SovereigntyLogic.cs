@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using static ESI.NET.ApiRequest;
+using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
@@ -17,21 +17,21 @@ namespace ESI.NET.Logic
         /// /sovereignty/campaigns/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Campaign>>> Campaigns()
+        public async Task<EsiResponse<List<Campaign>>> Campaigns()
             => await Execute<List<Campaign>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/sovereignty/campaigns/");
 
         /// <summary>
         /// /sovereignty/map/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<SystemSovereignty>>> Systems()
+        public async Task<EsiResponse<List<SystemSovereignty>>> Systems()
             => await Execute<List<SystemSovereignty>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/sovereignty/map/");
 
         /// <summary>
         /// /sovereignty/structures/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Structure>>> Structures()
+        public async Task<EsiResponse<List<Structure>>> Structures()
             => await Execute<List<Structure>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/sovereignty/structures/");
     }
 }

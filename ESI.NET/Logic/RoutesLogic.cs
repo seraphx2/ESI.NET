@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using static ESI.NET.ApiRequest;
+using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
@@ -22,7 +22,7 @@ namespace ESI.NET.Logic
         /// <param name="avoid"></param>
         /// <param name="connections"></param>
         /// <returns></returns>
-        public async Task<ApiResponse<int[]>> Map(
+        public async Task<EsiResponse<int[]>> Map(
             int origin, 
             int destination, 
             RoutesFlag flag = RoutesFlag.Shortest, 

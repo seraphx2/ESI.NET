@@ -3,7 +3,7 @@ using ESI.NET.Models.SSO;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using static ESI.NET.ApiRequest;
+using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
@@ -33,7 +33,7 @@ namespace ESI.NET.Logic
         /// <param name="max_kill_id">Only return killmails with ID smaller than this</param>
         /// <param name="max_count">How many killmails to return at maximum</param>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Killmail>>> ForCharacter(int? max_kill_id = 0, int max_count = 50)
+        public async Task<EsiResponse<List<Killmail>>> ForCharacter(int? max_kill_id = 0, int max_count = 50)
         {
             var parameters = new List<string>() { $"max_count={max_count}" };
 
@@ -50,7 +50,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="max_kill_id">Only return killmails with ID smaller than this</param>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Killmail>>> ForCorporation(int? max_kill_id = 0)
+        public async Task<EsiResponse<List<Killmail>>> ForCorporation(int? max_kill_id = 0)
         {
             var parameters = new List<string>();
 
@@ -68,7 +68,7 @@ namespace ESI.NET.Logic
         /// <param name="killmail_hash">The killmail hash for verification</param>
         /// <param name="killmail_id">The killmail ID to be queried</param>
         /// <returns></returns>
-        public async Task<ApiResponse<Information>> Information(string killmail_hash, int killmail_id)
+        public async Task<EsiResponse<Information>> Information(string killmail_hash, int killmail_id)
             => await Execute<Information>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/killmails/{killmail_id}/{killmail_hash}/");
     }
 }

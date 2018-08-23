@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace ESI.NET
 {
-    public static class ApiRequest
+    public static class EsiRequest
     {
-        public async static Task<ApiResponse<T>> Execute<T>(HttpClient client, ESIConfig config, RequestSecurity security, RequestMethod method, string endpoint, string[] parameters = null, object body = null, string token = null)
+        public async static Task<EsiResponse<T>> Execute<T>(HttpClient client, ESIConfig config, RequestSecurity security, RequestMethod method, string endpoint, string[] parameters = null, object body = null, string token = null)
         {
             var baseUrl = "https://esi.tech.ccp.is/";
             string version = "latest";// EndpointVersions[endpoint];
@@ -63,7 +63,7 @@ namespace ESI.NET
             }
             
             //Output final object
-            var obj = new ApiResponse<T>(response, method, endpoint);
+            var obj = new EsiResponse<T>(response, method, endpoint);
             return obj;
         }
 

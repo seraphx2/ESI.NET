@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using static ESI.NET.ApiRequest;
+using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
@@ -17,7 +17,7 @@ namespace ESI.NET.Logic
         /// /incursions/
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<List<Incursion>>> All()
+        public async Task<EsiResponse<List<Incursion>>> All()
             => await Execute<List<Incursion>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/incursions/");
     }
 }
