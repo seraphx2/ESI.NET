@@ -11,6 +11,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageLicenseUrl>https://github.com/seraphx2/ESI.NET/blob/master/LICENSE.txt</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/seraphx2/ESI.NET</PackageProjectUrl>
+    <OutputPath>$(SolutionDir)bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
