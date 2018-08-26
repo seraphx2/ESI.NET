@@ -7,7 +7,7 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class MailLogic : _BaseLogic
+    public class MailLogic : BaseLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
@@ -135,7 +135,7 @@ namespace ESI.NET.Logic
                 body = new { is_read };
             else if (is_read == null && labels != null)
                 body = new { labels };
-            else if (is_read != null && labels != null)
+            else
                 body = new { is_read, labels };
             return body;
         }

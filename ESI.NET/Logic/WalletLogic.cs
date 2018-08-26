@@ -7,7 +7,7 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class WalletLogic : _BaseLogic
+    public class WalletLogic : BaseLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;

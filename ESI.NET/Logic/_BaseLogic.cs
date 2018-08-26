@@ -3,7 +3,7 @@ using System.Collections.Immutable;
 
 namespace ESI.NET.Logic
 {
-    public class _BaseLogic
+    public class BaseLogic
     {
         public ImmutableDictionary<string, string> NoContentMessages = new Dictionary<string, string>()
         {

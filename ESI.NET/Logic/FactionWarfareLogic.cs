@@ -7,12 +7,12 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class FactionWarfareLogic : _BaseLogic
+    public class FactionWarfareLogic : BaseLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
         private readonly AuthorizedCharacterData _data;
-        private int corporation_id, character_id;
+        private readonly int character_id, corporation_id;
 
         public FactionWarfareLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
         {

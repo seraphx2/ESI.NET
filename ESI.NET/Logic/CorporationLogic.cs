@@ -8,12 +8,12 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class CorporationLogic : _BaseLogic
+    public class CorporationLogic : BaseLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
         private readonly AuthorizedCharacterData _data;
-        private int corporation_id;
+        private readonly int corporation_id;
 
         public CorporationLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
         {

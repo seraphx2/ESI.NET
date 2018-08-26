@@ -7,7 +7,7 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class LoyaltyLogic : _BaseLogic
+    public class LoyaltyLogic : BaseLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;

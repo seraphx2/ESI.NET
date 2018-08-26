@@ -4,7 +4,7 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class UserInterfaceLogic : _BaseLogic
+    public class UserInterfaceLogic : BaseLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;

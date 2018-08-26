@@ -12,14 +12,14 @@ namespace ESI.NET
     {
         public async static Task<EsiResponse<T>> Execute<T>(HttpClient client, EsiConfig config, RequestSecurity security, RequestMethod method, string endpoint, string noContent = null, string[] parameters = null, object body = null, string token = null)
         {
-            string version = "latest";// EndpointVersions[endpoint];
+            string version = "latest";
             var url = $"{config.EsiUrl}{version}{endpoint}?datasource={ config.DataSource.ToEsiValue() }";
 
             //Attach token to request header if this endpoint requires an authorized character
             if (security == RequestSecurity.Authenticated)
             {
                 if (token == null)
-                    throw new Exception("The request endpoint requires SSO authentication and a Token has not been provided.");
+                    throw new ArgumentException("The request endpoint requires SSO authentication and a Token has not been provided.");
                 else
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }

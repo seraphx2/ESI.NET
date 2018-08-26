@@ -7,12 +7,12 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class IndustryLogic : _BaseLogic
+    public class IndustryLogic : BaseLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
         private readonly AuthorizedCharacterData _data;
-        private int corporation_id, character_id;
+        private readonly int character_id, corporation_id;
 
         public IndustryLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
         {

@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace ESI.NET
 {
-    public class SsoLogic : _BaseLogic
+    public class SsoLogic : BaseLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
-        string clientKey;
+        private readonly string clientKey;
 
         public SsoLogic(HttpClient client, EsiConfig config)
         {

@@ -7,11 +7,11 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class ContactsLogic : _BaseLogic
+    public class ContactsLogic : BaseLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
-        AuthorizedCharacterData _data;
+        private readonly AuthorizedCharacterData _data;
 
         private readonly int character_id, corporation_id, alliance_id;
 
@@ -105,7 +105,7 @@ namespace ESI.NET.Logic
             if (watched != null)
                 parameters.Add($"watched={watched}");
 
-            return await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.PUT, $"/characters/{character_id}/contacts/", noContent: NoContentMessages["PUT|/characters/{character_id}/contacts/"], body: body, parameters: parameters.ToArray(), token: _data.Token); ;
+            return await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.PUT, $"/characters/{character_id}/contacts/", noContent: NoContentMessages["PUT|/characters/{character_id}/contacts/"], body: body, parameters: parameters.ToArray(), token: _data.Token);
         }
 
         /// <summary>

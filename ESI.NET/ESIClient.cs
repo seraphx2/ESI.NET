@@ -22,7 +22,7 @@ namespace ESI.NET
 
             // Enforce user agent value
             if (string.IsNullOrEmpty(config.UserAgent))
-                throw new Exception("For your protection, please provide an X-User-Agent value. This can be your character name and/or project name. CCP will be more likely to contact you rather than just cut off access to ESI if you provide something that can identify you within the New Eden galaxy.");
+                throw new ArgumentException("For your protection, please provide an X-User-Agent value. This can be your character name and/or project name. CCP will be more likely to contact you rather than just cut off access to ESI if you provide something that can identify you within the New Eden galaxy.");
             else
                 client.DefaultRequestHeaders.Add("X-User-Agent", config.UserAgent);
 

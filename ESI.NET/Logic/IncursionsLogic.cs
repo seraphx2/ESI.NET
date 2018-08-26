@@ -6,7 +6,7 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class IncursionsLogic : _BaseLogic
+    public class IncursionsLogic : BaseLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;

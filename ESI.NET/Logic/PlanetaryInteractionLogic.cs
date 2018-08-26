@@ -7,7 +7,7 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class PlanetaryInteractionLogic : _BaseLogic
+    public class PlanetaryInteractionLogic : BaseLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;

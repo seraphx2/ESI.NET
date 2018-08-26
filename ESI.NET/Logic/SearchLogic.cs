@@ -7,7 +7,7 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class SearchLogic : _BaseLogic
+    public class SearchLogic : BaseLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;

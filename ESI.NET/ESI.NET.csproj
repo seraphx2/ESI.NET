@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.0;netstandard2.0;net461;net462;net47;net471</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.3.2</Version>
+    <Version>1.4.2</Version>
     <Authors>Psianna Archeia</Authors>
     <Company>Sukebe Corporation</Company>
     <Description>.NET Wrapper for the Eve Online API</Description>
@@ -17,7 +17,6 @@
     <PackageReference Include="Microsoft.CSharp" Version="4.4.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.3" />
   </ItemGroup>
 
