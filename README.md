@@ -22,10 +22,12 @@ ESI.NET is now Dependency Injection compatible. There are a few parts required t
 In your appsettings.json, add the following object and fill it in appropriately:
 ```json
 "ESIConfig": {
-    "DataSource": "",
-    "UserAgent": "",
-    "ClientId": "",
-    "SecretKey": ""
+    "EsiUrl": "https://esi.tech.ccp.is/",
+    "DataSource": "Tranquility",
+    "ClientId": "**********",
+    "SecretKey": "**********",
+    "CallbackUrl": "",
+    "UserAgent": ""
   }
 ```
 Inject the ESIConfig object into your configuration in Startup.cs in the ConfigureServices method:
@@ -46,11 +48,12 @@ If you are using a .NET Standard-compatible .NET Framework application, you can 
 ```cs
 IOptions<ESIConfig> config = Options.Create(new ESIConfig()
 {
-    UserAgent = "",
+    EsiUrl = "https://esi.tech.ccp.is/",
     DataSource = DataSource.Tranquility,
-    ClientId = "",
-    SecretKey = "",
-    CallbackUrl = ""
+    ClientId = "**********",
+    SecretKey = "**********",
+    CallbackUrl = "",
+    UserAgent = ""
 });
 
 ESIClient client = new ESIClient(config);
