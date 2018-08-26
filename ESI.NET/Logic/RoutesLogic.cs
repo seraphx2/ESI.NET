@@ -6,12 +6,12 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class RoutesLogic
+    public class RoutesLogic : _BaseLogic
     {
-        private HttpClient _client;
-        private ESIConfig _config;
+        private readonly HttpClient _client;
+        private readonly EsiConfig _config;
 
-        public RoutesLogic(HttpClient client, ESIConfig config) { _client = client; _config = config; }
+        public RoutesLogic(HttpClient client, EsiConfig config) { _client = client; _config = config; }
 
         /// <summary>
         /// /route/{origin}/{destination}/
@@ -37,7 +37,7 @@ namespace ESI.NET.Logic
             if (connections != null)
                 parameters.Add($"&connections={string.Join(",", connections)}");
 
-            var response = await Execute<int[]>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/route/{origin}/{destination}/", parameters.ToArray());
+            var response = await Execute<int[]>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/route/{origin}/{destination}/", parameters: parameters.ToArray());
 
             return response;
         }

@@ -7,14 +7,14 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class SearchLogic
+    public class SearchLogic : _BaseLogic
     {
-        private HttpClient _client;
-        private ESIConfig _config;
-        private AuthorizedCharacterData _data;
-        private int character_id;
+        private readonly HttpClient _client;
+        private readonly EsiConfig _config;
+        private readonly AuthorizedCharacterData _data;
+        private readonly int character_id;
 
-        public SearchLogic(HttpClient client, ESIConfig config, AuthorizedCharacterData data = null)
+        public SearchLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
         {
             _client = client;
             _config = config;
@@ -40,7 +40,7 @@ namespace ESI.NET.Logic
             if (security == RequestSecurity.Authenticated)
                 endpoint = $"/characters/{character_id}/search/";
 
-            var response = await Execute<SearchResults>(_client, _config, security, RequestMethod.GET, endpoint, new string[] {
+            var response = await Execute<SearchResults>(_client, _config, security, RequestMethod.GET, endpoint, parameters: new string[] {
                 $"search={search}",
                 $"categories={categoryList}",
                 $"strict={isStrict}",

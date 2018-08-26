@@ -6,16 +6,16 @@ using System.Net.Http;
 
 namespace ESI.NET
 {
-    public class ESIClient : IESIClient
+    public class EsiClient : IEsiClient
     {
-        HttpClient client;
-        ESIConfig config;
+        readonly HttpClient client;
+        readonly EsiConfig config;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="config"></param>
-        public ESIClient(IOptions<ESIConfig> _config)
+        public EsiClient(IOptions<EsiConfig> _config)
         {
             config = _config.Value;
             client = new HttpClient();
@@ -26,7 +26,7 @@ namespace ESI.NET
             else
                 client.DefaultRequestHeaders.Add("X-User-Agent", config.UserAgent);
 
-            SSO = new SSOLogic(client, config);
+            SSO = new SsoLogic(client, config);
             Alliance = new AllianceLogic(client, config);
             Assets = new AssetsLogic(client, config);
             Bookmarks = new BookmarksLogic(client, config);
@@ -61,7 +61,7 @@ namespace ESI.NET
             Wars = new WarsLogic(client, config);
         }
 
-        public SSOLogic SSO { get; set; }
+        public SsoLogic SSO { get; set; }
         public AllianceLogic Alliance { get; set; }
         public AssetsLogic Assets { get; set; }
         public BookmarksLogic Bookmarks { get; set; }
@@ -122,5 +122,44 @@ namespace ESI.NET
             Wallet = new WalletLogic(client, config, data);
             Wars = new WarsLogic(client, config);
         }
+    }
+
+    public interface IEsiClient
+    {
+        SsoLogic SSO { get; set; }
+        AllianceLogic Alliance { get; set; }
+        AssetsLogic Assets { get; set; }
+        BookmarksLogic Bookmarks { get; set; }
+        CalendarLogic Calendar { get; set; }
+        CharacterLogic Character { get; set; }
+        ClonesLogic Clones { get; set; }
+        ContactsLogic Contacts { get; set; }
+        ContractsLogic Contracts { get; set; }
+        CorporationLogic Corporation { get; set; }
+        DogmaLogic Dogma { get; set; }
+        FactionWarfareLogic FactionWarfare { get; set; }
+        FittingsLogic Fittings { get; set; }
+        FleetsLogic Fleets { get; set; }
+        IncursionsLogic Incursions { get; set; }
+        IndustryLogic Industry { get; set; }
+        InsuranceLogic Insurance { get; set; }
+        KillmailsLogic Killmails { get; set; }
+        LocationLogic Location { get; set; }
+        LoyaltyLogic Loyalty { get; set; }
+        MailLogic Mail { get; set; }
+        MarketLogic Market { get; set; }
+        OpportunitiesLogic Opportunities { get; set; }
+        PlanetaryInteractionLogic PlanetaryInteraction { get; set; }
+        RoutesLogic Routes { get; set; }
+        SearchLogic Search { get; set; }
+        SkillsLogic Skills { get; set; }
+        SovereigntyLogic Sovereignty { get; set; }
+        StatusLogic Status { get; set; }
+        UniverseLogic Universe { get; set; }
+        UserInterfaceLogic UserInterface { get; set; }
+        WalletLogic Wallet { get; set; }
+        WarsLogic Wars { get; set; }
+
+        void SetCharacterData(AuthorizedCharacterData data);
     }
 }

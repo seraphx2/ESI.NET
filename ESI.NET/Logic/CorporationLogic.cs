@@ -8,14 +8,14 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class CorporationLogic
+    public class CorporationLogic : _BaseLogic
     {
-        private HttpClient _client;
-        private ESIConfig _config;
-        private AuthorizedCharacterData _data;
+        private readonly HttpClient _client;
+        private readonly EsiConfig _config;
+        private readonly AuthorizedCharacterData _data;
         private int corporation_id;
 
-        public CorporationLogic(HttpClient client, ESIConfig config, AuthorizedCharacterData data = null)
+        public CorporationLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
         {
             _client = client;
             _config = config;
@@ -47,7 +47,7 @@ namespace ESI.NET.Logic
         /// <param name="corporation_ids"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Corporation>>> Names(int[] corporation_ids)
-            => await Execute<List<Corporation>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/corporations/names/", new string[]
+            => await Execute<List<Corporation>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/corporations/names/", parameters: new string[]
             {
                 $"corporation_ids={string.Join(",", corporation_ids)}"
             });
@@ -93,7 +93,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Structure>>> Structures(int page = 1)
-            => await Execute<List<Structure>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/structures/", new string[]
+            => await Execute<List<Structure>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/structures/", parameters: new string[]
             {
                 $"page={page}"
             }, token: _data.Token);
@@ -147,7 +147,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Blueprint>>> Blueprints(int page = 1)
-            => await Execute<List<Blueprint>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/blueprints/", new string[]
+            => await Execute<List<Blueprint>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/blueprints/", parameters: new string[]
             {
                 $"page={page}"
             }, token: _data.Token);
@@ -158,7 +158,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<Standing>> Standings(int page = 1)
-            => await Execute<Standing>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/standings/", new string[]
+            => await Execute<Standing>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/standings/", parameters: new string[]
             {
                 $"page={page}"
             }, token: _data.Token);
@@ -169,7 +169,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Starbase>>> Starbases(int page = 1)
-            => await Execute<List<Starbase>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/starbases/", new string[]
+            => await Execute<List<Starbase>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/starbases/", parameters: new string[]
             {
                 $"page={page}"
             }, token: _data.Token);
@@ -181,7 +181,7 @@ namespace ESI.NET.Logic
         /// <param name="system_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<StarbaseInfo>> Starbase(int starbase_id, int system_id)
-            => await Execute<StarbaseInfo>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/starbases/{starbase_id}/", new string[]
+            => await Execute<StarbaseInfo>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/starbases/{starbase_id}/", parameters: new string[]
             {
                 $"system_id={system_id}"
             }, token: _data.Token);
@@ -192,7 +192,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<ContainerLog>>> ContainerLogs(int page = 1)
-            => await Execute<List<ContainerLog>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/containers/logs/", new string[]
+            => await Execute<List<ContainerLog>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/containers/logs/", parameters: new string[]
             {
                 $"page={page}"
             }, token: _data.Token);
@@ -210,7 +210,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Medal>>> Medals(int page = 1)
-            => await Execute<List<Medal>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/medals/", new string[]
+            => await Execute<List<Medal>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/medals/", parameters: new string[]
             {
                 $"page={page}"
             }, token: _data.Token);
@@ -221,7 +221,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<IssuedMedal>>> MedalsIssued(int page = 1)
-            => await Execute<List<IssuedMedal>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/medals/issued/", new string[]
+            => await Execute<List<IssuedMedal>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/medals/issued/", parameters: new string[]
             {
                 $"page={page}"
             }, token: _data.Token);
@@ -232,7 +232,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<int[]>> Outposts(int page = 1)
-            => await Execute<int[]>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/outposts/", new string[]
+            => await Execute<int[]>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/outposts/", parameters: new string[]
             {
                 $"page={page}"
             }, token: _data.Token);
@@ -251,7 +251,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Shareholder>>> Shareholders(int page = 1)
-            => await Execute<List<Shareholder>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/shareholders/", new string[]
+            => await Execute<List<Shareholder>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/shareholders/", parameters: new string[]
             {
                 $"page={page}"
             }, token: _data.Token);

@@ -7,14 +7,14 @@ using model = ESI.NET.Models.Opportunities;
 
 namespace ESI.NET.Logic
 {
-    public class OpportunitiesLogic
+    public class OpportunitiesLogic : _BaseLogic
     {
-        private HttpClient _client;
-        private ESIConfig _config;
-        private AuthorizedCharacterData _data;
-        private int character_id;
+        private readonly HttpClient _client;
+        private readonly EsiConfig _config;
+        private readonly AuthorizedCharacterData _data;
+        private readonly int character_id;
         
-        public OpportunitiesLogic(HttpClient client, ESIConfig config, AuthorizedCharacterData data = null)
+        public OpportunitiesLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
         {
             _client = client;
             _config = config;

@@ -4,12 +4,12 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class UserInterfaceLogic
+    public class UserInterfaceLogic : _BaseLogic
     {
-        private HttpClient _client;
-        private ESIConfig _config;
+        private readonly HttpClient _client;
+        private readonly EsiConfig _config;
 
-        public UserInterfaceLogic(HttpClient client, ESIConfig config) { _client = client; _config = config; }
+        public UserInterfaceLogic(HttpClient client, EsiConfig config) { _client = client; _config = config; }
 
         /// <summary>
         /// /ui/openwindow/marketdetails/
@@ -17,7 +17,7 @@ namespace ESI.NET.Logic
         /// <param name="type_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> MarketDetails(int type_id)
-            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/openwindow/marketdetails/", new string[]
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/openwindow/marketdetails/", parameters: new string[]
             {
                 $"type_id={type_id}"
             });
@@ -28,7 +28,7 @@ namespace ESI.NET.Logic
         /// <param name="contract_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> Contract(int contract_id)
-            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/openwindow/contract/", new string[]
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/openwindow/contract/", parameters: new string[]
             {
                 $"contract_id={contract_id}"
             });
@@ -39,7 +39,7 @@ namespace ESI.NET.Logic
         /// <param name="target_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> Information(int target_id)
-            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/openwindow/information/", new string[]
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/openwindow/information/", parameters: new string[]
             {
                 $"target_id={target_id}"
             });
@@ -52,7 +52,7 @@ namespace ESI.NET.Logic
         /// <param name="clear_other_waypoints"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> Waypoint(long destination_id, bool add_to_beginning = false, bool clear_other_waypoints = false)
-            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/autopilot/waypoint/", new string[]
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/autopilot/waypoint/", parameters: new string[]
             {
                 $"destination_id={destination_id}",
                 $"add_to_beginning={add_to_beginning}",

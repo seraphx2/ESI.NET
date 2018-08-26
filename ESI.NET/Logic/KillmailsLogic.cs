@@ -7,14 +7,14 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class KillmailsLogic
+    public class KillmailsLogic : _BaseLogic
     {
-        private HttpClient _client;
-        private ESIConfig _config;
-        private AuthorizedCharacterData _data;
-        private int character_id, corporation_id;
+        private readonly HttpClient _client;
+        private readonly EsiConfig _config;
+        private readonly AuthorizedCharacterData _data;
+        private readonly int character_id, corporation_id;
 
-        public KillmailsLogic(HttpClient client, ESIConfig config, AuthorizedCharacterData data = null)
+        public KillmailsLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
         {
             _client = client;
             _config = config;
@@ -40,7 +40,7 @@ namespace ESI.NET.Logic
             if (max_kill_id > 0)
                 parameters.Add($"max_kill_id={max_kill_id}");
 
-            var response = await Execute<List<Killmail>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/killmails/recent/", parameters.ToArray(), token: _data.Token);
+            var response = await Execute<List<Killmail>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/killmails/recent/", parameters: parameters.ToArray(), token: _data.Token);
 
             return response;
         }
@@ -57,7 +57,7 @@ namespace ESI.NET.Logic
             if (max_kill_id > 0)
                 parameters.Add($"max_kill_id={max_kill_id}");
 
-            var response = await Execute<List<Killmail>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/killmails/recent/", parameters.ToArray(), token: _data.Token);
+            var response = await Execute<List<Killmail>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/killmails/recent/", parameters: parameters.ToArray(), token: _data.Token);
 
             return response;
         }

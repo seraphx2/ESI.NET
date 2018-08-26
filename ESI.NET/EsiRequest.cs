@@ -10,17 +10,10 @@ namespace ESI.NET
 {
     public static class EsiRequest
     {
-        public async static Task<EsiResponse<T>> Execute<T>(HttpClient client, ESIConfig config, RequestSecurity security, RequestMethod method, string endpoint, string[] parameters = null, object body = null, string token = null)
+        public async static Task<EsiResponse<T>> Execute<T>(HttpClient client, EsiConfig config, RequestSecurity security, RequestMethod method, string endpoint, string noContent = null, string[] parameters = null, object body = null, string token = null)
         {
-            var baseUrl = "https://esi.tech.ccp.is/";
             string version = "latest";// EndpointVersions[endpoint];
-            var url = $"{baseUrl}{version}{endpoint}?datasource={ config.DataSource.ToEsiValue() }";
-
-            //Enforce user agent value
-            //if (config.UserAgent == string.Empty || config.UserAgent == null)
-            //    throw new Exception("For your protection, please provide a user_agent value. This can be your character name and/or project name. CCP will be more likely to contact you than just cut off access to ESI if you provide something that can identify you within the New Eden galaxy.");
-            //else
-            //    client.DefaultRequestHeaders.Add("X-User-Agent", config.UserAgent);
+            var url = $"{config.EsiUrl}{version}{endpoint}?datasource={ config.DataSource.ToEsiValue() }";
 
             //Attach token to request header if this endpoint requires an authorized character
             if (security == RequestSecurity.Authenticated)
@@ -63,7 +56,7 @@ namespace ESI.NET
             }
             
             //Output final object
-            var obj = new EsiResponse<T>(response, method, endpoint);
+            var obj = new EsiResponse<T>(response, method, endpoint, noContent);
             return obj;
         }
 

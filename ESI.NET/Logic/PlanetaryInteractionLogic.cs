@@ -7,14 +7,14 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class PlanetaryInteractionLogic
+    public class PlanetaryInteractionLogic : _BaseLogic
     {
-        private HttpClient _client;
-        private ESIConfig _config;
-        private AuthorizedCharacterData _data;
-        private int character_id, corporation_id;
+        private readonly HttpClient _client;
+        private readonly EsiConfig _config;
+        private readonly AuthorizedCharacterData _data;
+        private readonly int character_id, corporation_id;
 
-        public PlanetaryInteractionLogic(HttpClient client, ESIConfig config, AuthorizedCharacterData data = null)
+        public PlanetaryInteractionLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
         {
             _client = client;
             _config = config;

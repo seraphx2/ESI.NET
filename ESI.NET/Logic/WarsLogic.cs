@@ -6,11 +6,11 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class WarsLogic
+    public class WarsLogic : _BaseLogic
     {
-        private HttpClient _client;
-        private ESIConfig _config;
-        public WarsLogic(HttpClient client, ESIConfig config) { _client = client; _config = config; }
+        private readonly HttpClient _client;
+        private readonly EsiConfig _config;
+        public WarsLogic(HttpClient client, EsiConfig config) { _client = client; _config = config; }
 
         /// <summary>
         /// /wars/
@@ -24,7 +24,7 @@ namespace ESI.NET.Logic
             if (max_war_id > 0)
                 parameters.Add($"max_war_id={max_war_id}");
 
-            var response = await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/wars/", parameters.ToArray());
+            var response = await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/wars/", parameters: parameters.ToArray());
 
             return response;
         }
@@ -44,7 +44,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Models.Killmails.Killmail>>> Kills(int war_id, int page = 1)
-            => await Execute<List<Models.Killmails.Killmail>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/wars/{war_id}/killmails/", new string[]
+            => await Execute<List<Models.Killmails.Killmail>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/wars/{war_id}/killmails/", parameters: new string[]
             {
                 $"page={page}"
             });

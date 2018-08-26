@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 
-namespace ESI.NET
+namespace ESI.NET.Logic
 {
-    public static class Dictionaries
+    public class _BaseLogic
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public static Dictionary<string, string> NoContentMessages = new Dictionary<string, string>()
+        public ImmutableDictionary<string, string> NoContentMessages = new Dictionary<string, string>()
         {
             //Calendar
             {"PUT|/characters/{character_id}/calendar/{event_id}/", "Event updated"},
@@ -47,43 +43,6 @@ namespace ESI.NET
             {"POST|/ui/openwindow/information/", "Open window request received"},
             {"POST|/ui/autopilot/waypoint/", "Open window request received"},
             {"POST|/ui/openwindow/newmail/", "Open window request received"},
-        };
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public static Dictionary<string, string> EndpointVersions = new Dictionary<string, string>()
-        {
-            {"/characters/{character_id}/assets/", ""},
-            {"/characters/{character_id}/assets/locations/", ""},
-            {"/characters/{character_id}/assets/names/", ""},
-            {"/corporations/{corporation_id}/assets/", ""},
-            {"/corporations/{corporation_id}/assets/locations/", ""},
-            {"/corporations/{corporation_id}/assets/names/", ""},
-
-            {"/incursions/", ""},
-
-            {"/insurance/prices/", ""},
-
-            {"/characters/{character_id}/killmails/recent/", ""},
-            {"/corporations/{corporation_id}/killmails/recent/", ""},
-            {"/killmails/{killmail_id}/{killmail_hash}/", ""},
-
-            {"/characters/{character_id}/planets/", ""},
-            {"/characters/{character_id}/planets/{planet_id}/", ""},
-            {"/corporations/{corporation_id}/customs_offices/", ""},
-            {"/universe/schematics/{schematic_id}/", ""},
-
-            {"/characters/{character_id}/search/", ""},
-            {"/search/", ""},
-
-            {"/sovereignty/campaigns/", ""},
-            {"/sovereignty/map/", ""},
-            {"/sovereignty/structures/", ""},
-
-            {"/wars/", ""},
-            {"/wars/{war_id}/", ""},
-            {"/wars/{war_id}/killmails/", ""}
-        };
+        }.ToImmutableDictionary();
     }
 }

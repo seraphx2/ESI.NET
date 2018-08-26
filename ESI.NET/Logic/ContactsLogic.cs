@@ -1,22 +1,21 @@
 ﻿using ESI.NET.Models.Contacts;
 using ESI.NET.Models.SSO;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class ContactsLogic
+    public class ContactsLogic : _BaseLogic
     {
-        private HttpClient _client;
-        private ESIConfig _config;
+        private readonly HttpClient _client;
+        private readonly EsiConfig _config;
         AuthorizedCharacterData _data;
 
-        private int character_id, corporation_id, alliance_id;
+        private readonly int character_id, corporation_id, alliance_id;
 
-        public ContactsLogic(HttpClient client, ESIConfig config, AuthorizedCharacterData data = null)
+        public ContactsLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
         {
             _client = client;
             _config = config;
@@ -36,7 +35,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Contact>>> ListForCharacter(int page = 1)
-            => await Execute<List<Contact>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/contacts/", new string[]
+            => await Execute<List<Contact>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/contacts/", parameters: new string[]
             {
                 $"page={page}"
             }, token: _data.Token);
@@ -47,7 +46,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Contact>>> ListForCorporation(int page = 1)
-            => await Execute<List<Contact>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/contacts/", new string[]
+            => await Execute<List<Contact>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/contacts/", parameters: new string[]
             {
                 $"page={page}"
             }, token: _data.Token);
@@ -58,7 +57,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Contact>>> ListForAlliance(int page = 1)
-            => await Execute<List<Contact>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/alliances/{alliance_id}/contacts/", new string[]
+            => await Execute<List<Contact>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/alliances/{alliance_id}/contacts/", parameters: new string[]
             {
                 $"page={page}"
             }, token: _data.Token);
@@ -83,12 +82,7 @@ namespace ESI.NET.Logic
             if (watched != null)
                 parameters.Add($"watched={watched}");
 
-            var response = await Execute<int[]>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, $"/characters/{character_id}/contacts/", body: body, parameters: parameters.ToArray(), token: _data.Token);
-
-            if (response.StatusCode == HttpStatusCode.NoContent)
-                response.Message = Dictionaries.NoContentMessages["POST|/characters/{character_id}/contacts/"];
-
-            return response;
+            return await Execute<int[]>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, $"/characters/{character_id}/contacts/", noContent: NoContentMessages["POST|/characters/{character_id}/contacts/"], body: body, parameters: parameters.ToArray(), token: _data.Token);
         }
 
         /// <summary>
@@ -111,12 +105,7 @@ namespace ESI.NET.Logic
             if (watched != null)
                 parameters.Add($"watched={watched}");
 
-            var response = await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.PUT, $"/characters/{character_id}/contacts/", body: body, parameters: parameters.ToArray(), token: _data.Token);
-
-            if (response.StatusCode == HttpStatusCode.NoContent)
-                response.Message = Dictionaries.NoContentMessages["PUT|/characters/{character_id}/contacts/"];
-
-            return response;
+            return await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.PUT, $"/characters/{character_id}/contacts/", noContent: NoContentMessages["PUT|/characters/{character_id}/contacts/"], body: body, parameters: parameters.ToArray(), token: _data.Token); ;
         }
 
         /// <summary>
@@ -125,17 +114,10 @@ namespace ESI.NET.Logic
         /// <param name="contact_ids"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> Delete(int[] contact_ids)
-        {
-            var response = await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.DELETE, $"/characters/{character_id}/contacts/", new string[]
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.DELETE, $"/characters/{character_id}/contacts/", noContent: NoContentMessages["DELETE|/characters/{character_id}/contacts/"], parameters: new string[]
             {
                 $"contact_ids={string.Join(",", contact_ids)}"
             }, token: _data.Token);
-
-            if (response.StatusCode == HttpStatusCode.NoContent)
-                response.Message = Dictionaries.NoContentMessages["DELETE|/characters/{character_id}/contacts/"];
-
-            return response;
-        }
 
         /// <summary>
         /// /characters/{character_id}/contacts/labels/

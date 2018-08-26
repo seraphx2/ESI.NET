@@ -7,14 +7,14 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class SkillsLogic
+    public class SkillsLogic : _BaseLogic
     {
-        private HttpClient _client;
-        private ESIConfig _config;
-        private AuthorizedCharacterData _data;
-        private int character_id;
+        private readonly HttpClient _client;
+        private readonly EsiConfig _config;
+        private readonly AuthorizedCharacterData _data;
+        private readonly int character_id;
 
-        public SkillsLogic(HttpClient client, ESIConfig config, AuthorizedCharacterData data = null)
+        public SkillsLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
         {
             _client = client;
             _config = config;

@@ -2,12 +2,13 @@
 
 namespace ESI.NET
 {
-    public class ESIConfig
+    public class EsiConfig
     {
-        public string UserAgent { get; set; }
+        public string EsiUrl { get; set; }
         public DataSource DataSource { get; set; }
         public string ClientId { get; set; }
         public string SecretKey { get; set; }
         public string CallbackUrl { get; set; }
+        public string UserAgent { get; set; }
     }
 }

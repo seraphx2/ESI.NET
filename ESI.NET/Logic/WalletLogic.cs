@@ -7,14 +7,14 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class WalletLogic
+    public class WalletLogic : _BaseLogic
     {
-        private HttpClient _client;
-        private ESIConfig _config;
-        private AuthorizedCharacterData _data;
-        private int character_id, corporation_id;
+        private readonly HttpClient _client;
+        private readonly EsiConfig _config;
+        private readonly AuthorizedCharacterData _data;
+        private readonly int character_id, corporation_id;
 
-        public WalletLogic(HttpClient client, ESIConfig config, AuthorizedCharacterData data = null)
+        public WalletLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
         {
             _client = client;
             _config = config;
@@ -45,7 +45,7 @@ namespace ESI.NET.Logic
             if (from_id != null)
                 parameters.Add($"from_id={from_id}");
 
-            return await Execute<List<JournalEntry>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/wallet/journal/", parameters.ToArray(), token: _data.Token);
+            return await Execute<List<JournalEntry>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/wallet/journal/", parameters: parameters.ToArray(), token: _data.Token);
         }
             
 
@@ -60,7 +60,7 @@ namespace ESI.NET.Logic
             if (from_id != null)
                 parameters.Add($"from_id={from_id}");
 
-            return await Execute<List<Transaction>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/wallet/transactions/", parameters.ToArray(), token: _data.Token);
+            return await Execute<List<Transaction>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/wallet/transactions/", parameters: parameters.ToArray(), token: _data.Token);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace ESI.NET.Logic
             if (from_id != null)
                 parameters.Add($"from_id={from_id}");
 
-            return await Execute<List<JournalEntry>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/wallets/{division}/journal/", parameters.ToArray(), token: _data.Token);
+            return await Execute<List<JournalEntry>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/wallets/{division}/journal/", parameters: parameters.ToArray(), token: _data.Token);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace ESI.NET.Logic
             if (from_id != null)
                 parameters.Add($"from_id={from_id}");
 
-            return await Execute<List<Transaction>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/wallets/{division}/transactions/", parameters.ToArray(), token: _data.Token);
+            return await Execute<List<Transaction>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/wallets/{division}/transactions/", parameters: parameters.ToArray(), token: _data.Token);
         }
     }
 }

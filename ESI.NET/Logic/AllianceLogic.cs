@@ -7,12 +7,12 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class AllianceLogic
+    public class AllianceLogic : _BaseLogic
     {
-        private HttpClient _client;
-        private ESIConfig _config;
+        private readonly HttpClient _client;
+        private readonly EsiConfig _config;
 
-        public AllianceLogic(HttpClient client, ESIConfig config) { _client = client; _config = config; }
+        public AllianceLogic(HttpClient client, EsiConfig config) { _client = client; _config = config; }
 
         /// <summary>
         /// /alliances/
@@ -27,7 +27,7 @@ namespace ESI.NET.Logic
         /// <param name="alliance_ids"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Alliance>>> Names(int[] alliance_ids)
-            => await Execute<List<Alliance>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/alliances/names/", new string[]
+            => await Execute<List<Alliance>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/alliances/names/", parameters: new string[]
             {
                 $"alliance_ids={string.Join(",", alliance_ids)}"
             });

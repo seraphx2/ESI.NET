@@ -3,7 +3,7 @@ using System;
 
 namespace ESI.NET.Models.SSO
 {
-    public class SSOToken
+    public class SsoToken
     {
         [JsonProperty("access_token")]
         public string Value { get; set; }

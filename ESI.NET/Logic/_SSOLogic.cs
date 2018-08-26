@@ -12,13 +12,13 @@ using System.Threading.Tasks;
 
 namespace ESI.NET
 {
-    public class SSOLogic
+    public class SsoLogic : _BaseLogic
     {
-        private HttpClient _client;
-        private ESIConfig _config;
+        private readonly HttpClient _client;
+        private readonly EsiConfig _config;
         string clientKey;
 
-        public SSOLogic(HttpClient client, ESIConfig config)
+        public SsoLogic(HttpClient client, EsiConfig config)
         {
             _client = client;
             _config = config;
@@ -26,8 +26,8 @@ namespace ESI.NET
             clientKey = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{config.ClientId}:{config.SecretKey}"));
         }
 
-        public string CreateAuthenticationUrl(List<string> scopes)
-            => $"https://login.eveonline.com/oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}&scope={string.Join(" ", scopes)}";
+        public string CreateAuthenticationUrl(List<string> scopes = null)
+            => $"https://login.eveonline.com/oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}{((scopes != null) ? $"&scope={string.Join(" ", scopes)}" : "")}";
 
         /// <summary>
         /// SSO Token helper
@@ -37,7 +37,7 @@ namespace ESI.NET
         /// <param name="grantType"></param>
         /// <param name="code">The authorization_code or the refresh_token</param>
         /// <returns></returns>
-        public async Task<SSOToken> GetToken(GrantType grantType, string code)
+        public async Task<SsoToken> GetToken(GrantType grantType, string code)
         {
             var body = $"grant_type={grantType.ToEsiValue()}";
             if (grantType == GrantType.AuthorizationCode)
@@ -49,7 +49,7 @@ namespace ESI.NET
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", clientKey);
 
             var response = await _client.PostAsync("https://login.eveonline.com/oauth/token", postBody).Result.Content.ReadAsStringAsync();
-            var token = JsonConvert.DeserializeObject<SSOToken>(response);
+            var token = JsonConvert.DeserializeObject<SsoToken>(response);
             token.Expires = DateTime.Now.AddSeconds(token.ExpiresIn);
 
             return token;

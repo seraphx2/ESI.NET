@@ -2,31 +2,27 @@
 using ESI.NET.Models.Calendar;
 using ESI.NET.Models.SSO;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class CalendarLogic
+    public class CalendarLogic : _BaseLogic
     {
-        private HttpClient _client;
-        private ESIConfig _config;
-        private AuthorizedCharacterData _data;
-        private int character_id, corporation_id;
+        private readonly HttpClient _client;
+        private readonly EsiConfig _config;
+        private readonly AuthorizedCharacterData _data;
+        private readonly int character_id;
 
-        public CalendarLogic(HttpClient client, ESIConfig config, AuthorizedCharacterData data = null)
+        public CalendarLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
         {
             _client = client;
             _config = config;
             _data = data;
 
             if (data != null)
-            {
                 character_id = data.CharacterID;
-                corporation_id = data.CorporationID;
-            }
         }
 
         /// <summary>
@@ -51,17 +47,10 @@ namespace ESI.NET.Logic
         /// <param name="response"></param>
         /// <returns></returns>
         public async Task<EsiResponse<Event>> Respond(int event_id, EventResponse eventResponse)
-        {
-            var response = await Execute<Event>(_client, _config, RequestSecurity.Authenticated, RequestMethod.PUT, $"/characters/{character_id}/calendar/{event_id}/", body: new
+            => await Execute<Event>(_client, _config, RequestSecurity.Authenticated, RequestMethod.PUT, $"/characters/{character_id}/calendar/{event_id}/", noContent: NoContentMessages["PUT|/characters/{character_id}/calendar/{event_id}/"], body: new
             {
                 response = eventResponse.ToEsiValue()
             }, token: _data.Token);
-
-            if (response.StatusCode == HttpStatusCode.NoContent)
-                response.Message = Dictionaries.NoContentMessages["PUT|/characters/{character_id}/calendar/{event_id}/"];
-
-            return response;
-        }
 
         /// <summary>
         /// 

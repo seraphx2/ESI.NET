@@ -7,14 +7,14 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class IndustryLogic
+    public class IndustryLogic : _BaseLogic
     {
-        private HttpClient _client;
-        private ESIConfig _config;
-        private AuthorizedCharacterData _data;
+        private readonly HttpClient _client;
+        private readonly EsiConfig _config;
+        private readonly AuthorizedCharacterData _data;
         private int corporation_id, character_id;
 
-        public IndustryLogic(HttpClient client, ESIConfig config, AuthorizedCharacterData data = null)
+        public IndustryLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
         {
             _client = client;
             _config = config;
@@ -47,7 +47,7 @@ namespace ESI.NET.Logic
         /// <param name="include_completed"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Job>>> JobsForCharacter(bool include_completed = false)
-            => await Execute<List<Job>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/industry/jobs/", new string[]
+            => await Execute<List<Job>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/industry/jobs/", parameters: new string[]
             {
                 $"include_completed={include_completed}"
             }, token: _data.Token);
@@ -58,7 +58,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Entry>>> MiningLedger(int page = 1)
-            => await Execute<List<Entry>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/mining/", new string[]
+            => await Execute<List<Entry>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/mining/", parameters: new string[]
             {
                 $"page={page}"
             }, token: _data.Token);
@@ -69,7 +69,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Observer>>> Observers(int page = 1)
-            => await Execute<List<Observer>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporation/{corporation_id}/mining/observers/", new string[]
+            => await Execute<List<Observer>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporation/{corporation_id}/mining/observers/", parameters: new string[]
             {
                 $"page={page}"
             }, token: _data.Token);
@@ -81,7 +81,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<ObserverInfo>>> ObservedMining(int observer_id, int page = 1)
-            => await Execute<List<ObserverInfo>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporation/{corporation_id}/mining/observers/{observer_id}/", new string[]
+            => await Execute<List<ObserverInfo>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporation/{corporation_id}/mining/observers/{observer_id}/", parameters: new string[]
             {
                 $"page={page}"
             }, token: _data.Token);
@@ -93,7 +93,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Job>>> JobsForCorporation(bool include_completed = false, int page = 1)
-            => await Execute<List<Job>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/industry/jobs/", new string[]
+            => await Execute<List<Job>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/industry/jobs/", parameters: new string[]
             {
                 $"include_completed={include_completed}",
                 $"page={page}"

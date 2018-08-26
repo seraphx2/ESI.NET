@@ -7,7 +7,7 @@ namespace ESI.NET
 {
     public class EsiResponse<T>
     {
-        public EsiResponse(HttpResponseMessage response, RequestMethod method, string endpoint)
+        public EsiResponse(HttpResponseMessage response, RequestMethod method, string endpoint, string noContent)
         {
             StatusCode = response.StatusCode;
 
@@ -18,6 +18,8 @@ namespace ESI.NET
                 if (response.StatusCode == HttpStatusCode.OK ||
                     response.StatusCode == HttpStatusCode.Created)
                     Data = JsonConvert.DeserializeObject<T>(stringResult);
+                else if (response.StatusCode == HttpStatusCode.NoContent)
+                    Message = noContent;
                 else
                     Message = JsonConvert.DeserializeAnonymousType(stringResult, new { error = string.Empty }).error;
             }

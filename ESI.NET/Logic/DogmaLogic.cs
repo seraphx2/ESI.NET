@@ -6,12 +6,12 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class DogmaLogic
+    public class DogmaLogic : _BaseLogic
     {
-        private HttpClient _client;
-        private ESIConfig _config;
+        private readonly HttpClient _client;
+        private readonly EsiConfig _config;
 
-        public DogmaLogic(HttpClient client, ESIConfig config) { _client = client; _config = config; }
+        public DogmaLogic(HttpClient client, EsiConfig config) { _client = client; _config = config; }
 
         /// <summary>
         /// /dogma/attributes/

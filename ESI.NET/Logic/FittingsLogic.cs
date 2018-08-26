@@ -1,21 +1,20 @@
 ﻿using ESI.NET.Models.Fittings;
 using ESI.NET.Models.SSO;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class FittingsLogic
+    public class FittingsLogic : _BaseLogic
     {
-        private HttpClient _client;
-        private ESIConfig _config;
-        private AuthorizedCharacterData _data;
-        private int character_id;
+        private readonly HttpClient _client;
+        private readonly EsiConfig _config;
+        private readonly AuthorizedCharacterData _data;
+        private readonly int character_id;
 
-        public FittingsLogic(HttpClient client, ESIConfig config, AuthorizedCharacterData data = null)
+        public FittingsLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
         {
             _client = client;
             _config = config;
@@ -46,13 +45,6 @@ namespace ESI.NET.Logic
         /// <param name="fitting_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> Delete(int fitting_id)
-        {
-            var response = await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.DELETE, $"/characters/{character_id}/fittings/{fitting_id}/", token: _data.Token);
-
-            if (response.StatusCode == HttpStatusCode.NoContent)
-                response.Message = Dictionaries.NoContentMessages["DELETE|/characters/{character_id}/fittings/{fitting_id}/"];
-
-            return response;
-        }
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.DELETE, $"/characters/{character_id}/fittings/{fitting_id}/", noContent: NoContentMessages["DELETE|/characters/{character_id}/fittings/{fitting_id}/"], token: _data.Token);
     }
 }

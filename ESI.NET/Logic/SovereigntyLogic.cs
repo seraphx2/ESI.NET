@@ -6,12 +6,12 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class SovereigntyLogic
+    public class SovereigntyLogic : _BaseLogic
     {
-        private HttpClient _client;
-        private ESIConfig _config;
+        private readonly HttpClient _client;
+        private readonly EsiConfig _config;
 
-        public SovereigntyLogic(HttpClient client, ESIConfig config) { _client = client; _config = config; }
+        public SovereigntyLogic(HttpClient client, EsiConfig config) { _client = client; _config = config; }
 
         /// <summary>
         /// /sovereignty/campaigns/

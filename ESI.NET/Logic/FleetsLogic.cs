@@ -2,21 +2,20 @@
 using ESI.NET.Models.Fleets;
 using ESI.NET.Models.SSO;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class FleetsLogic
+    public class FleetsLogic : _BaseLogic
     {
-        private HttpClient _client;
-        private ESIConfig _config;
-        private AuthorizedCharacterData _data;
-        private int character_id;
+        private readonly HttpClient _client;
+        private readonly EsiConfig _config;
+        private readonly AuthorizedCharacterData _data;
+        private readonly int character_id;
 
-        public FleetsLogic(HttpClient client, ESIConfig config, AuthorizedCharacterData data = null)
+        public FleetsLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
         {
             _client = client;
             _config = config;
@@ -42,23 +41,7 @@ namespace ESI.NET.Logic
         /// <param name="is_free_move"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> UpdateSettings(long fleet_id, string motd = null, bool? is_free_move = null)
-        {
-            dynamic body = null;
-
-            if (motd != null)
-                body = new { motd = motd };
-            if (is_free_move != null)
-                body = new { is_free_move = is_free_move };
-            if (motd != null && is_free_move != null)
-                body = new { motd = motd, is_free_move = is_free_move };
-
-            var response = await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.PUT, $"/fleets/{fleet_id}/", body: body, token: _data.Token);
-
-            if (response.StatusCode == HttpStatusCode.NoContent)
-                response.Message = Dictionaries.NoContentMessages["PUT|/fleets/{fleet_id}/"];
-
-            return response;
-        }
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.PUT, $"/fleets/{fleet_id}/", noContent: NoContentMessages["PUT|/fleets/{fleet_id}/"], body: BuildUpdateSettingsObject(motd, is_free_move), token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/fleet/
@@ -85,17 +68,7 @@ namespace ESI.NET.Logic
         /// <param name="squad_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> InviteCharacter(long fleet_id, int character_id, FleetRole role, long wing_id = 0, long squad_id = 0)
-        {
-            dynamic body = null;
-            body = BuildFleetInvite(character_id, role, wing_id, squad_id, body);
-
-            var response = await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, $"/fleets/{fleet_id}/members/", body: body, token: _data.Token);
-
-            if (response.StatusCode == HttpStatusCode.NoContent)
-                response.Message = Dictionaries.NoContentMessages["POST|/fleets/{fleet_id}/members/"];
-
-            return response;
-        }
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, $"/fleets/{fleet_id}/members/", noContent: NoContentMessages["POST|/fleets/{fleet_id}/members/"], body: BuildFleetInviteObject(character_id, role, wing_id, squad_id), token: _data.Token);
 
         /// <summary>
         /// /fleets/{fleet_id}/members/{member_id}/
@@ -107,17 +80,7 @@ namespace ESI.NET.Logic
         /// <param name="squad_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> MoveCharacter(long fleet_id, int member_id, FleetRole role, long wing_id = 0, long squad_id = 0)
-        {
-            dynamic body = null;
-            body = BuildFleetInvite(character_id, role, wing_id, squad_id, body);
-
-            var response = await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.PUT, $"/fleets/{fleet_id}/members/{member_id}/", body: body, token: _data.Token);
-
-            if (response.StatusCode == HttpStatusCode.NoContent)
-                response.Message = Dictionaries.NoContentMessages["PUT|/fleets/{fleet_id}/members/{member_id}/"];
-
-            return response;
-        }
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.PUT, $"/fleets/{fleet_id}/members/{member_id}/", noContent: NoContentMessages["PUT|/fleets/{fleet_id}/members/{member_id}/"], body: BuildFleetInviteObject(character_id, role, wing_id, squad_id), token: _data.Token);
 
         /// <summary>
         /// /fleets/{fleet_id}/members/{member_id}/
@@ -126,14 +89,7 @@ namespace ESI.NET.Logic
         /// <param name="member_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> KickCharacter(long fleet_id, int member_id)
-        {
-            var response = await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.DELETE, $"/fleets/{fleet_id}/members/{member_id}/", token: _data.Token);
-
-            if (response.StatusCode == HttpStatusCode.NoContent)
-                response.Message = Dictionaries.NoContentMessages["DELETE|/fleets/{fleet_id}/members/{member_id}/"];
-
-            return response;
-        }
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.DELETE, $"/fleets/{fleet_id}/members/{member_id}/", noContent: NoContentMessages["DELETE|/fleets/{fleet_id}/members/{member_id}/"], token: _data.Token);
 
         /// <summary>
         /// /fleets/{fleet_id}/wings/
@@ -141,14 +97,7 @@ namespace ESI.NET.Logic
         /// <param name="fleet_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Wing>>> Wings(long fleet_id)
-        {
-            var response = await Execute<List<Wing>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/fleets/{fleet_id}/wings/", token: _data.Token);
-
-            if (response.StatusCode == HttpStatusCode.NoContent)
-                response.Message = Dictionaries.NoContentMessages["DELETE|/fleets/{fleet_id}/members/{member_id}/"];
-
-            return response;
-        }
+            => await Execute<List<Wing>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/fleets/{fleet_id}/wings/", noContent: NoContentMessages["DELETE|/fleets/{fleet_id}/members/{member_id}/"], token: _data.Token);
 
         /// <summary>
         /// /fleets/{fleet_id}/wings/
@@ -166,17 +115,10 @@ namespace ESI.NET.Logic
         /// <param name="name"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> RenameWing(long fleet_id, long wing_id, string name)
-        {
-            var response = await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.PUT, $"/fleets/{fleet_id}/wings/{wing_id}/", body: new
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.PUT, $"/fleets/{fleet_id}/wings/{wing_id}/", noContent: NoContentMessages["PUT|/fleets/{fleet_id}/wings/{wing_id}/"], body: new
             {
                 name
             }, token: _data.Token);
-
-            if (response.StatusCode == HttpStatusCode.NoContent)
-                response.Message = Dictionaries.NoContentMessages["PUT|/fleets/{fleet_id}/wings/{wing_id}/"];
-
-            return response;
-        }
 
         /// <summary>
         /// /fleets/{fleet_id}/wings/{wing_id}/
@@ -185,14 +127,7 @@ namespace ESI.NET.Logic
         /// <param name="wing_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> DeleteWing(long fleet_id, long wing_id)
-        {
-            var response = await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.DELETE, $"/fleets/{fleet_id}/wings/{wing_id}/", token: _data.Token);
-
-            if (response.StatusCode == HttpStatusCode.NoContent)
-                response.Message = Dictionaries.NoContentMessages["DELETE|/fleets/{fleet_id}/wings/{wing_id}/"];
-
-            return response;
-        }
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.DELETE, $"/fleets/{fleet_id}/wings/{wing_id}/", noContent: NoContentMessages["DELETE|/fleets/{fleet_id}/wings/{wing_id}/"], token: _data.Token);
 
         /// <summary>
         /// /fleets/{fleet_id}/wings/{wing_id}/squads/
@@ -211,17 +146,10 @@ namespace ESI.NET.Logic
         /// <param name="name"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> RenameSquad(long fleet_id, long squad_id, string name)
-        {
-            var response = await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.PUT, $"/fleets/{fleet_id}/squads/{squad_id}/", body: new
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.PUT, $"/fleets/{fleet_id}/squads/{squad_id}/", noContent: NoContentMessages["PUT|/fleets/{fleet_id}/squads/{squad_id}/"], body: new
             {
                 name
             }, token: _data.Token);
-
-            if (response.StatusCode == HttpStatusCode.NoContent)
-                response.Message = Dictionaries.NoContentMessages["PUT|/fleets/{fleet_id}/squads/{squad_id}/"];
-
-            return response;
-        }
 
         /// <summary>
         /// /fleets/{fleet_id}/squads/{squad_id}/
@@ -230,16 +158,27 @@ namespace ESI.NET.Logic
         /// <param name="squad_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> DeleteSquad(long fleet_id, long squad_id)
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.DELETE, $"/fleets/{fleet_id}/squads/{squad_id}/", noContent: NoContentMessages["DELETE|/fleets/{fleet_id}/squads/{squad_id}/"], token: _data.Token);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="motd"></param>
+        /// <param name="is_free_move"></param>
+        /// <returns></returns>
+        private static dynamic BuildUpdateSettingsObject(string motd, bool? is_free_move)
         {
-            var response = await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.DELETE, $"/fleets/{fleet_id}/squads/{squad_id}/", token: _data.Token);
+            dynamic body = null;
 
-            if (response.StatusCode == HttpStatusCode.NoContent)
-                response.Message = Dictionaries.NoContentMessages["DELETE|/fleets/{fleet_id}/squads/{squad_id}/"];
+            if (motd != null)
+                body = new { motd };
+            if (is_free_move != null)
+                body = new { is_free_move };
+            if (motd != null && is_free_move != null)
+                body = new { motd, is_free_move };
 
-            return response;
+            return body;
         }
-
-
 
         /// <summary>
         /// Dynamically builds the required structure for a fleet invite or move
@@ -250,8 +189,10 @@ namespace ESI.NET.Logic
         /// <param name="squad_id"></param>
         /// <param name="body"></param>
         /// <returns></returns>
-        private static dynamic BuildFleetInvite(int character_id, FleetRole role, long wing_id, long squad_id, dynamic body)
+        private static dynamic BuildFleetInviteObject(int character_id, FleetRole role, long wing_id, long squad_id)
         {
+            dynamic body = null;
+
             if (role == FleetRole.FleetCommander)
                 body = new { character_id, role = role.ToString() };
 

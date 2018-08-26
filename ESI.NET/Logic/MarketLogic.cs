@@ -8,14 +8,14 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class MarketLogic
+    public class MarketLogic : _BaseLogic
     {
-        private HttpClient _client;
-        private ESIConfig _config;
-        private AuthorizedCharacterData _data;
+        private readonly HttpClient _client;
+        private readonly EsiConfig _config;
+        private readonly AuthorizedCharacterData _data;
         private int corporation_id, character_id;
 
-        public MarketLogic(HttpClient client, ESIConfig config, AuthorizedCharacterData data = null)
+        public MarketLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
         {
             _client = client;
             _config = config;
@@ -55,7 +55,7 @@ namespace ESI.NET.Logic
             if (type_id != null)
                 parameters.Add($"type_id={type_id}");
 
-            var response = await Execute<List<Order>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/markets/{region_id}/orders/", parameters.ToArray());
+            var response = await Execute<List<Order>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/markets/{region_id}/orders/", parameters: parameters.ToArray());
 
             return response;
         }
@@ -67,7 +67,7 @@ namespace ESI.NET.Logic
         /// <param name="type_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Statistic>>> TypeHistoryInRegion(int region_id, int type_id)
-            => await Execute<List<Statistic>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/markets/{region_id}/history/", new string[]
+            => await Execute<List<Statistic>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/markets/{region_id}/history/", parameters: new string[]
             {
                 $"type_id={type_id}"
             });
@@ -79,7 +79,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Order>>> StructureOrders(long structure_id, int page = 1)
-            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/markets/structures/{structure_id}/", new string[]
+            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/markets/structures/{structure_id}/", parameters: new string[]
             {
                 $"page={page}"
             }, token: _data.Token);
@@ -112,7 +112,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Order>>> CharacterOrderHistory(int page = 1)
-            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/orders/history/", new string[]
+            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/orders/history/", parameters: new string[]
             {
                 $"page={page}"
             }, token: _data.Token);
@@ -124,7 +124,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<int>>> Types(int region_id, int page = 1)
-            => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/markets/{region_id}/types/", new string[]
+            => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/markets/{region_id}/types/", parameters: new string[]
             {
                 $"page={page}"
             });
@@ -135,7 +135,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Order>>> CorporationOrders(int page = 1)
-            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/orders/", new string[]
+            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/orders/", parameters: new string[]
             {
                 $"page={page}"
             }, token: _data.Token);
@@ -146,7 +146,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Order>>> CorporationOrderHistory(int page = 1)
-            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/orders/history/", new string[]
+            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/orders/history/", parameters: new string[]
             {
                 $"page={page}"
             }, token: _data.Token);

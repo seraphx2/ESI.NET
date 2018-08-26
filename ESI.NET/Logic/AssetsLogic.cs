@@ -7,14 +7,14 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class AssetsLogic
+    public class AssetsLogic : _BaseLogic
     {
-        private HttpClient _client;
-        private ESIConfig _config;
-        private AuthorizedCharacterData _data;
-        private int character_id, corporation_id;
+        private readonly HttpClient _client;
+        private readonly EsiConfig _config;
+        private readonly AuthorizedCharacterData _data;
+        private readonly int character_id, corporation_id;
 
-        public AssetsLogic(HttpClient client, ESIConfig config, AuthorizedCharacterData data = null)
+        public AssetsLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
         {
             _client = client;
             _config = config;
@@ -33,7 +33,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Item>>> ForCharacter(int page = 1)
-            => await Execute<List<Item>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/assets/", new string[]
+            => await Execute<List<Item>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/assets/", parameters: new string[]
             {
                 $"page={page}"
             }, token: _data.Token);
@@ -61,7 +61,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Item>>> ForCorporation(int page = 1)
-            => await Execute<List<Item>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/assets/", new string[]
+            => await Execute<List<Item>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/assets/", parameters: new string[]
             {
                 $"page={page}"
             }, token: _data.Token);

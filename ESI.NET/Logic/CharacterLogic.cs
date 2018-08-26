@@ -8,14 +8,14 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class CharacterLogic
+    public class CharacterLogic : _BaseLogic
     {
-        private HttpClient _client;
-        private ESIConfig _config;
-        private AuthorizedCharacterData _data;
-        private int character_id;
+        private readonly HttpClient _client;
+        private readonly EsiConfig _config;
+        private readonly AuthorizedCharacterData _data;
+        private readonly int character_id;
 
-        public CharacterLogic(HttpClient client, ESIConfig config, AuthorizedCharacterData data = null)
+        public CharacterLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
         {
             _client = client;
             _config = config;
@@ -39,7 +39,7 @@ namespace ESI.NET.Logic
         /// <param name="characterIds"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Character>>> Names(int[] character_ids)
-            => await Execute<List<Character>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/characters/names/", new string[]
+            => await Execute<List<Character>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/characters/names/", parameters: new string[]
             {
                 $"character_ids={string.Join(",", character_ids)}"
             });
@@ -65,7 +65,7 @@ namespace ESI.NET.Logic
         /// <param name="page">Which page of results to return</param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Blueprint>>> Blueprints(int page = 1)
-            => await Execute<List<Blueprint>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/characters/{character_id}/blueprints/", new string[]
+            => await Execute<List<Blueprint>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/characters/{character_id}/blueprints/", parameters: new string[]
             {
                 $"page={page}"
             });
@@ -90,8 +90,8 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="character_ids">The target characters to calculate the charge for</param>
         /// <returns></returns>
-        public async Task<EsiResponse<CSPA>> CalculateCSPA(object character_ids)
-            => await Execute<CSPA>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, $"/characters/{character_id}/cspa/", body: character_ids, token: _data.Token);
+        public async Task<EsiResponse<Cspa>> CalculateCSPA(object character_ids)
+            => await Execute<Cspa>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, $"/characters/{character_id}/cspa/", body: character_ids, token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/fatigue/
