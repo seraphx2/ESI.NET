@@ -1,8 +1,8 @@
-﻿using ESI.NET.Models.SSO;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,8 +12,10 @@ namespace ESI.NET
     {
         public async static Task<EsiResponse<T>> Execute<T>(HttpClient client, EsiConfig config, RequestSecurity security, RequestMethod method, string endpoint, string noContent = null, string[] parameters = null, object body = null, string token = null)
         {
-            string version = "latest";
-            var url = $"{config.EsiUrl}{version}{endpoint}?datasource={ config.DataSource.ToEsiValue() }";
+            if (await Ping(client, config) != "ok")
+                throw new PingException("ESI could not be reached. Request has been terminated.");
+
+            var url = $"{config.EsiUrl}latest{endpoint}?datasource={config.DataSource.ToEsiValue()}";
 
             //Attach token to request header if this endpoint requires an authorized character
             if (security == RequestSecurity.Authenticated)
@@ -56,7 +58,7 @@ namespace ESI.NET
             }
             
             //Output final object
-            var obj = new EsiResponse<T>(response, method, endpoint, noContent);
+            var obj = new EsiResponse<T>(response, noContent);
             return obj;
         }
 
@@ -76,5 +78,8 @@ namespace ESI.NET
             PUT,
             TRACE
         }
+
+        private static async Task<string> Ping(HttpClient client, EsiConfig config)
+            => new EsiResponse<string>(await client.GetAsync($"{config.EsiUrl}ping").ConfigureAwait(false), null).Message;
     }
 }

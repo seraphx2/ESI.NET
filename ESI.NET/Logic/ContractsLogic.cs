@@ -31,46 +31,96 @@ namespace ESI.NET.Logic
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Contract>>> CharacterContracts()
-            => await Execute<List<Contract>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/contracts/", token: _data.Token);
+        public async Task<EsiResponse<List<Contract>>> Contracts(int region_id, int page = 1)
+            => await Execute<List<Contract>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/contracts/public/{region_id}/", parameters: new string[]
+            {
+                $"page={page}"
+            });
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="contract_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<ContractItem>>> CharacterContractItems(int contract_id)
-            => await Execute<List<ContractItem>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/contracts/{contract_id}/items/", token: _data.Token);
+        public async Task<EsiResponse<List<ContractItem>>> ContractItems(int contract_id, int page = 1)
+            => await Execute<List<ContractItem>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/contracts/public/bids/{contract_id}/", parameters: new string[]
+            {
+                $"page={page}"
+            });
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="contract_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Bid>>> CharacterContractBids(int contract_id)
-            => await Execute<List<Bid>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/contracts/{contract_id}/bids/", token: _data.Token);
+        public async Task<EsiResponse<List<Bid>>> ContractBids(int contract_id, int page = 1)
+            => await Execute<List<Bid>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/contracts/public/items/{contract_id}/", parameters: new string[]
+            {
+                $"page={page}"
+            });
 
         /// <summary>
-        /// 
+        /// /characters/{character_id}/contracts/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Contract>>> CorporationContracts()
-            => await Execute<List<Contract>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/contracts/", token: _data.Token);
+        public async Task<EsiResponse<List<Contract>>> CharacterContracts(int page = 1)
+            => await Execute<List<Contract>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/contracts/", parameters: new string[]
+            {
+                $"page={page}"
+            }, token: _data.Token);
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="contract_id"></param>
-        /// <returns></returns>
-        public async Task<EsiResponse<List<ContractItem>>> CorporationContractItems(int contract_id)
-            => await Execute<List<ContractItem>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/contracts/{contract_id}/items/", token: _data.Token);
-
-        /// <summary>
-        /// 
+        /// /characters/{character_id}/contracts/{contract_id}/items/
         /// </summary>
         /// <param name="contract_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Bid>>> CorporationContractBids(int contract_id)
-            => await Execute<List<Bid>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/contracts/{contract_id}/bids/", token: _data.Token);
+        public async Task<EsiResponse<List<ContractItem>>> CharacterContractItems(int contract_id, int page = 1)
+            => await Execute<List<ContractItem>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/contracts/{contract_id}/items/", parameters: new string[]
+            {
+                $"page={page}"
+            }, token: _data.Token);
+
+        /// <summary>
+        /// /characters/{character_id}/contracts/{contract_id}/bids/
+        /// </summary>
+        /// <param name="contract_id"></param>
+        /// <returns></returns>
+        public async Task<EsiResponse<List<Bid>>> CharacterContractBids(int contract_id, int page = 1)
+            => await Execute<List<Bid>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/contracts/{contract_id}/bids/", parameters: new string[]
+            {
+                $"page={page}"
+            }, token: _data.Token);
+
+        /// <summary>
+        /// /corporations/{corporation_id}/contracts/
+        /// </summary>
+        /// <returns></returns>
+        public async Task<EsiResponse<List<Contract>>> CorporationContracts(int page = 1)
+            => await Execute<List<Contract>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/contracts/", parameters: new string[]
+            {
+                $"page={page}"
+            }, token: _data.Token);
+
+        /// <summary>
+        /// /corporations/{corporation_id}/contracts/{contract_id}/items/
+        /// </summary>
+        /// <param name="contract_id"></param>
+        /// <returns></returns>
+        public async Task<EsiResponse<List<ContractItem>>> CorporationContractItems(int contract_id, int page = 1)
+            => await Execute<List<ContractItem>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/contracts/{contract_id}/items/", parameters: new string[]
+            {
+                $"page={page}"
+            }, token: _data.Token);
+
+        /// <summary>
+        /// /corporations/{corporation_id}/contracts/{contract_id}/bids/
+        /// </summary>
+        /// <param name="contract_id"></param>
+        /// <returns></returns>
+        public async Task<EsiResponse<List<Bid>>> CorporationContractBids(int contract_id, int page = 1)
+            => await Execute<List<Bid>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/contracts/{contract_id}/bids/", parameters: new string[]
+            {
+                $"page={page}"
+            }, token: _data.Token);
     }
 }

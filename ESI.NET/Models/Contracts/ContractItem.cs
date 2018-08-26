@@ -21,5 +21,20 @@ namespace ESI.NET.Models.Contracts
 
         [JsonProperty("is_included")]
         public bool IsIncluded { get; set; }
+
+        [JsonProperty("is_blueprint_copy")]
+        public bool IsBlueprintCopy { get; set; }
+
+        [JsonProperty("item_id")]
+        public long ItemId { get; set; }
+
+        [JsonProperty("material_efficiency")]
+        public int MaterialEfficiency { get; set; }
+
+        [JsonProperty("runs")]
+        public int Runs { get; set; }
+
+        [JsonProperty("time_efficiency")]
+        public int TimeEfficiency { get; set; }
     }
 }
