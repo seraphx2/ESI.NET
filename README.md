@@ -56,7 +56,7 @@ IOptions<EsiConfig> config = Options.Create(new EsiConfig()
     UserAgent = ""
 });
 
-ESIClient client = new ESIClient(config);
+EsiClient client = new EsiClient(config);
 ```
 
 NOTE: You will need to import `Microsoft.Extensions.Options` to accomplish the above.
@@ -64,7 +64,7 @@ NOTE: You will need to import `Microsoft.Extensions.Options` to accomplish the a
 ### Endpoint Example
 Accessing a public endpoint is extremely simple. Instantiate an instance of the client.
 ```cs
-ApiResponse response = _client.Universe.Names(new List<long>()
+EsiResponse response = _client.Universe.Names(new List<long>()
 {
     1590304510,
     99006319,
@@ -83,10 +83,10 @@ var url = _client.SSO.CreateAuthenticationUrl();
 
 ### Initial SSO Token Request
 ```cs
-SSOToken token = await _client.SSO.GetToken(GrantType.AuthorizationCode, code);
+SsoToken token = await _client.SSO.GetToken(GrantType.AuthorizationCode, code);
 AuthorizedCharacter auth_char = await SSO.Verify(token.Value);
 ```
 ### Refresh Token Request
 ```cs
-SSOToken token = await _client.SSO.GetToken(GrantType.RefreshToken, auth_char.RefreshToken);
+SsoToken token = await _client.SSO.GetToken(GrantType.RefreshToken, auth_char.RefreshToken);
 ```
