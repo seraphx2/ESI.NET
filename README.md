@@ -21,7 +21,7 @@ ESI.NET is now Dependency Injection compatible. There are a few parts required t
 ### .NET Standard
 In your appsettings.json, add the following object and fill it in appropriately:
 ```json
-"ESIConfig": {
+"EsiConfig": {
     "EsiUrl": "https://esi.tech.ccp.is/",
     "DataSource": "Tranquility",
     "ClientId": "**********",
@@ -30,15 +30,15 @@ In your appsettings.json, add the following object and fill it in appropriately:
     "UserAgent": ""
   }
 ```
-Inject the ESIConfig object into your configuration in Startup.cs in the ConfigureServices method:
+Inject the EsiConfig object into your configuration in `Startup.cs` in the `ConfigureServices()` method:
 ```cs
-services.Configure<ESIConfig>(Configuration.GetSection("ESIConfig"));
+services.Configure<EsiConfig>(Configuration.GetSection("EsiConfig"));
 ```
 
 Lastly, access the configuration in your class constructor:
 ```cs
-IESIClient _client;
-public ApiTestController(IESIClient client) { _client = client; }
+IEsiClient _client;
+public ApiTestController(IEsiClient client) { _client = client; }
 
 ```
 
@@ -46,7 +46,7 @@ public ApiTestController(IESIClient client) { _client = client; }
 If you are using a .NET Standard-compatible .NET Framework application, you can instatiate the client in this manner:
 
 ```cs
-IOptions<ESIConfig> config = Options.Create(new ESIConfig()
+IOptions<EsiConfig> config = Options.Create(new EsiConfig()
 {
     EsiUrl = "https://esi.tech.ccp.is/",
     DataSource = DataSource.Tranquility,

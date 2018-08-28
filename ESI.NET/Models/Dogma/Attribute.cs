@@ -17,7 +17,7 @@ namespace ESI.NET.Models.Dogma
         public int IconId { get; set; }
 
         [JsonProperty("default_value")]
-        public decimal DefaultValue { get; set; }
+        public double DefaultValue { get; set; }
 
         [JsonProperty("published")]
         public bool Published { get; set; }
