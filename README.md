@@ -62,7 +62,7 @@ EsiClient client = new EsiClient(config);
 NOTE: You will need to import `Microsoft.Extensions.Options` to accomplish the above.
 
 ### Endpoint Example
-Accessing a public endpoint is extremely simple. Instantiate an instance of the client.
+Accessing a public endpoint is extremely simple:
 ```cs
 EsiResponse response = _client.Universe.Names(new List<long>()
 {
@@ -76,7 +76,7 @@ For your protection, please provide a user_agent value. This can be your charact
 ## SSO Example
 
 ### SSO Login URL generator
-ESI.NET has a helper method to generat the URL required to authenticate a character or authorize roles (by providing a List<string> of scopes) in the Eve Online SSO.
+ESI.NET has a helper method to generate the URL required to authenticate a character or authorize roles (by providing a List<string> of scopes) in the Eve Online SSO.
 ```cs
 var url = _client.SSO.CreateAuthenticationUrl();
 ```
