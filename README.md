@@ -15,7 +15,7 @@ https://www.nuget.org/packages/ESI.NET
 
 `dotnet add package ESI.NET `
 
-## Public Endpoint Example
+## Client Instantiation
 ESI.NET is now Dependency Injection compatible. There are a few parts required to set this up propery in a .NET Standard/Core application:
 
 ### .NET Standard
