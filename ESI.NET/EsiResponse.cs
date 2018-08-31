@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using static ESI.NET.EsiRequest;
 
 namespace ESI.NET
 {
@@ -32,11 +32,23 @@ namespace ESI.NET
 
             if (response.Headers.Contains("X-Pages"))
                 Pages = int.Parse(response.Headers.GetValues("X-Pages").First());
+
+            if (response.Content.Headers.Contains("Expires"))
+                Expires = DateTime.Parse(response.Content.Headers.GetValues("Expires").First());
+
+            if (response.Headers.Contains("X-Esi-Error-Limit-Remain"))
+                ErrorLimitRemain = int.Parse(response.Headers.GetValues("X-Esi-Error-Limit-Remain").First());
+
+            if (response.Headers.Contains("X-Esi-Error-Limit-Reset"))
+                ErrorLimitReset = int.Parse(response.Headers.GetValues("X-Esi-Error-Limit-Reset").First());
         }
 
         public HttpStatusCode StatusCode { get; set; }
+        public DateTime? Expires { get; set; }
+        public int? ErrorLimitRemain { get; set; }
+        public int? ErrorLimitReset { get; set; }
+        public int? Pages { get; set; } = null;
         public string Message { get; set; } = null;
         public T Data { get; set; }
-        public int? Pages { get; set; } = null;
     }
 }

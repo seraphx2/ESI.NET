@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.0;netstandard2.0;net461;net462;net47;net471</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.5.3</Version>
+    <Version>2.0.0</Version>
     <Authors>Psianna Archeia</Authors>
     <Company>Sukebe Corporation</Company>
     <Description>.NET Wrapper for the Eve Online API</Description>

@@ -50,36 +50,38 @@ namespace ESI.NET
 
             var response = await _client.PostAsync("https://login.eveonline.com/oauth/token", postBody).Result.Content.ReadAsStringAsync();
             var token = JsonConvert.DeserializeObject<SsoToken>(response);
-            token.Expires = DateTime.Now.AddSeconds(token.ExpiresIn);
 
             return token;
         }
 
         /// <summary>
-        /// Retrieves the Character information for the provided Token information. Serialize and store this object for quick retrieval and token refreshing.
+        /// Verifies the Character information for the provided Token information.
+        /// While this method represents the oauth/verify request, in addition to the verified data that ESI returns, this object also stores the Token and Refresh token
+        /// and this method also uses ESI retrieves other information pertinent to making calls in the ESI.NET API. (alliance_id, corporation_id, faction_id)
+        /// You will need a record in your database that stores at least this information. Serialize and store this object for quick retrieval and token refreshing.
         /// </summary>
         /// <param name="token"></param>
-        /// <param name="getExtendedData">Uses ESI to retrieve additional character-specific IDs for use with the client (allianceId, corporationId, factionId).</param>
         /// <returns></returns>
-        public async Task<AuthorizedCharacterData> Verify(string token)
+        public async Task<AuthorizedCharacterData> Verify(SsoToken token)
         {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var response = await _client.GetAsync("https://login.eveonline.com/oauth/verify").ConfigureAwait(false);
-            var authCharacter = JsonConvert.DeserializeObject<AuthorizedCharacterData>(response.Content.ReadAsStringAsync().Result);
-            authCharacter.Token = token;
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
+            var response = await _client.GetAsync("https://login.eveonline.com/oauth/verify").Result.Content.ReadAsStringAsync();
+            var authorizedCharacter = JsonConvert.DeserializeObject<AuthorizedCharacterData>(response);
+            authorizedCharacter.Token = token.AccessToken;
+            authorizedCharacter.RefreshToken = token.RefreshToken;
 
             // Get more specifc details about authorized character to be used in API calls that require this data about the character
-            var characterResponse = new CharacterLogic(_client, _config, authCharacter).Affiliation(new int[] { authCharacter.CharacterID }).Result;
+            var characterResponse = new CharacterLogic(_client, _config, authorizedCharacter).Affiliation(new int[] { authorizedCharacter.CharacterID }).Result;
             if (characterResponse.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var characterData = characterResponse.Data.First();
 
-                authCharacter.AllianceID = characterData.AllianceId;
-                authCharacter.CorporationID = characterData.CorporationId;
-                authCharacter.FactionID = characterData.FactionId;
+                authorizedCharacter.AllianceID = characterData.AllianceId;
+                authorizedCharacter.CorporationID = characterData.CorporationId;
+                authorizedCharacter.FactionID = characterData.FactionId;
             }
 
-            return authCharacter;
+            return authorizedCharacter;
         }
     }
 }
