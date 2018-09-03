@@ -8,7 +8,7 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class CharacterLogic : BaseLogic
+    public class CharacterLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;

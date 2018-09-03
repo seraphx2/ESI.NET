@@ -5,7 +5,7 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class StatusLogic : BaseLogic
+    public class StatusLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;

@@ -7,7 +7,7 @@ using model = ESI.NET.Models.Opportunities;
 
 namespace ESI.NET.Logic
 {
-    public class OpportunitiesLogic : BaseLogic
+    public class OpportunitiesLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;

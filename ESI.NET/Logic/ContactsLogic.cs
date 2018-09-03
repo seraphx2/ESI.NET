@@ -7,7 +7,7 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class ContactsLogic : BaseLogic
+    public class ContactsLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;

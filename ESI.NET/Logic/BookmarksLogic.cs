@@ -7,7 +7,7 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class BookmarksLogic : BaseLogic
+    public class BookmarksLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;

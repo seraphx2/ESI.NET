@@ -8,7 +8,7 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class FleetsLogic : BaseLogic
+    public class FleetsLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;

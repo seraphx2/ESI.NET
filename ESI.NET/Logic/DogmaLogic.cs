@@ -6,7 +6,7 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class DogmaLogic : BaseLogic
+    public class DogmaLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;

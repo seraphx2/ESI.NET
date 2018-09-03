@@ -8,7 +8,7 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class CalendarLogic : BaseLogic
+    public class CalendarLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;

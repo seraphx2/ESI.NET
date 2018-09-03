@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace ESI.NET
 {
-    public class SsoLogic : BaseLogic
+    public class SsoLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;

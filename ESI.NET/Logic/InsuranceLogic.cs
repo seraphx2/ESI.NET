@@ -6,7 +6,7 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class InsuranceLogic : BaseLogic
+    public class InsuranceLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;

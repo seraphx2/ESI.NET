@@ -7,7 +7,7 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class FittingsLogic : BaseLogic
+    public class FittingsLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;

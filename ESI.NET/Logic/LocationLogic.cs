@@ -6,7 +6,7 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class LocationLogic : BaseLogic
+    public class LocationLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
