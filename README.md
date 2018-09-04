@@ -78,7 +78,7 @@ For your protection, please provide a user_agent value. This can be your charact
 ## SSO Example
 
 ### SSO Login URL generator
-ESI.NET has a helper method to generate the URL required to authenticate a character or authorize roles (by providing a List<string> of scopes) in the Eve Online SSO.
+ESI.NET has a helper method to generate the URL required to authenticate a character or authorize roles (by providing a List<string> of scopes) for the Eve Online SSO.
 ```cs
 var url = _client.SSO.CreateAuthenticationUrl();
 ```
@@ -86,7 +86,7 @@ var url = _client.SSO.CreateAuthenticationUrl();
 ### Initial SSO Token Request
 ```cs
 SsoToken token = await _client.SSO.GetToken(GrantType.AuthorizationCode, code);
-AuthorizedCharacter auth_char = await SSO.Verify(token.Value);
+AuthorizedCharacterData auth_char = await _client.SSO.Verify(token);
 ```
 ### Refresh Token Request
 ```cs
