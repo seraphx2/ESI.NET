@@ -11,7 +11,7 @@ namespace ESI.NET
 {
     internal static class EsiRequest
     {
-        public static string eTag = null;
+        internal static string eTag = null;
 
         public async static Task<EsiResponse<T>> Execute<T>(HttpClient client, EsiConfig config, RequestSecurity security, RequestMethod method, string endpoint, Dictionary<string, string> replacements = null, string[] parameters = null, object body = null, string token = null)
         {
