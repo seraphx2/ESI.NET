@@ -1,3 +1,5 @@
+[![Build status](https://robmburke.visualstudio.com/ESI.NET/_apis/build/status/ESI.NET)](https://robmburke.visualstudio.com/ESI.NET/_build/latest?definitionId=5)
+
 # What is ESI.NET?
 
 **ESI.NET** is a .NET wrapper for the [Eve Online ESI API](https://esi.tech.ccp.is/latest/). This wrapper simplifies the process of integrating ESI into your .NET application.
