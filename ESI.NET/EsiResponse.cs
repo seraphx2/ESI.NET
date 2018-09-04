@@ -40,7 +40,7 @@ namespace ESI.NET
                 Pages = int.Parse(response.Headers.GetValues("X-Pages").First());
 
             if (response.Headers.Contains("ETag"))
-                ETag = response.Headers.GetValues("ETag").First();
+                ETag = response.Headers.GetValues("ETag").First().Replace("\"", string.Empty);
 
             if (response.Content.Headers.Contains("Expires"))
                 Expires = DateTime.Parse(response.Content.Headers.GetValues("Expires").First());
