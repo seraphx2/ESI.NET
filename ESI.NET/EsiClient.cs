@@ -122,7 +122,7 @@ namespace ESI.NET
             Wallet = new WalletLogic(client, config, data);
         }
 
-        public void SetIfNoneMatch(string eTag)
+        public void SetIfNoneMatchHeader(string eTag)
             => EsiRequest.eTag = eTag;
     }
 
