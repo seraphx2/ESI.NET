@@ -33,7 +33,10 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Item>>> ForCharacter(int page = 1)
-            => await Execute<List<Item>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/assets/", parameters: new string[]
+            => await Execute<List<Item>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/assets/", replacements: new Dictionary<string, string>()
+            {
+                { "character_id", character_id.ToString() }
+            }, parameters: new string[]
             {
                 $"page={page}"
             }, token: _data.Token);
@@ -44,7 +47,10 @@ namespace ESI.NET.Logic
         /// <param name="item_ids"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<ItemLocation>>> LocationsForCharacter(List<long> item_ids)
-            => await Execute<List<ItemLocation>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, $"/characters/{character_id}/assets/locations/", body: item_ids.ToArray(), token: _data.Token);
+            => await Execute<List<ItemLocation>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/characters/{character_id}/assets/locations/", replacements: new Dictionary<string, string>()
+            {
+                { "character_id", character_id.ToString() }
+            }, body: item_ids.ToArray(), token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/assets/names/
@@ -52,7 +58,10 @@ namespace ESI.NET.Logic
         /// <param name="item_ids"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<ItemName>>> NamesForCharacter(List<long> item_ids)
-            => await Execute<List<ItemName>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, $"/characters/{character_id}/assets/names/", body: item_ids.ToArray(), token: _data.Token);
+            => await Execute<List<ItemName>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/characters/{character_id}/assets/names/", replacements: new Dictionary<string, string>()
+            {
+                { "character_id", character_id.ToString() }
+            }, body: item_ids.ToArray(), token: _data.Token);
 
 
         /// <summary>
@@ -61,7 +70,10 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Item>>> ForCorporation(int page = 1)
-            => await Execute<List<Item>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/assets/", parameters: new string[]
+            => await Execute<List<Item>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/assets/", replacements: new Dictionary<string, string>()
+            {
+                { "corporation_id", corporation_id.ToString() }
+            }, parameters: new string[]
             {
                 $"page={page}"
             }, token: _data.Token);
@@ -72,7 +84,10 @@ namespace ESI.NET.Logic
         /// <param name="item_ids"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<ItemLocation>>> LocationsForCorporation(List<long> item_ids)
-            => await Execute<List<ItemLocation>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, $"/corporations/{corporation_id}/assets/locations/", body: item_ids.ToArray(), token: _data.Token);
+            => await Execute<List<ItemLocation>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/corporations/{corporation_id}/assets/locations/", replacements: new Dictionary<string, string>()
+            {
+                { "corporation_id", corporation_id.ToString() }
+            }, body: item_ids.ToArray(), token: _data.Token);
 
         /// <summary>
         /// /corporations/{corporation_id}/assets/names/
@@ -80,6 +95,9 @@ namespace ESI.NET.Logic
         /// <param name="item_ids"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<ItemName>>> NamesForCorporation(List<long> item_ids)
-            => await Execute<List<ItemName>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, $"/corporations/{corporation_id}/assets/names/", body: item_ids.ToArray(), token: _data.Token);
+            => await Execute<List<ItemName>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/corporations/{corporation_id}/assets/names/", replacements: new Dictionary<string, string>()
+            {
+                { "corporation_id", corporation_id.ToString() }
+            }, body: item_ids.ToArray(), token: _data.Token);
     }
 }

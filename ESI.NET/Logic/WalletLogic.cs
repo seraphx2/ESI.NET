@@ -32,7 +32,10 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<decimal>> CharacterWallet()
-            => await Execute<decimal>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/wallet/", token: _data.Token);
+            => await Execute<decimal>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/wallet/", replacements: new Dictionary<string, string>()
+            {
+                { "character_id", character_id.ToString() }
+            }, token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/wallet/journal/
@@ -45,7 +48,10 @@ namespace ESI.NET.Logic
             if (from_id != null)
                 parameters.Add($"from_id={from_id}");
 
-            return await Execute<List<JournalEntry>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/wallet/journal/", parameters: parameters.ToArray(), token: _data.Token);
+            return await Execute<List<JournalEntry>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/wallet/journal/", replacements: new Dictionary<string, string>()
+            {
+                { "character_id", character_id.ToString() }
+            }, parameters: parameters.ToArray(), token: _data.Token);
         }
             
 
@@ -60,7 +66,10 @@ namespace ESI.NET.Logic
             if (from_id != null)
                 parameters.Add($"from_id={from_id}");
 
-            return await Execute<List<Transaction>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/wallet/transactions/", parameters: parameters.ToArray(), token: _data.Token);
+            return await Execute<List<Transaction>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/wallet/transactions/", replacements: new Dictionary<string, string>()
+            {
+                { "character_id", character_id.ToString() }
+            }, parameters: parameters.ToArray(), token: _data.Token);
         }
 
         /// <summary>
@@ -68,7 +77,10 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Wallet>>> CorporationWallets()
-            => await Execute<List<Wallet>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/wallets/", token: _data.Token);
+            => await Execute<List<Wallet>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/wallets/", replacements: new Dictionary<string, string>()
+            {
+                { "corporation_id", corporation_id.ToString() }
+            }, token: _data.Token);
 
         /// <summary>
         /// /corporations/{corporation_id}/wallets/{division}/journal/
@@ -82,7 +94,11 @@ namespace ESI.NET.Logic
             if (from_id != null)
                 parameters.Add($"from_id={from_id}");
 
-            return await Execute<List<JournalEntry>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/wallets/{division}/journal/", parameters: parameters.ToArray(), token: _data.Token);
+            return await Execute<List<JournalEntry>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/wallets/{division}/journal/", replacements: new Dictionary<string, string>()
+            {
+                { "corporation_id", corporation_id.ToString() },
+                { "division", division.ToString() }
+            }, parameters: parameters.ToArray(), token: _data.Token);
         }
 
         /// <summary>
@@ -97,7 +113,11 @@ namespace ESI.NET.Logic
             if (from_id != null)
                 parameters.Add($"from_id={from_id}");
 
-            return await Execute<List<Transaction>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/wallets/{division}/transactions/", parameters: parameters.ToArray(), token: _data.Token);
+            return await Execute<List<Transaction>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/wallets/{division}/transactions/", replacements: new Dictionary<string, string>()
+            {
+                { "corporation_id", corporation_id.ToString() },
+                { "division", division.ToString() }
+            }, parameters: parameters.ToArray(), token: _data.Token);
         }
     }
 }

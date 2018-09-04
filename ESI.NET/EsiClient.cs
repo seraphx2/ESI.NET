@@ -121,6 +121,9 @@ namespace ESI.NET
             Skills = new SkillsLogic(client, config, data);
             Wallet = new WalletLogic(client, config, data);
         }
+
+        public void SetIfNoneMatch(string eTag)
+            => EsiRequest.eTag = eTag;
     }
 
     public interface IEsiClient
@@ -160,5 +163,6 @@ namespace ESI.NET
         WarsLogic Wars { get; set; }
 
         void SetCharacterData(AuthorizedCharacterData data);
+        void SetIfNoneMatch(string eTag);
     }
 }

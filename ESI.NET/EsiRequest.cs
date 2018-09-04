@@ -4,23 +4,25 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ESI.NET
 {
-    public static class EsiRequest
+    internal static class EsiRequest
     {
+        public static string eTag = null;
+
         public async static Task<EsiResponse<T>> Execute<T>(HttpClient client, EsiConfig config, RequestSecurity security, RequestMethod method, string endpoint, Dictionary<string, string> replacements = null, string[] parameters = null, object body = null, string token = null)
         {
-            if (await Ping(client, config) != "ok")
-                throw new PingException("ESI could not be reached. Request has been terminated.");
+            var path = $"{method.ToString()}|{endpoint}";
+            var version = EndpointVersion[path];
 
-            foreach (var property in replacements)
-                endpoint.Replace($"{{{property.Key}}}", property.Value);
+            if (replacements != null)
+                foreach (var property in replacements)
+                    endpoint = endpoint.Replace($"{{{property.Key}}}", property.Value);
 
-            var url = $"{config.EsiUrl}{EndpointVersion[$"{method.ToString()}|{endpoint}"]}{endpoint}?datasource={config.DataSource.ToEsiValue()}";
+            var url = $"{config.EsiUrl}{version}{endpoint}?datasource={config.DataSource.ToEsiValue()}";
 
             //Attach token to request header if this endpoint requires an authorized character
             if (security == RequestSecurity.Authenticated)
@@ -29,6 +31,12 @@ namespace ESI.NET
                     throw new ArgumentException("The request endpoint requires SSO authentication and a Token has not been provided.");
                 else
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+
+            if (eTag != null)
+            {
+                client.DefaultRequestHeaders.Add("If-None-Match", $"\"{eTag}\"");
+                eTag = null;
             }
 
             //Attach query string parameters
@@ -63,7 +71,7 @@ namespace ESI.NET
             }
             
             //Output final object
-            var obj = new EsiResponse<T>(response, method, endpoint);
+            var obj = new EsiResponse<T>(response, path, version);
             return obj;
         }
 
@@ -84,10 +92,7 @@ namespace ESI.NET
             TRACE
         }
 
-        private static async Task<string> Ping(HttpClient client, EsiConfig config)
-            => new EsiResponse<string>(await client.GetAsync($"{config.EsiUrl}ping").ConfigureAwait(false), null).Message;
-
-        private static ImmutableDictionary<string, string> EndpointVersion = new Dictionary<string, string>()
+        private static readonly ImmutableDictionary<string, string> EndpointVersion = new Dictionary<string, string>()
         {
             {"GET|/alliances/", "v1"},
             {"GET|/alliances/{alliance_id}/", "v3"},

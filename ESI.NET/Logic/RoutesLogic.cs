@@ -37,7 +37,11 @@ namespace ESI.NET.Logic
             if (connections != null)
                 parameters.Add($"&connections={string.Join(",", connections)}");
 
-            var response = await Execute<int[]>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/route/{origin}/{destination}/", parameters: parameters.ToArray());
+            var response = await Execute<int[]>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/route/{origin}/{destination}/", replacements: new Dictionary<string, string>()
+            {
+                { "origin", origin.ToString() },
+                { "destination", destination.ToString() }
+            }, parameters: parameters.ToArray());
 
             return response;
         }

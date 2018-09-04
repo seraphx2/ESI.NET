@@ -50,14 +50,20 @@ namespace ESI.NET.Logic
         /// <param name="character_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<Information>> Information(int character_id)
-            => await Execute<Information>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/characters/{character_id}/");
+            => await Execute<Information>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/characters/{character_id}/", replacements: new Dictionary<string, string>()
+            {
+                { "character_id", character_id.ToString() }
+            });
 
         /// <summary>
         /// /characters/{character_id}/agents_research/
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Agent>>> AgentsResearch()
-            => await Execute<List<Agent>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/agents_research/", token: _data.Token);
+            => await Execute<List<Agent>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/agents_research/", replacements: new Dictionary<string, string>()
+            {
+                { "character_id", character_id.ToString() }
+            }, token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/blueprints/
@@ -65,7 +71,10 @@ namespace ESI.NET.Logic
         /// <param name="page">Which page of results to return</param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Blueprint>>> Blueprints(int page = 1)
-            => await Execute<List<Blueprint>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/characters/{character_id}/blueprints/", parameters: new string[]
+            => await Execute<List<Blueprint>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/characters/{character_id}/blueprints/", replacements: new Dictionary<string, string>()
+            {
+                { "character_id", character_id.ToString() }
+            }, parameters: new string[]
             {
                 $"page={page}"
             });
@@ -75,7 +84,10 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<ChatChannel>>> ChatChannels()
-            => await Execute<List<ChatChannel>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/chat_channels/", token: _data.Token);
+            => await Execute<List<ChatChannel>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/chat_channels/", replacements: new Dictionary<string, string>()
+            {
+                { "character_id", character_id.ToString() }
+            }, token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/corporationhistory/
@@ -83,7 +95,10 @@ namespace ESI.NET.Logic
         /// <param name="character_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Corporation>>> CorporationHistory(int character_id)
-            => await Execute<List<Corporation>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/characters/{character_id}/corporationhistory/");
+            => await Execute<List<Corporation>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/characters/{character_id}/corporationhistory/", replacements: new Dictionary<string, string>()
+            {
+                { "character_id", character_id.ToString() }
+            });
 
         /// <summary>
         /// /characters/{character_id}/cspa/
@@ -91,35 +106,50 @@ namespace ESI.NET.Logic
         /// <param name="character_ids">The target characters to calculate the charge for</param>
         /// <returns></returns>
         public async Task<EsiResponse<Cspa>> CalculateCSPA(object character_ids)
-            => await Execute<Cspa>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, $"/characters/{character_id}/cspa/", body: character_ids, token: _data.Token);
+            => await Execute<Cspa>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/characters/{character_id}/cspa/", replacements: new Dictionary<string, string>()
+            {
+                { "character_id", character_id.ToString() }
+            }, body: character_ids, token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/fatigue/
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<Fatigue>> Fatigue()
-            => await Execute<Fatigue>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/fatigue/", token: _data.Token);
+            => await Execute<Fatigue>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/fatigue/", replacements: new Dictionary<string, string>()
+            {
+                { "character_id", character_id.ToString() }
+            }, token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/medals/
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Medal>>> Medals()
-            => await Execute<List<Medal>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/medals/", token: _data.Token);
+            => await Execute<List<Medal>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/medals/", replacements: new Dictionary<string, string>()
+            {
+                { "character_id", character_id.ToString() }
+            }, token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/notifications/
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Notification>>> Notifications()
-            => await Execute<List<Notification>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/notifications/", token: _data.Token);
+            => await Execute<List<Notification>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/notifications/", replacements: new Dictionary<string, string>()
+            {
+                { "character_id", character_id.ToString() }
+            }, token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/notifications/contacts/
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<ContactNotification>>> ContactNotifications()
-            => await Execute<List<ContactNotification>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/notifications/contacts/", token: _data.Token);
+            => await Execute<List<ContactNotification>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/notifications/contacts/", replacements: new Dictionary<string, string>()
+            {
+                { "character_id", character_id.ToString() }
+            }, token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/portrait/
@@ -127,34 +157,49 @@ namespace ESI.NET.Logic
         /// <param name="character_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<Images>> Portrait(int character_id)
-            => await Execute<Images>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/characters/{character_id}/portrait/");
+            => await Execute<Images>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/characters/{character_id}/portrait/", replacements: new Dictionary<string, string>()
+            {
+                { "character_id", character_id.ToString() }
+            });
 
         /// <summary>
         /// /characters/{character_id}/roles/
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<string>>> Roles()
-            => await Execute<List<string>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/roles/", token: _data.Token);
+            => await Execute<List<string>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/roles/", replacements: new Dictionary<string, string>()
+            {
+                { "character_id", character_id.ToString() }
+            }, token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/standings/
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Standing>>> Standings()
-            => await Execute<List<Standing>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/standings/", token: _data.Token);
+            => await Execute<List<Standing>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/standings/", replacements: new Dictionary<string, string>()
+            {
+                { "character_id", character_id.ToString() }
+            }, token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/stats/
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Stats>>> Stats()
-            => await Execute<List<Stats>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/stats/", token: _data.Token);
+            => await Execute<List<Stats>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/stats/", replacements: new Dictionary<string, string>()
+            {
+                { "character_id", character_id.ToString() }
+            }, token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/titles/
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Title>>> Titles()
-            => await Execute<List<Title>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/titles/", token: _data.Token);
+            => await Execute<List<Title>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/titles/", replacements: new Dictionary<string, string>()
+            {
+                { "character_id", character_id.ToString() }
+            }, token: _data.Token);
     }
 }

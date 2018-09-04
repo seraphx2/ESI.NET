@@ -45,6 +45,6 @@ namespace ESI.NET.Logic
         /// <param name="fitting_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> Delete(int fitting_id)
-            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.DELETE, $"/characters/{character_id}/fittings/{fitting_id}/", noContent: NoContentMessages["DELETE|/characters/{character_id}/fittings/{fitting_id}/"], token: _data.Token);
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.DELETE, $"/characters/{character_id}/fittings/{fitting_id}/", token: _data.Token);
     }
 }

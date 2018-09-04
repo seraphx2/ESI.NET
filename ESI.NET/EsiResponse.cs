@@ -5,36 +5,42 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using static ESI.NET.EsiRequest;
 
 namespace ESI.NET
 {
     public class EsiResponse<T>
     {
-        public EsiResponse(HttpResponseMessage response, RequestMethod method, string endpoint)
+        public EsiResponse(HttpResponseMessage response, string path, string version)
         {
             StatusCode = response.StatusCode;
+            Endpoint = path.Split('|')[1];
+            Version = version;
 
             if (response.StatusCode != HttpStatusCode.NoContent)
             {
                 var result = response.Content.ReadAsStringAsync().Result;
 
                 if (response.StatusCode == HttpStatusCode.OK ||
-                    response.StatusCode == HttpStatusCode.Created) {
-
+                    response.StatusCode == HttpStatusCode.Created)
+                {
                     if ((result.StartsWith("{") && result.EndsWith("}")) || result.StartsWith("[") && result.EndsWith("]"))
                         Data = JsonConvert.DeserializeObject<T>(result);
                     else
                         Message = result;
-                }                        
+                }
+                else if (response.StatusCode == HttpStatusCode.NotModified)
+                    Message = "Not Modified";
                 else
                     Message = JsonConvert.DeserializeAnonymousType(result, new { error = string.Empty }).error;
             }
             else if (response.StatusCode == HttpStatusCode.NoContent)
-                Message = NoContentMessage[$"{method.ToString()}|{endpoint}"];
+                Message = NoContentMessage[path];
 
             if (response.Headers.Contains("X-Pages"))
                 Pages = int.Parse(response.Headers.GetValues("X-Pages").First());
+
+            if (response.Headers.Contains("ETag"))
+                ETag = response.Headers.GetValues("ETag").First();
 
             if (response.Content.Headers.Contains("Expires"))
                 Expires = DateTime.Parse(response.Content.Headers.GetValues("Expires").First());
@@ -47,14 +53,17 @@ namespace ESI.NET
         }
 
         public HttpStatusCode StatusCode { get; set; }
+        public string Endpoint { get; set; }
+        public string Version { get; set; }
         public DateTime? Expires { get; set; }
+        public string ETag { get; set; }
         public int? ErrorLimitRemain { get; set; }
         public int? ErrorLimitReset { get; set; }
         public int? Pages { get; set; } = null;
         public string Message { get; set; } = null;
         public T Data { get; set; }
 
-        private ImmutableDictionary<string, string> NoContentMessage = new Dictionary<string, string>()
+        private readonly ImmutableDictionary<string, string> NoContentMessage = new Dictionary<string, string>()
         {
             //Calendar
             {"PUT|/characters/{character_id}/calendar/{event_id}/", "Event updated"},
