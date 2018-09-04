@@ -163,6 +163,6 @@ namespace ESI.NET
         WarsLogic Wars { get; set; }
 
         void SetCharacterData(AuthorizedCharacterData data);
-        void SetIfNoneMatch(string eTag);
+        void SetIfNoneMatchHeader(string eTag);
     }
 }
