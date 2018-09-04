@@ -1,4 +1,4 @@
-[![Build status](https://robmburke.visualstudio.com/ESI.NET/_apis/build/status/ESI.NET)](https://robmburke.visualstudio.com/ESI.NET/_build/latest?definitionId=5)
+[![Build status](https://robmburke.visualstudio.com/ESI.NET/_apis/build/status/ESI.NET)](https://robmburke.visualstudio.com/ESI.NET/_build/latest?definitionId=5) [![Quality status](https://sonarcloud.io/api/project_badges/measure?project=ESI.NET&metric=alert_status)
 
 # What is ESI.NET?
 
