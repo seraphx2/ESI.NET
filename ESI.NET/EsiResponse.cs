@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -8,30 +10,37 @@ namespace ESI.NET
 {
     public class EsiResponse<T>
     {
-        public EsiResponse(HttpResponseMessage response, string noContent)
+        public EsiResponse(HttpResponseMessage response, string path, string version)
         {
             StatusCode = response.StatusCode;
+            Endpoint = path.Split('|')[1];
+            Version = version;
 
             if (response.StatusCode != HttpStatusCode.NoContent)
             {
                 var result = response.Content.ReadAsStringAsync().Result;
 
                 if (response.StatusCode == HttpStatusCode.OK ||
-                    response.StatusCode == HttpStatusCode.Created) {
-
+                    response.StatusCode == HttpStatusCode.Created)
+                {
                     if ((result.StartsWith("{") && result.EndsWith("}")) || result.StartsWith("[") && result.EndsWith("]"))
                         Data = JsonConvert.DeserializeObject<T>(result);
                     else
                         Message = result;
-                }                        
+                }
+                else if (response.StatusCode == HttpStatusCode.NotModified)
+                    Message = "Not Modified";
                 else
                     Message = JsonConvert.DeserializeAnonymousType(result, new { error = string.Empty }).error;
             }
             else if (response.StatusCode == HttpStatusCode.NoContent)
-                Message = noContent;
+                Message = NoContentMessage[path];
 
             if (response.Headers.Contains("X-Pages"))
                 Pages = int.Parse(response.Headers.GetValues("X-Pages").First());
+
+            if (response.Headers.Contains("ETag"))
+                ETag = response.Headers.GetValues("ETag").First();
 
             if (response.Content.Headers.Contains("Expires"))
                 Expires = DateTime.Parse(response.Content.Headers.GetValues("Expires").First());
@@ -44,11 +53,54 @@ namespace ESI.NET
         }
 
         public HttpStatusCode StatusCode { get; set; }
+        public string Endpoint { get; set; }
+        public string Version { get; set; }
         public DateTime? Expires { get; set; }
+        public string ETag { get; set; }
         public int? ErrorLimitRemain { get; set; }
         public int? ErrorLimitReset { get; set; }
         public int? Pages { get; set; } = null;
         public string Message { get; set; } = null;
         public T Data { get; set; }
+
+        private readonly ImmutableDictionary<string, string> NoContentMessage = new Dictionary<string, string>()
+        {
+            //Calendar
+            {"PUT|/characters/{character_id}/calendar/{event_id}/", "Event updated"},
+
+            //Contacts
+            {"PUT|/characters/{character_id}/contacts/", "Contacts updated"},
+            {"DELETE|/characters/{character_id}/contacts/", "Contacts deleted"},
+
+            //Corporations
+            {"PUT|/corporations/{corporation_id}/structures/{structure_id}/", "Structure vulnerability window updated"},
+
+            //Fittings
+            {"DELETE|/characters/{character_id}/fittings/{fitting_id}/", ""},
+
+            //Fleets
+            {"PUT|/fleets/{fleet_id}/", "Fleet updated"},
+            {"POST|/fleets/{fleet_id}/members/", "Fleet invitation sent"},
+            {"DELETE|/fleets/{fleet_id}/members/{member_id}/", "Fleet member kicked"},
+            {"PUT|/fleets/{fleet_id}/members/{member_id}/", "Fleet invitation sent"},
+            {"DELETE|/fleets/{fleet_id}/wings/{wing_id}/", "Wing deleted"},
+            {"PUT|/fleets/{fleet_id}/wings/{wing_id}/", "Wing renamed"},
+            {"DELETE|/fleets/{fleet_id}/squads/{squad_id}/", "Squad deleted"},
+            {"PUT|/fleets/{fleet_id}/squads/{squad_id}/", "Squad renamed"},
+
+            //Mail
+            {"POST|/characters/{character_id}/mail/", "Mail created"},
+            {"POST|/characters/{character_id}/mail/labels/", "Label created"},
+            {"DELETE|/characters/{character_id}/mail/labels/{label_id}/", "Label deleted"},
+            {"PUT|/characters/{character_id}/mail/{mail_id}/", "Mail updated"},
+            {"DELETE|/characters/{character_id}/mail/{mail_id}/", "Mail deleted"},
+
+            //User Interface
+            {"POST|/ui/openwindow/marketdetails/", "Open window request received"},
+            {"POST|/ui/openwindow/contract/", "Open window request received"},
+            {"POST|/ui/openwindow/information/", "Open window request received"},
+            {"POST|/ui/autopilot/waypoint/", "Open window request received"},
+            {"POST|/ui/openwindow/newmail/", "Open window request received"}
+        }.ToImmutableDictionary();
     }
 }

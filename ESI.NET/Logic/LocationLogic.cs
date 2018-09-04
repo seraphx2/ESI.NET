@@ -1,12 +1,13 @@
 ﻿using ESI.NET.Models.Location;
 using ESI.NET.Models.SSO;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class LocationLogic : BaseLogic
+    public class LocationLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
@@ -28,20 +29,29 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<Location>> Location()
-            => await Execute<Location>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/location/", token: _data.Token);
+            => await Execute<Location>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/location/", replacements: new Dictionary<string, string>()
+            {
+                { "character_id", character_id.ToString() }
+            }, token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/ship/
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<Ship>> Ship()
-            => await Execute<Ship>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/ship/", token: _data.Token);
+            => await Execute<Ship>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/ship/", replacements: new Dictionary<string, string>()
+            {
+                { "character_id", character_id.ToString() }
+            }, token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/online/
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<Activity>> Online()
-            => await Execute<Activity>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/online/", token: _data.Token);
+            => await Execute<Activity>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/online/", replacements: new Dictionary<string, string>()
+            {
+                { "character_id", character_id.ToString() }
+            }, token: _data.Token);
     }
 }

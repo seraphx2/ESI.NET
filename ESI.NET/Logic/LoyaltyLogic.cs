@@ -7,7 +7,7 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class LoyaltyLogic : BaseLogic
+    public class LoyaltyLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
@@ -29,13 +29,19 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Offer>>> Offers(int corporation_id)
-            => await Execute<List<Offer>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/loyalty/stores/{corporation_id}/offers/");
+            => await Execute<List<Offer>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/loyalty/stores/{corporation_id}/offers/", replacements: new Dictionary<string, string>()
+            {
+                { "corporation_id", corporation_id.ToString() }
+            });
 
         /// <summary>
         /// /characters/{character_id}/loyalty/points/
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Points>>> Points()
-            => await Execute<List<Points>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/loyalty/points/", token: _data.Token);
+            => await Execute<List<Points>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/loyalty/points/", replacements: new Dictionary<string, string>()
+            {
+                { "character_id", character_id.ToString() }
+            }, token: _data.Token);
     }
 }

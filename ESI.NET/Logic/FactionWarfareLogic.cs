@@ -7,7 +7,7 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class FactionWarfareLogic : BaseLogic
+    public class FactionWarfareLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
@@ -74,13 +74,19 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<Stat>> StatsForCorporation()
-            => await Execute<Stat>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/fw/stats/", token: _data.Token);
+            => await Execute<Stat>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/fw/stats/", replacements: new Dictionary<string, string>()
+            {
+                { "corporation_id", corporation_id.ToString() }
+            }, token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/fw/stats/
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<Stat>> StatsForCharacter()
-            => await Execute<Stat>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/fw/stats/", token: _data.Token);
+            => await Execute<Stat>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/fw/stats/", replacements: new Dictionary<string, string>()
+            {
+                { "character_id", character_id.ToString() }
+            }, token: _data.Token);
     }
 }

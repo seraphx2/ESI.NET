@@ -7,7 +7,7 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class AllianceLogic : BaseLogic
+    public class AllianceLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
@@ -38,7 +38,10 @@ namespace ESI.NET.Logic
         /// <param name="allianceId"></param>
         /// <returns></returns>
         public async Task<EsiResponse<Information>> Information(int alliance_id)
-            => await Execute<Information>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/alliances/{alliance_id}/");
+            => await Execute<Information>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/alliances/{alliance_id}/", replacements: new Dictionary<string, string>()
+            {
+                { "alliance_id", alliance_id.ToString() }
+            });
 
         /// <summary>
         /// /alliances/{alliance_id}/corporations/
@@ -46,7 +49,10 @@ namespace ESI.NET.Logic
         /// <param name="alliance_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<int>>> Corporations(int alliance_id)
-            => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/alliances/{alliance_id}/corporations/");
+            => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/alliances/{alliance_id}/corporations/", replacements: new Dictionary<string, string>()
+            {
+                { "alliance_id", alliance_id.ToString() }
+            });
 
         /// <summary>
         /// /alliances/{alliance_id}/icons/
@@ -54,6 +60,9 @@ namespace ESI.NET.Logic
         /// <param name="alliance_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<Images>> Icons(int alliance_id)
-            => await Execute<Images>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/alliances/{alliance_id}/icons/");
+            => await Execute<Images>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/alliances/{alliance_id}/icons/", replacements: new Dictionary<string, string>()
+            {
+                { "alliance_id", alliance_id.ToString() }
+            });
     }
 }

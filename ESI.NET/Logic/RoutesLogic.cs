@@ -6,7 +6,7 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class RoutesLogic : BaseLogic
+    public class RoutesLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
@@ -37,7 +37,11 @@ namespace ESI.NET.Logic
             if (connections != null)
                 parameters.Add($"&connections={string.Join(",", connections)}");
 
-            var response = await Execute<int[]>(_client, _config, RequestSecurity.Public, RequestMethod.GET, $"/route/{origin}/{destination}/", parameters: parameters.ToArray());
+            var response = await Execute<int[]>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/route/{origin}/{destination}/", replacements: new Dictionary<string, string>()
+            {
+                { "origin", origin.ToString() },
+                { "destination", destination.ToString() }
+            }, parameters: parameters.ToArray());
 
             return response;
         }
