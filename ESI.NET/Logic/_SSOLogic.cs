@@ -1,5 +1,6 @@
 ﻿using ESI.NET.Enumerations;
 using ESI.NET.Logic;
+using ESI.NET.Models.Character;
 using ESI.NET.Models.SSO;
 using Newtonsoft.Json;
 using System;
@@ -70,11 +71,19 @@ namespace ESI.NET
             authorizedCharacter.Token = token.AccessToken;
             authorizedCharacter.RefreshToken = token.RefreshToken;
 
+            var url = $"{_config.EsiUrl}v1/characters/affiliation/?datasource={_config.DataSource.ToEsiValue()}";
+            var body = new StringContent(JsonConvert.SerializeObject(new int[] { authorizedCharacter.CharacterID }), Encoding.UTF8, "application/json");
+
             // Get more specifc details about authorized character to be used in API calls that require this data about the character
-            var characterResponse = new CharacterLogic(_client, _config, authorizedCharacter).Affiliation(new int[] { authorizedCharacter.CharacterID }).Result;
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
+            var characterResponse = await client.PostAsync(url, body).ConfigureAwait(false);
+
+            //var characterResponse = new CharacterLogic(_client, _config, authorizedCharacter).Affiliation(new int[] { authorizedCharacter.CharacterID }).ConfigureAwait(false).GetAwaiter().GetResult();
             if (characterResponse.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                var characterData = characterResponse.Data.First();
+                EsiResponse<List<Affiliation>> affiliations = new EsiResponse<List<Affiliation>>(characterResponse, "POST|/character/affiliations/", "v1");
+                var characterData = affiliations.Data.First();
 
                 authorizedCharacter.AllianceID = characterData.AllianceId;
                 authorizedCharacter.CorporationID = characterData.CorporationId;
