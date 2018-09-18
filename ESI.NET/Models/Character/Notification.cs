@@ -9,10 +9,10 @@ namespace ESI.NET.Models.Character
         public bool IsRead { get; set; }
 
         [JsonProperty("notification_id")]
-        public long Id { get; set; }
+        public long NotificationId { get; set; }
 
         [JsonProperty("sender_id")]
-        public long SenderID { get; set; }
+        public int SenderId { get; set; }
 
         [JsonProperty("sender_type")]
         public string SenderType { get; set; }
@@ -21,7 +21,7 @@ namespace ESI.NET.Models.Character
         public string Text { get; set; }
 
         [JsonProperty("timestamp")]
-        public DateTime Timestamp { get; set; }
+        public string Timestamp { get; set; }
 
         [JsonProperty("type")]
         public string Type { get; set; }

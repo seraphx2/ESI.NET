@@ -147,7 +147,7 @@ namespace ESI.NET
             {"DELETE|/characters/{character_id}/mail/{mail_id}/", "v1"},
             {"GET|/characters/{character_id}/medals/", "v1"},
             {"GET|/characters/{character_id}/mining/", "v1"},
-            {"GET|/characters/{character_id}/notifications/", "v2"},
+            {"GET|/characters/{character_id}/notifications/", "v3"},
             {"GET|/characters/{character_id}/notifications/contacts/", "v1"},
             {"GET|/characters/{character_id}/online/", "v2"},
             {"GET|/characters/{character_id}/opportunities/", "v1"},

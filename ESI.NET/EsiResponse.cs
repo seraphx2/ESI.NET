@@ -12,44 +12,53 @@ namespace ESI.NET
     {
         public EsiResponse(HttpResponseMessage response, string path, string version)
         {
-            StatusCode = response.StatusCode;
-            Endpoint = path.Split('|')[1];
-            Version = version;
-
-            if (response.StatusCode != HttpStatusCode.NoContent)
+            try
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                StatusCode = response.StatusCode;
+                Endpoint = path.Split('|')[1];
+                Version = version;
 
-                if (response.StatusCode == HttpStatusCode.OK ||
-                    response.StatusCode == HttpStatusCode.Created)
+                if (response.StatusCode != HttpStatusCode.NoContent)
                 {
-                    if ((result.StartsWith("{") && result.EndsWith("}")) || result.StartsWith("[") && result.EndsWith("]"))
-                        Data = JsonConvert.DeserializeObject<T>(result);
+                    var result = response.Content.ReadAsStringAsync().Result;
+
+                    if (response.StatusCode == HttpStatusCode.OK ||
+                        response.StatusCode == HttpStatusCode.Created)
+                    {
+                        if ((result.StartsWith("{") && result.EndsWith("}")) || result.StartsWith("[") && result.EndsWith("]"))
+                            Data = JsonConvert.DeserializeObject<T>(result);
+                        else
+                            Message = result;
+                    }
+                    else if (response.StatusCode == HttpStatusCode.NotModified)
+                        Message = "Not Modified";
                     else
-                        Message = result;
+                        Message = JsonConvert.DeserializeAnonymousType(result, new { error = string.Empty }).error;
                 }
-                else if (response.StatusCode == HttpStatusCode.NotModified)
-                    Message = "Not Modified";
-                else
-                    Message = JsonConvert.DeserializeAnonymousType(result, new { error = string.Empty }).error;
+                else if (response.StatusCode == HttpStatusCode.NoContent)
+                    Message = NoContentMessage[path];
+
+                if (response.Headers.Contains("X-Pages"))
+                    Pages = int.Parse(response.Headers.GetValues("X-Pages").First());
+
+                if (response.Headers.Contains("ETag"))
+                    ETag = response.Headers.GetValues("ETag").First().Replace("\"", string.Empty);
+
+                if (response.Content.Headers.Contains("Expires"))
+                    Expires = DateTime.Parse(response.Content.Headers.GetValues("Expires").First());
+
+                if (response.Headers.Contains("X-Esi-Error-Limit-Remain"))
+                    ErrorLimitRemain = int.Parse(response.Headers.GetValues("X-Esi-Error-Limit-Remain").First());
+
+                if (response.Headers.Contains("X-Esi-Error-Limit-Reset"))
+                    ErrorLimitReset = int.Parse(response.Headers.GetValues("X-Esi-Error-Limit-Reset").First());
             }
-            else if (response.StatusCode == HttpStatusCode.NoContent)
-                Message = NoContentMessage[path];
-
-            if (response.Headers.Contains("X-Pages"))
-                Pages = int.Parse(response.Headers.GetValues("X-Pages").First());
-
-            if (response.Headers.Contains("ETag"))
-                ETag = response.Headers.GetValues("ETag").First().Replace("\"", string.Empty);
-
-            if (response.Content.Headers.Contains("Expires"))
-                Expires = DateTime.Parse(response.Content.Headers.GetValues("Expires").First());
-
-            if (response.Headers.Contains("X-Esi-Error-Limit-Remain"))
-                ErrorLimitRemain = int.Parse(response.Headers.GetValues("X-Esi-Error-Limit-Remain").First());
-
-            if (response.Headers.Contains("X-Esi-Error-Limit-Reset"))
-                ErrorLimitReset = int.Parse(response.Headers.GetValues("X-Esi-Error-Limit-Reset").First());
+            catch (Exception ex)
+            {
+                Message = response.Content.ReadAsStringAsync().Result;
+                Exception = ex;
+            }
+            
         }
 
         public HttpStatusCode StatusCode { get; set; }
@@ -62,6 +71,7 @@ namespace ESI.NET
         public int? Pages { get; set; } = null;
         public string Message { get; set; } = null;
         public T Data { get; set; }
+        public Exception Exception { get; set; }
 
         private readonly ImmutableDictionary<string, string> NoContentMessage = new Dictionary<string, string>()
         {
