@@ -15,6 +15,8 @@ namespace ESI.NET
 
         public async static Task<EsiResponse<T>> Execute<T>(HttpClient client, EsiConfig config, RequestSecurity security, RequestMethod method, string endpoint, Dictionary<string, string> replacements = null, string[] parameters = null, object body = null, string token = null)
         {
+            client.DefaultRequestHeaders.Clear();
+
             var path = $"{method.ToString()}|{endpoint}";
             var version = EndpointVersion[path];
 
