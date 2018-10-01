@@ -28,8 +28,9 @@ namespace ESI.NET.Logic
         }
 
         /// <summary>
-        /// 
+        /// /contracts/public/{region_id}/
         /// </summary>
+        /// <param name="region_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Contract>>> Contracts(int region_id, int page = 1)
             => await Execute<List<Contract>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/contracts/public/{region_id}/", replacements: new Dictionary<string, string>()
@@ -41,12 +42,12 @@ namespace ESI.NET.Logic
             });
 
         /// <summary>
-        /// 
+        /// /contracts/public/items/{contract_id}/
         /// </summary>
         /// <param name="contract_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<ContractItem>>> ContractItems(int contract_id, int page = 1)
-            => await Execute<List<ContractItem>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/contracts/public/bids/{contract_id}/", replacements: new Dictionary<string, string>()
+            => await Execute<List<ContractItem>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/contracts/public/items/{contract_id}/", replacements: new Dictionary<string, string>()
             {
                 { "contract_id", contract_id.ToString() }
             }, parameters: new string[]
@@ -55,12 +56,12 @@ namespace ESI.NET.Logic
             });
 
         /// <summary>
-        /// 
+        /// "/contracts/public/bids/{contract_id}/
         /// </summary>
         /// <param name="contract_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Bid>>> ContractBids(int contract_id, int page = 1)
-            => await Execute<List<Bid>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/contracts/public/items/{contract_id}/", replacements: new Dictionary<string, string>()
+            => await Execute<List<Bid>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/contracts/public/bids/{contract_id}/", replacements: new Dictionary<string, string>()
             {
                 { "contract_id", contract_id.ToString() }
             }, parameters: new string[]
