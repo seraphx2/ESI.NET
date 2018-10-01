@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using ESI.NET.Enumerations;
+using Newtonsoft.Json;
 using System;
 
 namespace ESI.NET.Models.Contracts
@@ -27,7 +28,7 @@ namespace ESI.NET.Models.Contracts
         public long EndLocationId { get; set; }
 
         [JsonProperty("type")]
-        public string Type { get; set; }
+        public ContractType Type { get; set; }
 
         [JsonProperty("status")]
         public string Status { get; set; }
