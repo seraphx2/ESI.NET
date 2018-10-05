@@ -55,7 +55,7 @@ namespace ESI.NET.Logic
         /// <param name="type_id"></param>
         /// <param name="item_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Effect>> DynamicItem(int type_id, int item_id)
+        public async Task<EsiResponse<Effect>> DynamicItem(int type_id, long item_id)
             => await Execute<Effect>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/dogma/dynamic/items/{type_id}/{item_id}/", replacements: new Dictionary<string, string>()
             {
                 { "type_id", type_id.ToString() },
