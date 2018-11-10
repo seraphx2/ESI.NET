@@ -243,13 +243,13 @@ namespace ESI.NET.Logic
             dynamic body = null;
 
             if (role == FleetRole.FleetCommander)
-                body = new { character_id, role = role.ToString() };
+                body = new { character_id, role = role.ToEsiValue() };
 
             else if (role == FleetRole.WingCommander)
-                body = new { character_id, role = role.ToString(), wing_id };
+                body = new { character_id, role = role.ToEsiValue(), wing_id };
 
             else if (role == FleetRole.SquadCommander || role == FleetRole.SquadMember)
-                body = new { character_id, role = role.ToString(), wing_id, squad_id };
+                body = new { character_id, role = role.ToEsiValue(), wing_id, squad_id };
 
             return body;
         }
