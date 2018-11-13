@@ -47,6 +47,9 @@ namespace ESI.NET
                 if (response.Content.Headers.Contains("Expires"))
                     Expires = DateTime.Parse(response.Content.Headers.GetValues("Expires").First());
 
+                if (response.Content.Headers.Contains("Last-Modified"))
+                    LastModified = DateTime.Parse(response.Content.Headers.GetValues("Last-Modified").First());
+
                 if (response.Headers.Contains("X-Esi-Error-Limit-Remain"))
                     ErrorLimitRemain = int.Parse(response.Headers.GetValues("X-Esi-Error-Limit-Remain").First());
 
@@ -65,6 +68,7 @@ namespace ESI.NET
         public string Endpoint { get; set; }
         public string Version { get; set; }
         public DateTime? Expires { get; set; }
+        public DateTime? LastModified { get; set; }
         public string ETag { get; set; }
         public int? ErrorLimitRemain { get; set; }
         public int? ErrorLimitReset { get; set; }
