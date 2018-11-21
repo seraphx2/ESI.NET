@@ -1,4 +1,4 @@
-![Build status](https://robmburke.visualstudio.com/ESI.NET/_apis/build/status/ESI.NET) ![Quality gate](https://sonarcloud.io/api/project_badges/measure?project=ESI.NET&metric=alert_status)
+![Build status](https://robmburke.visualstudio.com/ESI.NET/_apis/build/status/ESI.NET) ![Quality gate](https://sonarcloud.io/api/project_badges/measure?project=ESI.NET&metric=alert_status) ![NuGet](https://img.shields.io/nuget/v/ESI.NET.svg)
 
 # What is ESI.NET?
 
