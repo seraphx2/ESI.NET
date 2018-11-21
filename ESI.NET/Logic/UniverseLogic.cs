@@ -1,4 +1,5 @@
-﻿using ESI.NET.Models.Universe;
+﻿using ESI.NET.Models.SSO;
+using ESI.NET.Models.Universe;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
