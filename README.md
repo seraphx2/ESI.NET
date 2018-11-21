@@ -32,12 +32,14 @@ In your appsettings.json, add the following object and fill it in appropriately:
     "UserAgent": ""
   }
 ```
+*For your protection, please provide a user_agent value. This can be your character name and/or project name. CCP will be more likely to contact you than just cut off access to ESI if you provide something that can identify you within the New Eden galaxy.*
+
 Inject the EsiConfig object into your configuration in `Startup.cs` in the `ConfigureServices()` method:
 ```cs
 services.Configure<EsiConfig>(Configuration.GetSection("EsiConfig"));
 ```
 
-Lastly, access the configuration in your class constructor:
+Lastly, access the client in your class constructor (the config options above will automatically be injected into it:
 ```cs
 IEsiClient _client;
 public ApiTestController(IEsiClient client) { _client = client; }
@@ -45,7 +47,7 @@ public ApiTestController(IEsiClient client) { _client = client; }
 ```
 
 ### .NET Framework
-If you are using a .NET Standard-compatible .NET Framework application, you can instatiate the client in this manner:
+If you are using a .NET Standard-compatible .NET Framework application, you can instantiate the client in this manner:
 
 ```cs
 IOptions<EsiConfig> config = Options.Create(new EsiConfig()
@@ -73,7 +75,6 @@ EsiResponse response = _client.Universe.Names(new List<long>()
     20000006
 }).Result;
 ```
-For your protection, please provide a user_agent value. This can be your character name and/or project name. CCP will be more likely to contact you than just cut off access to ESI if you provide something that can identify you within the New Eden galaxy.
 
 ## SSO Example
 
