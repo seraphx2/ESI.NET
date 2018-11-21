@@ -120,6 +120,7 @@ namespace ESI.NET
             Search = new SearchLogic(client, config, data);
             Skills = new SkillsLogic(client, config, data);
             Wallet = new WalletLogic(client, config, data);
+            Universe = new UniverseLogic(client, config, data);
         }
 
         public void SetIfNoneMatchHeader(string eTag)

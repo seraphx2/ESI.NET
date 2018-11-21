@@ -10,8 +10,14 @@ namespace ESI.NET.Logic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
+        private readonly AuthorizedCharacterData _data;
 
-        public UniverseLogic(HttpClient client, EsiConfig config) { _client = client; _config = config; }
+        public UniverseLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
+        {
+            _client = client;
+            _config = config;
+            _data = data;
+        }
 
         /// <summary>
         /// /universe/bloodlines/
@@ -189,7 +195,7 @@ namespace ESI.NET.Logic
             => await Execute<Structure>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/universe/structures/{structure_id}/", replacements: new Dictionary<string, string>()
             {
                 { "structure_id", structure_id.ToString() }
-            });
+            }, token: _data.Token);
 
         /// <summary>
         /// /universe/systems/
