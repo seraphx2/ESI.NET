@@ -5,7 +5,7 @@
 **ESI.NET** is a .NET wrapper for the [Eve Online ESI API](https://esi.tech.ccp.is/latest/). This wrapper simplifies the process of integrating ESI into your .NET application.
 
 ### Resources
-* [Tweetfleet - #esi-net-csharp](https://tweetfleet.slack.com/messages/CEBATQFA8/) - This channel is where you can contact me for questions and where automated code information will be pushed).
+* [Tweetfleet - #esi-net-csharp](https://tweetfleet.slack.com/messages/CEBATQFA8/) - This channel is where you can contact me for questions and where automated webhook notifications will be pushed.
 * [Tweetfleet - #esi](https://tweetfleet.slack.com/messages/C30KX8UUX/) - This is the official slack channel to speak with CCP devs (and developers) concerning ESI (and where I can be found as Psianna Archeia).
 * [ESI Application Keys](https://developers.eveonline.com/)
 * [ESI Swagger Definition](https://esi.tech.ccp.is/swagger.json)
