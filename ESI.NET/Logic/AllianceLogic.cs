@@ -22,23 +22,12 @@ namespace ESI.NET.Logic
             => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/alliances/");
 
         /// <summary>
-        /// /alliances/names/
-        /// </summary>
-        /// <param name="alliance_ids"></param>
-        /// <returns></returns>
-        public async Task<EsiResponse<List<Alliance>>> Names(int[] alliance_ids)
-            => await Execute<List<Alliance>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/alliances/names/", parameters: new string[]
-            {
-                $"alliance_ids={string.Join(",", alliance_ids)}"
-            });
-
-        /// <summary>
         /// /alliances/{alliance_id}/
         /// </summary>
         /// <param name="allianceId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Information>> Information(int alliance_id)
-            => await Execute<Information>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/alliances/{alliance_id}/", replacements: new Dictionary<string, string>()
+        public async Task<EsiResponse<Alliance>> Information(int alliance_id)
+            => await Execute<Alliance>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/alliances/{alliance_id}/", replacements: new Dictionary<string, string>()
             {
                 { "alliance_id", alliance_id.ToString() }
             });

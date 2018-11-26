@@ -30,8 +30,8 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="corporation_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Information>> Information(int corporation_id)
-            => await Execute<Information>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/corporations/{corporation_id}/", replacements: new Dictionary<string, string>()
+        public async Task<EsiResponse<Corporation>> Information(int corporation_id)
+            => await Execute<Corporation>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/corporations/{corporation_id}/", replacements: new Dictionary<string, string>()
             {
                 { "corporation_id", corporation_id.ToString() }
             });
@@ -45,17 +45,6 @@ namespace ESI.NET.Logic
             => await Execute<List<AllianceHistory>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/corporations/{corporation_id}/alliancehistory/", replacements: new Dictionary<string, string>()
             {
                 { "corporation_id", corporation_id.ToString() }
-            });
-
-        /// <summary>
-        /// /corporations/names/
-        /// </summary>
-        /// <param name="corporation_ids"></param>
-        /// <returns></returns>
-        public async Task<EsiResponse<List<Corporation>>> Names(int[] corporation_ids)
-            => await Execute<List<Corporation>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/corporations/names/", parameters: new string[]
-            {
-                $"corporation_ids={string.Join(",", corporation_ids)}"
             });
 
         /// <summary>
