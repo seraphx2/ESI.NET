@@ -1,5 +1,6 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
+using ESI.NET.Models.SSO;
 using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
@@ -8,8 +9,14 @@ namespace ESI.NET.Logic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
+        private readonly AuthorizedCharacterData _data;
 
-        public UserInterfaceLogic(HttpClient client, EsiConfig config) { _client = client; _config = config; }
+        public UserInterfaceLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
+        {
+            _client = client;
+            _config = config;
+            _data = data;
+        }
 
         /// <summary>
         /// /ui/openwindow/marketdetails/
@@ -20,7 +27,7 @@ namespace ESI.NET.Logic
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/openwindow/marketdetails/", parameters: new string[]
             {
                 $"type_id={type_id}"
-            });
+            }, token: _data.Token);
 
         /// <summary>
         /// /ui/openwindow/contract/
@@ -31,7 +38,7 @@ namespace ESI.NET.Logic
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/openwindow/contract/", parameters: new string[]
             {
                 $"contract_id={contract_id}"
-            });
+            }, token: _data.Token);
 
         /// <summary>
         /// /ui/openwindow/information/
@@ -42,7 +49,7 @@ namespace ESI.NET.Logic
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/openwindow/information/", parameters: new string[]
             {
                 $"target_id={target_id}"
-            });
+            }, token: _data.Token);
 
         /// <summary>
         /// /ui/autopilot/waypoint/
@@ -57,7 +64,7 @@ namespace ESI.NET.Logic
                 $"destination_id={destination_id}",
                 $"add_to_beginning={add_to_beginning}",
                 $"clear_other_waypoints={clear_other_waypoints}"
-            });
+            }, token: _data.Token);
 
         /// <summary>
         /// /ui/openwindow/newmail/
@@ -74,6 +81,6 @@ namespace ESI.NET.Logic
                 subject = subject,
                 body = body,
                 recipients = recipients
-            });
+            }, token: _data.Token);
     }
 }
