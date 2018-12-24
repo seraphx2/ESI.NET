@@ -94,3 +94,8 @@ AuthorizedCharacterData auth_char = await _client.SSO.Verify(token);
 ```cs
 SsoToken token = await _client.SSO.GetToken(GrantType.RefreshToken, auth_char.RefreshToken);
 ```
+### Performing an authenticated request
+Set the character data on the client before performing the request.
+```cs
+_client.SetCharacterData(authorizedCharacterData)
+```
