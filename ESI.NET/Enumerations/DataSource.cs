@@ -6,6 +6,7 @@ namespace ESI.NET.Enumerations
     public enum DataSource
     {
         [EnumMember(Value="tranquility")] /**/ Tranquility,
-        [EnumMember(Value="singularity")] /**/ Singularity
+        [EnumMember(Value="singularity")] /**/ Singularity,
+        [EnumMember(Value = "serenity")] /**/ serenity
     }
 }
