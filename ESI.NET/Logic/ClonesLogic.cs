@@ -29,19 +29,23 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<Clones>> List()
-            => await Execute<Clones>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/clones/", replacements: new Dictionary<string, string>()
-            {
-                { "character_id", character_id.ToString() }
-            }, token: _data.Token);
+            => await Execute<Clones>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/clones/",
+                replacements: new Dictionary<string, string>()
+                {
+                    { "character_id", character_id.ToString() }
+                },
+                token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/implants/
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<int[]>> Implants()
-            => await Execute<int[]>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/implants/", replacements: new Dictionary<string, string>()
-            {
-                { "character_id", character_id.ToString() }
-            }, token: _data.Token);
+            => await Execute<int[]>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/implants/",
+                replacements: new Dictionary<string, string>()
+                {
+                    { "character_id", character_id.ToString() }
+                },
+                token: _data.Token);
     }
 }

@@ -37,10 +37,11 @@ namespace ESI.NET.Logic
         /// <param name="group_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<model.Group>> Group(int group_id)
-            => await Execute<model.Group>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/opportunities/groups/{group_id}/", replacements: new Dictionary<string, string>()
-            {
-                { "group_id", group_id.ToString() }
-            });
+            => await Execute<model.Group>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/opportunities/groups/{group_id}/",
+                replacements: new Dictionary<string, string>()
+                {
+                    { "group_id", group_id.ToString() }
+                });
 
         /// <summary>
         /// /opportunities/tasks/
@@ -55,10 +56,11 @@ namespace ESI.NET.Logic
         /// <param name="task_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<model.Task>> Task(int task_id)
-            => await Execute<model.Task>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/opportunities/tasks/{task_id}/", replacements: new Dictionary<string, string>()
-            {
-                { "task_id", task_id.ToString() }
-            });
+            => await Execute<model.Task>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/opportunities/tasks/{task_id}/",
+                replacements: new Dictionary<string, string>()
+                {
+                    { "task_id", task_id.ToString() }
+                });
 
         /// <summary>
         /// /characters/{character_id}/opportunities/
@@ -66,9 +68,11 @@ namespace ESI.NET.Logic
         /// <param name="character_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<model.CompletedTask>>> CompletedTasks()
-            => await Execute<List<model.CompletedTask>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/opportunities/", replacements: new Dictionary<string, string>()
-            {
-                { "character_id", character_id.ToString() }
-            }, token: _data.Token);
+            => await Execute<List<model.CompletedTask>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/opportunities/",
+                replacements: new Dictionary<string, string>()
+                {
+                    { "character_id", character_id.ToString() }
+                },
+                token: _data.Token);
     }
 }

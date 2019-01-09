@@ -55,7 +55,8 @@ namespace ESI.NET.Logic
                 $"categories={categoryList}",
                 $"strict={isStrict}",
                 $"language={language}"
-            }, token: _data?.Token);
+            },
+            token: _data?.Token);
 
             return response;
         }

@@ -29,7 +29,12 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Fitting>>> List()
-            => await Execute<List<Fitting>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/characters/{character_id}/fittings/, token: _data.Token");
+            => await Execute<List<Fitting>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/fittings/",
+                replacements: new Dictionary<string, string>()
+                {
+                    { "character_id", character_id.ToString() }
+                },
+                token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/fittings/
@@ -37,7 +42,13 @@ namespace ESI.NET.Logic
         /// <param name="fitting"></param>
         /// <returns></returns>
         public async Task<EsiResponse<NewFitting>> Add(object fitting)
-            => await Execute<NewFitting>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, $"/characters/{character_id}/fittings/", body: fitting, token: _data.Token);
+            => await Execute<NewFitting>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/characters/{character_id}/fittings/",
+                replacements: new Dictionary<string, string>()
+                {
+                    { "character_id", character_id.ToString() }
+                },
+                body: fitting,
+                token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/fittings/{fitting_id}/
@@ -45,6 +56,12 @@ namespace ESI.NET.Logic
         /// <param name="fitting_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> Delete(int fitting_id)
-            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.DELETE, $"/characters/{character_id}/fittings/{fitting_id}/", token: _data.Token);
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.DELETE, "/characters/{character_id}/fittings/{fitting_id}/",
+                replacements: new Dictionary<string, string>()
+                {
+                    { "character_id", character_id.ToString() },
+                    { "fitting_id", fitting_id.ToString() }
+                },
+                token: _data.Token);
     }
 }

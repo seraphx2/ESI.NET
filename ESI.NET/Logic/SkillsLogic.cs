@@ -29,29 +29,35 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<Attributes>> Attributes()
-            => await Execute<Attributes>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/attributes/", replacements: new Dictionary<string, string>()
-            {
-                { "character_id", character_id.ToString() }
-            }, token: _data.Token);
+            => await Execute<Attributes>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/attributes/",
+                replacements: new Dictionary<string, string>()
+                {
+                    { "character_id", character_id.ToString() }
+                },
+                token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/skills/
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<SkillDetails>> List()
-            => await Execute<SkillDetails>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/skills/", replacements: new Dictionary<string, string>()
-            {
-                { "character_id", character_id.ToString() }
-            }, token: _data.Token);
+            => await Execute<SkillDetails>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/skills/",
+                replacements: new Dictionary<string, string>()
+                {
+                    { "character_id", character_id.ToString() }
+                },
+                token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/skillqueue/
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<SkillQueueItem>>> Queue()
-            => await Execute<List<SkillQueueItem>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/skillqueue/", replacements: new Dictionary<string, string>()
-            {
-                { "character_id", character_id.ToString() }
-            }, token: _data.Token);
+            => await Execute<List<SkillQueueItem>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/skillqueue/",
+                replacements: new Dictionary<string, string>()
+                {
+                    { "character_id", character_id.ToString() }
+                },
+                token: _data.Token);
     }
 }

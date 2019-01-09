@@ -24,10 +24,12 @@ namespace ESI.NET.Logic
         /// <param name="type_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> MarketDetails(int type_id)
-            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/openwindow/marketdetails/", parameters: new string[]
-            {
-                $"type_id={type_id}"
-            }, token: _data.Token);
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/openwindow/marketdetails/",
+                parameters: new string[]
+                {
+                    $"type_id={type_id}"
+                },
+                token: _data.Token);
 
         /// <summary>
         /// /ui/openwindow/contract/
@@ -35,10 +37,12 @@ namespace ESI.NET.Logic
         /// <param name="contract_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> Contract(int contract_id)
-            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/openwindow/contract/", parameters: new string[]
-            {
-                $"contract_id={contract_id}"
-            }, token: _data.Token);
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/openwindow/contract/",
+                parameters: new string[]
+                {
+                    $"contract_id={contract_id}"
+                },
+                token: _data.Token);
 
         /// <summary>
         /// /ui/openwindow/information/
@@ -46,10 +50,12 @@ namespace ESI.NET.Logic
         /// <param name="target_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> Information(int target_id)
-            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/openwindow/information/", parameters: new string[]
-            {
-                $"target_id={target_id}"
-            }, token: _data.Token);
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/openwindow/information/",
+                parameters: new string[]
+                {
+                    $"target_id={target_id}"
+                },
+                token: _data.Token);
 
         /// <summary>
         /// /ui/autopilot/waypoint/
@@ -59,12 +65,14 @@ namespace ESI.NET.Logic
         /// <param name="clear_other_waypoints"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> Waypoint(long destination_id, bool add_to_beginning = false, bool clear_other_waypoints = false)
-            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/autopilot/waypoint/", parameters: new string[]
-            {
-                $"destination_id={destination_id}",
-                $"add_to_beginning={add_to_beginning}",
-                $"clear_other_waypoints={clear_other_waypoints}"
-            }, token: _data.Token);
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/autopilot/waypoint/",
+                parameters: new string[]
+                {
+                    $"destination_id={destination_id}",
+                    $"add_to_beginning={add_to_beginning}",
+                    $"clear_other_waypoints={clear_other_waypoints}"
+                },
+                token: _data.Token);
 
         /// <summary>
         /// /ui/openwindow/newmail/
@@ -76,11 +84,13 @@ namespace ESI.NET.Logic
         /// <param name="to_corp_or_alliance_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> NewMail(string subject, string body, int[] recipients)
-            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/openwindow/newmail/", body: new
-            {
-                subject = subject,
-                body = body,
-                recipients = recipients
-            }, token: _data.Token);
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/openwindow/newmail/",
+                body: new
+                {
+                    subject,
+                    body,
+                    recipients
+                },
+                token: _data.Token);
     }
 }

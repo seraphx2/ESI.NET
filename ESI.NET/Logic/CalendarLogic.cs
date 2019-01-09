@@ -30,10 +30,12 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Event>>> Events()
-            => await Execute<List<Event>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/calendar/", replacements: new Dictionary<string, string>()
-            {
-                { "character_id", character_id.ToString() }
-            }, token: _data.Token);
+            => await Execute<List<Event>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/calendar/",
+                replacements: new Dictionary<string, string>()
+                {
+                    { "character_id", character_id.ToString() }
+                },
+                token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/calendar/{event_id}/
@@ -41,11 +43,13 @@ namespace ESI.NET.Logic
         /// <param name="contract_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<Event>> Event(int event_id)
-            => await Execute<Event>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/calendar/{event_id}/", replacements: new Dictionary<string, string>()
-            {
-                { "character_id", character_id.ToString() },
-                { "event_id", event_id.ToString() }
-            }, token: _data.Token);
+            => await Execute<Event>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/calendar/{event_id}/",
+                replacements: new Dictionary<string, string>()
+                {
+                    { "character_id", character_id.ToString() },
+                    { "event_id", event_id.ToString() }
+                },
+                token: _data.Token);
 
         /// <summary>
         /// /characters/{character_id}/calendar/{event_id}/
@@ -54,14 +58,17 @@ namespace ESI.NET.Logic
         /// <param name="response"></param>
         /// <returns></returns>
         public async Task<EsiResponse<Event>> Respond(int event_id, EventResponse eventResponse)
-            => await Execute<Event>(_client, _config, RequestSecurity.Authenticated, RequestMethod.PUT, "/characters/{character_id}/calendar/{event_id}/", replacements: new Dictionary<string, string>()
-            {
-                { "character_id", character_id.ToString() },
-                { "event_id", event_id.ToString() }
-            }, body: new
-            {
-                response = eventResponse.ToEsiValue()
-            }, token: _data.Token);
+            => await Execute<Event>(_client, _config, RequestSecurity.Authenticated, RequestMethod.PUT, "/characters/{character_id}/calendar/{event_id}/",
+                replacements: new Dictionary<string, string>()
+                {
+                    { "character_id", character_id.ToString() },
+                    { "event_id", event_id.ToString() }
+                },
+                body: new
+                {
+                    response = eventResponse.ToEsiValue()
+                },
+                token: _data.Token);
 
         /// <summary>
         /// 
@@ -69,10 +76,12 @@ namespace ESI.NET.Logic
         /// <param name="contract_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Response>>> Responses(int event_id)
-            => await Execute<List<Response>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/calendar/{event_id}/attendees/", replacements: new Dictionary<string, string>()
-            {
-                { "character_id", character_id.ToString() },
-                { "event_id", event_id.ToString() }
-            }, token: _data.Token);
+            => await Execute<List<Response>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/calendar/{event_id}/attendees/",
+                replacements: new Dictionary<string, string>()
+                {
+                    { "character_id", character_id.ToString() },
+                    { "event_id", event_id.ToString() }
+                },
+                token: _data.Token);
     }
 }
