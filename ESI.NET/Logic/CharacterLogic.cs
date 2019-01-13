@@ -188,8 +188,8 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/roles/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<string>>> Roles()
-            => await Execute<List<string>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/roles/",
+        public async Task<EsiResponse<Roles>> Roles()
+            => await Execute<Roles>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/roles/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
