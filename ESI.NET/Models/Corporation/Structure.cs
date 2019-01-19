@@ -29,7 +29,7 @@ namespace ESI.NET.Models.Corporation
         public List<Vulnerability> NextVul { get; set; } = new List<Vulnerability>();
 
         [JsonProperty("fuel_expires")]
-        public string FuelExpires { get; set; }
+        public DateTime FuelExpires { get; set; }
 
         [JsonProperty("services")]
         public List<Service> Services { get; set; } = new List<Service>();
