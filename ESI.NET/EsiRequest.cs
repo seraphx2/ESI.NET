@@ -211,7 +211,7 @@ namespace ESI.NET
             {"GET|/corporations/{corporation_id}/standings/", "v1"},
             {"GET|/corporations/{corporation_id}/starbases/", "v1"},
             {"GET|/corporations/{corporation_id}/starbases/{starbase_id}/", "v1"},
-            {"GET|/corporations/{corporation_id}/structures/", "v2"},
+            {"GET|/corporations/{corporation_id}/structures/", "v3"},
             {"GET|/corporations/{corporation_id}/titles/", "v1"},
             {"GET|/corporations/{corporation_id}/wallets/", "v1"},
             {"GET|/corporations/{corporation_id}/wallets/{division}/journal/", "v3"},
