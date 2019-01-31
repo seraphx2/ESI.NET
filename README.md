@@ -37,7 +37,7 @@ In your appsettings.json, add the following object and fill it in appropriately:
 
 Inject the EsiConfig object into your configuration in `Startup.cs` in the `ConfigureServices()` method:
 ```cs
-services.Configure<EsiConfig>(Configuration.GetSection("EsiConfig"));
+services.AddEsi(Configuration.GetSection("ESIConfig"));
 ```
 
 Lastly, access the client in your class constructor (the config options above will automatically be injected into it:
@@ -63,6 +63,7 @@ IOptions<EsiConfig> config = Options.Create(new EsiConfig()
 
 EsiClient client = new EsiClient(config);
 ```
+*For your protection (and mine), you are required to supply a user_agent value. This can be your character name and/or project name. CCP will be more likely to contact you than just cut off access to ESI if you provide something that can identify you within the New Eden galaxy. Without this property populated, the wrapper will not work.*
 
 NOTE: You will need to import `Microsoft.Extensions.Options` to accomplish the above.
 
