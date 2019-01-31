@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -8,6 +10,14 @@ namespace ESI.NET
 {
     public static class Extensions
     {
+        public static IServiceCollection AddEsi(this IServiceCollection services, IConfigurationSection section)
+        {
+            services.Configure<EsiConfig>(section);
+            services.AddScoped<IEsiClient, EsiClient>();
+
+            return services;
+        }
+
         public static string ToEsiValue(this Enum e)
         {
             var enums = e.ToString();
