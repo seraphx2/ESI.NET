@@ -25,7 +25,7 @@ namespace ESI.NET.Logic
             {
                 character_id = _data.CharacterID;
                 corporation_id = _data.CorporationID;
-                alliance_id = _data.CorporationID;
+                alliance_id = _data.AllianceID;
             }
         }
 
