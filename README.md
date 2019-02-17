@@ -42,7 +42,7 @@ services.AddEsi(Configuration.GetSection("ESIConfig"));
 
 Lastly, access the client in your class constructor (the config options above will automatically be injected into it:
 ```cs
-IEsiClient _client;
+private readonly IEsiClient _client;
 public ApiTestController(IEsiClient client) { _client = client; }
 
 ```
