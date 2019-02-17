@@ -42,41 +42,35 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="from_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<JournalEntry>>> CharacterJournal(long? from_id = null)
-        {
-            var parameters = new List<string>();
-            if (from_id != null)
-                parameters.Add($"from_id={from_id}");
-
-            return await Execute<List<JournalEntry>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/wallet/journal/",
+        public async Task<EsiResponse<List<JournalEntry>>> CharacterJournal(int page = 1)
+            => await Execute<List<JournalEntry>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/wallet/journal/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
                 },
-                parameters: parameters.ToArray(),
+                parameters: new string[]
+                {
+                    $"page={page}"
+                },
                 token: _data.Token);
-        }
-            
+
 
         /// <summary>
         /// /characters/{character_id}/wallet/transactions/
         /// </summary>
         /// <param name="from_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Transaction>>> CharacterTransactions(long? from_id = null)
-        {
-            var parameters = new List<string>();
-            if (from_id != null)
-                parameters.Add($"from_id={from_id}");
-
-            return await Execute<List<Transaction>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/wallet/transactions/",
+        public async Task<EsiResponse<List<Transaction>>> CharacterTransactions(int page = 1)
+            => await Execute<List<Transaction>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/wallet/transactions/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
                 },
-                parameters: parameters.ToArray(),
+                parameters: new string[]
+                {
+                    $"page={page}"
+                },
                 token: _data.Token);
-        }
 
         /// <summary>
         /// /corporations/{corporation_id}/wallets/
@@ -96,21 +90,18 @@ namespace ESI.NET.Logic
         /// <param name="division"></param>
         /// <param name="from_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<JournalEntry>>> CorporationJournal(int division, long? from_id = null)
-        {
-            var parameters = new List<string>();
-            if (from_id != null)
-                parameters.Add($"from_id={from_id}");
-
-            return await Execute<List<JournalEntry>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/wallets/{division}/journal/",
+        public async Task<EsiResponse<List<JournalEntry>>> CorporationJournal(int division, int page = 1)
+            => await Execute<List<JournalEntry>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/wallets/{division}/journal/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() },
                     { "division", division.ToString() }
                 },
-                parameters: parameters.ToArray(),
+                parameters: new string[]
+                {
+                    $"page={page}"
+                },
                 token: _data.Token);
-        }
 
         /// <summary>
         /// /corporations/{corporation_id}/wallets/{division}/transactions/
@@ -118,20 +109,17 @@ namespace ESI.NET.Logic
         /// <param name="division"></param>
         /// <param name="from_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Transaction>>> CorporationTransactions(int division, long? from_id = null)
-        {
-            var parameters = new List<string>();
-            if (from_id != null)
-                parameters.Add($"from_id={from_id}");
-
-            return await Execute<List<Transaction>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/wallets/{division}/transactions/",
+        public async Task<EsiResponse<List<Transaction>>> CorporationTransactions(int division, int page = 1)
+            => await Execute<List<Transaction>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/wallets/{division}/transactions/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() },
                     { "division", division.ToString() }
                 },
-                parameters: parameters.ToArray(),
+                parameters: new string[]
+                {
+                    $"page={page}"
+                },
                 token: _data.Token);
-        }
     }
 }
