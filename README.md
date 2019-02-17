@@ -5,8 +5,8 @@
 **ESI.NET** is a .NET wrapper for the [Eve Online ESI API](https://esi.tech.ccp.is/latest/). This wrapper simplifies the process of integrating ESI into your .NET application.
 
 ### Resources
-* [Discord - E.N](https://discord.gg/gmJMcdz) - This channel is where you can contact me (Psianna Archeia) for questions and where automated webhook notifications will be pushed for github and when builds are completed. (If you have Discord, this is the preferred way to contact me concerning ESI.NET)
-* [Tweetfleet - #esi](https://tweetfleet.slack.com/messages/C30KX8UUX/) - This is the official slack channel to speak with CCP devs (and developers) concerning ESI (and where I can be found as Psianna Archeia).
+* [Discord - E.N](https://discord.gg/gmJMcdz) - This channel is where you can contact me (Psianna Archeia) for questions and where automated webhook notifications will be pushed for github and when builds are completed. (If you have Discord, this is the preferred way to contact me concerning ESI.NET. I **DO NOT** monitor Slack anymore for ESI.NET issues.)
+* [Tweetfleet - #esi](https://tweetfleet.slack.com/messages/C30KX8UUX/) - This is the official slack channel to speak with CCP devs (and developers) concerning ESI.
 * [ESI Application Keys](https://developers.eveonline.com/)
 * [ESI Swagger Definition](https://esi.tech.ccp.is/swagger.json)
 * [ESI-Docs](https://github.com/esi/esi-docs) - This is the best documentation concerning ESI and the SSO process.
@@ -21,7 +21,7 @@ https://www.nuget.org/packages/ESI.NET
 ## Client Instantiation
 ESI.NET is now Dependency Injection compatible. There are a few parts required to set this up propery in a .NET Standard/Core application:
 
-### .NET Standard
+### .NET Standard (Dependency Injection)
 In your appsettings.json, add the following object and fill it in appropriately:
 ```json
 "EsiConfig": {
