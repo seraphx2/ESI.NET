@@ -8,7 +8,7 @@ namespace ESI.NET.Models.Industry
     public class Entry
     {
         [JsonProperty("date")]
-        public string Date { get; set; }
+        public DateTime Date { get; set; }
 
         [JsonProperty("solar_system_id")]
         public int SolarSystemId { get; set; }

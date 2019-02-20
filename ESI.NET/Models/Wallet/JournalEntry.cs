@@ -18,7 +18,7 @@ namespace ESI.NET.Models.Wallet
         public string ContextIdType { get; set; }
 
         [JsonProperty("date")]
-        public string Date { get; set; }
+        public DateTime Date { get; set; }
 
         [JsonProperty("description")]
         public string Description { get; set; }
