@@ -16,7 +16,7 @@ namespace ESI.NET.Models.Killmails
         public DateTime KillmailTime { get; set; }
 
         [JsonProperty("moon_id")]
-        public int MoodId { get; set; }
+        public int MoonId { get; set; }
 
         [JsonProperty("solar_system_id")]
         public int SolarSystemId { get; set; }
@@ -61,7 +61,7 @@ namespace ESI.NET.Models.Killmails
     public class Victim
     {
         [JsonProperty("alliance_id")]
-        public int AllianceID { get; set; }
+        public int AllianceId { get; set; }
 
         [JsonProperty("character_id")]
         public int CharacterId { get; set; }
@@ -91,6 +91,18 @@ namespace ESI.NET.Models.Killmails
         public int Flag { get; set; }
 
         [JsonProperty("item_type_id")]
-        public int TypeId { get; set; }
+        public int ItemTypeId { get; set; }
+
+        [JsonProperty("items")]
+        public List<Item> Items { get; set; }
+
+        [JsonProperty("quantity_destroyed")]
+        public long QuantityDestroyed { get; set; }
+
+        [JsonProperty("quantity_dropped")]
+        public long QuantityDropped { get; set; }
+
+        [JsonProperty("singleton")]
+        public int Singleton { get; set; }
     }
 }
