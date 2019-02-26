@@ -2,7 +2,7 @@
 
 # What is ESI.NET?
 
-**ESI.NET** is a .NET wrapper for the [Eve Online ESI API](https://esi.tech.ccp.is/latest/). This wrapper simplifies the process of integrating ESI into your .NET application.
+**ESI.NET** is a .NET wrapper for the [Eve Online ESI API](https://esi.evetech.net/). This wrapper simplifies the process of integrating ESI into your .NET application.
 
 ### Resources
 * [Discord - E.N](https://discord.gg/gmJMcdz) - This channel is where you can contact me (Psianna Archeia) for questions and where automated webhook notifications will be pushed for github and when builds are completed. (If you have Discord, this is the preferred way to contact me concerning ESI.NET. I **DO NOT** monitor Slack anymore for ESI.NET issues.)
