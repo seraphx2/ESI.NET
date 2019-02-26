@@ -25,7 +25,7 @@ ESI.NET is now Dependency Injection compatible. There are a few parts required t
 In your appsettings.json, add the following object and fill it in appropriately:
 ```json
 "EsiConfig": {
-    "EsiUrl": "https://esi.tech.ccp.is/",
+    "EsiUrl": "https://esi.evetech.net/",
     "DataSource": "Tranquility",
     "ClientId": "**********",
     "SecretKey": "**********",
@@ -53,7 +53,7 @@ If you are using a .NET Standard-compatible .NET Framework application, you can 
 ```cs
 IOptions<EsiConfig> config = Options.Create(new EsiConfig()
 {
-    EsiUrl = "https://esi.tech.ccp.is/",
+    EsiUrl = "https://esi.evetech.net/",
     DataSource = DataSource.Tranquility,
     ClientId = "**********",
     SecretKey = "**********",
