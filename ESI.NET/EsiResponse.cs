@@ -18,6 +18,27 @@ namespace ESI.NET
                 Endpoint = path.Split('|')[1];
                 Version = version;
 
+                if (response.Headers.Contains("X-ESI-Request-ID"))
+                    RequestId = Guid.Parse(response.Headers.GetValues("X-ESI-Request-ID").First());
+
+                if (response.Headers.Contains("X-Pages"))
+                    Pages = int.Parse(response.Headers.GetValues("X-Pages").First());
+
+                if (response.Headers.Contains("ETag"))
+                    ETag = response.Headers.GetValues("ETag").First().Replace("\"", string.Empty);
+
+                if (response.Content.Headers.Contains("Expires"))
+                    Expires = DateTime.Parse(response.Content.Headers.GetValues("Expires").First());
+
+                if (response.Content.Headers.Contains("Last-Modified"))
+                    LastModified = DateTime.Parse(response.Content.Headers.GetValues("Last-Modified").First());
+
+                if (response.Headers.Contains("X-Esi-Error-Limit-Remain"))
+                    ErrorLimitRemain = int.Parse(response.Headers.GetValues("X-Esi-Error-Limit-Remain").First());
+
+                if (response.Headers.Contains("X-Esi-Error-Limit-Reset"))
+                    ErrorLimitReset = int.Parse(response.Headers.GetValues("X-Esi-Error-Limit-Reset").First());
+
                 if (response.StatusCode != HttpStatusCode.NoContent)
                 {
                     var result = response.Content.ReadAsStringAsync().Result;
@@ -38,23 +59,6 @@ namespace ESI.NET
                 else if (response.StatusCode == HttpStatusCode.NoContent)
                     Message = NoContentMessage[path];
 
-                if (response.Headers.Contains("X-Pages"))
-                    Pages = int.Parse(response.Headers.GetValues("X-Pages").First());
-
-                if (response.Headers.Contains("ETag"))
-                    ETag = response.Headers.GetValues("ETag").First().Replace("\"", string.Empty);
-
-                if (response.Content.Headers.Contains("Expires"))
-                    Expires = DateTime.Parse(response.Content.Headers.GetValues("Expires").First());
-
-                if (response.Content.Headers.Contains("Last-Modified"))
-                    LastModified = DateTime.Parse(response.Content.Headers.GetValues("Last-Modified").First());
-
-                if (response.Headers.Contains("X-Esi-Error-Limit-Remain"))
-                    ErrorLimitRemain = int.Parse(response.Headers.GetValues("X-Esi-Error-Limit-Remain").First());
-
-                if (response.Headers.Contains("X-Esi-Error-Limit-Reset"))
-                    ErrorLimitReset = int.Parse(response.Headers.GetValues("X-Esi-Error-Limit-Reset").First());
             }
             catch (Exception ex)
             {
@@ -64,6 +68,7 @@ namespace ESI.NET
             
         }
 
+        public Guid RequestId { get; set; }
         public HttpStatusCode StatusCode { get; set; }
         public string Endpoint { get; set; }
         public string Version { get; set; }
