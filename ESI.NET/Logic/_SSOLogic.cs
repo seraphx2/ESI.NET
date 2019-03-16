@@ -82,7 +82,7 @@ namespace ESI.NET
             //var characterResponse = new CharacterLogic(_client, _config, authorizedCharacter).Affiliation(new int[] { authorizedCharacter.CharacterID }).ConfigureAwait(false).GetAwaiter().GetResult();
             if (characterResponse.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                EsiResponse<List<Affiliation>> affiliations = new EsiResponse<List<Affiliation>>(characterResponse, "POST|/character/affiliations/", "v1");
+                EsiResponse<List<Affiliation>> affiliations = new EsiResponse<List<Affiliation>>(characterResponse, "Post|/character/affiliations/", "v1");
                 var characterData = affiliations.Data.First();
 
                 authorizedCharacter.AllianceID = characterData.AllianceId;

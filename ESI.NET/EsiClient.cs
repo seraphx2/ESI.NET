@@ -125,7 +125,7 @@ namespace ESI.NET
         }
 
         public void SetIfNoneMatchHeader(string eTag)
-            => EsiRequest.eTag = eTag;
+            => EsiRequest.ETag = eTag;
     }
 
     public interface IEsiClient

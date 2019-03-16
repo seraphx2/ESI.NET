@@ -18,6 +18,6 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Incursion>>> All()
-            => await Execute<List<Incursion>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/incursions/");
+            => await Execute<List<Incursion>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/incursions/");
     }
 }
