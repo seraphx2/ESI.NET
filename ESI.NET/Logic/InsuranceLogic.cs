@@ -18,6 +18,6 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Insurance>>> Levels()
-            => await Execute<List<Insurance>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/insurance/prices/");
+            => await Execute<List<Insurance>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/insurance/prices/");
     }
 }

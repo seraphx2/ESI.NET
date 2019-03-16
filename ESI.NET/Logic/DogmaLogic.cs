@@ -18,7 +18,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<int>>> Attributes()
-            => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/dogma/attributes/");
+            => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/dogma/attributes/");
 
         /// <summary>
         /// /dogma/attributes/{attribute_id}/
@@ -26,7 +26,7 @@ namespace ESI.NET.Logic
         /// <param name="attribute_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<Attribute>> Attribute(int attribute_id)
-            => await Execute<Attribute>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/dogma/attributes/{attribute_id}/",
+            => await Execute<Attribute>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/dogma/attributes/{attribute_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "attribute_id", attribute_id.ToString() }
@@ -37,7 +37,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<int>>> Effects()
-            => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/dogma/effects/");
+            => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/dogma/effects/");
 
         /// <summary>
         /// /dogma/effects/{effect_id}/
@@ -45,7 +45,7 @@ namespace ESI.NET.Logic
         /// <param name="effect_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<Effect>> Effect(int effect_id)
-            => await Execute<Effect>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/dogma/effects/{effect_id}/",
+            => await Execute<Effect>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/dogma/effects/{effect_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "effect_id", effect_id.ToString() }
@@ -58,7 +58,7 @@ namespace ESI.NET.Logic
         /// <param name="item_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<Effect>> DynamicItem(int type_id, long item_id)
-            => await Execute<Effect>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/dogma/dynamic/items/{type_id}/{item_id}/",
+            => await Execute<Effect>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/dogma/dynamic/items/{type_id}/{item_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "type_id", type_id.ToString() },

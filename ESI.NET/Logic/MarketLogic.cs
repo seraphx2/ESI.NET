@@ -33,7 +33,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Price>>> Prices()
-            => await Execute<List<Price>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/markets/prices/");
+            => await Execute<List<Price>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/markets/prices/");
 
         /// <summary>
         /// /markets/{region_id}/orders/
@@ -55,7 +55,7 @@ namespace ESI.NET.Logic
             if (type_id != null)
                 parameters.Add($"type_id={type_id}");
 
-            var response = await Execute<List<Order>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/markets/{region_id}/orders/",
+            var response = await Execute<List<Order>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/markets/{region_id}/orders/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "region_id", region_id.ToString() }
@@ -72,7 +72,7 @@ namespace ESI.NET.Logic
         /// <param name="type_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Statistic>>> TypeHistoryInRegion(int region_id, int type_id)
-            => await Execute<List<Statistic>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/markets/{region_id}/history/",
+            => await Execute<List<Statistic>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/markets/{region_id}/history/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "region_id", region_id.ToString() }
@@ -89,7 +89,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Order>>> StructureOrders(long structure_id, int page = 1)
-            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/markets/structures/{structure_id}/",
+            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/markets/structures/{structure_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "structure_id", structure_id.ToString() }
@@ -105,7 +105,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<int>>> Groups()
-            => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/markets/groups/");
+            => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/markets/groups/");
 
         /// <summary>
         /// /markets/groups/{market_group_id}/
@@ -113,7 +113,7 @@ namespace ESI.NET.Logic
         /// <param name="market_group_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<Group>> Group(int market_group_id)
-            => await Execute<Group>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/markets/groups/{market_group_id}/",
+            => await Execute<Group>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/markets/groups/{market_group_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "market_group_id", market_group_id.ToString() }
@@ -124,7 +124,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Order>>> CharacterOrders()
-            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/orders/",
+            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/orders/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -137,7 +137,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Order>>> CharacterOrderHistory(int page = 1)
-            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/orders/history/",
+            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/orders/history/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -155,7 +155,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<int>>> Types(int region_id, int page = 1)
-            => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/markets/{region_id}/types/",
+            => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/markets/{region_id}/types/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "region_id", region_id.ToString() }
@@ -171,7 +171,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Order>>> CorporationOrders(int page = 1)
-            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/orders/",
+            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/orders/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -188,7 +188,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Order>>> CorporationOrderHistory(int page = 1)
-            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/orders/history/",
+            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/orders/history/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }

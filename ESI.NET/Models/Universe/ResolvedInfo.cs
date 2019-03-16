@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using ESI.NET.Enumerations;
+using Newtonsoft.Json;
 
 namespace ESI.NET.Models.Universe
 {
@@ -11,6 +12,6 @@ namespace ESI.NET.Models.Universe
         public string Name { get; set; }
 
         [JsonProperty("category")]
-        public string Category { get; set; }
+        public ResolvedInfoCategory Category { get; set; }
     }
 }
