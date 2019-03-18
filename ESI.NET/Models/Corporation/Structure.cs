@@ -53,7 +53,7 @@ namespace ESI.NET.Models.Corporation
         public int TypeId { get; set; }
 
         [JsonProperty("unanchors_at")]
-        public string UnanchorsAt { get; set; }
+        public DateTime UnanchorsAt { get; set; }
     }
 
     public class Service
@@ -62,6 +62,6 @@ namespace ESI.NET.Models.Corporation
         public string Name { get; set; }
 
         [JsonProperty("state")]
-        public string State { get; set; }
+        public StructureServiceState State { get; set; }
     }
 }
