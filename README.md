@@ -81,10 +81,12 @@ EsiResponse response = _client.Universe.Names(new List<long>()
 ## SSO Example
 
 ### SSO Login URL generator
-ESI.NET has a helper method to generate the URL required to authenticate a character or authorize roles (by providing a List<string> of scopes) for the Eve Online SSO.
+ESI.NET has a helper method to generate the URL required to authenticate a character or authorize roles (by providing a List<string> of scopes) for the Eve Online SSO. 
 ```cs
 var url = _client.SSO.CreateAuthenticationUrl();
 ```
+__SCOPE:__ As per the [OAuth 2.0 docs](https://docs.esi.evetech.net/docs/sso/web_based_sso_flow.html) a scope is required in the authentication url. The helper method takes an optional string parameter called __scope__. If you do not provide a scope the helper will place 0 at the end. _[Auth0 Docs - State Parameter](https://auth0.com/docs/protocols/oauth2/oauth-state)_.
+
 
 ### Initial SSO Token Request
 ```cs

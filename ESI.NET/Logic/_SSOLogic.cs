@@ -27,11 +27,17 @@ namespace ESI.NET
 
             clientKey = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{config.ClientId}:{config.SecretKey}"));
 
-            oauthEndpoint = (_config.AuthVersion == AuthVersion.v1) ? "https://login.eveonline.com/oauth/" : "https://login.eveonline.com/v2/oauth/";
+            oauthEndpoint = (_config.AuthVersion == AuthVersion.v1) ? "https://login.eveonline.com/oauth" : "https://login.eveonline.com/v2/oauth";
         }
 
-        public string CreateAuthenticationUrl(List<string> scopes = null)
-            => $"{oauthEndpoint}/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}{((scopes != null) ? $"&scope={string.Join(" ", scopes)}" : "")}";
+        /// <summary>
+        /// Generates the authentication URL that can be used to start the SSO workflow. 
+        /// </summary>
+        /// <param name="scopes"></param>
+        /// <param name="state">Required for Oauth 2.0, the state should be stored in a session and checked in the callback. If no state is provided it will be set to 0</param>
+        /// <returns></returns>
+        public string CreateAuthenticationUrl(List<string> scopes = null, string state = "0")
+            => $"{oauthEndpoint}/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}{((scopes != null) ? $"&scope={string.Join(" ", scopes)}" : "")}&state={state}";
         
 
 
