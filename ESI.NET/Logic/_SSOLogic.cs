@@ -18,6 +18,7 @@ namespace ESI.NET
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
         private readonly string clientKey;
+        private readonly string oauthEndpoint;
 
         public SsoLogic(HttpClient client, EsiConfig config)
         {
@@ -25,10 +26,14 @@ namespace ESI.NET
             _config = config;
 
             clientKey = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{config.ClientId}:{config.SecretKey}"));
+
+            oauthEndpoint = (_config.AuthVersion == AuthVersion.v1) ? "https://login.eveonline.com/oauth/" : "https://login.eveonline.com/v2/oauth/";
         }
 
         public string CreateAuthenticationUrl(List<string> scopes = null)
-            => $"https://login.eveonline.com/oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}{((scopes != null) ? $"&scope={string.Join(" ", scopes)}" : "")}";
+            => $"{oauthEndpoint}/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}{((scopes != null) ? $"&scope={string.Join(" ", scopes)}" : "")}";
+        
+
 
         /// <summary>
         /// SSO Token helper
@@ -49,7 +54,7 @@ namespace ESI.NET
             HttpContent postBody = new StringContent(body, Encoding.UTF8, "application/x-www-form-urlencoded");
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", clientKey);
 
-            var response = await _client.PostAsync("https://login.eveonline.com/oauth/token", postBody).Result.Content.ReadAsStringAsync();
+            var response = await _client.PostAsync($"{oauthEndpoint}/token", postBody).Result.Content.ReadAsStringAsync();
             var token = JsonConvert.DeserializeObject<SsoToken>(response);
 
             return token;
@@ -66,7 +71,7 @@ namespace ESI.NET
         public async Task<AuthorizedCharacterData> Verify(SsoToken token)
         {
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
-            var response = await _client.GetAsync("https://login.eveonline.com/oauth/verify").Result.Content.ReadAsStringAsync();
+            var response = await _client.GetAsync($"{oauthEndpoint}/verify").Result.Content.ReadAsStringAsync();
             var authorizedCharacter = JsonConvert.DeserializeObject<AuthorizedCharacterData>(response);
             authorizedCharacter.Token = token.AccessToken;
             authorizedCharacter.RefreshToken = token.RefreshToken;

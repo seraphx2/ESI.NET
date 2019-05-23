@@ -10,5 +10,6 @@ namespace ESI.NET
         public string SecretKey { get; set; }
         public string CallbackUrl { get; set; }
         public string UserAgent { get; set; }
+        public AuthVersion AuthVersion { get; set; }
     }
 }
