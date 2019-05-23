@@ -27,7 +27,7 @@ namespace ESI.NET
 
             clientKey = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{config.ClientId}:{config.SecretKey}"));
 
-            oauthEndpoint = (_config.AuthVersion == AuthVersion.v1) ? "https://login.eveonline.com/oauth" : "https://login.eveonline.com/v2/oauth";
+            oauthEndpoint = (_config.AuthVersion != AuthVersion.v2) ? "https://login.eveonline.com/oauth" : "https://login.eveonline.com/v2/oauth";
         }
 
         /// <summary>
