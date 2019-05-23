@@ -77,7 +77,7 @@ namespace ESI.NET
         public async Task<AuthorizedCharacterData> Verify(SsoToken token)
         {
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
-            var response = await _client.GetAsync($"{oauthEndpoint}/verify").Result.Content.ReadAsStringAsync();
+            var response = await _client.GetAsync($"https://login.eveonline.com/oauth/verify").Result.Content.ReadAsStringAsync();
             var authorizedCharacter = JsonConvert.DeserializeObject<AuthorizedCharacterData>(response);
             authorizedCharacter.Token = token.AccessToken;
             authorizedCharacter.RefreshToken = token.RefreshToken;
