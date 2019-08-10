@@ -16,6 +16,6 @@ namespace ESI.NET.Enumerations
         [EnumMember(Value="region")]         /**/ Region = 128,
         [EnumMember(Value="solar_system")]   /**/ SolarSystem = 256,
         [EnumMember(Value="station")]        /**/ Station = 512,
-        [EnumMember(Value="wormhole")]       /**/ Wormhole = 1024
+        [EnumMember(Value="structure")]      /**/ Structure = 1024
     }
 }
