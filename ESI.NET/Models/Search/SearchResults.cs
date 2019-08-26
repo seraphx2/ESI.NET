@@ -35,7 +35,7 @@ namespace ESI.NET.Models
         [JsonProperty("station")]
         public long[] Stations { get; set; }
 
-        [JsonProperty("wormhole")]
-        public long[] Wormholes { get; set; }
+        [JsonProperty("structure")]
+        public long[] Structures { get; set; }
     }
 }
