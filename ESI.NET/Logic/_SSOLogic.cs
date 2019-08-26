@@ -17,8 +17,8 @@ namespace ESI.NET
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
-        private readonly string clientKey;
-        private readonly string ssoUrl;
+        private readonly string _clientKey;
+        private readonly string _ssoUrl;
 
         public SsoLogic(HttpClient client, EsiConfig config)
         {
@@ -27,20 +27,20 @@ namespace ESI.NET
             switch (_config.DataSource)
             {
                 case DataSource.Tranquility:
-                    ssoUrl = "https://login.eveonline.com/";
+                    _ssoUrl = "https://login.eveonline.com";
                     break;
                 case DataSource.Singularity:
-                    ssoUrl = "https://sisilogin.testeveonline.com/";
+                    _ssoUrl = "https://sisilogin.testeveonline.com";
                     break;
                 case DataSource.Serenity:
-                    ssoUrl = "https://login.evepc.163.com/";
+                    _ssoUrl = "https://login.evepc.163.com";
                     break;
             }
-            clientKey = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{config.ClientId}:{config.SecretKey}"));
+            _clientKey = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{config.ClientId}:{config.SecretKey}"));
         }
 
         public string CreateAuthenticationUrl(List<string> scopes = null)
-            => $"{ssoUrl}oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}{((scopes != null) ? $"&scope={string.Join(" ", scopes)}" : "")}";
+            => $"{_ssoUrl}/oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}{((scopes != null) ? $"&scope={string.Join(" ", scopes)}" : "")}";
 
         /// <summary>
         /// SSO Token helper
@@ -59,9 +59,9 @@ namespace ESI.NET
                 body += $"&refresh_token={code}";
 
             HttpContent postBody = new StringContent(body, Encoding.UTF8, "application/x-www-form-urlencoded");
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", clientKey);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", _clientKey);
 
-            var response = await _client.PostAsync($"{ssoUrl}oauth/token", postBody).Result.Content.ReadAsStringAsync();
+            var response = await _client.PostAsync($"{_ssoUrl}/oauth/token", postBody).Result.Content.ReadAsStringAsync();
             var token = JsonConvert.DeserializeObject<SsoToken>(response);
 
             return token;
@@ -78,7 +78,7 @@ namespace ESI.NET
         public async Task<AuthorizedCharacterData> Verify(SsoToken token)
         {
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
-            var response = await _client.GetAsync($"{ssoUrl}oauth/verify").Result.Content.ReadAsStringAsync();
+            var response = await _client.GetAsync($"{_ssoUrl}/oauth/verify").Result.Content.ReadAsStringAsync();
             var authorizedCharacter = JsonConvert.DeserializeObject<AuthorizedCharacterData>(response);
             authorizedCharacter.Token = token.AccessToken;
             authorizedCharacter.RefreshToken = token.RefreshToken;
