@@ -349,7 +349,7 @@ namespace ESI.NET.Logic
         /// <param name="outpost_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<Outpost>> Outpost(int outpost_id)
-            => await Execute<Outpost>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, $"/corporations/{corporation_id}/outposts/{outpost_id}/",
+            => await Execute<Outpost>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/outposts/{outpost_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() },

@@ -275,7 +275,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Ancestry>>> Ancestries()
-            => await Execute<List<Ancestry>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, $"/universe/ancestries/");
+            => await Execute<List<Ancestry>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/universe/ancestries/");
 
         /// <summary>
         /// /universe/asteroid_belts/{asteroid_belt_id}/

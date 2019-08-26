@@ -45,7 +45,7 @@ namespace ESI.NET.Logic
         /// <param name="planet_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<ColonyLayout>> ColonyLayout(int planet_id)
-            => await Execute<ColonyLayout>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, $"/characters/{character_id}/planets/{planet_id}/",
+            => await Execute<ColonyLayout>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/planets/{planet_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() },
