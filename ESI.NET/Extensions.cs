@@ -18,6 +18,20 @@ namespace ESI.NET
             return services;
         }
 
+        public static IServiceCollection AddEsi(this IServiceCollection services, EsiConfig esiConfig)
+        {
+            services.Configure<EsiConfig>(options => { 
+                options.CallbackUrl = esiConfig.CallbackUrl;
+                options.ClientId = esiConfig.ClientId;
+                options.DataSource = esiConfig.DataSource;
+                options.EsiUrl = esiConfig.EsiUrl;
+                options.SecretKey = esiConfig.SecretKey;
+                options.UserAgent = esiConfig.UserAgent;
+            });
+            services.AddScoped<IEsiClient, EsiClient>();
+            return services;
+        }
+
         public static string ToEsiValue(this Enum e)
         {
             var enums = e.ToString();
