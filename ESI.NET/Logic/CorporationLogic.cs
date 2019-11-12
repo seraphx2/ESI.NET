@@ -31,7 +31,7 @@ namespace ESI.NET.Logic
         /// <param name="corporation_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<Corporation>> Information(int corporation_id)
-            => await Execute<Corporation>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/corporations/{corporation_id}/",
+            => await Execute<Corporation>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/corporations/{corporation_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -43,7 +43,7 @@ namespace ESI.NET.Logic
         /// <param name="corporation_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<AllianceHistory>>> AllianceHistory(int corporation_id)
-            => await Execute<List<AllianceHistory>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/corporations/{corporation_id}/alliancehistory/",
+            => await Execute<List<AllianceHistory>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/corporations/{corporation_id}/alliancehistory/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -54,7 +54,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Member>>> Members()
-            => await Execute<List<Member>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/members/",
+            => await Execute<List<Member>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/members/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -66,7 +66,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<CharacterRoles>>> Roles()
-            => await Execute<List<CharacterRoles>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/roles/",
+            => await Execute<List<CharacterRoles>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/roles/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -78,7 +78,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<CharacterRolesHistory>>> RolesHistory()
-            => await Execute<List<CharacterRolesHistory>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/roles/history/",
+            => await Execute<List<CharacterRolesHistory>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/roles/history/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -91,7 +91,7 @@ namespace ESI.NET.Logic
         /// <param name="corporationId"></param>
         /// <returns></returns>
         public async Task<EsiResponse<Images>> Icons(int corporation_id)
-            => await Execute<Images>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/corporations/{corporation_id}/icons/",
+            => await Execute<Images>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/corporations/{corporation_id}/icons/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -102,14 +102,14 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<int>>> NpcCorps()
-            => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/corporations/npccorps/");
+            => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/corporations/npccorps/");
 
         /// <summary>
         /// /corporations/{corporation_id}/structures/
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Structure>>> Structures(int page = 1)
-            => await Execute<List<Structure>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/structures/",
+            => await Execute<List<Structure>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/structures/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -126,7 +126,7 @@ namespace ESI.NET.Logic
         /// <param name="structure_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> UpdateStructureVulnerability(long structure_id, object new_schedule)
-            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.PUT, "/corporations/{corporation_id}/structures/{structure_id}/",
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Put, "/corporations/{corporation_id}/structures/{structure_id}/",
                 replacements: new Dictionary<string, string>()            {
                     { "corporation_id", corporation_id.ToString() },
                     { "structure_id", structure_id.ToString() }
@@ -139,7 +139,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<MemberInfo>>> MemberTracking()
-            => await Execute<List<MemberInfo>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/membertracking/",
+            => await Execute<List<MemberInfo>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/membertracking/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -151,7 +151,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<Divisions>> Divisions()
-            => await Execute<Divisions>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/divisions/",
+            => await Execute<Divisions>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/divisions/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -163,7 +163,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<int>> MemberLimit()
-            => await Execute<int>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/members/limit/",
+            => await Execute<int>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/members/limit/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -175,7 +175,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Title>>> Titles()
-            => await Execute<List<Title>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/titles/",
+            => await Execute<List<Title>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/titles/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -187,7 +187,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<MemberTitles>>> MemberTitles()
-            => await Execute<List<MemberTitles>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/members/titles/",
+            => await Execute<List<MemberTitles>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/members/titles/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -200,7 +200,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Blueprint>>> Blueprints(int page = 1)
-            => await Execute<List<Blueprint>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/blueprints/",
+            => await Execute<List<Blueprint>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/blueprints/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -217,7 +217,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<Standing>> Standings(int page = 1)
-            => await Execute<Standing>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/standings/",
+            => await Execute<Standing>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/standings/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -234,7 +234,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Starbase>>> Starbases(int page = 1)
-            => await Execute<List<Starbase>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/starbases/",
+            => await Execute<List<Starbase>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/starbases/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -252,7 +252,7 @@ namespace ESI.NET.Logic
         /// <param name="system_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<StarbaseInfo>> Starbase(long starbase_id, int system_id)
-            => await Execute<StarbaseInfo>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/starbases/{starbase_id}/",
+            => await Execute<StarbaseInfo>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/starbases/{starbase_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() },
@@ -270,7 +270,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<ContainerLog>>> ContainerLogs(int page = 1)
-            => await Execute<List<ContainerLog>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/containers/logs/",
+            => await Execute<List<ContainerLog>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/containers/logs/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -286,7 +286,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Facility>>> Facilities()
-            => await Execute<List<Facility>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/facilities/",
+            => await Execute<List<Facility>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/facilities/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -299,7 +299,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Medal>>> Medals(int page = 1)
-            => await Execute<List<Medal>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/medals/",
+            => await Execute<List<Medal>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/medals/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -315,7 +315,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<IssuedMedal>>> MedalsIssued(int page = 1)
-            => await Execute<List<IssuedMedal>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/medals/issued/",
+            => await Execute<List<IssuedMedal>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/medals/issued/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -332,7 +332,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<int[]>> Outposts(int page = 1)
-            => await Execute<int[]>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/outposts/",
+            => await Execute<int[]>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/outposts/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -349,7 +349,7 @@ namespace ESI.NET.Logic
         /// <param name="outpost_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<Outpost>> Outpost(int outpost_id)
-            => await Execute<Outpost>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, $"/corporations/{corporation_id}/outposts/{outpost_id}/",
+            => await Execute<Outpost>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/outposts/{outpost_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() },
@@ -363,7 +363,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Shareholder>>> Shareholders(int page = 1)
-            => await Execute<List<Shareholder>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/shareholders/",
+            => await Execute<List<Shareholder>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/shareholders/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }

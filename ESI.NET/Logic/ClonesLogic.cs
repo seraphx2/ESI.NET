@@ -29,7 +29,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<Clones>> List()
-            => await Execute<Clones>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/clones/",
+            => await Execute<Clones>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/clones/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -41,7 +41,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<int[]>> Implants()
-            => await Execute<int[]>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/implants/",
+            => await Execute<int[]>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/implants/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }

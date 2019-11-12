@@ -29,7 +29,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<Location>> Location()
-            => await Execute<Location>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/location/",
+            => await Execute<Location>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/location/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -41,7 +41,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<Ship>> Ship()
-            => await Execute<Ship>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/ship/",
+            => await Execute<Ship>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/ship/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -53,7 +53,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<Activity>> Online()
-            => await Execute<Activity>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/online/",
+            => await Execute<Activity>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/online/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }

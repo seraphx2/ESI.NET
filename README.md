@@ -2,14 +2,14 @@
 
 # What is ESI.NET?
 
-**ESI.NET** is a .NET wrapper for the [Eve Online ESI API](https://esi.tech.ccp.is/latest/). This wrapper simplifies the process of integrating ESI into your .NET application.
+**ESI.NET** is a .NET wrapper for the [Eve Online ESI API](https://esi.evetech.net/). This wrapper simplifies the process of integrating ESI into your .NET application.
 
 ### Resources
-* [Discord - E.N](https://discord.gg/gmJMcdz) - This channel is where you can contact me (Psianna Archeia) for questions and where automated webhook notifications will be pushed for github and when builds are completed. (If you have Discord, this is the preferred way to contact me concerning ESI.NET. I **DO NOT** monitor Slack anymore for ESI.NET issues.)
+* [Discord - E.N](https://discord.gg/SvdN39f) - This channel is where you can contact me (Psianna Archeia) for questions and where automated webhook notifications will be pushed for github and when builds are completed. (If you have Discord, this is the preferred way to contact me concerning ESI.NET. I **DO NOT** monitor Slack anymore for ESI.NET issues.)
 * [Tweetfleet - #esi](https://tweetfleet.slack.com/messages/C30KX8UUX/) - This is the official slack channel to speak with CCP devs (and developers) concerning ESI.
 * [ESI Application Keys](https://developers.eveonline.com/)
 * [ESI Swagger Definition](https://esi.tech.ccp.is/swagger.json)
-* [ESI-Docs](https://github.com/esi/esi-docs) - This is the best documentation concerning ESI and the SSO process.
+* [ESI-Docs](https://docs.esi.evetech.net/) ([source](https://github.com/esi/esi-docs)) - This is the best documentation concerning ESI and the SSO process.
 
 It is extremely important to not solely rely on ESI.NET. You may need to refer to the official specifications to understand what data is expected to be provided. For example, in some instances, ESI.NET will ask for specific values in the endpoint method and construct the JSON object that needs to be sent in the POST request body because it is a simple object that requires a few values. Some of the more complex objects will need to be constructed with anonymous objects by the developer and this can be determined when the endpoint method requires an `object` instead of an `int` or a `string`. Refer to the official documentation and construct the anonymous object to reflect what is expected as Json.NET will be able to convert that anonymous object into the appropriate JSON data.
 
@@ -19,7 +19,7 @@ https://www.nuget.org/packages/ESI.NET
 `dotnet add package ESI.NET `
 
 ## Client Instantiation
-ESI.NET is now Dependency Injection compatible. There are a few parts required to set this up propery in a .NET Standard/Core application:
+ESI.NET is Dependency Injection compatible. There are a few parts required to set this up properly in a .NET Standard/Core application:
 
 ### .NET Standard (Dependency Injection)
 In your appsettings.json, add the following object and fill it in appropriately:

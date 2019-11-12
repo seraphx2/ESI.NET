@@ -34,5 +34,9 @@ namespace ESI.NET.Models.Universe
 
         [JsonProperty("stations")]
         public List<ResolvedInfo> Stations { get; set; } = new List<ResolvedInfo>();
+
+        [JsonProperty("structures")]
+        public List<ResolvedInfo> Structures { get; set; } = new List<ResolvedInfo>();
+
     }
 }

@@ -33,7 +33,7 @@ namespace ESI.NET.Logic
         /// <param name="region_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Contract>>> Contracts(int region_id, int page = 1)
-            => await Execute<List<Contract>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/contracts/public/{region_id}/",
+            => await Execute<List<Contract>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/contracts/public/{region_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "region_id", region_id.ToString() }
@@ -49,7 +49,7 @@ namespace ESI.NET.Logic
         /// <param name="contract_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<ContractItem>>> ContractItems(int contract_id, int page = 1)
-            => await Execute<List<ContractItem>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/contracts/public/items/{contract_id}/",
+            => await Execute<List<ContractItem>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/contracts/public/items/{contract_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "contract_id", contract_id.ToString() }
@@ -65,7 +65,7 @@ namespace ESI.NET.Logic
         /// <param name="contract_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Bid>>> ContractBids(int contract_id, int page = 1)
-            => await Execute<List<Bid>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/contracts/public/bids/{contract_id}/",
+            => await Execute<List<Bid>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/contracts/public/bids/{contract_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "contract_id", contract_id.ToString() }
@@ -80,7 +80,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Contract>>> CharacterContracts(int page = 1)
-            => await Execute<List<Contract>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/contracts/",
+            => await Execute<List<Contract>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/contracts/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -97,7 +97,7 @@ namespace ESI.NET.Logic
         /// <param name="contract_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<ContractItem>>> CharacterContractItems(int contract_id, int page = 1)
-            => await Execute<List<ContractItem>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/contracts/{contract_id}/items/",
+            => await Execute<List<ContractItem>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/contracts/{contract_id}/items/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() },
@@ -115,7 +115,7 @@ namespace ESI.NET.Logic
         /// <param name="contract_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Bid>>> CharacterContractBids(int contract_id, int page = 1)
-            => await Execute<List<Bid>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/contracts/{contract_id}/bids/",
+            => await Execute<List<Bid>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/contracts/{contract_id}/bids/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() },
@@ -132,7 +132,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Contract>>> CorporationContracts(int page = 1)
-            => await Execute<List<Contract>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/contracts/",
+            => await Execute<List<Contract>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/contracts/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -149,7 +149,7 @@ namespace ESI.NET.Logic
         /// <param name="contract_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<ContractItem>>> CorporationContractItems(int contract_id, int page = 1)
-            => await Execute<List<ContractItem>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/contracts/{contract_id}/items/",
+            => await Execute<List<ContractItem>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/contracts/{contract_id}/items/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() },
@@ -167,7 +167,7 @@ namespace ESI.NET.Logic
         /// <param name="contract_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Bid>>> CorporationContractBids(int contract_id, int page = 1)
-            => await Execute<List<Bid>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/corporations/{corporation_id}/contracts/{contract_id}/bids/",
+            => await Execute<List<Bid>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/contracts/{contract_id}/bids/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() },

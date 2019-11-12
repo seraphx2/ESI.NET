@@ -21,7 +21,7 @@ namespace ESI.NET.Models.Character
         public string Text { get; set; }
 
         [JsonProperty("timestamp")]
-        public string Timestamp { get; set; }
+        public DateTime Timestamp { get; set; }
 
         [JsonProperty("type")]
         public string Type { get; set; }

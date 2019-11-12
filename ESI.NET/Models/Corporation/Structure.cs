@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using ESI.NET.Enumerations;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ESI.NET.Models.Corporation
 {
@@ -11,7 +11,7 @@ namespace ESI.NET.Models.Corporation
         public int CorporationId { get; set; }
 
         [JsonProperty("fuel_expires")]
-        public string FuelExpires { get; set; }
+        public DateTime FuelExpires { get; set; }
 
         [JsonProperty("next_reinforce_apply")]
         public string NextReinforceApply { get; set; }
@@ -35,13 +35,13 @@ namespace ESI.NET.Models.Corporation
         public List<Service> Services { get; set; }
 
         [JsonProperty("state")]
-        public string State { get; set; }
+        public StructureState State { get; set; }
 
         [JsonProperty("state_timer_end")]
-        public string StateTimerEnd { get; set; }
+        public DateTime StateTimerEnd { get; set; }
 
         [JsonProperty("state_timer_start")]
-        public string StateTimerStart { get; set; }
+        public DateTime StateTimerStart { get; set; }
 
         [JsonProperty("structure_id")]
         public long StructureId { get; set; }
@@ -53,7 +53,7 @@ namespace ESI.NET.Models.Corporation
         public int TypeId { get; set; }
 
         [JsonProperty("unanchors_at")]
-        public string UnanchorsAt { get; set; }
+        public DateTime UnanchorsAt { get; set; }
     }
 
     public class Service
@@ -62,6 +62,6 @@ namespace ESI.NET.Models.Corporation
         public string Name { get; set; }
 
         [JsonProperty("state")]
-        public string State { get; set; }
+        public StructureServiceState State { get; set; }
     }
 }

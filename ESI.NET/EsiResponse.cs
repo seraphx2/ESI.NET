@@ -18,25 +18,8 @@ namespace ESI.NET
                 Endpoint = path.Split('|')[1];
                 Version = version;
 
-                if (response.StatusCode != HttpStatusCode.NoContent)
-                {
-                    var result = response.Content.ReadAsStringAsync().Result;
-
-                    if (response.StatusCode == HttpStatusCode.OK ||
-                        response.StatusCode == HttpStatusCode.Created)
-                    {
-                        if ((result.StartsWith("{") && result.EndsWith("}")) || result.StartsWith("[") && result.EndsWith("]"))
-                            Data = JsonConvert.DeserializeObject<T>(result);
-                        else
-                            Message = result;
-                    }
-                    else if (response.StatusCode == HttpStatusCode.NotModified)
-                        Message = "Not Modified";
-                    else
-                        Message = JsonConvert.DeserializeAnonymousType(result, new { error = string.Empty }).error;
-                }
-                else if (response.StatusCode == HttpStatusCode.NoContent)
-                    Message = NoContentMessage[path];
+                if (response.Headers.Contains("X-ESI-Request-ID"))
+                    RequestId = Guid.Parse(response.Headers.GetValues("X-ESI-Request-ID").First());
 
                 if (response.Headers.Contains("X-Pages"))
                     Pages = int.Parse(response.Headers.GetValues("X-Pages").First());
@@ -55,6 +38,27 @@ namespace ESI.NET
 
                 if (response.Headers.Contains("X-Esi-Error-Limit-Reset"))
                     ErrorLimitReset = int.Parse(response.Headers.GetValues("X-Esi-Error-Limit-Reset").First());
+
+                if (response.StatusCode != HttpStatusCode.NoContent)
+                {
+                    var result = response.Content.ReadAsStringAsync().Result;
+
+                    if (response.StatusCode == HttpStatusCode.OK ||
+                        response.StatusCode == HttpStatusCode.Created)
+                    {
+                        if ((result.StartsWith("{") && result.EndsWith("}")) || result.StartsWith("[") && result.EndsWith("]"))
+                            Data = JsonConvert.DeserializeObject<T>(result);
+                        else
+                            Message = result;
+                    }
+                    else if (response.StatusCode == HttpStatusCode.NotModified)
+                        Message = "Not Modified";
+                    else
+                        Message = JsonConvert.DeserializeAnonymousType(result, new { error = string.Empty }).error;
+                }
+                else if (response.StatusCode == HttpStatusCode.NoContent)
+                    Message = _noContentMessage[path];
+
             }
             catch (Exception ex)
             {
@@ -64,6 +68,7 @@ namespace ESI.NET
             
         }
 
+        public Guid RequestId { get; set; }
         public HttpStatusCode StatusCode { get; set; }
         public string Endpoint { get; set; }
         public string Version { get; set; }
@@ -72,49 +77,49 @@ namespace ESI.NET
         public string ETag { get; set; }
         public int? ErrorLimitRemain { get; set; }
         public int? ErrorLimitReset { get; set; }
-        public int? Pages { get; set; } = null;
-        public string Message { get; set; } = null;
+        public int? Pages { get; set; }
+        public string Message { get; set; }
         public T Data { get; set; }
         public Exception Exception { get; set; }
 
-        private readonly ImmutableDictionary<string, string> NoContentMessage = new Dictionary<string, string>()
+        private readonly ImmutableDictionary<string, string> _noContentMessage = new Dictionary<string, string>()
         {
             //Calendar
-            {"PUT|/characters/{character_id}/calendar/{event_id}/", "Event updated"},
+            {"Put|/characters/{character_id}/calendar/{event_id}/", "Event updated"},
 
             //Contacts
-            {"PUT|/characters/{character_id}/contacts/", "Contacts updated"},
-            {"DELETE|/characters/{character_id}/contacts/", "Contacts deleted"},
+            {"Put|/characters/{character_id}/contacts/", "Contacts updated"},
+            {"Delete|/characters/{character_id}/contacts/", "Contacts deleted"},
 
             //Corporations
-            {"PUT|/corporations/{corporation_id}/structures/{structure_id}/", "Structure vulnerability window updated"},
+            {"Put|/corporations/{corporation_id}/structures/{structure_id}/", "Structure vulnerability window updated"},
 
             //Fittings
-            {"DELETE|/characters/{character_id}/fittings/{fitting_id}/", ""},
+            {"Delete|/characters/{character_id}/fittings/{fitting_id}/", ""},
 
             //Fleets
-            {"PUT|/fleets/{fleet_id}/", "Fleet updated"},
-            {"POST|/fleets/{fleet_id}/members/", "Fleet invitation sent"},
-            {"DELETE|/fleets/{fleet_id}/members/{member_id}/", "Fleet member kicked"},
-            {"PUT|/fleets/{fleet_id}/members/{member_id}/", "Fleet invitation sent"},
-            {"DELETE|/fleets/{fleet_id}/wings/{wing_id}/", "Wing deleted"},
-            {"PUT|/fleets/{fleet_id}/wings/{wing_id}/", "Wing renamed"},
-            {"DELETE|/fleets/{fleet_id}/squads/{squad_id}/", "Squad deleted"},
-            {"PUT|/fleets/{fleet_id}/squads/{squad_id}/", "Squad renamed"},
+            {"Put|/fleets/{fleet_id}/", "Fleet updated"},
+            {"Post|/fleets/{fleet_id}/members/", "Fleet invitation sent"},
+            {"Delete|/fleets/{fleet_id}/members/{member_id}/", "Fleet member kicked"},
+            {"Put|/fleets/{fleet_id}/members/{member_id}/", "Fleet invitation sent"},
+            {"Delete|/fleets/{fleet_id}/wings/{wing_id}/", "Wing deleted"},
+            {"Put|/fleets/{fleet_id}/wings/{wing_id}/", "Wing renamed"},
+            {"Delete|/fleets/{fleet_id}/squads/{squad_id}/", "Squad deleted"},
+            {"Put|/fleets/{fleet_id}/squads/{squad_id}/", "Squad renamed"},
 
             //Mail
-            {"POST|/characters/{character_id}/mail/", "Mail created"},
-            {"POST|/characters/{character_id}/mail/labels/", "Label created"},
-            {"DELETE|/characters/{character_id}/mail/labels/{label_id}/", "Label deleted"},
-            {"PUT|/characters/{character_id}/mail/{mail_id}/", "Mail updated"},
-            {"DELETE|/characters/{character_id}/mail/{mail_id}/", "Mail deleted"},
+            {"Post|/characters/{character_id}/mail/", "Mail created"},
+            {"Post|/characters/{character_id}/mail/labels/", "Label created"},
+            {"Delete|/characters/{character_id}/mail/labels/{label_id}/", "Label deleted"},
+            {"Put|/characters/{character_id}/mail/{mail_id}/", "Mail updated"},
+            {"Delete|/characters/{character_id}/mail/{mail_id}/", "Mail deleted"},
 
             //User Interface
-            {"POST|/ui/openwindow/marketdetails/", "Open window request received"},
-            {"POST|/ui/openwindow/contract/", "Open window request received"},
-            {"POST|/ui/openwindow/information/", "Open window request received"},
-            {"POST|/ui/autopilot/waypoint/", "Open window request received"},
-            {"POST|/ui/openwindow/newmail/", "Open window request received"}
+            {"Post|/ui/openwindow/marketdetails/", "Open window request received"},
+            {"Post|/ui/openwindow/contract/", "Open window request received"},
+            {"Post|/ui/openwindow/information/", "Open window request received"},
+            {"Post|/ui/autopilot/waypoint/", "Open window request received"},
+            {"Post|/ui/openwindow/newmail/", "Open window request received"}
         }.ToImmutableDictionary();
     }
 }

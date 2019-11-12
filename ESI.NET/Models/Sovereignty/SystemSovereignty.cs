@@ -15,6 +15,5 @@ namespace ESI.NET.Models.Sovereignty
 
         [JsonProperty("system_id")]
         public int SystemId { get; set; }
-
     }
 }

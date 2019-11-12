@@ -24,7 +24,7 @@ namespace ESI.NET.Logic
         /// <param name="type_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> MarketDetails(int type_id)
-            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/openwindow/marketdetails/",
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Post, "/ui/openwindow/marketdetails/",
                 parameters: new string[]
                 {
                     $"type_id={type_id}"
@@ -37,7 +37,7 @@ namespace ESI.NET.Logic
         /// <param name="contract_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> Contract(int contract_id)
-            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/openwindow/contract/",
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Post, "/ui/openwindow/contract/",
                 parameters: new string[]
                 {
                     $"contract_id={contract_id}"
@@ -50,7 +50,7 @@ namespace ESI.NET.Logic
         /// <param name="target_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> Information(int target_id)
-            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/openwindow/information/",
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Post, "/ui/openwindow/information/",
                 parameters: new string[]
                 {
                     $"target_id={target_id}"
@@ -65,7 +65,7 @@ namespace ESI.NET.Logic
         /// <param name="clear_other_waypoints"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> Waypoint(long destination_id, bool add_to_beginning = false, bool clear_other_waypoints = false)
-            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/autopilot/waypoint/",
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Post, "/ui/autopilot/waypoint/",
                 parameters: new string[]
                 {
                     $"destination_id={destination_id}",
@@ -84,7 +84,7 @@ namespace ESI.NET.Logic
         /// <param name="to_corp_or_alliance_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> NewMail(string subject, string body, int[] recipients)
-            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.POST, "/ui/openwindow/newmail/",
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Post, "/ui/openwindow/newmail/",
                 body: new
                 {
                     subject,
