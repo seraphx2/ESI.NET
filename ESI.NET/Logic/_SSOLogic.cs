@@ -27,7 +27,8 @@ namespace ESI.NET
             switch (_config.DataSource)
             {
                 case DataSource.Tranquility:
-                    _ssoUrl = "https://login.eveonline.com";
+                    _ssoUrl = "https://login.eveonline.com" +
+                        "";
                     break;
                 case DataSource.Singularity:
                     _ssoUrl = "https://sisilogin.testeveonline.com";
@@ -37,10 +38,23 @@ namespace ESI.NET
                     break;
             }
             _clientKey = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{config.ClientId}:{config.SecretKey}"));
+
+            //Check that Auth version matches an implemented version, new versions must be added here and in each of the functions below.
+            if (!(_config.AuthVersion == AuthVersion.v1 || _config.AuthVersion == AuthVersion.v2))
+                throw new NotImplementedException($"Supplied auth version has not been implemented in {nameof(SsoLogic)}.");
+            
+            
         }
 
-        public string CreateAuthenticationUrl(List<string> scopes = null)
-            => $"{_ssoUrl}/oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}{((scopes != null) ? $"&scope={string.Join(" ", scopes)}" : "")}";
+        public string CreateAuthenticationUrl(List<string> scopes = null,string state="0")
+        {
+            if (_config.AuthVersion == AuthVersion.v1)
+                return $"{_ssoUrl}/oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}{((scopes != null) ? $"&scope={string.Join(" ", scopes)}" : "")}&state={Uri.EscapeDataString(state)}";
+            else if (_config.AuthVersion == AuthVersion.v2)
+                return $"{_ssoUrl}/v2/oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}{((scopes != null) ? $"&scope={string.Join(" ", scopes)}" : "")}&state={Uri.EscapeDataString(state)}";
+            else
+                throw new NotImplementedException($"Supplied auth version has not been implemented in {nameof(CreateAuthenticationUrl)}.");
+        }
 
         /// <summary>
         /// SSO Token helper
@@ -56,12 +70,21 @@ namespace ESI.NET
             if (grantType == GrantType.AuthorizationCode)
                 body += $"&code={code}";
             else if (grantType == GrantType.RefreshToken)
-                body += $"&refresh_token={code}";
+                body += $"&refresh_token={Uri.EscapeDataString(code)}";
 
             HttpContent postBody = new StringContent(body, Encoding.UTF8, "application/x-www-form-urlencoded");
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", _clientKey);
 
-            var response = await _client.PostAsync($"{_ssoUrl}/oauth/token", postBody).Result.Content.ReadAsStringAsync();
+            HttpResponseMessage responseBase = null;
+
+            if (_config.AuthVersion == AuthVersion.v1)
+                responseBase = await _client.PostAsync($"{_ssoUrl}/oauth/token", postBody);
+            else if (_config.AuthVersion == AuthVersion.v2)
+                responseBase = await _client.PostAsync($"{_ssoUrl}/v2/oauth/token", postBody);
+            else
+                throw new NotImplementedException($"Supplied auth version has not been implemented in {nameof(GetToken)}.");
+
+            var response = await responseBase.Content.ReadAsStringAsync();
             var token = JsonConvert.DeserializeObject<SsoToken>(response);
 
             return token;
@@ -78,10 +101,30 @@ namespace ESI.NET
         public async Task<AuthorizedCharacterData> Verify(SsoToken token)
         {
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
-            var response = await _client.GetAsync($"{_ssoUrl}/oauth/verify").Result.Content.ReadAsStringAsync();
-            var authorizedCharacter = JsonConvert.DeserializeObject<AuthorizedCharacterData>(response);
-            authorizedCharacter.Token = token.AccessToken;
-            authorizedCharacter.RefreshToken = token.RefreshToken;
+            AuthorizedCharacterData authorizedCharacter = null;
+
+            if (_config.AuthVersion == AuthVersion.v1)
+            {
+                var response = await _client.GetAsync($"{_ssoUrl}/oauth/verify").Result.Content.ReadAsStringAsync();
+                authorizedCharacter = JsonConvert.DeserializeObject<AuthorizedCharacterData>(response);
+                authorizedCharacter.Token = token.AccessToken;
+                authorizedCharacter.RefreshToken = token.RefreshToken;
+            }
+            else if (_config.AuthVersion == AuthVersion.v2)
+            {
+                var response = await (await _client.GetAsync($"{_config.EsiUrl}verify")).Content.ReadAsStringAsync();
+                authorizedCharacter = JsonConvert.DeserializeObject<AuthorizedCharacterData>(response);
+                authorizedCharacter.Token = token.AccessToken;
+                authorizedCharacter.RefreshToken = token.RefreshToken;
+            }
+            else
+                throw new NotImplementedException($"Supplied auth version has not been implemented in {nameof(Verify)}.");
+
+
+            //var response = await (await _client.GetAsync($"{_config.EsiUrl}verify")).Content.ReadAsStringAsync();
+            //AuthorizedCharacterData authorizedCharacter = JsonConvert.DeserializeObject<AuthorizedCharacterData>(response);
+            //authorizedCharacter.Token = token.AccessToken;
+            //authorizedCharacter.RefreshToken = token.RefreshToken;
 
             var url = $"{_config.EsiUrl}v1/characters/affiliation/?datasource={_config.DataSource.ToEsiValue()}";
             var body = new StringContent(JsonConvert.SerializeObject(new int[] { authorizedCharacter.CharacterID }), Encoding.UTF8, "application/json");
