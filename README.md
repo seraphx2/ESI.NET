@@ -30,10 +30,13 @@ In your appsettings.json, add the following object and fill it in appropriately:
     "ClientId": "**********",
     "SecretKey": "**********",
     "CallbackUrl": "",
-    "UserAgent": ""
+    "UserAgent": "",
+    "AuthVersion": "v2"
   }
 ```
 *For your protection (and mine), you are required to supply a user_agent value. This can be your character name and/or project name. CCP will be more likely to contact you than just cut off access to ESI if you provide something that can identify you within the New Eden galaxy. Without this property populated, the wrapper will not work.*
+
+**Note:** Following the implementation of SSOv2, the default has been set to v2 in the settings shown above.  For backwards compatibility, not specifying an AuthVersion will cause v1 to be used.
 
 Inject the EsiConfig object into your configuration in `Startup.cs` in the `ConfigureServices()` method:
 ```cs
@@ -58,7 +61,8 @@ IOptions<EsiConfig> config = Options.Create(new EsiConfig()
     ClientId = "**********",
     SecretKey = "**********",
     CallbackUrl = "",
-    UserAgent = ""
+    UserAgent = "",
+    AuthVersion: AuthVersion.v2
 });
 
 EsiClient client = new EsiClient(config);
@@ -81,7 +85,7 @@ EsiResponse response = _client.Universe.Names(new List<long>()
 ## SSO Example
 
 ### SSO Login URL generator
-ESI.NET has a helper method to generate the URL required to authenticate a character or authorize roles (by providing a List<string> of scopes) for the Eve Online SSO.
+ESI.NET has a helper method to generate the URL required to authenticate a character or authorize roles (by providing a List<string> of scopes) for the Eve Online SSO.  You should also provide a value for "state" that you verify when it is returned (it will be included in the callback).
 ```cs
 var url = _client.SSO.CreateAuthenticationUrl();
 ```
