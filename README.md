@@ -87,8 +87,8 @@ EsiResponse response = _client.Universe.Names(new List<long>()
 ### SSO Login URL generator
 ESI.NET has a helper method to generate the URL required to authenticate a character or authorize roles (by providing a List<string> of scopes) for the Eve Online SSO.  You should also provide a value for "state" that you verify when it is returned (it will be included in the callback).
 ```cs
-    string scopes = "esi-location.read_location.v1 esi-location.read_ship_type.v1 esi-skills.read_skills.v1 esi-skills.read_skillqueue.v1 esi-wallet.read_character_wallet.v1 esi-characterstats.read.v1";
-    var scopeList = scopes.Split(" ", StringSplitOptions.RemoveEmptyEntries).ToList();
+string scopes = "esi-location.read_location.v1 esi-location.read_ship_type.v1 esi-skills.read_skills.v1 esi-skills.read_skillqueue.v1 esi-wallet.read_character_wallet.v1 esi-characterstats.read.v1";
+var scopeList = scopes.Split(" ", StringSplitOptions.RemoveEmptyEntries).ToList();
 var url = _client.SSO.CreateAuthenticationUrl(scopeList, "validateThis");
 ```
 
