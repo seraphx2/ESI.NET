@@ -76,11 +76,12 @@ namespace ESI.NET.Logic
         /// <param name="page">Which page of results to return</param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Blueprint>>> Blueprints(int page = 1)
-            => await Execute<List<Blueprint>>(_client, _config, RequestSecurity.Public, RequestMethod.GET, "/characters/{character_id}/blueprints/",
+            => await Execute<List<Blueprint>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.GET, "/characters/{character_id}/blueprints/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
                 },
+                token: _data.Token,
                 parameters: new string[]
                 {
                     $"page={page}"
