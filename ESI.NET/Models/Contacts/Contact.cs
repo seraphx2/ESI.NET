@@ -19,8 +19,8 @@ namespace ESI.NET.Models.Contacts
         [JsonProperty("is_blocked")]
         public bool IsBlocked { get; set; }
 
-        [JsonProperty("label_id")]
-        public long LabelId { get; set; }
+        [JsonProperty("label_ids")]
+        public long LabelIds { get; set; }
 
     }
 }

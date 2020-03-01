@@ -35,8 +35,8 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="war_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Information>> Information(int war_id)
-            => await Execute<Information>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/wars/{war_id}/",
+        public async Task<EsiResponse<War>> Information(int war_id)
+            => await Execute<War>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/wars/{war_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "war_id", war_id.ToString() }

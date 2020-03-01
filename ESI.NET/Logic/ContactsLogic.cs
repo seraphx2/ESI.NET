@@ -1,6 +1,7 @@
 ﻿using ESI.NET.Models.Contacts;
 using ESI.NET.Models.SSO;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -83,19 +84,19 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /characters/{character_id}/contacts/
         /// </summary>
-        /// <param name="contact_id"></param>
+        /// <param name="contact_ids"></param>
         /// <param name="standing"></param>
-        /// <param name="label_id"></param>
+        /// <param name="label_ids"></param>
         /// <param name="watched"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Add(int contact_id, decimal standing, int? label_id = null, bool? watched = null)
+        public async Task<EsiResponse<int[]>> Add(int[] contact_ids, decimal standing, int[] label_ids = null, bool? watched = null)
         {
-            var body = new int[] { contact_id };
+            var body = contact_ids;
 
             var parameters = new List<string>() { $"standing={standing}" };
 
-            if (label_id != null)
-                parameters.Add($"label_id={label_id}");
+            if (label_ids != null)
+                parameters.Add($"label_ids={string.Join(",", label_ids)}");
 
             if (watched != null)
                 parameters.Add($"watched={watched}");
@@ -118,14 +119,14 @@ namespace ESI.NET.Logic
         /// <param name="label_id"></param>
         /// <param name="watched"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> Update(int contact_id, decimal standing, int? label_id = null, bool? watched = null)
+        public async Task<EsiResponse<string>> Update(int[] contact_ids, decimal standing, int[] label_ids = null, bool? watched = null)
         {
-            var body = new int[] { contact_id };
+            var body = contact_ids;
 
             var parameters = new List<string>() { $"standing={standing}" };
 
-            if (label_id != null)
-                parameters.Add($"label_id={label_id}");
+            if (label_ids != null)
+                parameters.Add($"label_ids={string.Join(",", label_ids)}");
 
             if (watched != null)
                 parameters.Add($"watched={watched}");
