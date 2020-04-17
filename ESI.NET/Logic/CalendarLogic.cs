@@ -29,8 +29,8 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/calendar/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Event>>> Events()
-            => await Execute<List<Event>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/calendar/",
+        public async Task<EsiResponse<List<CalendarItem>>> Events()
+            => await Execute<List<CalendarItem>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/calendar/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }

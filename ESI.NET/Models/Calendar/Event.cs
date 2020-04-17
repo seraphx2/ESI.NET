@@ -5,11 +5,14 @@ namespace ESI.NET.Models.Calendar
 {
     public class Event
     {
+        [JsonProperty("date")]
+        public DateTime Date { get; set; }
+
+        [JsonProperty("duration")]
+        public int Duration { get; set; }
+
         [JsonProperty("event_id")]
         public int EventId { get; set; }
-
-        [JsonProperty("title")]
-        public string Title { get; set; }
 
         [JsonProperty("importance")]
         public int Importance { get; set; }
@@ -20,11 +23,8 @@ namespace ESI.NET.Models.Calendar
         [JsonProperty("owner_name")]
         public string OwnerName { get; set; }
 
-        [JsonProperty("date")]
-        public DateTime Date { get; set; }
-
-        [JsonProperty("duration")]
-        public int Duration { get; set; }
+        [JsonProperty("owner_type")]
+        public string OwnerType { get; set; }
 
         [JsonProperty("response")]
         public string Response { get; set; }
@@ -32,33 +32,7 @@ namespace ESI.NET.Models.Calendar
         [JsonProperty("text")]
         public string Text { get; set; }
 
-        [JsonProperty("owner_type")]
-        public string OwnerType { get; set; }
-
-        [JsonProperty("event_response")]
-        private string EventResponse
-        {
-            get
-            {
-                return Response;
-            }
-            set
-            {
-                Response = value;
-            }
-        }
-
-        [JsonProperty("event_date")]
-        public DateTime EventDate
-        {
-            get
-            {
-                return Date;
-            }
-            set
-            {
-                Date = value;
-            }
-        }
+        [JsonProperty("title")]
+        public string Title { get; set; }
     }
 }
