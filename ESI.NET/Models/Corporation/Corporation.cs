@@ -42,5 +42,8 @@ namespace ESI.NET.Models.Corporation
 
         [JsonProperty("url")]
         public string Url { get; set; }
+
+        [JsonProperty("war_eligible")]
+        public bool WarEligible { get; set; }
     }
 }
