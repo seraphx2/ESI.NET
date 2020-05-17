@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -42,6 +43,8 @@ namespace ESI.NET
         public string CreateAuthenticationUrl(List<string> scopes = null)
             => $"{_ssoUrl}/oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}{((scopes != null) ? $"&scope={string.Join(" ", scopes)}" : "")}";
 
+
+ 
         /// <summary>
         /// SSO Token helper
         /// </summary>
@@ -66,6 +69,68 @@ namespace ESI.NET
 
             return token;
         }
+
+
+        /// <summary>
+        /// Get authentication for the v2 Auth Flow
+        /// </summary>
+        /// <param name="scopes">ESI Scopes to request</param>
+        /// <param name="codeVerifier">challenge code</param>
+        /// <param name="state">unique state</param>
+        /// <returns>URL for authentication</returns>
+        public string CreateAuthenticationUrlV2(List<string> scopes, string codeVerifier, string state)
+        {
+            // create code_challenge
+            var base64CodeVerifier = Convert.ToBase64String(Encoding.UTF8.GetBytes(codeVerifier)).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+            var encodedCodeChallenge = string.Empty ;
+            using (var sha256 = SHA256.Create())
+            {
+                var challengeBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(base64CodeVerifier));
+                encodedCodeChallenge = Convert.ToBase64String(challengeBytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+            }
+
+            return $"https://login.eveonline.com/v2/oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}&code_challenge={encodedCodeChallenge}&code_challenge_method=S256&state={state}{((scopes != null) ? $"&scope={string.Join(" ", scopes)}" : "")}";
+        }
+
+
+        /// <summary>
+        /// Get SSO Token for the v2 Auth flow
+        /// </summary>
+        public async Task<SsoToken> GetTokenV2(GrantType grantType, string code, string codeVerifier = "", List<string> scopes = null)
+        {
+            var body = $"grant_type={grantType.ToEsiValue()}";
+
+            body += $"&client_id={_config.ClientId}";
+
+            if (grantType == GrantType.AuthorizationCode)
+            {
+                body += $"&code={code}";
+
+                var codeVerifierBytes = Encoding.ASCII.GetBytes(codeVerifier);
+                var base64CodeVerifierBytes = Convert.ToBase64String(codeVerifierBytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+                body += $"&code_verifier={base64CodeVerifierBytes}";
+
+            }
+            else if (grantType == GrantType.RefreshToken)
+            {
+
+                body += $"&refresh_token={code}";
+
+                if (scopes != null)
+                {
+                    body += $"&scope={string.Join(" ", scopes)}";
+                }
+            }
+
+            HttpContent postBody = new StringContent(body, Encoding.UTF8, "application/x-www-form-urlencoded");
+            _client.DefaultRequestHeaders.Host = "login.eveonline.com";
+
+            var response = await _client.PostAsync("https://login.eveonline.com/v2/oauth/token", postBody).Result.Content.ReadAsStringAsync();
+            var token = JsonConvert.DeserializeObject<SsoToken>(response);
+
+            return token;
+        }
+
 
         /// <summary>
         /// Verifies the Character information for the provided Token information.
