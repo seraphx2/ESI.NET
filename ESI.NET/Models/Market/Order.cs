@@ -17,6 +17,9 @@ namespace ESI.NET.Models.Market
         [JsonProperty("region_id")]
         public int RegionId { get; set; }
 
+        [JsonProperty("system_id")]
+        public long SystemId { get; set; }
+
         [JsonProperty("location_id")]
         public long LocationId { get; set; }
 
