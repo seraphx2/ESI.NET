@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace ESI.NET.Models.Contacts
 {
@@ -20,7 +21,7 @@ namespace ESI.NET.Models.Contacts
         public bool IsBlocked { get; set; }
 
         [JsonProperty("label_ids")]
-        public long LabelIds { get; set; }
+        public List<long> LabelIds { get; set; }
 
     }
 }
