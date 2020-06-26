@@ -1,8 +1,6 @@
 ﻿using ESI.NET.Enumerations;
-using ESI.NET.Models._SSO;
 using ESI.NET.Models.Character;
 using ESI.NET.Models.SSO;
-using JsonWebToken;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -80,44 +78,7 @@ namespace ESI.NET
             var response = await responseBase.Content.ReadAsStringAsync();
             var token = JsonConvert.DeserializeObject<SsoToken>(response);
 
-            await ValidateJWT(token.AccessToken);
-
             return token;
-        }
-
-        private async Task ValidateJWT(string accessToken)
-        {
-            string key = await GetKey(JwtKeyType.RS256);
-
-            var policy = new TokenValidationPolicyBuilder()
-                .RequireSignature(SymmetricJwk.FromBase64Url(key), SignatureAlgorithm.RsaSha256)
-                .RequireIssuer("login.eveonline.com")
-                .Build();
-
-            var reader = new JwtReader();
-            var result = reader.TryReadToken(accessToken, policy);
-
-            if (result.Succedeed)
-            {
-                Console.WriteLine("The token is " + result.Token);
-            }
-            else
-            {
-                Console.WriteLine("Failed to read the token. Reason: " + result.Status);
-            }
-        }
-
-        private async Task<string> GetKey(JwtKeyType kst)
-        {
-            var response = await new HttpClient().GetAsync("https://login.eveonline.com/oauth/jwks").Result.Content.ReadAsStringAsync();
-            var keySets = JsonConvert.DeserializeObject<KeySets>(response);
-
-            var key = keySets.Keys.First(m => m.alg == kst);
-
-            if (kst == JwtKeyType.RS256)
-                return key.n;
-
-            return key.x;
         }
 
         /// <summary>
