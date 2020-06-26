@@ -1,7 +1,8 @@
 ﻿using ESI.NET.Enumerations;
-using ESI.NET.Logic;
+using ESI.NET.Models._SSO;
 using ESI.NET.Models.Character;
 using ESI.NET.Models.SSO;
+using JsonWebToken;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -27,33 +28,27 @@ namespace ESI.NET
             switch (_config.DataSource)
             {
                 case DataSource.Tranquility:
-                    _ssoUrl = "https://login.eveonline.com" +
-                        "";
-                    break;
-                case DataSource.Singularity:
-                    _ssoUrl = "https://sisilogin.testeveonline.com";
+                    _ssoUrl = "https://login.eveonline.com";
                     break;
                 case DataSource.Serenity:
                     _ssoUrl = "https://login.evepc.163.com";
                     break;
             }
             _clientKey = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{config.ClientId}:{config.SecretKey}"));
-
-            //Check that Auth version matches an implemented version, new versions must be added here and in each of the functions below.
-            if (!(_config.AuthVersion == AuthVersion.v1 || _config.AuthVersion == AuthVersion.v2))
-                throw new NotImplementedException($"Supplied auth version has not been implemented in {nameof(SsoLogic)}.");
-            
-            
         }
 
-        public string CreateAuthenticationUrl(List<string> scopes = null,string state="0")
+        public string CreateAuthenticationUrl(List<string> scopes = null, string state = "")
         {
-            if (_config.AuthVersion == AuthVersion.v1)
-                return $"{_ssoUrl}/oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}{((scopes != null) ? $"&scope={string.Join(" ", scopes)}" : "")}&state={Uri.EscapeDataString(state)}";
-            else if (_config.AuthVersion == AuthVersion.v2)
-                return $"{_ssoUrl}/v2/oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}{((scopes != null) ? $"&scope={string.Join(" ", scopes)}" : "")}&state={Uri.EscapeDataString(state)}";
-            else
-                throw new NotImplementedException($"Supplied auth version has not been implemented in {nameof(CreateAuthenticationUrl)}.");
+            string authVersion = string.Empty;
+
+            switch (_config.AuthVersion)
+            {
+                case AuthVersion.v2:
+                    authVersion = "/v2";
+                    break;
+            }
+
+            return $"{_ssoUrl}{authVersion}/oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}{((scopes != null) ? $"&scope={string.Join(" ", scopes)}" : "")}{((scopes != null) ? $"&scope={string.Join(" ", scopes)}" : "")}{((state != null) ? $"&state={state}" : "")}";
         }
 
         /// <summary>
@@ -81,13 +76,48 @@ namespace ESI.NET
                 responseBase = await _client.PostAsync($"{_ssoUrl}/oauth/token", postBody);
             else if (_config.AuthVersion == AuthVersion.v2)
                 responseBase = await _client.PostAsync($"{_ssoUrl}/v2/oauth/token", postBody);
-            else
-                throw new NotImplementedException($"Supplied auth version has not been implemented in {nameof(GetToken)}.");
 
             var response = await responseBase.Content.ReadAsStringAsync();
             var token = JsonConvert.DeserializeObject<SsoToken>(response);
 
+            await ValidateJWT(token.AccessToken);
+
             return token;
+        }
+
+        private async Task ValidateJWT(string accessToken)
+        {
+            string key = await GetKey(JwtKeyType.RS256);
+
+            var policy = new TokenValidationPolicyBuilder()
+                .RequireSignature(SymmetricJwk.FromBase64Url(key), SignatureAlgorithm.RsaSha256)
+                .RequireIssuer("login.eveonline.com")
+                .Build();
+
+            var reader = new JwtReader();
+            var result = reader.TryReadToken(accessToken, policy);
+
+            if (result.Succedeed)
+            {
+                Console.WriteLine("The token is " + result.Token);
+            }
+            else
+            {
+                Console.WriteLine("Failed to read the token. Reason: " + result.Status);
+            }
+        }
+
+        private async Task<string> GetKey(JwtKeyType kst)
+        {
+            var response = await new HttpClient().GetAsync("https://login.eveonline.com/oauth/jwks").Result.Content.ReadAsStringAsync();
+            var keySets = JsonConvert.DeserializeObject<KeySets>(response);
+
+            var key = keySets.Keys.First(m => m.alg == kst);
+
+            if (kst == JwtKeyType.RS256)
+                return key.n;
+
+            return key.x;
         }
 
         /// <summary>
@@ -101,30 +131,10 @@ namespace ESI.NET
         public async Task<AuthorizedCharacterData> Verify(SsoToken token)
         {
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
-            AuthorizedCharacterData authorizedCharacter = null;
-
-            if (_config.AuthVersion == AuthVersion.v1)
-            {
-                var response = await _client.GetAsync($"{_ssoUrl}/oauth/verify").Result.Content.ReadAsStringAsync();
-                authorizedCharacter = JsonConvert.DeserializeObject<AuthorizedCharacterData>(response);
-                authorizedCharacter.Token = token.AccessToken;
-                authorizedCharacter.RefreshToken = token.RefreshToken;
-            }
-            else if (_config.AuthVersion == AuthVersion.v2)
-            {
-                var response = await (await _client.GetAsync($"{_config.EsiUrl}verify")).Content.ReadAsStringAsync();
-                authorizedCharacter = JsonConvert.DeserializeObject<AuthorizedCharacterData>(response);
-                authorizedCharacter.Token = token.AccessToken;
-                authorizedCharacter.RefreshToken = token.RefreshToken;
-            }
-            else
-                throw new NotImplementedException($"Supplied auth version has not been implemented in {nameof(Verify)}.");
-
-
-            //var response = await (await _client.GetAsync($"{_config.EsiUrl}verify")).Content.ReadAsStringAsync();
-            //AuthorizedCharacterData authorizedCharacter = JsonConvert.DeserializeObject<AuthorizedCharacterData>(response);
-            //authorizedCharacter.Token = token.AccessToken;
-            //authorizedCharacter.RefreshToken = token.RefreshToken;
+            var response = await _client.GetAsync($"{_ssoUrl}/oauth/verify").Result.Content.ReadAsStringAsync();
+            var authorizedCharacter = JsonConvert.DeserializeObject<AuthorizedCharacterData>(response);
+            authorizedCharacter.Token = token.AccessToken;
+            authorizedCharacter.RefreshToken = token.RefreshToken;
 
             var url = $"{_config.EsiUrl}v1/characters/affiliation/?datasource={_config.DataSource.ToEsiValue()}";
             var body = new StringContent(JsonConvert.SerializeObject(new int[] { authorizedCharacter.CharacterID }), Encoding.UTF8, "application/json");
@@ -134,7 +144,6 @@ namespace ESI.NET
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
             var characterResponse = await client.PostAsync(url, body).ConfigureAwait(false);
 
-            //var characterResponse = new CharacterLogic(_client, _config, authorizedCharacter).Affiliation(new int[] { authorizedCharacter.CharacterID }).ConfigureAwait(false).GetAwaiter().GetResult();
             if (characterResponse.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 EsiResponse<List<Affiliation>> affiliations = new EsiResponse<List<Affiliation>>(characterResponse, "Post|/character/affiliations/", "v1");
