@@ -46,7 +46,7 @@ namespace ESI.NET
                     break;
             }
 
-            return $"{_ssoUrl}{authVersion}/oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}{((scopes != null) ? $"&scope={string.Join(" ", scopes)}" : "")}{((scopes != null) ? $"&scope={string.Join(" ", scopes)}" : "")}{((state != null) ? $"&state={state}" : "")}";
+            return $"{_ssoUrl}{authVersion}/oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}{((scopes != null) ? $"&scope={string.Join(" ", scopes)}" : "")}{((state != null) ? $"&state={state}" : "")}";
         }
 
         /// <summary>
