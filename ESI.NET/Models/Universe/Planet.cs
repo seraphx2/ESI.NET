@@ -31,6 +31,13 @@ namespace ESI.NET.Models.Universe
         [JsonProperty("system_id")]
         public int SystemId { get; set; }
 
+
+        /// <summary>
+        /// Only returned in /universe/systems/{system_id}/
+        /// </summary>
+        [JsonProperty("asteroid_belts")]
+        public int[] AsteroidBelts { get; set; }
+
         /// <summary>
         /// Only returned in /universe/systems/{system_id}/
         /// </summary>
