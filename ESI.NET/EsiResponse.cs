@@ -95,7 +95,7 @@ namespace ESI.NET
             {"Put|/corporations/{corporation_id}/structures/{structure_id}/", "Structure vulnerability window updated"},
 
             //Fittings
-            {"Delete|/characters/{character_id}/fittings/{fitting_id}/", ""},
+            {"Delete|/characters/{character_id}/fittings/{fitting_id}/", "Fitting deleted"},
 
             //Fleets
             {"Put|/fleets/{fleet_id}/", "Fleet updated"},
