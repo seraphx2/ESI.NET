@@ -5,8 +5,10 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -35,7 +37,15 @@ namespace ESI.NET
             _clientKey = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{config.ClientId}:{config.SecretKey}"));
         }
 
-        public string CreateAuthenticationUrl(List<string> scopes = null, string state = "")
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <param name="state"></param>
+        /// <param name="code_challenge">All hashing/encryption will be done automatically. Just provide the code.</param>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public string CreateAuthenticationUrl(List<string> scope = null, string state = null, string challengeCode = null)
         {
             string authVersion = string.Empty;
 
@@ -46,22 +56,54 @@ namespace ESI.NET
                     break;
             }
 
-            return $"{_ssoUrl}{authVersion}/oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}{((scopes != null) ? $"&scope={string.Join(" ", scopes)}" : "")}{((state != null) ? $"&state={state}" : "")}";
+            var url = $"{_ssoUrl}{authVersion}/oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}";
+
+            if (scope != null)
+                url = $"{url}&scope={string.Join(" ", scope.Distinct().ToList())}";
+
+            if (state != null)
+                url = $"{url}&state={string.Join(" ", state)}";
+
+            if (challengeCode != null)
+            {
+                url = $"{url}&code_challenge_method=S256";
+
+                var code_challenge = string.Empty;
+
+                using (var sha256 = SHA256.Create())
+                {
+                    var base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(challengeCode)).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+                    var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(base64));
+                    code_challenge = Convert.ToBase64String(bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+
+                    url = $"{url}&code_challenge={code_challenge}";
+                }
+            }
+
+            return url;
         }
 
         /// <summary>
         /// SSO Token helper
         /// </summary>
-        /// <param name="clientId"></param>
-        /// <param name="secretKey"></param>
         /// <param name="grantType"></param>
         /// <param name="code">The authorization_code or the refresh_token</param>
+        /// <param name="codeChallenge">Provide the same value that was provided for codeChallenge in CreateAuthenticationUrl(). All hashing/encryption will be done automatically. Just provide the code.</param>
         /// <returns></returns>
-        public async Task<SsoToken> GetToken(GrantType grantType, string code)
+        public async Task<SsoToken> GetToken(GrantType grantType, string code, string codeChallenge = null)
         {
             var body = $"grant_type={grantType.ToEsiValue()}";
             if (grantType == GrantType.AuthorizationCode)
+            {
                 body += $"&code={code}";
+
+                if (codeChallenge != null)
+                {
+                    var bytes = Encoding.ASCII.GetBytes(codeChallenge);
+                    var base64 = Convert.ToBase64String(bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+                    body += $"&code_verifier={base64}";
+                }
+            }   
             else if (grantType == GrantType.RefreshToken)
                 body += $"&refresh_token={Uri.EscapeDataString(code)}";
 
@@ -76,6 +118,13 @@ namespace ESI.NET
                 responseBase = await _client.PostAsync($"{_ssoUrl}/v2/oauth/token", postBody);
 
             var response = await responseBase.Content.ReadAsStringAsync();
+
+            if (responseBase.StatusCode == HttpStatusCode.OK)
+            {
+                var error = JsonConvert.DeserializeAnonymousType(response, new { error_description = string.Empty }).error_description;
+                throw new ArgumentException(error);
+            }
+
             var token = JsonConvert.DeserializeObject<SsoToken>(response);
 
             return token;
