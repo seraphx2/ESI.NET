@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace ESI.NET.Models.Alliance
 {
@@ -11,7 +12,7 @@ namespace ESI.NET.Models.Alliance
         public int CreatorId { get; set; }
 
         [JsonProperty("date_founded")]
-        public string DateFounded { get; set; }
+        public DateTime DateFounded { get; set; }
 
         [JsonProperty("executor_corporation_id")]
         public int ExecutorCorporationId { get; set; }

@@ -119,7 +119,7 @@ namespace ESI.NET
 
             var response = await responseBase.Content.ReadAsStringAsync();
 
-            if (responseBase.StatusCode == HttpStatusCode.OK)
+            if (responseBase.StatusCode != HttpStatusCode.OK)
             {
                 var error = JsonConvert.DeserializeAnonymousType(response, new { error_description = string.Empty }).error_description;
                 throw new ArgumentException(error);
