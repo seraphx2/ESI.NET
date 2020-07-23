@@ -9,7 +9,7 @@ namespace ESI.NET.Models.Status
         public int Players { get; set; }
 
         [JsonProperty("server_version")]
-        public int ServerVersion { get; set; }
+        public string ServerVersion { get; set; }
 
         [JsonProperty("start_time")]
         public DateTime StartTime { get; set; }

@@ -2,7 +2,9 @@
 using ESI.NET.Models.SSO;
 using Microsoft.Extensions.Options;
 using System;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace ESI.NET
 {
@@ -18,13 +20,20 @@ namespace ESI.NET
         public EsiClient(IOptions<EsiConfig> _config)
         {
             config = _config.Value;
-            client = new HttpClient();
+            client = new HttpClient(new HttpClientHandler
+            {
+                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+            });
 
             // Enforce user agent value
             if (string.IsNullOrEmpty(config.UserAgent))
                 throw new ArgumentException("For your protection, please provide an X-User-Agent value. This can be your character name and/or project name. CCP will be more likely to contact you rather than just cut off access to ESI if you provide something that can identify you within the New Eden galaxy.");
             else
                 client.DefaultRequestHeaders.Add("X-User-Agent", config.UserAgent);
+
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
+            client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
 
             SSO = new SsoLogic(client, config);
             Alliance = new AllianceLogic(client, config);
