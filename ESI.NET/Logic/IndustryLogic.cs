@@ -98,7 +98,7 @@ namespace ESI.NET.Logic
         /// <param name="observer_id"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<ObserverInfo>>> ObservedMining(int observer_id, int page = 1)
+        public async Task<EsiResponse<List<ObserverInfo>>> ObservedMining(long observer_id, int page = 1)
             => await Execute<List<ObserverInfo>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporation/{corporation_id}/mining/observers/{observer_id}/",
                 replacements: new Dictionary<string, string>()
                 {
