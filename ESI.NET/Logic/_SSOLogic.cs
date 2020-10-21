@@ -59,10 +59,10 @@ namespace ESI.NET
             var url = $"{_ssoUrl}{authVersion}/oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}";
 
             if (scope != null)
-                url = $"{url}&scope={string.Join(" ", scope.Distinct().ToList())}";
+                url = $"{url}&scope={string.Join("+", scope.Distinct().ToList())}";
 
             if (state != null)
-                url = $"{url}&state={string.Join(" ", state)}";
+                url = $"{url}&state={state}";
 
             if (challengeCode != null)
             {
