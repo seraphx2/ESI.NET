@@ -53,8 +53,8 @@ namespace ESI.NET.Logic
         /// /corporations/{corporation_id}/members/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Member>>> Members()
-            => await Execute<List<Member>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/members/",
+        public async Task<EsiResponse<int[]>> Members()
+            => await Execute<int[]>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/members/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
