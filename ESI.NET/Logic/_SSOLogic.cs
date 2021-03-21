@@ -131,6 +131,36 @@ namespace ESI.NET
         }
 
         /// <summary>
+        /// SSO Token revokation helper
+        /// ESI will invalidate the provided refreshToken
+        /// </summary>
+        /// <param name="refreshToken">Refresh token provided during Authorization process</param>
+        /// <returns></returns>
+        public async Task RevokeToken(string refreshToken)
+        {
+            var body = $"token_type_hint={GrantType.RefreshToken.ToEsiValue()}";
+            body += $"&token={Uri.EscapeDataString(refreshToken)}";
+
+            HttpContent postBody = new StringContent(body, Encoding.UTF8, "application/x-www-form-urlencoded");
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", _clientKey);
+
+            HttpResponseMessage responseBase = null;
+
+            if (_config.AuthVersion == AuthVersion.v1)
+                responseBase = await _client.PostAsync($"{_ssoUrl}/oauth/revoke", postBody);
+            else if (_config.AuthVersion == AuthVersion.v2)
+                responseBase = await _client.PostAsync($"{_ssoUrl}/v2/oauth/revoke", postBody);
+
+            var response = await responseBase.Content.ReadAsStringAsync();
+
+            if (responseBase.StatusCode != HttpStatusCode.OK)
+            {
+                var error = JsonConvert.DeserializeAnonymousType(response, new { error_description = string.Empty }).error_description;
+                throw new ArgumentException(error);
+            }
+        }
+
+        /// <summary>
         /// Verifies the Character information for the provided Token information.
         /// While this method represents the oauth/verify request, in addition to the verified data that ESI returns, this object also stores the Token and Refresh token
         /// and this method also uses ESI retrieves other information pertinent to making calls in the ESI.NET API. (alliance_id, corporation_id, faction_id)
