@@ -134,12 +134,12 @@ namespace ESI.NET
         /// SSO Token revokation helper
         /// ESI will invalidate the provided refreshToken
         /// </summary>
-        /// <param name="refreshToken">Refresh token provided during Authorization process</param>
+        /// <param name="code">refresh_token to revoke</param>
         /// <returns></returns>
-        public async Task RevokeToken(string refreshToken)
+        public async Task RevokeToken(string code)
         {
             var body = $"token_type_hint={GrantType.RefreshToken.ToEsiValue()}";
-            body += $"&token={Uri.EscapeDataString(refreshToken)}";
+            body += $"&token={Uri.EscapeDataString(code)}";
 
             HttpContent postBody = new StringContent(body, Encoding.UTF8, "application/x-www-form-urlencoded");
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", _clientKey);
