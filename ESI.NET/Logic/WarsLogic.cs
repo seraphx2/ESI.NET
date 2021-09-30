@@ -17,14 +17,14 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="max_war_id">Only return wars with ID smaller than this</param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<int>>> All(long max_war_id = 0)
+        public async Task<EsiResponse<int[]>> All(long max_war_id = 0)
         {
             var parameters = new List<string>();
 
             if (max_war_id > 0)
                 parameters.Add($"max_war_id={max_war_id}");
 
-            var response = await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/wars/",
+            var response = await Execute<int[]>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/wars/",
                 parameters: parameters.ToArray());
 
             return response;

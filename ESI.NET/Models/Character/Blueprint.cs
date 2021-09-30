@@ -5,10 +5,10 @@ namespace ESI.NET.Models.Character
     public class Blueprint
     {
         [JsonProperty("item_id")]
-        public long Id { get; set; }
+        public long ItemId { get; set; }
 
         [JsonProperty("location_flag")]
-        public string Location { get; set; }
+        public string LocationFlag { get; set; }
 
         [JsonProperty("location_id")]
         public long LocationId { get; set; }
@@ -26,6 +26,6 @@ namespace ESI.NET.Models.Character
         public int TimeEfficiency { get; set; }
 
         [JsonProperty("type_id")]
-        public long TypeId { get; set; }
+        public int TypeId { get; set; }
     }
 }

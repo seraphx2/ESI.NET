@@ -104,8 +104,8 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="character_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Corporation>>> CorporationHistory(int character_id)
-            => await Execute<List<Corporation>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/characters/{character_id}/corporationhistory/",
+        public async Task<EsiResponse<List<CorporationHistory>>> CorporationHistory(int character_id)
+            => await Execute<List<CorporationHistory>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/characters/{character_id}/corporationhistory/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -116,8 +116,8 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="character_ids">The target characters to calculate the charge for</param>
         /// <returns></returns>
-        public async Task<EsiResponse<Cspa>> CalculateCSPA(object character_ids)
-            => await Execute<Cspa>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Post, "/characters/{character_id}/cspa/",
+        public async Task<EsiResponse<decimal>> CSPA(object character_ids)
+            => await Execute<decimal>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Post, "/characters/{character_id}/cspa/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -203,18 +203,6 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<List<Standing>>> Standings()
             => await Execute<List<Standing>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/standings/",
-                replacements: new Dictionary<string, string>()
-                {
-                    { "character_id", character_id.ToString() }
-                },
-                token: _data.Token);
-
-        /// <summary>
-        /// /characters/{character_id}/stats/
-        /// </summary>
-        /// <returns></returns>
-        public async Task<EsiResponse<List<Stats>>> Stats()
-            => await Execute<List<Stats>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/stats/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }

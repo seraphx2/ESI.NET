@@ -28,8 +28,8 @@ namespace ESI.NET.Logic
         /// /opportunities/groups/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<int>>> Groups()
-            => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/opportunities/groups/");
+        public async Task<EsiResponse<int[]>> Groups()
+            => await Execute<int[]>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/opportunities/groups/");
 
         /// <summary>
         /// /opportunities/groups/{group_id}/
@@ -47,8 +47,8 @@ namespace ESI.NET.Logic
         /// /opportunities/tasks/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<int>>> Tasks()
-            => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/opportunities/tasks/");
+        public async Task<EsiResponse<int[]>> Tasks()
+            => await Execute<int[]>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/opportunities/tasks/");
 
         /// <summary>
         /// /opportunities/tasks/{task_id}/

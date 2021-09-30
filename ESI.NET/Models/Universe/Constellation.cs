@@ -17,6 +17,6 @@ namespace ESI.NET.Models.Universe
         public long RegionId { get; set; }
 
         [JsonProperty("systems")]
-        public long[] MyProperty { get; set; }
+        public long[] Systems { get; set; }
     }
 }
