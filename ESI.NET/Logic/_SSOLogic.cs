@@ -109,25 +109,21 @@ namespace ESI.NET
             {
                 body += $"&refresh_token={Uri.EscapeDataString(code)}";
 
-                // if we have no Secret Key we're using PCKE so need to pass the client_id direct
+                // If there is no Secret Key, PCKE is being used so need to pass the client_id directly
                 if(string.IsNullOrEmpty(_config.SecretKey))
-                {
                     body += $"&client_id={_config.ClientId}";
-                }
             }
 
             HttpContent postBody = new StringContent(body, Encoding.UTF8, "application/x-www-form-urlencoded");
-            if(!String.IsNullOrEmpty(_config.SecretKey))
-            {
+            if(!string.IsNullOrEmpty(_config.SecretKey))
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", _clientKey);
-            }
 
             HttpResponseMessage responseBase = null;
 
-            if (_config.AuthVersion == AuthVersion.v1)
-                responseBase = await _client.PostAsync($"{_ssoUrl}/oauth/token", postBody);
-            else if (_config.AuthVersion == AuthVersion.v2)
+            if (_config.AuthVersion == AuthVersion.v2)
                 responseBase = await _client.PostAsync($"{_ssoUrl}/v2/oauth/token", postBody);
+            else
+                responseBase = await _client.PostAsync($"{_ssoUrl}/oauth/token", postBody);
 
             var response = await responseBase.Content.ReadAsStringAsync();
 
@@ -158,10 +154,10 @@ namespace ESI.NET
 
             HttpResponseMessage responseBase = null;
 
-            if (_config.AuthVersion == AuthVersion.v1)
-                responseBase = await _client.PostAsync($"{_ssoUrl}/oauth/revoke", postBody);
-            else if (_config.AuthVersion == AuthVersion.v2)
+            if (_config.AuthVersion == AuthVersion.v2)
                 responseBase = await _client.PostAsync($"{_ssoUrl}/v2/oauth/revoke", postBody);
+            else
+                responseBase = await _client.PostAsync($"{_ssoUrl}/oauth/revoke", postBody);
 
             var response = await responseBase.Content.ReadAsStringAsync();
 
