@@ -7,6 +7,15 @@ namespace ESI.NET.Models.Corporation
 {
     public class Structure
     {
+        [JsonProperty("corporation_id")]
+        public int CorporationId { get; set; }
+
+        [JsonProperty("fuel_expires")]
+        public DateTime FuelExpires { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
         [JsonProperty("next_reinforce_apply")]
         public DateTime NextReinforceApply { get; set; }
 
