@@ -7,7 +7,7 @@ namespace ESI.NET.Models.Character
     public class Medal
     {
         [JsonProperty("corporation_id")]
-        public long CorporationId { get; set; }
+        public int CorporationId { get; set; }
 
         [JsonProperty("date")]
         public DateTime Date { get; set; }
@@ -19,10 +19,10 @@ namespace ESI.NET.Models.Character
         public List<GraphicLayer> Graphics { get; set; } = new List<GraphicLayer>();
 
         [JsonProperty("issuer_id")]
-        public long IssuerId { get; set; }
+        public int IssuerId { get; set; }
 
         [JsonProperty("medal_id")]
-        public long Id { get; set; }
+        public int MedalId { get; set; }
 
         [JsonProperty("reason")]
         public string Reason { get; set; }

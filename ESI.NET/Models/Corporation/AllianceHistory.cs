@@ -5,9 +5,6 @@ namespace ESI.NET.Models.Corporation
 {
     public class AllianceHistory
     {
-        [JsonProperty("start_date")]
-        public DateTime StartDate { get; set; }
-
         [JsonProperty("alliance_id")]
         public int AllianceId { get; set; }
 
@@ -16,5 +13,8 @@ namespace ESI.NET.Models.Corporation
 
         [JsonProperty("record_id")]
         public int RecordId { get; set; }
+
+        [JsonProperty("start_date")]
+        public DateTime StartDate { get; set; }
     }
 }

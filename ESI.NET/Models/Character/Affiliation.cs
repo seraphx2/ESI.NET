@@ -4,11 +4,11 @@ namespace ESI.NET.Models.Character
 {
     public class Affiliation
     {
-        [JsonProperty("character_id")]
-        public int CharacterId { get; set; }
-
         [JsonProperty("alliance_id")]
         public int AllianceId { get; set; }
+
+        [JsonProperty("character_id")]
+        public int CharacterId { get; set; }
 
         [JsonProperty("corporation_id")]
         public int CorporationId { get; set; }
