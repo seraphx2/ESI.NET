@@ -101,14 +101,26 @@ namespace ESI.NET
                 {
                     var bytes = Encoding.ASCII.GetBytes(codeChallenge);
                     var base64 = Convert.ToBase64String(bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
-                    body += $"&code_verifier={base64}";
+                    body += $"&code_verifier={base64}&client_id={_config.ClientId}";
                 }
+                
             }   
             else if (grantType == GrantType.RefreshToken)
+            {
                 body += $"&refresh_token={Uri.EscapeDataString(code)}";
 
+                // if we have no Secret Key we're using PCKE so need to pass the client_id direct
+                if(string.IsNullOrEmpty(_config.SecretKey))
+                {
+                    body += $"&client_id={_config.ClientId}";
+                }
+            }
+
             HttpContent postBody = new StringContent(body, Encoding.UTF8, "application/x-www-form-urlencoded");
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", _clientKey);
+            if(!String.IsNullOrEmpty(_config.SecretKey))
+            {
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", _clientKey);
+            }
 
             HttpResponseMessage responseBase = null;
 
