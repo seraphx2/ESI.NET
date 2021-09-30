@@ -31,8 +31,8 @@ namespace ESI.NET.Logic
         /// /universe/categories/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<int>>> Categories()
-            => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/universe/categories/");
+        public async Task<EsiResponse<int[]>> Categories()
+            => await Execute<int[]>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/universe/categories/");
 
         /// <summary>
         /// /universe/categories/{category_id}/
@@ -49,8 +49,8 @@ namespace ESI.NET.Logic
         /// /universe/constellations/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<int>>> Constellations()
-            => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/universe/constellations/");
+        public async Task<EsiResponse<int[]>> Constellations()
+            => await Execute<int[]>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/universe/constellations/");
 
         /// <summary>
         /// /universe/constellations/{constellation_id}/
@@ -74,8 +74,8 @@ namespace ESI.NET.Logic
         /// /universe/graphics/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<int>>> Graphics()
-            => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/universe/graphics/");
+        public async Task<EsiResponse<int[]>> Graphics()
+            => await Execute<int[]>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/universe/graphics/");
 
         /// <summary>
         /// /universe/graphics/{graphic_id}/
@@ -92,8 +92,8 @@ namespace ESI.NET.Logic
         /// /universe/groups/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<int>>> Groups()
-            => await Execute<List<int>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/universe/groups/");
+        public async Task<EsiResponse<int[]>> Groups()
+            => await Execute<int[]>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/universe/groups/");
 
         /// <summary>
         /// /universe/groups/{group_id}/

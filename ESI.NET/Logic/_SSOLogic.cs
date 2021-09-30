@@ -59,10 +59,10 @@ namespace ESI.NET
             var url = $"{_ssoUrl}{authVersion}/oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}";
 
             if (scope != null)
-                url = $"{url}&scope={string.Join(" ", scope.Distinct().ToList())}";
+                url = $"{url}&scope={string.Join("+", scope.Distinct().ToList())}";
 
             if (state != null)
-                url = $"{url}&state={string.Join(" ", state)}";
+                url = $"{url}&state={state}";
 
             if (challengeCode != null)
             {
@@ -101,14 +101,26 @@ namespace ESI.NET
                 {
                     var bytes = Encoding.ASCII.GetBytes(codeChallenge);
                     var base64 = Convert.ToBase64String(bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
-                    body += $"&code_verifier={base64}";
+                    body += $"&code_verifier={base64}&client_id={_config.ClientId}";
                 }
+                
             }   
             else if (grantType == GrantType.RefreshToken)
+            {
                 body += $"&refresh_token={Uri.EscapeDataString(code)}";
 
+                // if we have no Secret Key we're using PCKE so need to pass the client_id direct
+                if(string.IsNullOrEmpty(_config.SecretKey))
+                {
+                    body += $"&client_id={_config.ClientId}";
+                }
+            }
+
             HttpContent postBody = new StringContent(body, Encoding.UTF8, "application/x-www-form-urlencoded");
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", _clientKey);
+            if(!String.IsNullOrEmpty(_config.SecretKey))
+            {
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", _clientKey);
+            }
 
             HttpResponseMessage responseBase = null;
 
@@ -128,6 +140,36 @@ namespace ESI.NET
             var token = JsonConvert.DeserializeObject<SsoToken>(response);
 
             return token;
+        }
+
+        /// <summary>
+        /// SSO Token revokation helper
+        /// ESI will invalidate the provided refreshToken
+        /// </summary>
+        /// <param name="code">refresh_token to revoke</param>
+        /// <returns></returns>
+        public async Task RevokeToken(string code)
+        {
+            var body = $"token_type_hint={GrantType.RefreshToken.ToEsiValue()}";
+            body += $"&token={Uri.EscapeDataString(code)}";
+
+            HttpContent postBody = new StringContent(body, Encoding.UTF8, "application/x-www-form-urlencoded");
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", _clientKey);
+
+            HttpResponseMessage responseBase = null;
+
+            if (_config.AuthVersion == AuthVersion.v1)
+                responseBase = await _client.PostAsync($"{_ssoUrl}/oauth/revoke", postBody);
+            else if (_config.AuthVersion == AuthVersion.v2)
+                responseBase = await _client.PostAsync($"{_ssoUrl}/v2/oauth/revoke", postBody);
+
+            var response = await responseBase.Content.ReadAsStringAsync();
+
+            if (responseBase.StatusCode != HttpStatusCode.OK)
+            {
+                var error = JsonConvert.DeserializeAnonymousType(response, new { error_description = string.Empty }).error_description;
+                throw new ArgumentException(error);
+            }
         }
 
         /// <summary>
