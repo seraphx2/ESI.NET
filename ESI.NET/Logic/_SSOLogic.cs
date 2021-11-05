@@ -100,8 +100,7 @@ namespace ESI.NET
             {
                 body += $"&refresh_token={Uri.EscapeDataString(code)}";
 
-                // If there is no Secret Key, PCKE is being used so need to pass the client_id directly
-                if(string.IsNullOrEmpty(_config.SecretKey))
+                if(codeChallenge != null)
                     body += $"&client_id={_config.ClientId}";
             }
 
