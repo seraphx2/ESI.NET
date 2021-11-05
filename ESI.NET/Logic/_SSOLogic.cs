@@ -167,7 +167,7 @@ namespace ESI.NET
                 var tokenHandler = new JwtSecurityTokenHandler();
 
                 // Get the eve online JWT to validate against
-                var jwtksUrl = "https://login.eveonline.com/oauth/jwks";
+                var jwtksUrl = $"https://{_ssoUrl}/oauth/jwks";
                 var response = await _client.GetAsync(jwtksUrl).Result.Content.ReadAsStringAsync();
                 var jwks = new JsonWebKeySet(response);
                 var jwk = jwks.Keys.First();
