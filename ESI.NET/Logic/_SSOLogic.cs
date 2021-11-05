@@ -1,9 +1,11 @@
 ﻿using ESI.NET.Enumerations;
 using ESI.NET.Models.Character;
 using ESI.NET.Models.SSO;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -178,29 +180,74 @@ namespace ESI.NET
         /// <returns></returns>
         public async Task<AuthorizedCharacterData> Verify(SsoToken token)
         {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
-            var response = await _client.GetAsync($"{_ssoUrl}/oauth/verify").Result.Content.ReadAsStringAsync();
-            var authorizedCharacter = JsonConvert.DeserializeObject<AuthorizedCharacterData>(response);
-            authorizedCharacter.Token = token.AccessToken;
-            authorizedCharacter.RefreshToken = token.RefreshToken;
+            AuthorizedCharacterData authorizedCharacter = new AuthorizedCharacterData();
 
-            var url = $"{_config.EsiUrl}v1/characters/affiliation/?datasource={_config.DataSource.ToEsiValue()}";
-            var body = new StringContent(JsonConvert.SerializeObject(new int[] { authorizedCharacter.CharacterID }), Encoding.UTF8, "application/json");
-
-            // Get more specifc details about authorized character to be used in API calls that require this data about the character
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
-            var characterResponse = await client.PostAsync(url, body).ConfigureAwait(false);
-
-            if (characterResponse.StatusCode == System.Net.HttpStatusCode.OK)
+            try
             {
-                EsiResponse<List<Affiliation>> affiliations = new EsiResponse<List<Affiliation>>(characterResponse, "Post|/character/affiliations/", "v1");
-                var characterData = affiliations.Data.First();
+                var tokenHandler = new JwtSecurityTokenHandler();
 
-                authorizedCharacter.AllianceID = characterData.AllianceId;
-                authorizedCharacter.CorporationID = characterData.CorporationId;
-                authorizedCharacter.FactionID = characterData.FactionId;
+                // get the eve online JWT to validate against
+                string jwtksUrl = "https://login.eveonline.com/oauth/jwks";
+                var response = await _client.GetAsync(jwtksUrl).Result.Content.ReadAsStringAsync();
+                var jwks = new JsonWebKeySet(response);
+                var jwk = jwks.Keys.First();
+
+                SecurityToken validatedToken;
+
+                // validate the token
+                TokenValidationParameters tokenValidationParams = new TokenValidationParameters
+                {
+                    ValidateAudience = false,
+                    ValidateIssuer = true,
+                    ValidIssuer = "login.eveonline.com",
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = jwk,
+                    ClockSkew = TimeSpan.FromSeconds(2), // ccp's servers seem slightly ahead (~1s)
+                };
+                tokenHandler.ValidateToken(token.AccessToken, tokenValidationParams, out validatedToken);
+
+                JwtSecurityToken jwtValidatedToken = validatedToken as JwtSecurityToken;
+
+                string subjectClaim = jwtValidatedToken.Claims.SingleOrDefault(c => c.Type == "sub").Value;
+                string nameClaim = jwtValidatedToken.Claims.SingleOrDefault(c => c.Type == "name").Value;
+                string ownerClaim = jwtValidatedToken.Claims.SingleOrDefault(c => c.Type == "owner").Value;
+
+                
+                var returnedScopes = jwtValidatedToken.Claims.Where(c => c.Type == "scp");
+                string scopesClaim = string.Join(" ", returnedScopes.Select(s => s.Value));
+
+                authorizedCharacter.RefreshToken = token.RefreshToken;
+                authorizedCharacter.Token = token.AccessToken;
+                authorizedCharacter.CharacterName = nameClaim;
+                authorizedCharacter.CharacterOwnerHash = ownerClaim;
+                authorizedCharacter.CharacterID = int.Parse(subjectClaim.Split(':').Last());
+                authorizedCharacter.ExpiresOn = jwtValidatedToken.ValidTo;
+                authorizedCharacter.Scopes = scopesClaim;
+
+                // Get more specifc details about authorized character to be used in API calls that require this data about the character
+                var url = $"{_config.EsiUrl}v1/characters/affiliation/?datasource={_config.DataSource.ToEsiValue()}";
+                var body = new StringContent(JsonConvert.SerializeObject(new int[] { authorizedCharacter.CharacterID }), Encoding.UTF8, "application/json");
+
+                var client = new HttpClient();
+                var characterResponse = await client.PostAsync(url, body).ConfigureAwait(false);
+
+                if (characterResponse.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    EsiResponse<List<Affiliation>> affiliations = new EsiResponse<List<Affiliation>>(characterResponse, "Post|/character/affiliations/", "v1");
+                    var characterData = affiliations.Data.First();
+
+                    authorizedCharacter.AllianceID = characterData.AllianceId;
+                    authorizedCharacter.CorporationID = characterData.CorporationId;
+                    authorizedCharacter.FactionID = characterData.FactionId;
+
+                }
+
             }
+            catch
+            {
+                // validation failed
+            }
+
 
             return authorizedCharacter;
         }
