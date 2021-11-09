@@ -203,15 +203,15 @@ namespace ESI.NET
                 authorizedCharacter.Scopes = scopesClaim;
 
                 // Get more specifc details about authorized character to be used in API calls that require this data about the character
-                var url = $"{_config.EsiUrl}v1/characters/affiliation/?datasource={_config.DataSource.ToEsiValue()}";
+                var url = $"{_config.EsiUrl}latest/characters/affiliation/?datasource={_config.DataSource.ToEsiValue()}";
                 var body = new StringContent(JsonConvert.SerializeObject(new int[] { authorizedCharacter.CharacterID }), Encoding.UTF8, "application/json");
 
                 var client = new HttpClient();
                 var characterResponse = await client.PostAsync(url, body).ConfigureAwait(false);
 
-                if (characterResponse.StatusCode == System.Net.HttpStatusCode.OK)
+                if (characterResponse.StatusCode == HttpStatusCode.OK)
                 {
-                    EsiResponse<List<Affiliation>> affiliations = new EsiResponse<List<Affiliation>>(characterResponse, "Post|/character/affiliations/", "v1");
+                    EsiResponse<List<Affiliation>> affiliations = new EsiResponse<List<Affiliation>>(characterResponse, "Post|/character/affiliations/");
                     var characterData = affiliations.Data.First();
 
                     authorizedCharacter.AllianceID = characterData.AllianceId;
