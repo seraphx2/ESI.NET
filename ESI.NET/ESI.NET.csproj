@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.1;netstandard2.0;net461;net462;net47;net471;net5.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;netstandard2.0;net461;net462;net47;net471;net5.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>2021.11.19</Version>
     <Authors>Psianna Archeia</Authors>
