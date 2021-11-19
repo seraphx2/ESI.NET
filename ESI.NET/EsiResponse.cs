@@ -10,13 +10,12 @@ namespace ESI.NET
 {
     public class EsiResponse<T>
     {
-        public EsiResponse(HttpResponseMessage response, string path, string version)
+        public EsiResponse(HttpResponseMessage response, string path)
         {
             try
             {
                 StatusCode = response.StatusCode;
                 Endpoint = path.Split('|')[1];
-                Version = version;
 
                 if (response.Headers.Contains("X-ESI-Request-ID"))
                     RequestId = Guid.Parse(response.Headers.GetValues("X-ESI-Request-ID").First());
@@ -71,7 +70,7 @@ namespace ESI.NET
         public Guid RequestId { get; set; }
         public HttpStatusCode StatusCode { get; set; }
         public string Endpoint { get; set; }
-        public string Version { get; set; }
+        public string Version { get; set; } = "latest";
         public DateTime? Expires { get; set; }
         public DateTime? LastModified { get; set; }
         public string ETag { get; set; }
