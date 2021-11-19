@@ -1,9 +1,11 @@
 ﻿using ESI.NET.Enumerations;
 using ESI.NET.Models.Character;
 using ESI.NET.Models.SSO;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -21,6 +23,8 @@ namespace ESI.NET
         private readonly string _clientKey;
         private readonly string _ssoUrl;
 
+        private static Random random = new Random();
+
         public SsoLogic(HttpClient client, EsiConfig config)
         {
             _client = client;
@@ -28,10 +32,10 @@ namespace ESI.NET
             switch (_config.DataSource)
             {
                 case DataSource.Tranquility:
-                    _ssoUrl = "https://login.eveonline.com";
+                    _ssoUrl = "login.eveonline.com";
                     break;
                 case DataSource.Serenity:
-                    _ssoUrl = "https://login.evepc.163.com";
+                    _ssoUrl = "login.evepc.163.com";
                     break;
             }
             _clientKey = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{config.ClientId}:{config.SecretKey}"));
@@ -47,16 +51,7 @@ namespace ESI.NET
         /// <returns></returns>
         public string CreateAuthenticationUrl(List<string> scope = null, string state = null, string challengeCode = null)
         {
-            string authVersion = string.Empty;
-
-            switch (_config.AuthVersion)
-            {
-                case AuthVersion.v2:
-                    authVersion = "/v2";
-                    break;
-            }
-
-            var url = $"{_ssoUrl}{authVersion}/oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}";
+            var url = $"https://{_ssoUrl}/v2/oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}";
 
             if (scope != null)
                 url = $"{url}&scope={string.Join("+", scope.Distinct().ToList())}";
@@ -68,19 +63,23 @@ namespace ESI.NET
             {
                 url = $"{url}&code_challenge_method=S256";
 
-                var code_challenge = string.Empty;
-
                 using (var sha256 = SHA256.Create())
                 {
                     var base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(challengeCode)).TrimEnd('=').Replace('+', '-').Replace('/', '_');
                     var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(base64));
-                    code_challenge = Convert.ToBase64String(bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+                    var code_challenge = Convert.ToBase64String(bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
 
                     url = $"{url}&code_challenge={code_challenge}";
                 }
             }
 
             return url;
+        }
+        
+        public string GenerateChallengeCode()
+        {
+            const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, 32).Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
         /// <summary>
@@ -103,37 +102,32 @@ namespace ESI.NET
                     var base64 = Convert.ToBase64String(bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
                     body += $"&code_verifier={base64}&client_id={_config.ClientId}";
                 }
-                
             }   
             else if (grantType == GrantType.RefreshToken)
             {
                 body += $"&refresh_token={Uri.EscapeDataString(code)}";
 
-                // If there is no Secret Key, PCKE is being used so need to pass the client_id directly
-                if(string.IsNullOrEmpty(_config.SecretKey))
+                if(codeChallenge != null)
                     body += $"&client_id={_config.ClientId}";
             }
 
             HttpContent postBody = new StringContent(body, Encoding.UTF8, "application/x-www-form-urlencoded");
-            if(!string.IsNullOrEmpty(_config.SecretKey))
-                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", _clientKey);
-
-            HttpResponseMessage responseBase = null;
-
-            if (_config.AuthVersion == AuthVersion.v2)
-                responseBase = await _client.PostAsync($"{_ssoUrl}/v2/oauth/token", postBody);
-            else
-                responseBase = await _client.PostAsync($"{_ssoUrl}/oauth/token", postBody);
-
-            var response = await responseBase.Content.ReadAsStringAsync();
-
-            if (responseBase.StatusCode != HttpStatusCode.OK)
+            if(codeChallenge == null)
             {
-                var error = JsonConvert.DeserializeAnonymousType(response, new { error_description = string.Empty }).error_description;
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", _clientKey);
+                _client.DefaultRequestHeaders.Host = _ssoUrl;
+            }
+
+            var response = await _client.PostAsync($"https://{_ssoUrl}/v2/oauth/token", postBody);
+            var content = await response.Content.ReadAsStringAsync();
+
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                var error = JsonConvert.DeserializeAnonymousType(content, new { error_description = string.Empty }).error_description;
                 throw new ArgumentException(error);
             }
 
-            var token = JsonConvert.DeserializeObject<SsoToken>(response);
+            var token = JsonConvert.DeserializeObject<SsoToken>(content);
 
             return token;
         }
@@ -152,18 +146,12 @@ namespace ESI.NET
             HttpContent postBody = new StringContent(body, Encoding.UTF8, "application/x-www-form-urlencoded");
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", _clientKey);
 
-            HttpResponseMessage responseBase = null;
+            var response = await _client.PostAsync($"https://{_ssoUrl}/v2/oauth/revoke", postBody);
+            var content = await response.Content.ReadAsStringAsync();
 
-            if (_config.AuthVersion == AuthVersion.v2)
-                responseBase = await _client.PostAsync($"{_ssoUrl}/v2/oauth/revoke", postBody);
-            else
-                responseBase = await _client.PostAsync($"{_ssoUrl}/oauth/revoke", postBody);
-
-            var response = await responseBase.Content.ReadAsStringAsync();
-
-            if (responseBase.StatusCode != HttpStatusCode.OK)
+            if (response.StatusCode != HttpStatusCode.OK)
             {
-                var error = JsonConvert.DeserializeAnonymousType(response, new { error_description = string.Empty }).error_description;
+                var error = JsonConvert.DeserializeAnonymousType(content, new { error_description = string.Empty }).error_description;
                 throw new ArgumentException(error);
             }
         }
@@ -178,28 +166,69 @@ namespace ESI.NET
         /// <returns></returns>
         public async Task<AuthorizedCharacterData> Verify(SsoToken token)
         {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
-            var response = await _client.GetAsync($"{_ssoUrl}/oauth/verify").Result.Content.ReadAsStringAsync();
-            var authorizedCharacter = JsonConvert.DeserializeObject<AuthorizedCharacterData>(response);
-            authorizedCharacter.Token = token.AccessToken;
-            authorizedCharacter.RefreshToken = token.RefreshToken;
+            AuthorizedCharacterData authorizedCharacter = new AuthorizedCharacterData();
 
-            var url = $"{_config.EsiUrl}v1/characters/affiliation/?datasource={_config.DataSource.ToEsiValue()}";
-            var body = new StringContent(JsonConvert.SerializeObject(new int[] { authorizedCharacter.CharacterID }), Encoding.UTF8, "application/json");
-
-            // Get more specifc details about authorized character to be used in API calls that require this data about the character
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
-            var characterResponse = await client.PostAsync(url, body).ConfigureAwait(false);
-
-            if (characterResponse.StatusCode == System.Net.HttpStatusCode.OK)
+            try
             {
-                EsiResponse<List<Affiliation>> affiliations = new EsiResponse<List<Affiliation>>(characterResponse, "Post|/character/affiliations/", "v1");
-                var characterData = affiliations.Data.First();
+                var tokenHandler = new JwtSecurityTokenHandler();
 
-                authorizedCharacter.AllianceID = characterData.AllianceId;
-                authorizedCharacter.CorporationID = characterData.CorporationId;
-                authorizedCharacter.FactionID = characterData.FactionId;
+                // Get the eve online JWT to validate against
+                var jwtksUrl = $"https://{_ssoUrl}/oauth/jwks";
+                var response = await _client.GetAsync(jwtksUrl).Result.Content.ReadAsStringAsync();
+                var jwks = new JsonWebKeySet(response);
+                var jwk = jwks.Keys.First();
+
+                SecurityToken validatedToken;
+
+                // Validate the token
+                TokenValidationParameters tokenValidationParams = new TokenValidationParameters
+                {
+                    ValidateAudience = false,
+                    ValidateIssuer = true,
+                    ValidIssuer = _ssoUrl,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = jwk,
+                    ClockSkew = TimeSpan.FromSeconds(2), // CCP's servers seem slightly ahead (~1s)
+                };
+                tokenHandler.ValidateToken(token.AccessToken, tokenValidationParams, out validatedToken);
+
+                JwtSecurityToken jwtValidatedToken = validatedToken as JwtSecurityToken;
+
+                var subjectClaim = jwtValidatedToken.Claims.SingleOrDefault(c => c.Type == "sub").Value;
+                var nameClaim = jwtValidatedToken.Claims.SingleOrDefault(c => c.Type == "name").Value;
+                var ownerClaim = jwtValidatedToken.Claims.SingleOrDefault(c => c.Type == "owner").Value;
+                
+                var returnedScopes = jwtValidatedToken.Claims.Where(c => c.Type == "scp");
+                var scopesClaim = string.Join(" ", returnedScopes.Select(s => s.Value));
+
+                authorizedCharacter.RefreshToken = token.RefreshToken;
+                authorizedCharacter.Token = token.AccessToken;
+                authorizedCharacter.CharacterName = nameClaim;
+                authorizedCharacter.CharacterOwnerHash = ownerClaim;
+                authorizedCharacter.CharacterID = int.Parse(subjectClaim.Split(':').Last());
+                authorizedCharacter.ExpiresOn = jwtValidatedToken.ValidTo;
+                authorizedCharacter.Scopes = scopesClaim;
+
+                // Get more specifc details about authorized character to be used in API calls that require this data about the character
+                var url = $"{_config.EsiUrl}latest/characters/affiliation/?datasource={_config.DataSource.ToEsiValue()}";
+                var body = new StringContent(JsonConvert.SerializeObject(new int[] { authorizedCharacter.CharacterID }), Encoding.UTF8, "application/json");
+
+                var client = new HttpClient();
+                var characterResponse = await client.PostAsync(url, body).ConfigureAwait(false);
+
+                if (characterResponse.StatusCode == HttpStatusCode.OK)
+                {
+                    EsiResponse<List<Affiliation>> affiliations = new EsiResponse<List<Affiliation>>(characterResponse, "Post|/character/affiliations/");
+                    var characterData = affiliations.Data.First();
+
+                    authorizedCharacter.AllianceID = characterData.AllianceId;
+                    authorizedCharacter.CorporationID = characterData.CorporationId;
+                    authorizedCharacter.FactionID = characterData.FactionId;
+                }
+            }
+            catch
+            {
+                // validation failed
             }
 
             return authorizedCharacter;
