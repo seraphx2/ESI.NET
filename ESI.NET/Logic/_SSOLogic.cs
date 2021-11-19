@@ -23,6 +23,8 @@ namespace ESI.NET
         private readonly string _clientKey;
         private readonly string _ssoUrl;
 
+        private static Random random = new Random();
+
         public SsoLogic(HttpClient client, EsiConfig config)
         {
             _client = client;
@@ -73,6 +75,12 @@ namespace ESI.NET
 
             return url;
         }
+        
+        public string GenerateChallengeCode()
+        {
+            const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, 32).Select(s => s[random.Next(s.Length)]).ToArray());
+        }
 
         /// <summary>
         /// SSO Token helper
@@ -94,7 +102,6 @@ namespace ESI.NET
                     var base64 = Convert.ToBase64String(bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
                     body += $"&code_verifier={base64}&client_id={_config.ClientId}";
                 }
-                
             }   
             else if (grantType == GrantType.RefreshToken)
             {
