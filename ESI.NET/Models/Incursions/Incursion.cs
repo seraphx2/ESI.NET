@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace ESI.NET.Models.Incursions
 {
@@ -19,6 +18,9 @@ namespace ESI.NET.Models.Incursions
 
         [JsonProperty("influence")]
         public double Influence { get; set; }
+
+        [JsonProperty("staging_solar_system_id")]
+        public long StagingSystemId { get; set; }
 
         [JsonProperty("state")]
         public string State { get; set; }
