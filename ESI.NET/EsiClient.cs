@@ -17,9 +17,15 @@ namespace ESI.NET
         /// 
         /// </summary>
         /// <param name="config"></param>
-        public EsiClient(IOptions<EsiConfig> _config)
+        public EsiClient(IOptions<EsiConfig> _config) : this(_config.Value) { }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="config"></param>
+        public EsiClient(EsiConfig _config)
         {
-            config = _config.Value;
+            config = _config;
             client = new HttpClient(new HttpClientHandler
             {
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate

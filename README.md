@@ -52,16 +52,15 @@ public ApiTestController(IEsiClient client) { _client = client; }
 If you are using a .NET Standard-compatible .NET Framework application, you can instantiate the client in this manner:
 
 ```cs
-IOptions<EsiConfig> config = Options.Create(new EsiConfig()
+EsiConfig config = new EsiConfig()
 {
     EsiUrl = "https://esi.evetech.net/",
     DataSource = DataSource.Tranquility,
     ClientId = "**********",
     SecretKey = "**********",
     CallbackUrl = "",
-    UserAgent = "",
-    AuthVersion = AuthVersion.v2
-});
+    UserAgent = ""
+};
 
 EsiClient client = new EsiClient(config);
 ```
