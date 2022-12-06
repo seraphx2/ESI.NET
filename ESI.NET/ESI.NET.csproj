@@ -16,7 +16,6 @@
     <Description>.NET Wrapper for the Eve Online API</Description>
     <RepositoryUrl>https://github.com/seraphx2/ESI.NET</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/seraphx2/ESI.NET</PackageProjectUrl>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
@@ -37,7 +36,7 @@
   <ItemGroup>
     <None Include="..\LICENSE.txt">
       <Pack>True</Pack>
-      <PackagePath></PackagePath>
+      <PackagePath>LICENSE.txt</PackagePath>
     </None>
   </ItemGroup>
 
