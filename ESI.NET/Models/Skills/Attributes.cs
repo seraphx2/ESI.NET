@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace ESI.NET.Models.Skills
 {
@@ -23,7 +24,7 @@ namespace ESI.NET.Models.Skills
         public int BonusRemaps { get; set; }
 
         [JsonProperty("last_remap_date")]
-        public string LastRemapDate { get; set; }
+        public DateTime LastRemapDate { get; set; }
 
         [JsonProperty("accrued_remap_cooldown_date")]
         public string AccruedRemapCooldownDate { get; set; }
