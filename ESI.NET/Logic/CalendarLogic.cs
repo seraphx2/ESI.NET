@@ -30,7 +30,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<CalendarItem>>> Events()
-            => await Execute<List<CalendarItem>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/calendar/",
+            => await Execute<List<CalendarItem>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/calendar/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -43,7 +43,7 @@ namespace ESI.NET.Logic
         /// <param name="contract_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<Event>> Event(int event_id)
-            => await Execute<Event>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/calendar/{event_id}/",
+            => await Execute<Event>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/calendar/{event_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() },
@@ -58,7 +58,7 @@ namespace ESI.NET.Logic
         /// <param name="response"></param>
         /// <returns></returns>
         public async Task<EsiResponse<Event>> Respond(int event_id, EventResponse eventResponse)
-            => await Execute<Event>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Put, "/characters/{character_id}/calendar/{event_id}/",
+            => await Execute<Event>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Put, "/characters/{character_id}/calendar/{event_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() },
@@ -76,7 +76,7 @@ namespace ESI.NET.Logic
         /// <param name="contract_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Response>>> Responses(int event_id)
-            => await Execute<List<Response>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/calendar/{event_id}/attendees/",
+            => await Execute<List<Response>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/calendar/{event_id}/attendees/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() },
