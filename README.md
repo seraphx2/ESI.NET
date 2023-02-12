@@ -59,8 +59,7 @@ IOptions<EsiConfig> config = Options.Create(new EsiConfig()
     ClientId = "**********",
     SecretKey = "**********",
     CallbackUrl = "",
-    UserAgent = "",
-    AuthVersion = AuthVersion.v2
+    UserAgent = ""
 });
 
 EsiClient client = new EsiClient(config);
