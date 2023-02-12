@@ -64,7 +64,10 @@ namespace ESI.NET
                 Message = response.Content.ReadAsStringAsync().Result;
                 Exception = ex;
             }
-            
+            finally
+            {
+                response.Dispose();
+            }
         }
 
         public Guid RequestId { get; set; }

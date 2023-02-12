@@ -111,14 +111,17 @@ namespace ESI.NET
                     body += $"&client_id={_config.ClientId}";
             }
 
-            HttpContent postBody = new StringContent(body, Encoding.UTF8, "application/x-www-form-urlencoded");
+            var request = new HttpRequestMessage(HttpMethod.Post, $"https://{_ssoUrl}/v2/oauth/token")
+            {
+                Content = new StringContent(body, Encoding.UTF8, "application/x-www-form-urlencoded"),
+            };
             if(codeChallenge == null)
             {
-                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", _clientKey);
-                _client.DefaultRequestHeaders.Host = _ssoUrl;
+                request.Headers.Authorization = new AuthenticationHeaderValue("Basic", _clientKey);
+                request.Headers.Host = _ssoUrl;
             }
 
-            var response = await _client.PostAsync($"https://{_ssoUrl}/v2/oauth/token", postBody);
+            var response = await _client.SendAsync(request);
             var content = await response.Content.ReadAsStringAsync();
 
             if (response.StatusCode != HttpStatusCode.OK)
