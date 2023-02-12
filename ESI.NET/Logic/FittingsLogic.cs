@@ -29,7 +29,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Fitting>>> List()
-            => await Execute<List<Fitting>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/fittings/",
+            => await Execute<List<Fitting>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/fittings/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -42,7 +42,7 @@ namespace ESI.NET.Logic
         /// <param name="fitting"></param>
         /// <returns></returns>
         public async Task<EsiResponse<NewFitting>> Add(object fitting)
-            => await Execute<NewFitting>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Post, "/characters/{character_id}/fittings/",
+            => await Execute<NewFitting>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/characters/{character_id}/fittings/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -56,7 +56,7 @@ namespace ESI.NET.Logic
         /// <param name="fitting_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> Delete(int fitting_id)
-            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Delete, "/characters/{character_id}/fittings/{fitting_id}/",
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Delete, "/characters/{character_id}/fittings/{fitting_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() },

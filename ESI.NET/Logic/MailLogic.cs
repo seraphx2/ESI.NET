@@ -38,7 +38,7 @@ namespace ESI.NET.Logic
             if (last_mail_id > 0)
                 parameters.Add($"last_mail_id={last_mail_id}");
 
-            var response = await Execute<List<Header>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/mail/",
+            var response = await Execute<List<Header>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/mail/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -58,7 +58,7 @@ namespace ESI.NET.Logic
         /// <param name="approved_cost"></param>
         /// <returns></returns>
         public async Task<EsiResponse<int>> New(object[] recipients, string subject, string body, int approved_cost = 0)
-            => await Execute<int>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Post, "/characters/{character_id}/mail/",
+            => await Execute<int>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/characters/{character_id}/mail/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -77,7 +77,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<LabelCounts>> Labels()
-            => await Execute<LabelCounts>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/mail/labels/",
+            => await Execute<LabelCounts>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/mail/labels/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -91,7 +91,7 @@ namespace ESI.NET.Logic
         /// <param name="color"></param>
         /// <returns></returns>
         public async Task<EsiResponse<long>> NewLabel(string name, string color)
-            => await Execute<long>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Post, "/characters/{character_id}/mail/labels/",
+            => await Execute<long>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/characters/{character_id}/mail/labels/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -109,7 +109,7 @@ namespace ESI.NET.Logic
         /// <param name="label_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> DeleteLabel(long label_id)
-            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Delete, "/characters/{character_id}/mail/labels/{label_id}/",
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Delete, "/characters/{character_id}/mail/labels/{label_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() },
@@ -122,7 +122,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<MailingList>>> MailingLists()
-            => await Execute<List<MailingList>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/mail/lists/",
+            => await Execute<List<MailingList>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/mail/lists/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -135,7 +135,7 @@ namespace ESI.NET.Logic
         /// <param name="mail_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<Message>> Retrieve(int mail_id)
-            => await Execute<Message>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/mail/{mail_id}/",
+            => await Execute<Message>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/mail/{mail_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() },
@@ -151,7 +151,7 @@ namespace ESI.NET.Logic
         /// <param name="labels"></param>
         /// <returns></returns>
         public async Task<EsiResponse<Message>> Update(int mail_id, bool? is_read = null, int[] labels = null)
-            => await Execute<Message>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Put, "/characters/{character_id}/mail/{mail_id}/",
+            => await Execute<Message>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Put, "/characters/{character_id}/mail/{mail_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() },
@@ -166,7 +166,7 @@ namespace ESI.NET.Logic
         /// <param name="mail_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<Message>> Delete(int mail_id)
-            => await Execute<Message>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Delete, "/characters/{character_id}/mail/{mail_id}/",
+            => await Execute<Message>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Delete, "/characters/{character_id}/mail/{mail_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() },

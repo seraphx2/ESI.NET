@@ -32,14 +32,14 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Facility>>> Facilities()
-            => await Execute<List<Facility>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/industry/facilities/");
+            => await Execute<List<Facility>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/industry/facilities/");
 
         /// <summary>
         /// /industry/systems/
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<SolarSystem>>> SolarSystemCostIndices()
-            => await Execute<List<SolarSystem>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/industry/systems/");
+            => await Execute<List<SolarSystem>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/industry/systems/");
 
         /// <summary>
         /// /characters/{character_id}/industry/jobs/
@@ -47,7 +47,7 @@ namespace ESI.NET.Logic
         /// <param name="include_completed"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Job>>> JobsForCharacter(bool include_completed = false)
-            => await Execute<List<Job>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/industry/jobs/",
+            => await Execute<List<Job>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/industry/jobs/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -64,7 +64,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Entry>>> MiningLedger(int page = 1)
-            => await Execute<List<Entry>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/mining/",
+            => await Execute<List<Entry>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/mining/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -81,7 +81,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Observer>>> Observers(int page = 1)
-            => await Execute<List<Observer>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporation/{corporation_id}/mining/observers/",
+            => await Execute<List<Observer>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporation/{corporation_id}/mining/observers/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -99,7 +99,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<ObserverInfo>>> ObservedMining(long observer_id, int page = 1)
-            => await Execute<List<ObserverInfo>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporation/{corporation_id}/mining/observers/{observer_id}/",
+            => await Execute<List<ObserverInfo>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporation/{corporation_id}/mining/observers/{observer_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() },
@@ -118,7 +118,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Job>>> JobsForCorporation(bool include_completed = false, int page = 1)
-            => await Execute<List<Job>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/industry/jobs/",
+            => await Execute<List<Job>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/industry/jobs/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -135,7 +135,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Extraction>>> Extractions()
-            => await Execute<List<Extraction>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporation/{corporation_id}/mining/extractions/",
+            => await Execute<List<Extraction>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporation/{corporation_id}/mining/extractions/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }

@@ -14,13 +14,14 @@ namespace ESI.NET
         readonly EsiConfig config;
 
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="EsiClient"/> class.
         /// </summary>
-        /// <param name="config"></param>
-        public EsiClient(IOptions<EsiConfig> _config)
+        /// <param name="_config">The configuration parameters of the <see cref="EsiClient"/>.</param>
+        /// <param name="_client">The <see cref="HttpClient"/> to use for HTTP requests.</param>
+        public EsiClient(IOptions<EsiConfig> _config, HttpClient _client = null)
         {
             config = _config.Value;
-            client = new HttpClient(new HttpClientHandler
+            client = _client ?? new HttpClient(new HttpClientHandler
             {
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
             });
@@ -28,8 +29,7 @@ namespace ESI.NET
             // Enforce user agent value
             if (string.IsNullOrEmpty(config.UserAgent))
                 throw new ArgumentException("For your protection, please provide an X-User-Agent value. This can be your character name and/or project name. CCP will be more likely to contact you rather than just cut off access to ESI if you provide something that can identify you within the New Eden galaxy.");
-            else
-                client.DefaultRequestHeaders.Add("X-User-Agent", config.UserAgent);
+            client.DefaultRequestHeaders.Add("X-User-Agent", config.UserAgent);
 
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
