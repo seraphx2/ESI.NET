@@ -12,9 +12,9 @@ namespace ESI.NET
     {
         internal static string ETag;
 
-        public static async Task<EsiResponse<T>> Execute<T>(HttpClient client, EsiConfig config, RequestSecurity security, RequestMethod method, string endpoint, Dictionary<string, string> replacements = null, string[] parameters = null, object body = null, string token = null)
+        public static async Task<EsiResponse<T>> Execute<T>(HttpClient client, EsiConfig config, RequestSecurity security, HttpMethod httpMethod, string endpoint, Dictionary<string, string> replacements = null, string[] parameters = null, object body = null, string token = null)
         {
-            var path = $"{method.ToString()}|{endpoint}";
+            var path = $"{httpMethod}|{endpoint}";
 
             if (replacements != null)
                 foreach (var property in replacements)
@@ -26,25 +26,6 @@ namespace ESI.NET
             if (parameters != null)
                 url += $"&{string.Join("&", parameters)}";
 
-            HttpMethod httpMethod;
-            switch (method)
-            {
-                case RequestMethod.Delete:
-                    httpMethod = HttpMethod.Delete;
-                    break;
-                case RequestMethod.Get:
-                    httpMethod = HttpMethod.Get;
-                    break;
-                case RequestMethod.Post:
-                    httpMethod = HttpMethod.Post;
-                    break;
-                case RequestMethod.Put:
-                    httpMethod = HttpMethod.Put;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(method));
-            }
-
             var request = new HttpRequestMessage(httpMethod, url);
 
             //Attach token to request header if this endpoint requires an authorized character
@@ -52,7 +33,6 @@ namespace ESI.NET
             {
                 if (token == null)
                     throw new ArgumentException("The request endpoint requires SSO authentication and a Token has not been provided.");
-
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
 
@@ -74,14 +54,6 @@ namespace ESI.NET
         {
             Public,
             Authenticated
-        }
-
-        public enum RequestMethod
-        {
-            Delete,
-            Get,
-            Post,
-            Put
         }
     }
 }

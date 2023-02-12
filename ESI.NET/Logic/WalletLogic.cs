@@ -32,7 +32,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<decimal>> CharacterWallet()
-            => await Execute<decimal>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/wallet/", replacements: new Dictionary<string, string>()
+            => await Execute<decimal>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/wallet/", replacements: new Dictionary<string, string>()
             {
                 { "character_id", character_id.ToString() }
             }, token: _data.Token);
@@ -43,7 +43,7 @@ namespace ESI.NET.Logic
         /// <param name="from_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<JournalEntry>>> CharacterJournal(int page = 1)
-            => await Execute<List<JournalEntry>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/wallet/journal/",
+            => await Execute<List<JournalEntry>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/wallet/journal/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -61,7 +61,7 @@ namespace ESI.NET.Logic
         /// <param name="from_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Transaction>>> CharacterTransactions(int page = 1)
-            => await Execute<List<Transaction>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/wallet/transactions/",
+            => await Execute<List<Transaction>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/wallet/transactions/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -77,7 +77,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Wallet>>> CorporationWallets()
-            => await Execute<List<Wallet>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/wallets/",
+            => await Execute<List<Wallet>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/wallets/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -91,7 +91,7 @@ namespace ESI.NET.Logic
         /// <param name="from_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<JournalEntry>>> CorporationJournal(int division, int page = 1)
-            => await Execute<List<JournalEntry>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/wallets/{division}/journal/",
+            => await Execute<List<JournalEntry>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/wallets/{division}/journal/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() },
@@ -110,7 +110,7 @@ namespace ESI.NET.Logic
         /// <param name="from_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Transaction>>> CorporationTransactions(int division, int page = 1)
-            => await Execute<List<Transaction>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/wallets/{division}/transactions/",
+            => await Execute<List<Transaction>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/wallets/{division}/transactions/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() },
