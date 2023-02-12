@@ -29,7 +29,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Offer>>> Offers(int corporation_id)
-            => await Execute<List<Offer>>(_client, _config, RequestSecurity.Public, RequestMethod.Get, "/loyalty/stores/{corporation_id}/offers/",
+            => await Execute<List<Offer>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/loyalty/stores/{corporation_id}/offers/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -40,7 +40,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Points>>> Points()
-            => await Execute<List<Points>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/loyalty/points/",
+            => await Execute<List<Points>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/loyalty/points/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }

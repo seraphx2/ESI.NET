@@ -50,7 +50,7 @@ namespace ESI.NET.Logic
                 endpoint = "/characters/{character_id}/search/";
             }
 
-            var response = await Execute<SearchResults>(_client, _config, security, RequestMethod.Get, endpoint, replacements, parameters: new string[] {
+            var response = await Execute<SearchResults>(_client, _config, security, HttpMethod.Get, endpoint, replacements, parameters: new string[] {
                 $"search={search}",
                 $"categories={categoryList}",
                 $"strict={isStrict}",

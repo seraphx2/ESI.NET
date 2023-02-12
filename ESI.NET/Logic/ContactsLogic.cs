@@ -36,7 +36,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Contact>>> ListForCharacter(int page = 1)
-            => await Execute<List<Contact>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/contacts/",
+            => await Execute<List<Contact>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/contacts/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -53,7 +53,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Contact>>> ListForCorporation(int page = 1)
-            => await Execute<List<Contact>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/contacts/",
+            => await Execute<List<Contact>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/contacts/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -70,7 +70,7 @@ namespace ESI.NET.Logic
         /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Contact>>> ListForAlliance(int page = 1)
-            => await Execute<List<Contact>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/alliances/{alliance_id}/contacts/",
+            => await Execute<List<Contact>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/alliances/{alliance_id}/contacts/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "alliance_id", alliance_id.ToString() }
@@ -101,7 +101,7 @@ namespace ESI.NET.Logic
             if (watched != null)
                 parameters.Add($"watched={watched}");
 
-            return await Execute<int[]>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Post, "/characters/{character_id}/contacts/",
+            return await Execute<int[]>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/characters/{character_id}/contacts/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -131,7 +131,7 @@ namespace ESI.NET.Logic
             if (watched != null)
                 parameters.Add($"watched={watched}");
 
-            return await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Put, "/characters/{character_id}/contacts/",
+            return await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Put, "/characters/{character_id}/contacts/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -147,7 +147,7 @@ namespace ESI.NET.Logic
         /// <param name="contact_ids"></param>
         /// <returns></returns>
         public async Task<EsiResponse<string>> Delete(int[] contact_ids)
-            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Delete, "/characters/{character_id}/contacts/",
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Delete, "/characters/{character_id}/contacts/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -163,7 +163,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Label>>> LabelsForCharacter()
-            => await Execute<List<Label>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/characters/{character_id}/contacts/labels/",
+            => await Execute<List<Label>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/contacts/labels/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -175,7 +175,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Label>>> LabelsForCorporation()
-            => await Execute<List<Label>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/corporations/{corporation_id}/contacts/labels/",
+            => await Execute<List<Label>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/contacts/labels/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -187,7 +187,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <returns></returns>
         public async Task<EsiResponse<List<Label>>> LabelsForAlliance()
-            => await Execute<List<Label>>(_client, _config, RequestSecurity.Authenticated, RequestMethod.Get, "/alliances/{alliance_id}/contacts/labels/",
+            => await Execute<List<Label>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/alliances/{alliance_id}/contacts/labels/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "alliance_id", alliance_id.ToString() }
