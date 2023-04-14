@@ -220,8 +220,14 @@ namespace ESI.NET.Logic
         /// /universe/types/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Types()
-            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/types/");
+        public async Task<EsiResponse<int[]>> Types(int page=1)
+        {
+            var parameters = new[]
+            {
+                $"page={page}"
+            };
+            return  await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/types/", parameters: parameters);
+        } 
 
         /// <summary>
         /// /universe/types/{type_id}/
