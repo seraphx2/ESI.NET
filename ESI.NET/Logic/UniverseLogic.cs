@@ -91,9 +91,14 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /universe/groups/
         /// </summary>
+        /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Groups()
-            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/groups/");
+        public async Task<EsiResponse<int[]>> Groups(int page = 1)
+            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/groups/",
+                parameters: new string[]
+                {
+                    $"page={page}"
+                });
 
         /// <summary>
         /// /universe/groups/{group_id}/
@@ -219,9 +224,14 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /universe/types/
         /// </summary>
+        /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Types()
-            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/types/");
+        public async Task<EsiResponse<int[]>> Types(int page = 1)
+            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/types/",
+                parameters: new string[]
+                {
+                    $"page={page}"
+                });
 
         /// <summary>
         /// /universe/types/{type_id}/

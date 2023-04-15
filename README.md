@@ -30,8 +30,7 @@ In your appsettings.json, add the following object and fill it in appropriately:
     "ClientId": "**********",
     "SecretKey": "**********",
     "CallbackUrl": "",
-    "UserAgent": "",
-    "AuthVersion": "v2"
+    "UserAgent": ""
   }
 ```
 *For your protection (and mine), you are required to supply a user_agent value. This can be your character name and/or project name. CCP will be more likely to contact you than just cut off access to ESI if you provide something that can identify you within the New Eden galaxy. Without this property populated, the wrapper will not work.*
@@ -59,8 +58,7 @@ IOptions<EsiConfig> config = Options.Create(new EsiConfig()
     ClientId = "**********",
     SecretKey = "**********",
     CallbackUrl = "",
-    UserAgent = "",
-    AuthVersion = AuthVersion.v2
+    UserAgent = ""
 });
 
 EsiClient client = new EsiClient(config);
