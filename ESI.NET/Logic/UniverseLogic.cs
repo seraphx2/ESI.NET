@@ -127,7 +127,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="any_ids">The ids to resolve; Supported IDs for resolving are: Characters, Corporations, Alliances, Stations, Solar Systems, Constellations, Regions, Types.</param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<ResolvedInfo>>> Names(List<long> any_ids)
+        public async Task<EsiResponse<List<ResolvedInfo>>> Names(List<int> any_ids)
             => await Execute<List<ResolvedInfo>>(_client, _config, RequestSecurity.Public, HttpMethod.Post, "/universe/names/", body: any_ids.ToArray());
 
         /// <summary>
