@@ -2,7 +2,7 @@
 
 namespace ESI.NET.Models.Universe
 {
-    class AsteroidBelt
+    public class AsteroidBelt
     {
         [JsonProperty("name")]
         public string Name { get; set; }
