@@ -23,7 +23,14 @@ namespace ESI.NET
             config = _config.Value;
             client = _client ?? new HttpClient(new HttpClientHandler
             {
+
+
+// Switch to All which adds brotli encoding for .net core due to https://github.com/ccpgames/sso-issues/issues/81
+#if NET
+                AutomaticDecompression = DecompressionMethods.All                
+#else
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+#endif
             });
 
             // Enforce user agent value
@@ -34,6 +41,7 @@ namespace ESI.NET
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
             client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
+
 
             SSO = new SsoLogic(client, config);
             Alliance = new AllianceLogic(client, config);
