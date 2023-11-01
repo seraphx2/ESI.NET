@@ -188,7 +188,7 @@ namespace ESI.NET
                 {
                     ValidateAudience = false,
                     ValidateIssuer = true,
-                    ValidIssuer = _ssoUrl,
+                    ValidIssuer = $"https://{_ssoUrl}",
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = jwk,
                     ClockSkew = TimeSpan.FromSeconds(2), // CCP's servers seem slightly ahead (~1s)
