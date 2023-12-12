@@ -40,7 +40,7 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /characters/{character_id}/wallet/journal/
         /// </summary>
-        /// <param name="from_id"></param>
+        /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<JournalEntry>>> CharacterJournal(int page = 1)
             => await Execute<List<JournalEntry>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/wallet/journal/",
@@ -60,7 +60,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="from_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Transaction>>> CharacterTransactions(int page = 1)
+        public async Task<EsiResponse<List<Transaction>>> CharacterTransactions(long from_id)
             => await Execute<List<Transaction>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/wallet/transactions/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -68,7 +68,7 @@ namespace ESI.NET.Logic
                 },
                 parameters: new string[]
                 {
-                    $"page={page}"
+                    $"from_id={from_id}"
                 },
                 token: _data.Token);
 
@@ -88,7 +88,7 @@ namespace ESI.NET.Logic
         /// /corporations/{corporation_id}/wallets/{division}/journal/
         /// </summary>
         /// <param name="division"></param>
-        /// <param name="from_id"></param>
+        /// <param name="page"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<JournalEntry>>> CorporationJournal(int division, int page = 1)
             => await Execute<List<JournalEntry>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/wallets/{division}/journal/",
@@ -109,7 +109,7 @@ namespace ESI.NET.Logic
         /// <param name="division"></param>
         /// <param name="from_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Transaction>>> CorporationTransactions(int division, int page = 1)
+        public async Task<EsiResponse<List<Transaction>>> CorporationTransactions(int division, long from_id)
             => await Execute<List<Transaction>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/wallets/{division}/transactions/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -118,7 +118,7 @@ namespace ESI.NET.Logic
                 },
                 parameters: new string[]
                 {
-                    $"page={page}"
+                    $"from_id={from_id}"
                 },
                 token: _data.Token);
     }
