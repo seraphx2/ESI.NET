@@ -2,6 +2,7 @@
 using ESI.NET.Models.SSO;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
 
@@ -14,7 +15,9 @@ namespace ESI.NET.Logic
         private readonly AuthorizedCharacterData _data;
         private readonly int character_id, corporation_id;
 
-        public BookmarksLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
+        public BookmarksLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null,
+            string eTag = null,
+            CancellationToken cancellationToken = default)
         {
             _client = client;
             _config = config;
@@ -31,8 +34,12 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/bookmarks/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Bookmark>>> ForCharacter(int page = 1)
-            => await Execute<List<Bookmark>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/bookmarks/",
+        public async Task<EsiResponse<List<Bookmark>>> ForCharacter(int page = 1, string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<Bookmark>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/characters/{character_id}/bookmarks/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -47,8 +54,12 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/bookmarks/folders/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Folder>>> FoldersForCharacter(int page = 1)
-            => await Execute<List<Folder>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/bookmarks/folders/",
+        public async Task<EsiResponse<List<Folder>>> FoldersForCharacter(int page = 1, string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<Folder>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/characters/{character_id}/bookmarks/folders/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -63,8 +74,12 @@ namespace ESI.NET.Logic
         /// /corporations/{corporation_id}/bookmarks/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Bookmark>>> ForCorporation(int page = 1)
-            => await Execute<List<Bookmark>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/bookmarks/",
+        public async Task<EsiResponse<List<Bookmark>>> ForCorporation(int page = 1, string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<Bookmark>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/corporations/{corporation_id}/bookmarks/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -79,8 +94,12 @@ namespace ESI.NET.Logic
         /// /corporations/{corporation_id}/bookmarks/folders/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Folder>>> FoldersForCorporation(int page = 1)
-            => await Execute<List<Folder>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/bookmarks/folders/",
+        public async Task<EsiResponse<List<Folder>>> FoldersForCorporation(int page = 1, string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<Folder>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/corporations/{corporation_id}/bookmarks/folders/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }

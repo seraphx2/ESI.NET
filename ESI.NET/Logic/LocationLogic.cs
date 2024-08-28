@@ -2,6 +2,7 @@
 using ESI.NET.Models.SSO;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
 
@@ -28,8 +29,11 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/location/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<Location>> Location()
-            => await Execute<Location>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/location/",
+        public async Task<EsiResponse<Location>> Location(string eTag = null, CancellationToken cancellationToken = default)
+            => await Execute<Location>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/characters/{character_id}/location/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -40,8 +44,11 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/ship/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<Ship>> Ship()
-            => await Execute<Ship>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/ship/",
+        public async Task<EsiResponse<Ship>> Ship(string eTag = null, CancellationToken cancellationToken = default)
+            => await Execute<Ship>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/characters/{character_id}/ship/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -52,8 +59,11 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/online/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<Activity>> Online()
-            => await Execute<Activity>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/online/",
+        public async Task<EsiResponse<Activity>> Online(string eTag = null, CancellationToken cancellationToken = default)
+            => await Execute<Activity>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/characters/{character_id}/online/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }

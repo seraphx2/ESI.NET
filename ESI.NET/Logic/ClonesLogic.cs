@@ -2,6 +2,7 @@
 using ESI.NET.Models.SSO;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
 
@@ -28,8 +29,12 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/clones/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<Clones>> List()
-            => await Execute<Clones>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/clones/",
+        public async Task<EsiResponse<Clones>> List(string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<Clones>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/characters/{character_id}/clones/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -40,8 +45,12 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/implants/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Implants()
-            => await Execute<int[]>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/implants/",
+        public async Task<EsiResponse<int[]>> Implants(string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<int[]>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/characters/{character_id}/implants/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }

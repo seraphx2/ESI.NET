@@ -2,6 +2,7 @@
 using ESI.NET.Models.SSO;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
 
@@ -31,23 +32,35 @@ namespace ESI.NET.Logic
         /// /industry/facilities/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Facility>>> Facilities()
-            => await Execute<List<Facility>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/industry/facilities/");
+        public async Task<EsiResponse<List<Facility>>> Facilities(string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<Facility>>(_client, _config, RequestSecurity.Public, HttpMethod.Get,
+                "/industry/facilities/",
+                eTag: eTag,
+                cancellationToken: cancellationToken);
 
         /// <summary>
         /// /industry/systems/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<SolarSystem>>> SolarSystemCostIndices()
-            => await Execute<List<SolarSystem>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/industry/systems/");
+        public async Task<EsiResponse<List<SolarSystem>>> SolarSystemCostIndices(string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<SolarSystem>>(_client, _config, RequestSecurity.Public, HttpMethod.Get,
+                "/industry/systems/",
+                eTag: eTag,
+                cancellationToken: cancellationToken);
 
         /// <summary>
         /// /characters/{character_id}/industry/jobs/
         /// </summary>
         /// <param name="include_completed"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Job>>> JobsForCharacter(bool include_completed = false)
-            => await Execute<List<Job>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/industry/jobs/",
+        public async Task<EsiResponse<List<Job>>> JobsForCharacter(bool include_completed = false, string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<Job>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/characters/{character_id}/industry/jobs/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -63,8 +76,12 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Entry>>> MiningLedger(int page = 1)
-            => await Execute<List<Entry>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/mining/",
+        public async Task<EsiResponse<List<Entry>>> MiningLedger(int page = 1, string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<Entry>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/characters/{character_id}/mining/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -80,8 +97,12 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Observer>>> Observers(int page = 1)
-            => await Execute<List<Observer>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporation/{corporation_id}/mining/observers/",
+        public async Task<EsiResponse<List<Observer>>> Observers(int page = 1, string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<Observer>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/corporation/{corporation_id}/mining/observers/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -98,8 +119,13 @@ namespace ESI.NET.Logic
         /// <param name="observer_id"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<ObserverInfo>>> ObservedMining(long observer_id, int page = 1)
-            => await Execute<List<ObserverInfo>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporation/{corporation_id}/mining/observers/{observer_id}/",
+        public async Task<EsiResponse<List<ObserverInfo>>> ObservedMining(long observer_id, int page = 1,
+            string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<ObserverInfo>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/corporation/{corporation_id}/mining/observers/{observer_id}/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() },
@@ -117,8 +143,13 @@ namespace ESI.NET.Logic
         /// <param name="include_completed"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Job>>> JobsForCorporation(bool include_completed = false, int page = 1)
-            => await Execute<List<Job>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/industry/jobs/",
+        public async Task<EsiResponse<List<Job>>> JobsForCorporation(bool include_completed = false, int page = 1,
+            string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<Job>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/corporations/{corporation_id}/industry/jobs/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -134,8 +165,12 @@ namespace ESI.NET.Logic
         /// /corporation/{corporation_id}/mining/extractions/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Extraction>>> Extractions()
-            => await Execute<List<Extraction>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporation/{corporation_id}/mining/extractions/",
+        public async Task<EsiResponse<List<Extraction>>> Extractions(string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<Extraction>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/corporation/{corporation_id}/mining/extractions/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }

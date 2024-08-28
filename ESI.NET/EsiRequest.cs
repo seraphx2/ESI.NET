@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ESI.NET
@@ -12,7 +13,18 @@ namespace ESI.NET
     {
         internal static string ETag;
 
-        public static async Task<EsiResponse<T>> Execute<T>(HttpClient client, EsiConfig config, RequestSecurity security, HttpMethod httpMethod, string endpoint, Dictionary<string, string> replacements = null, string[] parameters = null, object body = null, string token = null)
+        public static async Task<EsiResponse<T>> Execute<T>(
+            HttpClient client, 
+            EsiConfig config,
+            RequestSecurity security, 
+            HttpMethod httpMethod, 
+            string endpoint,
+            string eTag = null,
+            CancellationToken cancellationToken = default,
+            Dictionary<string, string> replacements = null,
+            string[] parameters = null,
+            object body = null,
+            string token = null)
         {
             var path = $"{httpMethod}|{endpoint}";
 
@@ -32,22 +44,23 @@ namespace ESI.NET
             if (security == RequestSecurity.Authenticated)
             {
                 if (token == null)
-                    throw new ArgumentException("The request endpoint requires SSO authentication and a Token has not been provided.");
+                    throw new ArgumentException(
+                        "The request endpoint requires SSO authentication and a Token has not been provided.");
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
 
-            if (ETag != null)
+            if (eTag != null || ETag != null)
             {
-                request.Headers.Add("If-None-Match", $"\"{ETag}\"");
-                ETag = null;
+                request.Headers.Add("If-None-Match", $"\"{eTag ?? ETag}\"");
             }
 
             //Serialize post body data
             if (body != null)
-                request.Content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
+                request.Content =
+                    new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
 
             //Output final object
-            return new EsiResponse<T>(await client.SendAsync(request).ConfigureAwait(false), path);
+            return new EsiResponse<T>(await client.SendAsync(request, cancellationToken).ConfigureAwait(false), path);
         }
 
         public enum RequestSecurity

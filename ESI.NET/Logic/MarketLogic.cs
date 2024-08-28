@@ -3,6 +3,7 @@ using ESI.NET.Models.Market;
 using ESI.NET.Models.SSO;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
 
@@ -15,7 +16,8 @@ namespace ESI.NET.Logic
         private readonly AuthorizedCharacterData _data;
         private readonly int character_id, corporation_id;
 
-        public MarketLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
+        public MarketLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null, string eTag = null,
+            CancellationToken cancellationToken = default)
         {
             _client = client;
             _config = config;
@@ -32,8 +34,11 @@ namespace ESI.NET.Logic
         /// /markets/prices/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Price>>> Prices()
-            => await Execute<List<Price>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/prices/");
+        public async Task<EsiResponse<List<Price>>> Prices(string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<Price>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/prices/",
+                eTag: eTag,
+                cancellationToken: cancellationToken);
 
         /// <summary>
         /// /markets/{region_id}/orders/
@@ -44,10 +49,12 @@ namespace ESI.NET.Logic
         /// <param name="type_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Order>>> RegionOrders(
-            int region_id, 
-            MarketOrderType order_type = MarketOrderType.All, 
-            int page = 1, 
-            int? type_id = null)
+            int region_id,
+            MarketOrderType order_type = MarketOrderType.All,
+            int page = 1,
+            int? type_id = null,
+            string eTag = null,
+            CancellationToken cancellationToken = default)
         {
             var parameters = new List<string>() { $"order_type={order_type.ToEsiValue()}" };
             parameters.Add($"page={page}");
@@ -55,7 +62,10 @@ namespace ESI.NET.Logic
             if (type_id != null)
                 parameters.Add($"type_id={type_id}");
 
-            var response = await Execute<List<Order>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/{region_id}/orders/",
+            var response = await Execute<List<Order>>(_client, _config, RequestSecurity.Public, HttpMethod.Get,
+                "/markets/{region_id}/orders/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "region_id", region_id.ToString() }
@@ -71,8 +81,12 @@ namespace ESI.NET.Logic
         /// <param name="region_id"></param>
         /// <param name="type_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Statistic>>> TypeHistoryInRegion(int region_id, int type_id)
-            => await Execute<List<Statistic>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/{region_id}/history/",
+        public async Task<EsiResponse<List<Statistic>>> TypeHistoryInRegion(int region_id, int type_id,
+            string eTag = null, CancellationToken cancellationToken = default)
+            => await Execute<List<Statistic>>(_client, _config, RequestSecurity.Public, HttpMethod.Get,
+                "/markets/{region_id}/history/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "region_id", region_id.ToString() }
@@ -88,8 +102,12 @@ namespace ESI.NET.Logic
         /// <param name="structure_id"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Order>>> StructureOrders(long structure_id, int page = 1)
-            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/markets/structures/{structure_id}/",
+        public async Task<EsiResponse<List<Order>>> StructureOrders(long structure_id, int page = 1, string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/markets/structures/{structure_id}/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "structure_id", structure_id.ToString() }
@@ -104,16 +122,22 @@ namespace ESI.NET.Logic
         /// /markets/groups/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Groups()
-            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/groups/");
+        public async Task<EsiResponse<int[]>> Groups(string eTag = null, CancellationToken cancellationToken = default)
+            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/groups/",
+                eTag: eTag,
+                cancellationToken: cancellationToken);
 
         /// <summary>
         /// /markets/groups/{market_group_id}/
         /// </summary>
         /// <param name="market_group_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Group>> Group(int market_group_id)
-            => await Execute<Group>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/groups/{market_group_id}/",
+        public async Task<EsiResponse<Group>> Group(int market_group_id, string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<Group>(_client, _config, RequestSecurity.Public, HttpMethod.Get,
+                "/markets/groups/{market_group_id}/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "market_group_id", market_group_id.ToString() }
@@ -123,8 +147,12 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/orders/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Order>>> CharacterOrders()
-            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/orders/",
+        public async Task<EsiResponse<List<Order>>> CharacterOrders(string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/characters/{character_id}/orders/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -136,8 +164,12 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Order>>> CharacterOrderHistory(int page = 1)
-            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/orders/history/",
+        public async Task<EsiResponse<List<Order>>> CharacterOrderHistory(int page = 1, string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/characters/{character_id}/orders/history/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -154,8 +186,12 @@ namespace ESI.NET.Logic
         /// <param name="region_id"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Types(int region_id, int page = 1)
-            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/{region_id}/types/",
+        public async Task<EsiResponse<int[]>> Types(int region_id, int page = 1, string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get,
+                "/markets/{region_id}/types/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "region_id", region_id.ToString() }
@@ -170,8 +206,12 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Order>>> CorporationOrders(int page = 1)
-            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/orders/",
+        public async Task<EsiResponse<List<Order>>> CorporationOrders(int page = 1, string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/corporations/{corporation_id}/orders/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -187,8 +227,12 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Order>>> CorporationOrderHistory(int page = 1)
-            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/orders/history/",
+        public async Task<EsiResponse<List<Order>>> CorporationOrderHistory(int page = 1, string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/corporations/{corporation_id}/orders/history/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }

@@ -1,6 +1,7 @@
 ﻿using ESI.NET.Enumerations;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
 
@@ -11,7 +12,11 @@ namespace ESI.NET.Logic
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
 
-        public RoutesLogic(HttpClient client, EsiConfig config) { _client = client; _config = config; }
+        public RoutesLogic(HttpClient client, EsiConfig config)
+        {
+            _client = client;
+            _config = config;
+        }
 
         /// <summary>
         /// /route/{origin}/{destination}/
@@ -23,11 +28,13 @@ namespace ESI.NET.Logic
         /// <param name="connections"></param>
         /// <returns></returns>
         public async Task<EsiResponse<int[]>> Map(
-            int origin, 
-            int destination, 
-            RoutesFlag flag = RoutesFlag.Shortest, 
-            int[] avoid = null, 
-            int[] connections = null)
+            int origin,
+            int destination,
+            RoutesFlag flag = RoutesFlag.Shortest,
+            int[] avoid = null,
+            int[] connections = null, 
+            string eTag = null,
+            CancellationToken cancellationToken = default)
         {
             var parameters = new List<string>() { $"flag={flag.ToEsiValue()}" };
 
@@ -37,7 +44,10 @@ namespace ESI.NET.Logic
             if (connections != null)
                 parameters.Add($"&connections={string.Join(",", connections)}");
 
-            var response = await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/route/{origin}/{destination}/",
+            var response = await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get,
+                "/route/{origin}/{destination}/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "origin", origin.ToString() },
