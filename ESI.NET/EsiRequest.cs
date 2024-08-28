@@ -52,6 +52,7 @@ namespace ESI.NET
             if (eTag != null || ETag != null)
             {
                 request.Headers.Add("If-None-Match", $"\"{eTag ?? ETag}\"");
+                ETag = null;
             }
 
             //Serialize post body data
