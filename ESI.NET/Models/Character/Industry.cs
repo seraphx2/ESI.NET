@@ -4,11 +4,9 @@ namespace ESI.NET.Models.Character
 {
     public class Industry
     {
-        [JsonProperty("hacking_successes")]
-        public long HackingSuccesses { get; set; }
+        [JsonProperty("hacking_successes")] public long HackingSuccesses { get; set; }
 
-        [JsonProperty("jobs_cancelled")]
-        public long JobsCancelled { get; set; }
+        [JsonProperty("jobs_cancelled")] public long JobsCancelled { get; set; }
 
         [JsonProperty("jobs_completed_copy_blueprint")]
         public long JobsCompletedCopyBlueprint { get; set; }
@@ -106,8 +104,7 @@ namespace ESI.NET.Models.Character
         [JsonProperty("jobs_started_time_productivity")]
         public long JobsStartedTimeProductivity { get; set; }
 
-        [JsonProperty("reprocess_item")]
-        public long ReprocessItem { get; set; }
+        [JsonProperty("reprocess_item")] public long ReprocessItem { get; set; }
 
         [JsonProperty("reprocess_item_quantity")]
         public long ReprocessItemQuantity { get; set; }

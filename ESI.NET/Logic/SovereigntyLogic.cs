@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using ESI.NET.Interfaces.Logic;
 using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class SovereigntyLogic
+    public class SovereigntyLogic : ISovereigntyLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;

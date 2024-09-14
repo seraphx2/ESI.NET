@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using ESI.NET.Interfaces.Logic;
 using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class AllianceLogic
+    public class AllianceLogic : IAllianceLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
@@ -41,7 +42,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "alliance_id", alliance_id.ToString() }
+                    {"alliance_id", alliance_id.ToString()}
                 });
 
         /// <summary>
@@ -57,7 +58,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "alliance_id", alliance_id.ToString() }
+                    {"alliance_id", alliance_id.ToString()}
                 });
 
         /// <summary>
@@ -73,7 +74,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "alliance_id", alliance_id.ToString() }
+                    {"alliance_id", alliance_id.ToString()}
                 });
     }
 }

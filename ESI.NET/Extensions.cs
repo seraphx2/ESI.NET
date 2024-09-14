@@ -26,7 +26,8 @@ namespace ESI.NET
                 var values = enums.Replace(" ", "").Split(',');
                 var newValues = new List<string>();
                 foreach (var item in values)
-                    newValues.Add(Enum.Parse(e.GetType(), item).GetType().GetTypeInfo().DeclaredMembers.SingleOrDefault(x => x.Name == item.ToString())
+                    newValues.Add(Enum.Parse(e.GetType(), item).GetType().GetTypeInfo().DeclaredMembers
+                        .SingleOrDefault(x => x.Name == item.ToString())
                         ?.GetCustomAttribute<EnumMemberAttribute>(true)?.Value);
 
                 return string.Join(",", newValues);

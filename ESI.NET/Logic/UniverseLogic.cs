@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using ESI.NET.Interfaces.Logic;
 using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class UniverseLogic
+    public class UniverseLogic : IUniverseLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
@@ -29,7 +30,7 @@ namespace ESI.NET.Logic
             CancellationToken cancellationToken = default)
             => await Execute<List<Bloodline>>(_client, _config, RequestSecurity.Public, HttpMethod.Get,
                 "/universe/bloodlines/",
-                eTag: eTag, cancellationToken: cancellationToken );
+                eTag: eTag, cancellationToken: cancellationToken);
 
         /// <summary>
         /// /universe/categories/
@@ -53,7 +54,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "category_id", category_id.ToString() }
+                    {"category_id", category_id.ToString()}
                 });
 
         /// <summary>
@@ -79,7 +80,7 @@ namespace ESI.NET.Logic
                 eTag: eTag,
                 cancellationToken: cancellationToken, replacements: new Dictionary<string, string>()
                 {
-                    { "constellation_id", constellation_id.ToString() }
+                    {"constellation_id", constellation_id.ToString()}
                 });
 
         /// <summary>
@@ -115,7 +116,7 @@ namespace ESI.NET.Logic
                 eTag: eTag,
                 cancellationToken: cancellationToken, replacements: new Dictionary<string, string>()
                 {
-                    { "graphic_id", graphic_id.ToString() }
+                    {"graphic_id", graphic_id.ToString()}
                 });
 
         /// <summary>
@@ -145,7 +146,7 @@ namespace ESI.NET.Logic
                 eTag: eTag,
                 cancellationToken: cancellationToken, replacements: new Dictionary<string, string>()
                 {
-                    { "group_id", group_id.ToString() }
+                    {"group_id", group_id.ToString()}
                 });
 
         /// <summary>
@@ -161,7 +162,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "moon_id", moon_id.ToString() }
+                    {"moon_id", moon_id.ToString()}
                 });
 
         /// <summary>
@@ -200,7 +201,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "planet_id", planet_id.ToString() }
+                    {"planet_id", planet_id.ToString()}
                 });
 
         /// <summary>
@@ -236,7 +237,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "region_id", region_id.ToString() }
+                    {"region_id", region_id.ToString()}
                 });
 
         /// <summary>
@@ -252,7 +253,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "station_id", station_id.ToString() }
+                    {"station_id", station_id.ToString()}
                 });
 
         /// <summary>
@@ -278,7 +279,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "structure_id", structure_id.ToString() }
+                    {"structure_id", structure_id.ToString()}
                 }, token: _data.Token);
 
         /// <summary>
@@ -304,7 +305,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "system_id", system_id.ToString() }
+                    {"system_id", system_id.ToString()}
                 });
 
         /// <summary>
@@ -335,7 +336,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "type_id", type_id.ToString() }
+                    {"type_id", type_id.ToString()}
                 });
 
         /// <summary>
@@ -351,7 +352,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "stargate_id", stargate_id.ToString() }
+                    {"stargate_id", stargate_id.ToString()}
                 });
 
         /// <summary>
@@ -387,7 +388,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "star_id", star_id.ToString() }
+                    {"star_id", star_id.ToString()}
                 });
 
         /// <summary>
@@ -414,7 +415,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "asteroid_belt_id", asteroid_belt_id.ToString() }
+                    {"asteroid_belt_id", asteroid_belt_id.ToString()}
                 });
     }
 }

@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using ESI.NET.Interfaces.Logic;
 using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class ContractsLogic
+    public class ContractsLogic : IContractsLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
@@ -41,7 +42,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "region_id", region_id.ToString() }
+                    {"region_id", region_id.ToString()}
                 },
                 parameters: new string[]
                 {
@@ -62,7 +63,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "contract_id", contract_id.ToString() }
+                    {"contract_id", contract_id.ToString()}
                 },
                 parameters: new string[]
                 {
@@ -82,7 +83,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "contract_id", contract_id.ToString() }
+                    {"contract_id", contract_id.ToString()}
                 },
                 parameters: new string[]
                 {
@@ -101,7 +102,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    {"character_id", character_id.ToString()}
                 },
                 parameters: new string[]
                 {
@@ -122,8 +123,8 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() },
-                    { "contract_id", contract_id.ToString() }
+                    {"character_id", character_id.ToString()},
+                    {"contract_id", contract_id.ToString()}
                 },
                 parameters: new string[]
                 {
@@ -144,8 +145,8 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() },
-                    { "contract_id", contract_id.ToString() }
+                    {"character_id", character_id.ToString()},
+                    {"contract_id", contract_id.ToString()}
                 },
                 parameters: new string[]
                 {
@@ -165,7 +166,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()}
                 },
                 parameters: new string[]
                 {
@@ -187,8 +188,8 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() },
-                    { "contract_id", contract_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()},
+                    {"contract_id", contract_id.ToString()}
                 },
                 parameters: new string[]
                 {
@@ -201,7 +202,8 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="contract_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Bid>>> CorporationContractBids(int contract_id, int page = 1, string eTag = null,
+        public async Task<EsiResponse<List<Bid>>> CorporationContractBids(int contract_id, int page = 1,
+            string eTag = null,
             CancellationToken cancellationToken = default)
             => await Execute<List<Bid>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
                 "/corporations/{corporation_id}/contracts/{contract_id}/bids/",
@@ -209,8 +211,8 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() },
-                    { "contract_id", contract_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()},
+                    {"contract_id", contract_id.ToString()}
                 },
                 parameters: new string[]
                 {

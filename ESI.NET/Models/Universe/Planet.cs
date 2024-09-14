@@ -4,8 +4,7 @@ namespace ESI.NET.Models.Universe
 {
     public class Planet
     {
-        [JsonProperty("planet_id")]
-        public int PlanetId { get; set; }
+        [JsonProperty("planet_id")] public int PlanetId { get; set; }
 
         /// <summary>
         /// Only returned in /universe/planets/{planet_id}/

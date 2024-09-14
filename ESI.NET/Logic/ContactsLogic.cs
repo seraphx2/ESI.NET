@@ -5,11 +5,12 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using ESI.NET.Interfaces.Logic;
 using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class ContactsLogic
+    public class ContactsLogic : IContactsLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
@@ -44,7 +45,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    {"character_id", character_id.ToString()}
                 },
                 parameters: new string[]
                 {
@@ -65,7 +66,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()}
                 },
                 parameters: new string[]
                 {
@@ -86,7 +87,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "alliance_id", alliance_id.ToString() }
+                    {"alliance_id", alliance_id.ToString()}
                 },
                 parameters: new string[]
                 {
@@ -103,11 +104,11 @@ namespace ESI.NET.Logic
         /// <param name="watched"></param>
         /// <returns></returns>
         public async Task<EsiResponse<int[]>> Add(int[] contact_ids, decimal standing, int[] label_ids = null,
-            bool? watched = null,CancellationToken cancellationToken = default)
+            bool? watched = null, CancellationToken cancellationToken = default)
         {
             var body = contact_ids;
 
-            var parameters = new List<string>() { $"standing={standing}" };
+            var parameters = new List<string>() {$"standing={standing}"};
 
             if (label_ids != null)
                 parameters.Add($"label_ids={string.Join(",", label_ids)}");
@@ -120,7 +121,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    {"character_id", character_id.ToString()}
                 },
                 parameters: parameters.ToArray(),
                 body: body,
@@ -140,7 +141,7 @@ namespace ESI.NET.Logic
         {
             var body = contact_ids;
 
-            var parameters = new List<string>() { $"standing={standing}" };
+            var parameters = new List<string>() {$"standing={standing}"};
 
             if (label_ids != null)
                 parameters.Add($"label_ids={string.Join(",", label_ids)}");
@@ -153,7 +154,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    {"character_id", character_id.ToString()}
                 },
                 parameters: parameters.ToArray(),
                 body: body,
@@ -171,7 +172,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    {"character_id", character_id.ToString()}
                 },
                 parameters: new string[]
                 {
@@ -191,7 +192,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    {"character_id", character_id.ToString()}
                 },
                 token: _data.Token);
 
@@ -207,7 +208,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()}
                 },
                 token: _data.Token);
 
@@ -220,7 +221,7 @@ namespace ESI.NET.Logic
                 "/alliances/{alliance_id}/contacts/labels/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "alliance_id", alliance_id.ToString() }
+                    {"alliance_id", alliance_id.ToString()}
                 },
                 token: _data.Token);
     }

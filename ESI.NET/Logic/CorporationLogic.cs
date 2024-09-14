@@ -5,11 +5,12 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using ESI.NET.Interfaces.Logic;
 using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class CorporationLogic
+    public class CorporationLogic : ICorporationLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
@@ -50,7 +51,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()}
                 });
 
         /// <summary>
@@ -66,7 +67,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()}
                 });
 
         /// <summary>
@@ -82,7 +83,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()}
                 },
                 parameters: new string[]
                 {
@@ -103,7 +104,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()}
                 },
                 parameters: new string[]
                 {
@@ -123,7 +124,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()}
                 },
                 token: _data.Token);
 
@@ -139,7 +140,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()}
                 },
                 token: _data.Token);
 
@@ -156,7 +157,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()}
                 });
 
         /// <summary>
@@ -172,7 +173,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()}
                 }, parameters: new string[]
                 {
                     $"page={page}"
@@ -192,7 +193,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()}
                 },
                 parameters: new string[]
                 {
@@ -212,7 +213,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()}
                 },
                 token: _data.Token);
 
@@ -228,7 +229,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()}
                 },
                 token: _data.Token);
 
@@ -244,7 +245,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()}
                 },
                 token: _data.Token);
 
@@ -260,7 +261,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()}
                 },
                 token: _data.Token);
 
@@ -276,7 +277,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()}
                 },
                 token: _data.Token);
 
@@ -292,7 +293,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()}
                 },
                 token: _data.Token);
 
@@ -309,7 +310,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()}
                 }, parameters: new string[]
                 {
                     $"page={page}"
@@ -329,7 +330,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()}
                 },
                 parameters: new string[]
                 {
@@ -350,7 +351,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()}
                 },
                 parameters: new string[]
                 {
@@ -372,8 +373,8 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() },
-                    { "starbase_id", starbase_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()},
+                    {"starbase_id", starbase_id.ToString()}
                 },
                 parameters: new string[]
                 {
@@ -393,7 +394,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()}
                 },
                 parameters: new string[]
                 {
@@ -413,7 +414,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()}
                 },
                 token: _data.Token);
     }

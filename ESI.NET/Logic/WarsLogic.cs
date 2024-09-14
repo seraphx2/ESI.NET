@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using ESI.NET.Interfaces.Logic;
 using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class WarsLogic
+    public class WarsLogic : IWarsLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
@@ -51,7 +52,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "war_id", war_id.ToString() }
+                    {"war_id", war_id.ToString()}
                 });
 
         /// <summary>
@@ -69,7 +70,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "war_id", war_id.ToString() }
+                    {"war_id", war_id.ToString()}
                 },
                 parameters: new string[]
                 {

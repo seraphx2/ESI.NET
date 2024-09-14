@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using ESI.NET.Interfaces.Logic;
 using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class LocationLogic
+    public class LocationLogic : ILocationLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
@@ -29,14 +30,15 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/location/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<Location>> Location(string eTag = null, CancellationToken cancellationToken = default)
+        public async Task<EsiResponse<Location>> Location(string eTag = null,
+            CancellationToken cancellationToken = default)
             => await Execute<Location>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
                 "/characters/{character_id}/location/",
                 eTag: eTag,
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    {"character_id", character_id.ToString()}
                 },
                 token: _data.Token);
 
@@ -51,7 +53,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    {"character_id", character_id.ToString()}
                 },
                 token: _data.Token);
 
@@ -59,14 +61,15 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/online/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<Activity>> Online(string eTag = null, CancellationToken cancellationToken = default)
+        public async Task<EsiResponse<Activity>> Online(string eTag = null,
+            CancellationToken cancellationToken = default)
             => await Execute<Activity>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
                 "/characters/{character_id}/online/",
                 eTag: eTag,
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    {"character_id", character_id.ToString()}
                 },
                 token: _data.Token);
     }

@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using ESI.NET.Interfaces.Logic;
 using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class PlanetaryInteractionLogic
+    public class PlanetaryInteractionLogic : IPlanetaryInteractionLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
@@ -32,14 +33,15 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/planets/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Planet>>> Colonies(string eTag = null, CancellationToken cancellationToken = default)
+        public async Task<EsiResponse<List<Planet>>> Colonies(string eTag = null,
+            CancellationToken cancellationToken = default)
             => await Execute<List<Planet>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
                 "/characters/{character_id}/planets/",
                 eTag: eTag,
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    {"character_id", character_id.ToString()}
                 },
                 token: _data.Token);
 
@@ -56,8 +58,8 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() },
-                    { "planet_id", planet_id.ToString() }
+                    {"character_id", character_id.ToString()},
+                    {"planet_id", planet_id.ToString()}
                 },
                 token: _data.Token);
 
@@ -73,7 +75,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    {"corporation_id", corporation_id.ToString()}
                 },
                 token: _data.Token);
 
@@ -90,7 +92,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "schematic_id", schematic_id.ToString() }
+                    {"schematic_id", schematic_id.ToString()}
                 });
     }
 }

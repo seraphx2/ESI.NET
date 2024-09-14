@@ -4,13 +4,10 @@ namespace ESI.NET.Models.Universe
 {
     public class AsteroidBelt
     {
-        [JsonProperty("name")]
-        public string Name { get; set; }
+        [JsonProperty("name")] public string Name { get; set; }
 
-        [JsonProperty("position")]
-        public Position Position { get; set; }
+        [JsonProperty("position")] public Position Position { get; set; }
 
-        [JsonProperty("system_id")]
-        public int SystemId { get; set; }
+        [JsonProperty("system_id")] public int SystemId { get; set; }
     }
 }

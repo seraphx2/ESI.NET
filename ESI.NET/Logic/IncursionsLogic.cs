@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using ESI.NET.Interfaces.Logic;
 using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class IncursionsLogic
+    public class IncursionsLogic : IIncursionsLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;

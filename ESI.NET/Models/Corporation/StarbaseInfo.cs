@@ -11,11 +11,9 @@ namespace ESI.NET.Models.Corporation
         [JsonProperty("allow_corporation_members")]
         public bool AllowCorporationMembers { get; set; }
 
-        [JsonProperty("anchor")]
-        public string Anchor { get; set; }
+        [JsonProperty("anchor")] public string Anchor { get; set; }
 
-        [JsonProperty("attack_if_at_war")]
-        public bool AttackIfAtWar { get; set; }
+        [JsonProperty("attack_if_at_war")] public bool AttackIfAtWar { get; set; }
 
         [JsonProperty("attack_if_other_security_status_dropping")]
         public bool AttackIfOtherSecurityStatusDropping { get; set; }
@@ -26,23 +24,17 @@ namespace ESI.NET.Models.Corporation
         [JsonProperty("attack_standing_threshold")]
         public float AttackStandingThreshold { get; set; }
 
-        [JsonProperty("fuel_bay_take")]
-        public string FuelBayTake { get; set; }
+        [JsonProperty("fuel_bay_take")] public string FuelBayTake { get; set; }
 
-        [JsonProperty("fuel_bay_view")]
-        public string FuelBayView { get; set; }
+        [JsonProperty("fuel_bay_view")] public string FuelBayView { get; set; }
 
-        [JsonProperty("fuels")]
-        public List<Fuel> Fuels { get; set; } = new List<Fuel>();
+        [JsonProperty("fuels")] public List<Fuel> Fuels { get; set; } = new List<Fuel>();
 
-        [JsonProperty("offline")]
-        public string Offline { get; set; }
+        [JsonProperty("offline")] public string Offline { get; set; }
 
-        [JsonProperty("online")]
-        public string Online { get; set; }
+        [JsonProperty("online")] public string Online { get; set; }
 
-        [JsonProperty("unanchor")]
-        public string Unanchor { get; set; }
+        [JsonProperty("unanchor")] public string Unanchor { get; set; }
 
         [JsonProperty("use_alliance_standings")]
         public bool UseAllianceStandings { get; set; }
@@ -50,10 +42,8 @@ namespace ESI.NET.Models.Corporation
 
     public class Fuel
     {
-        [JsonProperty("type_id")]
-        public int TypeId { get; set; }
+        [JsonProperty("type_id")] public int TypeId { get; set; }
 
-        [JsonProperty("quantity")]
-        public int Quantity { get; set; }
+        [JsonProperty("quantity")] public int Quantity { get; set; }
     }
 }

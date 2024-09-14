@@ -45,7 +45,8 @@ namespace ESI.NET
                     if (response.StatusCode == HttpStatusCode.OK ||
                         response.StatusCode == HttpStatusCode.Created)
                     {
-                        if ((result.StartsWith("{") && result.EndsWith("}")) || result.StartsWith("[") && result.EndsWith("]"))
+                        if ((result.StartsWith("{") && result.EndsWith("}")) ||
+                            result.StartsWith("[") && result.EndsWith("]"))
                             Data = JsonConvert.DeserializeObject<T>(result);
                         else
                             Message = result;
@@ -53,11 +54,10 @@ namespace ESI.NET
                     else if (response.StatusCode == HttpStatusCode.NotModified)
                         Message = "Not Modified";
                     else
-                        Message = JsonConvert.DeserializeAnonymousType(result, new { error = string.Empty }).error;
+                        Message = JsonConvert.DeserializeAnonymousType(result, new {error = string.Empty}).error;
                 }
                 else if (response.StatusCode == HttpStatusCode.NoContent)
                     Message = _noContentMessage[path];
-
             }
             catch (Exception ex)
             {
