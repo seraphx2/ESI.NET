@@ -10,7 +10,8 @@ namespace ESI.NET.Models.Character
         [JsonProperty("dungeons_completed_distribution")]
         public long DungeonsCompletedDistribution { get; set; }
 
-        [JsonProperty("missions_succeeded")] public long MissionsSucceeded { get; set; }
+        [JsonProperty("missions_succeeded")]
+        public long MissionsSucceeded { get; set; }
 
         [JsonProperty("missions_succeeded_epic_arc")]
         public long MissionsSucceededEpicArc { get; set; }

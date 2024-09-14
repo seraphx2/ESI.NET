@@ -4,12 +4,11 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using ESI.NET.Interfaces.Logic;
 using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class MailLogic : IMailLogic
+    public class MailLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
@@ -48,7 +47,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 },
                 parameters: parameters.ToArray(),
                 token: _data.Token);
@@ -71,7 +70,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 },
                 body: new
                 {
@@ -94,7 +93,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 },
                 token: _data.Token);
 
@@ -111,7 +110,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 },
                 body: new
                 {
@@ -131,8 +130,8 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()},
-                    {"label_id", label_id.ToString()}
+                    { "character_id", character_id.ToString() },
+                    { "label_id", label_id.ToString() }
                 },
                 token: _data.Token);
 
@@ -148,7 +147,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 },
                 token: _data.Token);
 
@@ -165,8 +164,8 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()},
-                    {"mail_id", mail_id.ToString()}
+                    { "character_id", character_id.ToString() },
+                    { "mail_id", mail_id.ToString() }
                 },
                 token: _data.Token);
 
@@ -177,15 +176,14 @@ namespace ESI.NET.Logic
         /// <param name="is_read"></param>
         /// <param name="labels"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Message>> Update(int mail_id, bool? is_read = null, int[] labels = null,
-            CancellationToken cancellationToken = default)
+        public async Task<EsiResponse<Message>> Update(int mail_id, bool? is_read = null, int[] labels = null, CancellationToken cancellationToken = default)
             => await Execute<Message>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Put,
                 "/characters/{character_id}/mail/{mail_id}/",
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()},
-                    {"mail_id", mail_id.ToString()}
+                    { "character_id", character_id.ToString() },
+                    { "mail_id", mail_id.ToString() }
                 },
                 body: BuildUpdateObject(is_read, labels),
                 token: _data.Token);
@@ -201,8 +199,8 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()},
-                    {"mail_id", mail_id.ToString()}
+                    { "character_id", character_id.ToString() },
+                    { "mail_id", mail_id.ToString() }
                 },
                 token: _data.Token);
 
@@ -217,11 +215,11 @@ namespace ESI.NET.Logic
             dynamic body = null;
 
             if (is_read != null && labels == null)
-                body = new {is_read};
+                body = new { is_read };
             else if (is_read == null && labels != null)
-                body = new {labels};
+                body = new { labels };
             else
-                body = new {is_read, labels};
+                body = new { is_read, labels };
             return body;
         }
     }

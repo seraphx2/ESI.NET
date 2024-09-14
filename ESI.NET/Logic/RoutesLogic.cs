@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using ESI.NET.Interfaces.Logic;
 using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class RoutesLogic : IRoutesLogic
+    public class RoutesLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
@@ -33,11 +32,11 @@ namespace ESI.NET.Logic
             int destination,
             RoutesFlag flag = RoutesFlag.Shortest,
             int[] avoid = null,
-            int[] connections = null,
+            int[] connections = null, 
             string eTag = null,
             CancellationToken cancellationToken = default)
         {
-            var parameters = new List<string>() {$"flag={flag.ToEsiValue()}"};
+            var parameters = new List<string>() { $"flag={flag.ToEsiValue()}" };
 
             if (avoid != null)
                 parameters.Add($"&avoid={string.Join(",", avoid)}");
@@ -51,8 +50,8 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"origin", origin.ToString()},
-                    {"destination", destination.ToString()}
+                    { "origin", origin.ToString() },
+                    { "destination", destination.ToString() }
                 },
                 parameters: parameters.ToArray());
 

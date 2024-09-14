@@ -5,12 +5,11 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using ESI.NET.Interfaces.Logic;
 using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class SearchLogic : ISearchLogic
+    public class SearchLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
@@ -36,8 +35,7 @@ namespace ESI.NET.Logic
         /// <param name="language">Language to use in the response</param>
         /// <returns></returns>
         public async Task<EsiResponse<SearchResults>> Query(SearchType type, string search, SearchCategory categories,
-            bool isStrict = false, string language = "en-us", string eTag = null,
-            CancellationToken cancellationToken = default)
+            bool isStrict = false, string language = "en-us", string eTag = null, CancellationToken cancellationToken = default)
         {
             var categoryList = categories.ToEsiValue();
 
@@ -49,7 +47,7 @@ namespace ESI.NET.Logic
                 security = RequestSecurity.Authenticated;
                 replacements = new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 };
                 endpoint = "/characters/{character_id}/search/";
             }

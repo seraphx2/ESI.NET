@@ -16,7 +16,8 @@ namespace ESI.NET.Models.Character
         [JsonProperty("activations_automated_targeting_system")]
         public long ActivationsAutomatedTargetingSystem { get; set; }
 
-        [JsonProperty("activations_bastion")] public long ActivationsBastion { get; set; }
+        [JsonProperty("activations_bastion")]
+        public long ActivationsBastion { get; set; }
 
         [JsonProperty("activations_bomb_launcher")]
         public long ActivationsBombLauncher { get; set; }
@@ -48,9 +49,11 @@ namespace ESI.NET.Models.Character
         [JsonProperty("activations_drone_tracking_modules")]
         public long ActivationsDroneTrackingModules { get; set; }
 
-        [JsonProperty("activations_eccm")] public long ActivationsEccm { get; set; }
+        [JsonProperty("activations_eccm")]
+        public long ActivationsEccm { get; set; }
 
-        [JsonProperty("activations_ecm")] public long ActivationsEcm { get; set; }
+        [JsonProperty("activations_ecm")]
+        public long ActivationsEcm { get; set; }
 
         [JsonProperty("activations_ecm_burst")]
         public long ActivationsEcmBurst { get; set; }
@@ -142,7 +145,8 @@ namespace ESI.NET.Models.Character
         [JsonProperty("activations_remote_tracking_computer")]
         public long ActivationsRemoteTrackingComputer { get; set; }
 
-        [JsonProperty("activations_salvager")] public long ActivationsSalvager { get; set; }
+        [JsonProperty("activations_salvager")]
+        public long ActivationsSalvager { get; set; }
 
         [JsonProperty("activations_sensor_booster")]
         public long ActivationsSensorBooster { get; set; }
@@ -156,7 +160,8 @@ namespace ESI.NET.Models.Character
         [JsonProperty("activations_ship_scanner")]
         public long ActivationsShipScanner { get; set; }
 
-        [JsonProperty("activations_siege")] public long ActivationsSiege { get; set; }
+        [JsonProperty("activations_siege")]
+        public long ActivationsSiege { get; set; }
 
         [JsonProperty("activations_smart_bomb")]
         public long ActivationsSmartBomb { get; set; }
@@ -188,7 +193,8 @@ namespace ESI.NET.Models.Character
         [JsonProperty("activations_tractor_beam")]
         public long ActivationsTractorBeam { get; set; }
 
-        [JsonProperty("activations_triage")] public long ActivationsTriage { get; set; }
+        [JsonProperty("activations_triage")]
+        public long ActivationsTriage { get; set; }
 
         [JsonProperty("activations_warp_disrupt_field_generator")]
         public long ActivationsWarpDisruptFieldGenerator { get; set; }
@@ -196,10 +202,13 @@ namespace ESI.NET.Models.Character
         [JsonProperty("activations_warp_scrambler")]
         public long ActivationsWarpScrambler { get; set; }
 
-        [JsonProperty("link_weapons")] public long LinkWeapons { get; set; }
+        [JsonProperty("link_weapons")]
+        public long LinkWeapons { get; set; }
 
-        [JsonProperty("overload")] public long Overload { get; set; }
+        [JsonProperty("overload")]
+        public long Overload { get; set; }
 
-        [JsonProperty("repairs")] public long Repairs { get; set; }
+        [JsonProperty("repairs")]
+        public long Repairs { get; set; }
     }
 }

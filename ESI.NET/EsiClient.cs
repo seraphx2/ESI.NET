@@ -5,7 +5,6 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using ESI.NET.Interfaces.Logic;
 
 namespace ESI.NET
 {
@@ -24,9 +23,11 @@ namespace ESI.NET
             config = _config.Value;
             client = _client ?? new HttpClient(new HttpClientHandler
             {
+
+
 // Switch to All which adds brotli encoding for .net core due to https://github.com/ccpgames/sso-issues/issues/81
 #if NET
-                AutomaticDecompression = DecompressionMethods.All
+                AutomaticDecompression = DecompressionMethods.All                
 #else
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
 #endif
@@ -34,8 +35,7 @@ namespace ESI.NET
 
             // Enforce user agent value
             if (string.IsNullOrEmpty(config.UserAgent))
-                throw new ArgumentException(
-                    "For your protection, please provide an X-User-Agent value. This can be your character name and/or project name. CCP will be more likely to contact you rather than just cut off access to ESI if you provide something that can identify you within the New Eden galaxy.");
+                throw new ArgumentException("For your protection, please provide an X-User-Agent value. This can be your character name and/or project name. CCP will be more likely to contact you rather than just cut off access to ESI if you provide something that can identify you within the New Eden galaxy.");
             client.DefaultRequestHeaders.Add("X-User-Agent", config.UserAgent);
 
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -78,39 +78,39 @@ namespace ESI.NET
             Wars = new WarsLogic(client, config);
         }
 
-        public ISsoLogic SSO { get; set; }
-        public IAllianceLogic Alliance { get; set; }
-        public IAssetsLogic Assets { get; set; }
-        public IBookmarksLogic Bookmarks { get; set; }
-        public ICalendarLogic Calendar { get; set; }
-        public ICharacterLogic Character { get; set; }
-        public IClonesLogic Clones { get; set; }
-        public IContactsLogic Contacts { get; set; }
-        public IContractsLogic Contracts { get; set; }
-        public ICorporationLogic Corporation { get; set; }
-        public IDogmaLogic Dogma { get; set; }
-        public IFactionWarfareLogic FactionWarfare { get; set; }
-        public IFleetsLogic Fleets { get; set; }
-        public IFittingsLogic Fittings { get; set; }
-        public IIncursionsLogic Incursions { get; set; }
-        public IIndustryLogic Industry { get; set; }
-        public IInsuranceLogic Insurance { get; set; }
-        public IKillmailsLogic Killmails { get; set; }
-        public ILocationLogic Location { get; set; }
-        public ILoyaltyLogic Loyalty { get; set; }
-        public IMailLogic Mail { get; set; }
-        public IMarketLogic Market { get; set; }
-        public IOpportunitiesLogic Opportunities { get; set; }
-        public IPlanetaryInteractionLogic PlanetaryInteraction { get; set; }
-        public IRoutesLogic Routes { get; set; }
-        public ISearchLogic Search { get; set; }
-        public ISkillsLogic Skills { get; set; }
-        public IStatusLogic Status { get; set; }
-        public ISovereigntyLogic Sovereignty { get; set; }
-        public IUniverseLogic Universe { get; set; }
-        public IUserInterfaceLogic UserInterface { get; set; }
-        public IWalletLogic Wallet { get; set; }
-        public IWarsLogic Wars { get; set; }
+        public SsoLogic SSO { get; set; }
+        public AllianceLogic Alliance { get; set; }
+        public AssetsLogic Assets { get; set; }
+        public BookmarksLogic Bookmarks { get; set; }
+        public CalendarLogic Calendar { get; set; }
+        public CharacterLogic Character { get; set; }
+        public ClonesLogic Clones { get; set; }
+        public ContactsLogic Contacts { get; set; }
+        public ContractsLogic Contracts { get; set; }
+        public CorporationLogic Corporation { get; set; }
+        public DogmaLogic Dogma { get; set; }
+        public FactionWarfareLogic FactionWarfare { get; set; }
+        public FleetsLogic Fleets { get; set; }
+        public FittingsLogic Fittings { get; set; }
+        public IncursionsLogic Incursions { get; set; }
+        public IndustryLogic Industry { get; set; }
+        public InsuranceLogic Insurance { get; set; }
+        public KillmailsLogic Killmails { get; set; }
+        public LocationLogic Location { get; set; }
+        public LoyaltyLogic Loyalty { get; set; }
+        public MailLogic Mail { get; set; }
+        public MarketLogic Market { get; set; }
+        public OpportunitiesLogic Opportunities { get; set; }
+        public PlanetaryInteractionLogic PlanetaryInteraction { get; set; }
+        public RoutesLogic Routes { get; set; }
+        public SearchLogic Search { get; set; }
+        public SkillsLogic Skills { get; set; }
+        public StatusLogic Status { get; set; }
+        public SovereigntyLogic Sovereignty { get; set; }
+        public UniverseLogic Universe { get; set; }
+        public UserInterfaceLogic UserInterface { get; set; }
+        public WalletLogic Wallet { get; set; }
+        public WarsLogic Wars { get; set; }
 
 
         public void SetCharacterData(AuthorizedCharacterData data)
@@ -148,39 +148,39 @@ namespace ESI.NET
 
     public interface IEsiClient
     {
-        ISsoLogic SSO { get; set; }
-        IAllianceLogic Alliance { get; set; }
-        IAssetsLogic Assets { get; set; }
-        IBookmarksLogic Bookmarks { get; set; }
-        ICalendarLogic Calendar { get; set; }
-        ICharacterLogic Character { get; set; }
-        IClonesLogic Clones { get; set; }
-        IContactsLogic Contacts { get; set; }
-        IContractsLogic Contracts { get; set; }
-        ICorporationLogic Corporation { get; set; }
-        IDogmaLogic Dogma { get; set; }
-        IFactionWarfareLogic FactionWarfare { get; set; }
-        IFittingsLogic Fittings { get; set; }
-        IFleetsLogic Fleets { get; set; }
-        IIncursionsLogic Incursions { get; set; }
-        IIndustryLogic Industry { get; set; }
-        IInsuranceLogic Insurance { get; set; }
-        IKillmailsLogic Killmails { get; set; }
-        ILocationLogic Location { get; set; }
-        ILoyaltyLogic Loyalty { get; set; }
-        IMailLogic Mail { get; set; }
-        IMarketLogic Market { get; set; }
-        IOpportunitiesLogic Opportunities { get; set; }
-        IPlanetaryInteractionLogic PlanetaryInteraction { get; set; }
-        IRoutesLogic Routes { get; set; }
-        ISearchLogic Search { get; set; }
-        ISkillsLogic Skills { get; set; }
-        ISovereigntyLogic Sovereignty { get; set; }
-        IStatusLogic Status { get; set; }
-        IUniverseLogic Universe { get; set; }
-        IUserInterfaceLogic UserInterface { get; set; }
-        IWalletLogic Wallet { get; set; }
-        IWarsLogic Wars { get; set; }
+        SsoLogic SSO { get; set; }
+        AllianceLogic Alliance { get; set; }
+        AssetsLogic Assets { get; set; }
+        BookmarksLogic Bookmarks { get; set; }
+        CalendarLogic Calendar { get; set; }
+        CharacterLogic Character { get; set; }
+        ClonesLogic Clones { get; set; }
+        ContactsLogic Contacts { get; set; }
+        ContractsLogic Contracts { get; set; }
+        CorporationLogic Corporation { get; set; }
+        DogmaLogic Dogma { get; set; }
+        FactionWarfareLogic FactionWarfare { get; set; }
+        FittingsLogic Fittings { get; set; }
+        FleetsLogic Fleets { get; set; }
+        IncursionsLogic Incursions { get; set; }
+        IndustryLogic Industry { get; set; }
+        InsuranceLogic Insurance { get; set; }
+        KillmailsLogic Killmails { get; set; }
+        LocationLogic Location { get; set; }
+        LoyaltyLogic Loyalty { get; set; }
+        MailLogic Mail { get; set; }
+        MarketLogic Market { get; set; }
+        OpportunitiesLogic Opportunities { get; set; }
+        PlanetaryInteractionLogic PlanetaryInteraction { get; set; }
+        RoutesLogic Routes { get; set; }
+        SearchLogic Search { get; set; }
+        SkillsLogic Skills { get; set; }
+        SovereigntyLogic Sovereignty { get; set; }
+        StatusLogic Status { get; set; }
+        UniverseLogic Universe { get; set; }
+        UserInterfaceLogic UserInterface { get; set; }
+        WalletLogic Wallet { get; set; }
+        WarsLogic Wars { get; set; }
 
         void SetCharacterData(AuthorizedCharacterData data);
         void SetIfNoneMatchHeader(string eTag);

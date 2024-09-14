@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using ESI.NET.Interfaces.Logic;
 using static ESI.NET.EsiRequest;
 using opportunities = ESI.NET.Models.Opportunities;
 
 namespace ESI.NET.Logic
 {
-    public class OpportunitiesLogic : IOpportunitiesLogic
+    public class OpportunitiesLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
@@ -48,7 +47,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"group_id", group_id.ToString()}
+                    { "group_id", group_id.ToString() }
                 });
 
         /// <summary>
@@ -74,7 +73,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"task_id", task_id.ToString()}
+                    { "task_id", task_id.ToString() }
                 });
 
         /// <summary>
@@ -90,7 +89,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 },
                 token: _data.Token);
     }

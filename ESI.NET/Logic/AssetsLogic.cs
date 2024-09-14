@@ -4,12 +4,11 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using ESI.NET.Interfaces.Logic;
 using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class AssetsLogic : IAssetsLogic
+    public class AssetsLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
@@ -42,7 +41,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 },
                 parameters: new string[]
                 {
@@ -56,13 +55,13 @@ namespace ESI.NET.Logic
         /// <param name="item_ids"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<ItemLocation>>> LocationsForCharacter(List<long> item_ids,
-            CancellationToken cancellationToken = default)
+             CancellationToken cancellationToken = default)
             => await Execute<List<ItemLocation>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post,
                 "/characters/{character_id}/assets/locations/",
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 },
                 body: item_ids.ToArray(),
                 token: _data.Token);
@@ -79,7 +78,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 },
                 body: item_ids.ToArray(),
                 token: _data.Token);
@@ -98,7 +97,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"corporation_id", corporation_id.ToString()}
+                    { "corporation_id", corporation_id.ToString() }
                 },
                 parameters: new string[]
                 {
@@ -118,7 +117,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"corporation_id", corporation_id.ToString()}
+                    { "corporation_id", corporation_id.ToString() }
                 },
                 body: item_ids.ToArray(),
                 token: _data.Token);
@@ -128,14 +127,13 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="item_ids"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<ItemName>>> NamesForCorporation(List<long> item_ids,
-            CancellationToken cancellationToken = default)
+        public async Task<EsiResponse<List<ItemName>>> NamesForCorporation(List<long> item_ids, CancellationToken cancellationToken = default)
             => await Execute<List<ItemName>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post,
                 "/corporations/{corporation_id}/assets/names/",
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"corporation_id", corporation_id.ToString()}
+                    { "corporation_id", corporation_id.ToString() }
                 },
                 body: item_ids.ToArray(),
                 token: _data.Token);

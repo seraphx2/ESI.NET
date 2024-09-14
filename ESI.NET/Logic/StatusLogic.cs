@@ -2,12 +2,11 @@
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using ESI.NET.Interfaces.Logic;
 using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class StatusLogic : IStatusLogic
+    public class StatusLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;

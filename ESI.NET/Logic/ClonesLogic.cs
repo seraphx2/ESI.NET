@@ -4,12 +4,11 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using ESI.NET.Interfaces.Logic;
 using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class ClonesLogic : IClonesLogic
+    public class ClonesLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
@@ -38,7 +37,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 },
                 token: _data.Token);
 
@@ -54,7 +53,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 },
                 token: _data.Token);
     }

@@ -6,6 +6,6 @@ namespace ESI.NET.Enumerations
     {
         [EnumMember(Value = "singularity")] /**/ Singularity,
         [EnumMember(Value = "tranquility")] /**/ Tranquility,
-        [EnumMember(Value = "serenity")] /**/ Serenity
+        [EnumMember(Value = "serenity")]    /**/ Serenity
     }
 }

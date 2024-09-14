@@ -5,12 +5,11 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using ESI.NET.Interfaces.Logic;
 using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class MarketLogic : IMarketLogic
+    public class MarketLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
@@ -57,7 +56,7 @@ namespace ESI.NET.Logic
             string eTag = null,
             CancellationToken cancellationToken = default)
         {
-            var parameters = new List<string>() {$"order_type={order_type.ToEsiValue()}"};
+            var parameters = new List<string>() { $"order_type={order_type.ToEsiValue()}" };
             parameters.Add($"page={page}");
 
             if (type_id != null)
@@ -69,7 +68,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"region_id", region_id.ToString()}
+                    { "region_id", region_id.ToString() }
                 },
                 parameters: parameters.ToArray());
 
@@ -90,7 +89,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"region_id", region_id.ToString()}
+                    { "region_id", region_id.ToString() }
                 },
                 parameters: new string[]
                 {
@@ -111,7 +110,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"structure_id", structure_id.ToString()}
+                    { "structure_id", structure_id.ToString() }
                 },
                 parameters: new string[]
                 {
@@ -141,7 +140,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"market_group_id", market_group_id.ToString()}
+                    { "market_group_id", market_group_id.ToString() }
                 });
 
         /// <summary>
@@ -156,7 +155,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 },
                 token: _data.Token);
 
@@ -173,7 +172,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 },
                 parameters: new string[]
                 {
@@ -195,7 +194,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"region_id", region_id.ToString()}
+                    { "region_id", region_id.ToString() }
                 },
                 parameters: new string[]
                 {
@@ -215,7 +214,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"corporation_id", corporation_id.ToString()}
+                    { "corporation_id", corporation_id.ToString() }
                 },
                 parameters: new string[]
                 {
@@ -236,7 +235,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"corporation_id", corporation_id.ToString()}
+                    { "corporation_id", corporation_id.ToString() }
                 },
                 parameters: new string[]
                 {

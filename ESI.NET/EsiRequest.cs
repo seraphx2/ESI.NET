@@ -14,10 +14,10 @@ namespace ESI.NET
         internal static string ETag;
 
         public static async Task<EsiResponse<T>> Execute<T>(
-            HttpClient client,
+            HttpClient client, 
             EsiConfig config,
-            RequestSecurity security,
-            HttpMethod httpMethod,
+            RequestSecurity security, 
+            HttpMethod httpMethod, 
             string endpoint,
             string eTag = null,
             CancellationToken cancellationToken = default,

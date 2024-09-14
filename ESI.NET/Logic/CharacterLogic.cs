@@ -5,12 +5,11 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using ESI.NET.Interfaces.Logic;
 using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class CharacterLogic : ICharacterLogic
+    public class CharacterLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
@@ -68,7 +67,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 });
 
         /// <summary>
@@ -83,7 +82,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 },
                 token: _data.Token);
 
@@ -100,7 +99,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 },
                 token: _data.Token,
                 parameters: new string[]
@@ -120,7 +119,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 },
                 token: _data.Token);
 
@@ -129,8 +128,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="character_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<CorporationHistory>>> CorporationHistory(int character_id,
-            string eTag = null,
+        public async Task<EsiResponse<List<CorporationHistory>>> CorporationHistory(int character_id, string eTag = null,
             CancellationToken cancellationToken = default)
             => await Execute<List<CorporationHistory>>(_client, _config, RequestSecurity.Public, HttpMethod.Get,
                 "/characters/{character_id}/corporationhistory/",
@@ -138,7 +136,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 });
 
         /// <summary>
@@ -146,14 +144,13 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="character_ids">The target characters to calculate the charge for</param>
         /// <returns></returns>
-        public async Task<EsiResponse<decimal>> CSPA(object character_ids,
-            CancellationToken cancellationToken = default)
+        public async Task<EsiResponse<decimal>> CSPA(object character_ids, CancellationToken cancellationToken = default)
             => await Execute<decimal>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post,
                 "/characters/{character_id}/cspa/",
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 },
                 body: character_ids,
                 token: _data.Token);
@@ -170,7 +167,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 },
                 token: _data.Token);
 
@@ -186,7 +183,7 @@ namespace ESI.NET.Logic
                 cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 },
                 token: _data.Token);
 
@@ -202,7 +199,7 @@ namespace ESI.NET.Logic
                 cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 },
                 token: _data.Token);
 
@@ -215,7 +212,7 @@ namespace ESI.NET.Logic
                 "/characters/{character_id}/notifications/contacts/",
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 },
                 token: _data.Token);
 
@@ -229,7 +226,7 @@ namespace ESI.NET.Logic
                 "/characters/{character_id}/portrait/",
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 });
 
         /// <summary>
@@ -241,7 +238,7 @@ namespace ESI.NET.Logic
                 "/characters/{character_id}/roles/",
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 },
                 token: _data.Token);
 
@@ -254,7 +251,7 @@ namespace ESI.NET.Logic
                 "/characters/{character_id}/standings/",
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 },
                 token: _data.Token);
 
@@ -267,7 +264,7 @@ namespace ESI.NET.Logic
                 "/characters/{character_id}/titles/",
                 replacements: new Dictionary<string, string>()
                 {
-                    {"character_id", character_id.ToString()}
+                    { "character_id", character_id.ToString() }
                 },
                 token: _data.Token);
     }

@@ -5,17 +5,22 @@ namespace ESI.NET.Models.Fleets
 {
     public class Wing
     {
-        [JsonProperty("name")] public string Name { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
 
-        [JsonProperty("id")] public long Id { get; set; }
+        [JsonProperty("id")]
+        public long Id { get; set; }
 
-        [JsonProperty("squads")] public List<Squad> Squads { get; set; } = new List<Squad>();
+        [JsonProperty("squads")]
+        public List<Squad> Squads { get; set; } = new List<Squad>();
     }
 
     public class Squad
     {
-        [JsonProperty("name")] public string Name { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
 
-        [JsonProperty("id")] public long Id { get; set; }
+        [JsonProperty("id")]
+        public long Id { get; set; }
     }
 }

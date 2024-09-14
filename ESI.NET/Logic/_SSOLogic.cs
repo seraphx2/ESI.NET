@@ -14,11 +14,10 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ESI.NET.Interfaces.Logic;
 
 namespace ESI.NET
 {
-    public class SsoLogic : ISsoLogic
+    public class SsoLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
@@ -95,8 +94,7 @@ namespace ESI.NET
         /// <param name="code">The authorization_code or the refresh_token</param>
         /// <param name="codeChallenge">Provide the same value that was provided for codeChallenge in CreateAuthenticationUrl(). All hashing/encryption will be done automatically. Just provide the code.</param>
         /// <returns></returns>
-        public async Task<SsoToken> GetToken(GrantType grantType, string code, string codeChallenge = null,
-            CancellationToken cancellationToken = default)
+        public async Task<SsoToken> GetToken(GrantType grantType, string code, string codeChallenge = null, CancellationToken cancellationToken = default)
         {
             var body = $"grant_type={grantType.ToEsiValue()}";
             if (grantType == GrantType.AuthorizationCode)
@@ -133,7 +131,7 @@ namespace ESI.NET
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                var error = JsonConvert.DeserializeAnonymousType(content, new {error_description = string.Empty})
+                var error = JsonConvert.DeserializeAnonymousType(content, new { error_description = string.Empty })
                     .error_description;
                 throw new ArgumentException(error);
             }
@@ -162,7 +160,7 @@ namespace ESI.NET
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                var error = JsonConvert.DeserializeAnonymousType(content, new {error_description = string.Empty})
+                var error = JsonConvert.DeserializeAnonymousType(content, new { error_description = string.Empty })
                     .error_description;
                 throw new ArgumentException(error);
             }
@@ -224,7 +222,7 @@ namespace ESI.NET
                 // Get more specifc details about authorized character to be used in API calls that require this data about the character
                 var url =
                     $"{_config.EsiUrl}latest/characters/affiliation/?datasource={_config.DataSource.ToEsiValue()}";
-                var body = new StringContent(JsonConvert.SerializeObject(new int[] {authorizedCharacter.CharacterID}),
+                var body = new StringContent(JsonConvert.SerializeObject(new int[] { authorizedCharacter.CharacterID }),
                     Encoding.UTF8, "application/json");
 
                 var client = new HttpClient();

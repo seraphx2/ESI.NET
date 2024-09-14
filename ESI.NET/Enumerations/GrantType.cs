@@ -5,7 +5,7 @@ namespace ESI.NET.Enumerations
 {
     public enum GrantType
     {
-        [EnumMember(Value = "authorization_code")] /**/ AuthorizationCode,
-        [EnumMember(Value = "refresh_token")] /**/ RefreshToken
+        [EnumMember(Value="authorization_code")] /**/ AuthorizationCode,
+        [EnumMember(Value="refresh_token")]      /**/ RefreshToken
     }
 }

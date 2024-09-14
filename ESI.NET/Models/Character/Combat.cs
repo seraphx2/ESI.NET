@@ -4,13 +4,17 @@ namespace ESI.NET.Models.Character
 {
     public class Combat
     {
-        [JsonProperty("cap_drainedby_npc")] public long CapDrainedbyNpc { get; set; }
+        [JsonProperty("cap_drainedby_npc")]
+        public long CapDrainedbyNpc { get; set; }
 
-        [JsonProperty("cap_drainedby_pc")] public long CapDrainedbyPc { get; set; }
+        [JsonProperty("cap_drainedby_pc")]
+        public long CapDrainedbyPc { get; set; }
 
-        [JsonProperty("cap_draining_pc")] public long CapDrainingPc { get; set; }
+        [JsonProperty("cap_draining_pc")]
+        public long CapDrainingPc { get; set; }
 
-        [JsonProperty("criminal_flag_set")] public long CriminalFlagSet { get; set; }
+        [JsonProperty("criminal_flag_set")]
+        public long CriminalFlagSet { get; set; }
 
         [JsonProperty("damage_from_np_cs_amount")]
         public long DamageFromNpCsAmount { get; set; }
@@ -150,53 +154,77 @@ namespace ESI.NET.Models.Character
         [JsonProperty("damage_to_structures_total_num_shots")]
         public long DamageToStructuresTotalNumShots { get; set; }
 
-        [JsonProperty("deaths_high_sec")] public long DeathsHighSec { get; set; }
+        [JsonProperty("deaths_high_sec")]
+        public long DeathsHighSec { get; set; }
 
-        [JsonProperty("deaths_low_sec")] public long DeathsLowSec { get; set; }
+        [JsonProperty("deaths_low_sec")]
+        public long DeathsLowSec { get; set; }
 
-        [JsonProperty("deaths_null_sec")] public long DeathsNullSec { get; set; }
+        [JsonProperty("deaths_null_sec")]
+        public long DeathsNullSec { get; set; }
 
-        [JsonProperty("deaths_pod_high_sec")] public long DeathsPodHighSec { get; set; }
+        [JsonProperty("deaths_pod_high_sec")]
+        public long DeathsPodHighSec { get; set; }
 
-        [JsonProperty("deaths_pod_low_sec")] public long DeathsPodLowSec { get; set; }
+        [JsonProperty("deaths_pod_low_sec")]
+        public long DeathsPodLowSec { get; set; }
 
-        [JsonProperty("deaths_pod_null_sec")] public long DeathsPodNullSec { get; set; }
+        [JsonProperty("deaths_pod_null_sec")]
+        public long DeathsPodNullSec { get; set; }
 
-        [JsonProperty("deaths_pod_wormhole")] public long DeathsPodWormhole { get; set; }
+        [JsonProperty("deaths_pod_wormhole")]
+        public long DeathsPodWormhole { get; set; }
 
-        [JsonProperty("deaths_wormhole")] public long DeathsWormhole { get; set; }
+        [JsonProperty("deaths_wormhole")]
+        public long DeathsWormhole { get; set; }
 
-        [JsonProperty("drone_engage")] public long DroneEngage { get; set; }
+        [JsonProperty("drone_engage")]
+        public long DroneEngage { get; set; }
 
-        [JsonProperty("dscans")] public long Dscans { get; set; }
+        [JsonProperty("dscans")]
+        public long Dscans { get; set; }
 
-        [JsonProperty("duel_requested")] public long DuelRequested { get; set; }
+        [JsonProperty("duel_requested")]
+        public long DuelRequested { get; set; }
 
-        [JsonProperty("engagement_register")] public long EngagementRegister { get; set; }
+        [JsonProperty("engagement_register")]
+        public long EngagementRegister { get; set; }
 
-        [JsonProperty("kills_assists")] public long KillsAssists { get; set; }
+        [JsonProperty("kills_assists")]
+        public long KillsAssists { get; set; }
 
-        [JsonProperty("kills_high_sec")] public long KillsHighSec { get; set; }
+        [JsonProperty("kills_high_sec")]
+        public long KillsHighSec { get; set; }
 
-        [JsonProperty("kills_low_sec")] public long KillsLowSec { get; set; }
+        [JsonProperty("kills_low_sec")]
+        public long KillsLowSec { get; set; }
 
-        [JsonProperty("kills_null_sec")] public long KillsNullSec { get; set; }
+        [JsonProperty("kills_null_sec")]
+        public long KillsNullSec { get; set; }
 
-        [JsonProperty("kills_pod_high_sec")] public long KillsPodHighSec { get; set; }
+        [JsonProperty("kills_pod_high_sec")]
+        public long KillsPodHighSec { get; set; }
 
-        [JsonProperty("kills_pod_low_sec")] public long KillsPodLowSec { get; set; }
+        [JsonProperty("kills_pod_low_sec")]
+        public long KillsPodLowSec { get; set; }
 
-        [JsonProperty("kills_pod_null_sec")] public long KillsPodNullSec { get; set; }
+        [JsonProperty("kills_pod_null_sec")]
+        public long KillsPodNullSec { get; set; }
 
-        [JsonProperty("kills_pod_wormhole")] public long KillsPodWormhole { get; set; }
+        [JsonProperty("kills_pod_wormhole")]
+        public long KillsPodWormhole { get; set; }
 
-        [JsonProperty("kills_wormhole")] public long KillsWormhole { get; set; }
+        [JsonProperty("kills_wormhole")]
+        public long KillsWormhole { get; set; }
 
-        [JsonProperty("npc_flag_set")] public long NpcFlagSet { get; set; }
+        [JsonProperty("npc_flag_set")]
+        public long NpcFlagSet { get; set; }
 
-        [JsonProperty("probe_scans")] public long ProbeScans { get; set; }
+        [JsonProperty("probe_scans")]
+        public long ProbeScans { get; set; }
 
-        [JsonProperty("pvp_flag_set")] public long PvpFlagSet { get; set; }
+        [JsonProperty("pvp_flag_set")]
+        public long PvpFlagSet { get; set; }
 
         [JsonProperty("repair_armor_by_remote_amount")]
         public long RepairArmorByRemoteAmount { get; set; }
@@ -234,20 +262,28 @@ namespace ESI.NET.Models.Character
         [JsonProperty("repair_shield_self_amount")]
         public long RepairShieldSelfAmount { get; set; }
 
-        [JsonProperty("self_destructs")] public long SelfDestructs { get; set; }
+        [JsonProperty("self_destructs")]
+        public long SelfDestructs { get; set; }
 
-        [JsonProperty("warp_scramble_pc")] public long WarpScramblePc { get; set; }
+        [JsonProperty("warp_scramble_pc")]
+        public long WarpScramblePc { get; set; }
 
-        [JsonProperty("warp_scrambledby_npc")] public long WarpScrambledbyNpc { get; set; }
+        [JsonProperty("warp_scrambledby_npc")]
+        public long WarpScrambledbyNpc { get; set; }
 
-        [JsonProperty("warp_scrambledby_pc")] public long WarpScrambledbyPc { get; set; }
+        [JsonProperty("warp_scrambledby_pc")]
+        public long WarpScrambledbyPc { get; set; }
 
-        [JsonProperty("weapon_flag_set")] public long WeaponFlagSet { get; set; }
+        [JsonProperty("weapon_flag_set")]
+        public long WeaponFlagSet { get; set; }
 
-        [JsonProperty("webifiedby_npc")] public long WebifiedbyNpc { get; set; }
+        [JsonProperty("webifiedby_npc")]
+        public long WebifiedbyNpc { get; set; }
 
-        [JsonProperty("webifiedby_pc")] public long WebifiedbyPc { get; set; }
+        [JsonProperty("webifiedby_pc")]
+        public long WebifiedbyPc { get; set; }
 
-        [JsonProperty("webifying_pc")] public long WebifyingPc { get; set; }
+        [JsonProperty("webifying_pc")]
+        public long WebifyingPc { get; set; }
     }
 }

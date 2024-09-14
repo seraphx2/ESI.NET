@@ -1,13 +1,12 @@
 ﻿using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using ESI.NET.Interfaces.Logic;
 using ESI.NET.Models.SSO;
 using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
-    public class UserInterfaceLogic : IUserInterfaceLogic
+    public class UserInterfaceLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
