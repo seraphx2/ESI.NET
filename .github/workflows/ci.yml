@@ -39,11 +39,11 @@ jobs:
             --output ./nupkgs \
             /p:PackageVersion=${{ steps.get_version.outputs.version }}
 
-      - name: Push to NuGet.org
-        run: |
-          dotnet nuget push "nupkgs/*.nupkg" \
-            --api-key ${{ secrets.NUGET_API_KEY }} \
-            --source https://api.nuget.org/v3/index.json
+      # - name: Push to NuGet.org
+      #   run: |
+      #     dotnet nuget push "nupkgs/*.nupkg" \
+      #       --api-key ${{ secrets.NUGET_API_KEY }} \
+      #       --source https://api.nuget.org/v3/index.json
 
       - name: Send Discord Webhook
         if: success()
