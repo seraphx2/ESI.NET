@@ -58,7 +58,7 @@ jobs:
         if: success()
         uses: Ilshidur/action-discord@v1
         with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          webhook: ${{ github.event_name == 'workflow_dispatch' && secrets.DISCORD_TEST_WEBHOOK_URL || secrets.DISCORD_WEBHOOK_URL }}
           message: |
             **ESI.NET ${{ steps.get_version.outputs.version }} Release**
             The build has completed successfully, and the NuGet package is now available.
