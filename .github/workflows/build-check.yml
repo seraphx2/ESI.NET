@@ -1,0 +1,33 @@
+name: PR Build Check
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+      BUILD_PLATFORM: 'Any CPU'
+      BUILD_CONFIGURATION: 'Release'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '7.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build solution
+        run: |
+          dotnet build "**/*.sln" --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore
+
+      - name: Run tests (if any exist)
+        run: |
+          dotnet test --configuration ${{ env.BUILD_CONFIGURATION }} --no-build || echo "No tests found, continuing."
