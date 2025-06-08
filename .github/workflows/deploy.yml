@@ -17,6 +17,9 @@ jobs:
       BUILD_PLATFORM: 'Any CPU'
       BUILD_CONFIGURATION: 'Release'
 
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -34,6 +37,7 @@ jobs:
             echo "version=${{ github.event.inputs.manual_tag }}" | sed 's/^v//' >> $GITHUB_OUTPUT
           else
             echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+          fi
 
       - name: Restore dependencies
         run: dotnet restore
@@ -48,6 +52,22 @@ jobs:
             --configuration ${{ env.BUILD_CONFIGURATION }} \
             --output ./nupkgs \
             /p:PackageVersion=${{ steps.get_version.outputs.version }}
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-package
+          path: ./nupkgs/*.nupkg
+
+  deploy:
+    needs: build
+    runs-on: windows-latest
+
+    steps:
+      - name: Download package artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: nuget-package
 
       # - name: Push to NuGet.org
       #   run: |
