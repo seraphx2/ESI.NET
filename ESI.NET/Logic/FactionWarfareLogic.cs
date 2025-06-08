@@ -2,6 +2,7 @@
 using ESI.NET.Models.SSO;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
 
@@ -31,50 +32,76 @@ namespace ESI.NET.Logic
         /// /fw/wars/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<War>>> List()
-            => await Execute<List<War>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/fw/wars/");
+        public async Task<EsiResponse<List<War>>> List(string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<War>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/fw/wars/",
+                eTag: eTag,
+                cancellationToken: cancellationToken);
 
         /// <summary>
         /// /fw/stats/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Stat>>> Stats()
-            => await Execute<List<Stat>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/fw/stats/");
+        public async Task<EsiResponse<List<Stat>>> Stats(string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<Stat>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/fw/stats/",
+                eTag: eTag,
+                cancellationToken: cancellationToken);
 
         /// <summary>
         /// /fw/systems/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<FactionWarfareSystem>>> Systems()
-            => await Execute<List<FactionWarfareSystem>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/fw/systems/");
+        public async Task<EsiResponse<List<FactionWarfareSystem>>> Systems(string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<FactionWarfareSystem>>(_client, _config, RequestSecurity.Public, HttpMethod.Get,
+                "/fw/systems/",
+                eTag: eTag,
+                cancellationToken: cancellationToken);
 
         /// <summary>
         /// fw/leaderboards/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<Leaderboards<FactionTotal>>> Leaderboads()
-            => await Execute<Leaderboards<FactionTotal>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/fw/leaderboards/");
+        public async Task<EsiResponse<Leaderboards<FactionTotal>>> Leaderboads(string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<Leaderboards<FactionTotal>>(_client, _config, RequestSecurity.Public, HttpMethod.Get,
+                "/fw/leaderboards/",
+                eTag: eTag,
+                cancellationToken: cancellationToken);
 
         /// <summary>
         /// /fw/leaderboards/corporations/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<Leaderboards<CorporationTotal>>> LeaderboardsForCorporations()
-            => await Execute<Leaderboards<CorporationTotal>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/fw/leaderboards/corporations/");
+        public async Task<EsiResponse<Leaderboards<CorporationTotal>>> LeaderboardsForCorporations(string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<Leaderboards<CorporationTotal>>(_client, _config, RequestSecurity.Public, HttpMethod.Get,
+                "/fw/leaderboards/corporations/",
+                eTag: eTag,
+                cancellationToken: cancellationToken);
 
         /// <summary>
         /// /fw/leaderboards/characters/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<Leaderboards<CharacterTotal>>> LeaderboardsForCharacters()
-            => await Execute<Leaderboards<CharacterTotal>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/fw/leaderboards/characters/");
+        public async Task<EsiResponse<Leaderboards<CharacterTotal>>> LeaderboardsForCharacters(string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<Leaderboards<CharacterTotal>>(_client, _config, RequestSecurity.Public, HttpMethod.Get,
+                "/fw/leaderboards/characters/",
+                eTag: eTag,
+                cancellationToken: cancellationToken);
 
         /// <summary>
         /// /corporations/{corporation_id}/fw/stats/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<Stat>> StatsForCorporation()
-            => await Execute<Stat>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/fw/stats/",
+        public async Task<EsiResponse<Stat>> StatsForCorporation(string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<Stat>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/corporations/{corporation_id}/fw/stats/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -85,8 +112,12 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/fw/stats/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<Stat>> StatsForCharacter()
-            => await Execute<Stat>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/fw/stats/",
+        public async Task<EsiResponse<Stat>> StatsForCharacter(string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<Stat>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/characters/{character_id}/fw/stats/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }

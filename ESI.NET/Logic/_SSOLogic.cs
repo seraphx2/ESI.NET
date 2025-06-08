@@ -12,6 +12,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ESI.NET
@@ -38,6 +39,7 @@ namespace ESI.NET
                     _ssoUrl = "login.evepc.163.com";
                     break;
             }
+
             _clientKey = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{config.ClientId}:{config.SecretKey}"));
         }
 
@@ -49,9 +51,11 @@ namespace ESI.NET
         /// <param name="code_challenge">All hashing/encryption will be done automatically. Just provide the code.</param>
         /// <param name=""></param>
         /// <returns></returns>
-        public string CreateAuthenticationUrl(List<string> scope = null, string state = null, string challengeCode = null)
+        public string CreateAuthenticationUrl(List<string> scope = null, string state = null,
+            string challengeCode = null)
         {
-            var url = $"https://{_ssoUrl}/v2/oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}";
+            var url =
+                $"https://{_ssoUrl}/v2/oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}";
 
             if (scope != null)
                 url = $"{url}&scope={string.Join("+", scope.Distinct().ToList())}";
@@ -65,7 +69,8 @@ namespace ESI.NET
 
                 using (var sha256 = SHA256.Create())
                 {
-                    var base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(challengeCode)).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+                    var base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(challengeCode)).TrimEnd('=')
+                        .Replace('+', '-').Replace('/', '_');
                     var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(base64));
                     var code_challenge = Convert.ToBase64String(bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
 
@@ -75,7 +80,7 @@ namespace ESI.NET
 
             return url;
         }
-        
+
         public string GenerateChallengeCode()
         {
             const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -89,7 +94,7 @@ namespace ESI.NET
         /// <param name="code">The authorization_code or the refresh_token</param>
         /// <param name="codeChallenge">Provide the same value that was provided for codeChallenge in CreateAuthenticationUrl(). All hashing/encryption will be done automatically. Just provide the code.</param>
         /// <returns></returns>
-        public async Task<SsoToken> GetToken(GrantType grantType, string code, string codeChallenge = null)
+        public async Task<SsoToken> GetToken(GrantType grantType, string code, string codeChallenge = null, CancellationToken cancellationToken = default)
         {
             var body = $"grant_type={grantType.ToEsiValue()}";
             if (grantType == GrantType.AuthorizationCode)
@@ -102,12 +107,12 @@ namespace ESI.NET
                     var base64 = Convert.ToBase64String(bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
                     body += $"&code_verifier={base64}&client_id={_config.ClientId}";
                 }
-            }   
+            }
             else if (grantType == GrantType.RefreshToken)
             {
                 body += $"&refresh_token={Uri.EscapeDataString(code)}";
 
-                if(codeChallenge != null)
+                if (codeChallenge != null)
                     body += $"&client_id={_config.ClientId}";
             }
 
@@ -115,18 +120,19 @@ namespace ESI.NET
             {
                 Content = new StringContent(body, Encoding.UTF8, "application/x-www-form-urlencoded"),
             };
-            if(codeChallenge == null)
+            if (codeChallenge == null)
             {
                 request.Headers.Authorization = new AuthenticationHeaderValue("Basic", _clientKey);
                 request.Headers.Host = _ssoUrl;
             }
 
-            var response = await _client.SendAsync(request);
+            var response = await _client.SendAsync(request, cancellationToken);
             var content = await response.Content.ReadAsStringAsync();
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                var error = JsonConvert.DeserializeAnonymousType(content, new { error_description = string.Empty }).error_description;
+                var error = JsonConvert.DeserializeAnonymousType(content, new { error_description = string.Empty })
+                    .error_description;
                 throw new ArgumentException(error);
             }
 
@@ -141,7 +147,7 @@ namespace ESI.NET
         /// </summary>
         /// <param name="code">refresh_token to revoke</param>
         /// <returns></returns>
-        public async Task RevokeToken(string code)
+        public async Task RevokeToken(string code, CancellationToken cancellationToken = default)
         {
             var body = $"token_type_hint={GrantType.RefreshToken.ToEsiValue()}";
             body += $"&token={Uri.EscapeDataString(code)}";
@@ -149,12 +155,13 @@ namespace ESI.NET
             HttpContent postBody = new StringContent(body, Encoding.UTF8, "application/x-www-form-urlencoded");
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", _clientKey);
 
-            var response = await _client.PostAsync($"https://{_ssoUrl}/v2/oauth/revoke", postBody);
+            var response = await _client.PostAsync($"https://{_ssoUrl}/v2/oauth/revoke", postBody, cancellationToken);
             var content = await response.Content.ReadAsStringAsync();
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                var error = JsonConvert.DeserializeAnonymousType(content, new { error_description = string.Empty }).error_description;
+                var error = JsonConvert.DeserializeAnonymousType(content, new { error_description = string.Empty })
+                    .error_description;
                 throw new ArgumentException(error);
             }
         }
@@ -167,7 +174,7 @@ namespace ESI.NET
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task<AuthorizedCharacterData> Verify(SsoToken token)
+        public async Task<AuthorizedCharacterData> Verify(SsoToken token, CancellationToken cancellationToken = default)
         {
             AuthorizedCharacterData authorizedCharacter = new AuthorizedCharacterData();
 
@@ -200,7 +207,7 @@ namespace ESI.NET
                 var subjectClaim = jwtValidatedToken.Claims.SingleOrDefault(c => c.Type == "sub").Value;
                 var nameClaim = jwtValidatedToken.Claims.SingleOrDefault(c => c.Type == "name").Value;
                 var ownerClaim = jwtValidatedToken.Claims.SingleOrDefault(c => c.Type == "owner").Value;
-                
+
                 var returnedScopes = jwtValidatedToken.Claims.Where(c => c.Type == "scp");
                 var scopesClaim = string.Join(" ", returnedScopes.Select(s => s.Value));
 
@@ -213,15 +220,18 @@ namespace ESI.NET
                 authorizedCharacter.Scopes = scopesClaim;
 
                 // Get more specifc details about authorized character to be used in API calls that require this data about the character
-                var url = $"{_config.EsiUrl}latest/characters/affiliation/?datasource={_config.DataSource.ToEsiValue()}";
-                var body = new StringContent(JsonConvert.SerializeObject(new int[] { authorizedCharacter.CharacterID }), Encoding.UTF8, "application/json");
+                var url =
+                    $"{_config.EsiUrl}latest/characters/affiliation/?datasource={_config.DataSource.ToEsiValue()}";
+                var body = new StringContent(JsonConvert.SerializeObject(new int[] { authorizedCharacter.CharacterID }),
+                    Encoding.UTF8, "application/json");
 
                 var client = new HttpClient();
-                var characterResponse = await client.PostAsync(url, body).ConfigureAwait(false);
+                var characterResponse = await client.PostAsync(url, body, cancellationToken).ConfigureAwait(false);
 
                 if (characterResponse.StatusCode == HttpStatusCode.OK)
                 {
-                    EsiResponse<List<Affiliation>> affiliations = new EsiResponse<List<Affiliation>>(characterResponse, "Post|/character/affiliations/");
+                    EsiResponse<List<Affiliation>> affiliations =
+                        new EsiResponse<List<Affiliation>>(characterResponse, "Post|/character/affiliations/");
                     var characterData = affiliations.Data.First();
 
                     authorizedCharacter.AllianceID = characterData.AllianceId;

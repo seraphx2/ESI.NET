@@ -3,6 +3,7 @@ using ESI.NET.Models.Calendar;
 using ESI.NET.Models.SSO;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
 
@@ -29,8 +30,12 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/calendar/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<CalendarItem>>> Events()
-            => await Execute<List<CalendarItem>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/calendar/",
+        public async Task<EsiResponse<List<CalendarItem>>> Events(string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<CalendarItem>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/characters/{character_id}/calendar/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -42,8 +47,12 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="contract_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Event>> Event(int event_id)
-            => await Execute<Event>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/calendar/{event_id}/",
+        public async Task<EsiResponse<Event>> Event(int event_id, string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<Event>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/characters/{character_id}/calendar/{event_id}/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() },
@@ -57,8 +66,11 @@ namespace ESI.NET.Logic
         /// <param name="event_id"></param>
         /// <param name="response"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Event>> Respond(int event_id, EventResponse eventResponse)
-            => await Execute<Event>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Put, "/characters/{character_id}/calendar/{event_id}/",
+        public async Task<EsiResponse<Event>> Respond(int event_id, EventResponse eventResponse,
+            CancellationToken cancellationToken = default)
+            => await Execute<Event>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Put,
+                "/characters/{character_id}/calendar/{event_id}/",
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() },
@@ -75,8 +87,12 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="contract_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Response>>> Responses(int event_id)
-            => await Execute<List<Response>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/calendar/{event_id}/attendees/",
+        public async Task<EsiResponse<List<Response>>> Responses(int event_id, string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<Response>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/characters/{character_id}/calendar/{event_id}/attendees/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() },

@@ -141,6 +141,7 @@ namespace ESI.NET
             Universe = new UniverseLogic(client, config, data);
         }
 
+        [Obsolete]
         public void SetIfNoneMatchHeader(string eTag)
             => EsiRequest.ETag = eTag;
     }

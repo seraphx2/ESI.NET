@@ -3,6 +3,7 @@ using ESI.NET.Models;
 using ESI.NET.Models.SSO;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
 
@@ -33,7 +34,8 @@ namespace ESI.NET.Logic
         /// <param name="isStrict">Whether the search should be a strict match</param>
         /// <param name="language">Language to use in the response</param>
         /// <returns></returns>
-        public async Task<EsiResponse<SearchResults>> Query(SearchType type, string search, SearchCategory categories, bool isStrict = false, string language = "en-us")
+        public async Task<EsiResponse<SearchResults>> Query(SearchType type, string search, SearchCategory categories,
+            bool isStrict = false, string language = "en-us", string eTag = null, CancellationToken cancellationToken = default)
         {
             var categoryList = categories.ToEsiValue();
 
@@ -50,13 +52,19 @@ namespace ESI.NET.Logic
                 endpoint = "/characters/{character_id}/search/";
             }
 
-            var response = await Execute<SearchResults>(_client, _config, security, HttpMethod.Get, endpoint, replacements, parameters: new string[] {
-                $"search={search}",
-                $"categories={categoryList}",
-                $"strict={isStrict}",
-                $"language={language}"
-            },
-            token: _data?.Token);
+            var response = await Execute<SearchResults>(_client, _config, security, HttpMethod.Get,
+                endpoint: endpoint,
+                eTag: eTag,
+                cancellationToken: cancellationToken,
+                replacements: replacements,
+                parameters: new string[]
+                {
+                    $"search={search}",
+                    $"categories={categoryList}",
+                    $"strict={isStrict}",
+                    $"language={language}"
+                },
+                token: _data?.Token);
 
             return response;
         }

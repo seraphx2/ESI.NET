@@ -1,6 +1,7 @@
 ﻿using ESI.NET.Models.Sovereignty;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
 
@@ -11,27 +12,43 @@ namespace ESI.NET.Logic
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
 
-        public SovereigntyLogic(HttpClient client, EsiConfig config) { _client = client; _config = config; }
+        public SovereigntyLogic(HttpClient client, EsiConfig config)
+        {
+            _client = client;
+            _config = config;
+        }
 
         /// <summary>
         /// /sovereignty/campaigns/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Campaign>>> Campaigns()
-            => await Execute<List<Campaign>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/sovereignty/campaigns/");
+        public async Task<EsiResponse<List<Campaign>>> Campaigns(string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<Campaign>>(_client, _config, RequestSecurity.Public, HttpMethod.Get,
+                "/sovereignty/campaigns/",
+                eTag: eTag,
+                cancellationToken: cancellationToken);
 
         /// <summary>
         /// /sovereignty/map/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<SystemSovereignty>>> Systems()
-            => await Execute<List<SystemSovereignty>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/sovereignty/map/");
+        public async Task<EsiResponse<List<SystemSovereignty>>> Systems(string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<SystemSovereignty>>(_client, _config, RequestSecurity.Public, HttpMethod.Get,
+                "/sovereignty/map/",
+                eTag: eTag,
+                cancellationToken: cancellationToken);
 
         /// <summary>
         /// /sovereignty/structures/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Structure>>> Structures()
-            => await Execute<List<Structure>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/sovereignty/structures/");
+        public async Task<EsiResponse<List<Structure>>> Structures(string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<Structure>>(_client, _config, RequestSecurity.Public, HttpMethod.Get,
+                "/sovereignty/structures/",
+                eTag: eTag,
+                cancellationToken: cancellationToken);
     }
 }

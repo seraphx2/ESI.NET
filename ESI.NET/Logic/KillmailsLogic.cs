@@ -2,6 +2,7 @@
 using ESI.NET.Models.SSO;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
 
@@ -32,8 +33,12 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Killmail>>> ForCharacter(int page = 1)
-            => await Execute<List<Killmail>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/killmails/recent/",
+        public async Task<EsiResponse<List<Killmail>>> ForCharacter(int page = 1, string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<Killmail>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/characters/{character_id}/killmails/recent/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
@@ -49,8 +54,12 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Killmail>>> ForCorporation(int page = 1)
-            => await Execute<List<Killmail>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/killmails/recent/",
+        public async Task<EsiResponse<List<Killmail>>> ForCorporation(int page = 1, string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<List<Killmail>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get,
+                "/corporations/{corporation_id}/killmails/recent/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", corporation_id.ToString() }
@@ -67,8 +76,13 @@ namespace ESI.NET.Logic
         /// <param name="killmail_hash">The killmail hash for verification</param>
         /// <param name="killmail_id">The killmail ID to be queried</param>
         /// <returns></returns>
-        public async Task<EsiResponse<Information>> Information(string killmail_hash, int killmail_id)
-            => await Execute<Information>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/killmails/{killmail_id}/{killmail_hash}/",
+        public async Task<EsiResponse<Information>> Information(string killmail_hash, int killmail_id,
+            string eTag = null,
+            CancellationToken cancellationToken = default)
+            => await Execute<Information>(_client, _config, RequestSecurity.Public, HttpMethod.Get,
+                "/killmails/{killmail_id}/{killmail_hash}/",
+                eTag: eTag,
+                cancellationToken: cancellationToken,
                 replacements: new Dictionary<string, string>()
                 {
                     { "killmail_id", killmail_id.ToString() },

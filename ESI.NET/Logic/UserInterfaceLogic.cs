@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using ESI.NET.Models.SSO;
 using static ESI.NET.EsiRequest;
@@ -23,8 +24,10 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="type_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> MarketDetails(int type_id)
-            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/ui/openwindow/marketdetails/",
+        public async Task<EsiResponse<string>> MarketDetails(int type_id, CancellationToken cancellationToken = default)
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post,
+                "/ui/openwindow/marketdetails/",
+                cancellationToken: cancellationToken,
                 parameters: new string[]
                 {
                     $"type_id={type_id}"
@@ -36,8 +39,10 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="contract_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> Contract(int contract_id)
-            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/ui/openwindow/contract/",
+        public async Task<EsiResponse<string>> Contract(int contract_id, CancellationToken cancellationToken = default)
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post,
+                "/ui/openwindow/contract/",
+                cancellationToken: cancellationToken,
                 parameters: new string[]
                 {
                     $"contract_id={contract_id}"
@@ -49,8 +54,10 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="target_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> Information(int target_id)
-            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/ui/openwindow/information/",
+        public async Task<EsiResponse<string>> Information(int target_id, CancellationToken cancellationToken = default)
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post,
+                "/ui/openwindow/information/",
+                cancellationToken: cancellationToken,
                 parameters: new string[]
                 {
                     $"target_id={target_id}"
@@ -64,8 +71,11 @@ namespace ESI.NET.Logic
         /// <param name="add_to_beginning"></param>
         /// <param name="clear_other_waypoints"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> Waypoint(long destination_id, bool add_to_beginning = false, bool clear_other_waypoints = false)
-            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/ui/autopilot/waypoint/",
+        public async Task<EsiResponse<string>> Waypoint(long destination_id, bool add_to_beginning = false,
+            bool clear_other_waypoints = false, CancellationToken cancellationToken = default)
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post,
+                "/ui/autopilot/waypoint/",
+                cancellationToken: cancellationToken,
                 parameters: new string[]
                 {
                     $"destination_id={destination_id}",
@@ -83,8 +93,11 @@ namespace ESI.NET.Logic
         /// <param name="to_mailing_list_id"></param>
         /// <param name="to_corp_or_alliance_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> NewMail(string subject, string body, int[] recipients)
-            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/ui/openwindow/newmail/",
+        public async Task<EsiResponse<string>> NewMail(string subject, string body, int[] recipients,
+            CancellationToken cancellationToken = default)
+            => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post,
+                "/ui/openwindow/newmail/",
+                cancellationToken: cancellationToken,
                 body: new
                 {
                     subject,
