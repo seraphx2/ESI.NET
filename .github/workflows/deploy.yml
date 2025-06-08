@@ -28,6 +28,7 @@ jobs:
 
       - name: Extract version from tag or input
         id: get_version
+        shell: bash
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "version=${{ github.event.inputs.manual_tag }}" | sed 's/^v//' >> $GITHUB_OUTPUT
@@ -54,12 +55,13 @@ jobs:
       #       --api-key ${{ secrets.NUGET_API_KEY }} \
       #       --source https://api.nuget.org/v3/index.json
 
-      # - name: Send Discord Webhook
-      #   if: success()
-      #   uses: Ilshidur/action-discord@v1
-      #   with:
-      #     webhook: ${{ github.event_name == 'workflow_dispatch' && secrets.DISCORD_TEST_WEBHOOK_URL || secrets.DISCORD_WEBHOOK_URL }}
-      #     message: |
-      #       **ESI.NET ${{ steps.get_version.outputs.version }} Release**
-      #       The build has completed successfully, and the NuGet package is now available.
-      #       <https://github.com/seraphx2/ESI.NET/releases>
+      - name: Send Discord Webhook
+        if: success()
+        env:
+          DISCORD_WEBHOOK: ${{ github.event_name == 'workflow_dispatch' && secrets.DISCORD_TEST_WEBHOOK_URL || secrets.DISCORD_WEBHOOK_URL }}
+        uses: Ilshidur/action-discord@0.3.2
+        with:
+          args: |
+            **ESI.NET ${{ steps.get_version.outputs.version }} Release**
+            The build has completed successfully, and the NuGet package is now available.
+            <https://github.com/seraphx2/ESI.NET/releases>
