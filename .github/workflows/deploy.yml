@@ -4,6 +4,11 @@ on:
   push:
     tags:
       - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      manual_tag:
+        description: 'Version tag (e.g. v1.2.3)'
+        required: true
 
 jobs:
   build:
@@ -21,9 +26,13 @@ jobs:
         with:
           dotnet-version: '7.0.x'
 
-      - name: Extract version from tag
+      - name: Extract version from tag or input
         id: get_version
-        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "version=${{ github.event.inputs.manual_tag }}" | sed 's/^v//' >> $GITHUB_OUTPUT
+          else
+            echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
       - name: Restore dependencies
         run: dotnet restore
