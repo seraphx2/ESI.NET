@@ -54,12 +54,12 @@ jobs:
       #       --api-key ${{ secrets.NUGET_API_KEY }} \
       #       --source https://api.nuget.org/v3/index.json
 
-      - name: Send Discord Webhook
-        if: success()
-        uses: Ilshidur/action-discord@v1
-        with:
-          webhook: ${{ github.event_name == 'workflow_dispatch' && secrets.DISCORD_TEST_WEBHOOK_URL || secrets.DISCORD_WEBHOOK_URL }}
-          message: |
-            **ESI.NET ${{ steps.get_version.outputs.version }} Release**
-            The build has completed successfully, and the NuGet package is now available.
-            <https://github.com/seraphx2/ESI.NET/releases>
+      # - name: Send Discord Webhook
+      #   if: success()
+      #   uses: Ilshidur/action-discord@v1
+      #   with:
+      #     webhook: ${{ github.event_name == 'workflow_dispatch' && secrets.DISCORD_TEST_WEBHOOK_URL || secrets.DISCORD_WEBHOOK_URL }}
+      #     message: |
+      #       **ESI.NET ${{ steps.get_version.outputs.version }} Release**
+      #       The build has completed successfully, and the NuGet package is now available.
+      #       <https://github.com/seraphx2/ESI.NET/releases>
