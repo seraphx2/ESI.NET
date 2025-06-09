@@ -46,13 +46,13 @@ jobs:
         run: |
           dotnet build ESI.NET.sln --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore
 
-      - name: Pack project
+      - name: Create Package
         shell: bash
         run: |
           dotnet pack ESI.NET/ESI.NET.csproj \
             --configuration ${{ env.BUILD_CONFIGURATION }} \
             --output ./nupkgs \
-            /p:PackageVersion=${{ steps.get_version.outputs.version }}
+            -p:PackageVersion=${{ steps.get_version.outputs.version }}
 
       - name: Upload package artifact
         uses: actions/upload-artifact@v4
