@@ -47,6 +47,7 @@ jobs:
           dotnet build ESI.NET.sln --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore
 
       - name: Pack project
+        shell: bash
         run: |
           dotnet pack ESI.NET/ESI.NET.csproj \
             --configuration ${{ env.BUILD_CONFIGURATION }} \
