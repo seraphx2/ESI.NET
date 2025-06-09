@@ -3,7 +3,7 @@ name: Build and Release ESI.NET
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - '*.*.*'
   workflow_dispatch:
     inputs:
       manual_tag:
@@ -75,6 +75,24 @@ jobs:
       #       --api-key ${{ secrets.NUGET_API_KEY }} \
       #       --source https://api.nuget.org/v3/index.json
 
+      - name: Generate release notes from PR commits
+        id: changelog
+        shell: bash
+        run: |
+          LOG=$(git log --merges --pretty=format:"- %s" -n 20)
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$LOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.manual_tag || github.ref_name }}
+          name: ESI.NET ${{ needs.build.outputs.version }}
+          body: ${{ steps.changelog.outputs.changelog }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Send Discord Webhook
         if: success()
         env:
@@ -82,6 +100,4 @@ jobs:
         uses: Ilshidur/action-discord@0.3.2
         with:
           args: |
-            **ESI.NET ${{ steps.get_version.outputs.version }} Release**
-            The build has completed successfully, and the NuGet package is now available.
-            <https://github.com/seraphx2/ESI.NET/releases>
+            **ESI.NET ${{ steps.get_version.outputs.version }} NuGet package released**
