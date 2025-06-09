@@ -70,11 +70,11 @@ jobs:
         with:
           name: nuget-package
 
-      # - name: Push to NuGet.org
-      #   run: |
-      #     dotnet nuget push "nupkgs/*.nupkg" \
-      #       --api-key ${{ secrets.NUGET_API_KEY }} \
-      #       --source https://api.nuget.org/v3/index.json
+      - name: Push to NuGet.org
+        run: |
+          dotnet nuget push "nupkgs/*.nupkg" \
+            --api-key ${{ secrets.NUGET_API_KEY }} \
+            --source https://api.nuget.org/v3/index.json
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -93,4 +93,4 @@ jobs:
         uses: Ilshidur/action-discord@0.3.2
         with:
           args: |
-            **ESI.NET ${{ steps.get_version.outputs.version }} NuGet package released**
+            **ESI.NET ${{ needs.build.outputs.version }} NuGet package released**
