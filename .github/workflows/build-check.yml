@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     env:
       BUILD_PLATFORM: 'Any CPU'
       BUILD_CONFIGURATION: 'Release'
