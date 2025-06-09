@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       manual_tag:
-        description: 'Version tag (e.g. v1.2.3)'
+        description: 'Version tag (example 2025.1.1 (<year>.<month>.<integer++>)'
         required: true
 
 jobs:
