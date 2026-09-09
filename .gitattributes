@@ -61,3 +61,11 @@
 #*.PDF   diff=astextplain
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
+
+###############################################################################
+# Keep shell scripts and CI YAML LF-only for the Linux CI runners, regardless
+# of the checkout platform's autocrlf setting.
+###############################################################################
+*.sh   text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf

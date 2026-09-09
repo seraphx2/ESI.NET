@@ -1,0 +1,29 @@
+name: CI
+
+# PR gate for both branches: dev->master (the release gate) and feature->dev
+# (contributor PRs). The `check` job aggregates the build and is the required
+# status check on master (branch protection) — keep its name stable.
+on:
+  pull_request:
+    branches: [master, dev]
+
+# Newer commits on the PR branch supersede an in-flight run.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/ci-dotnet
+
+  check:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "build passed"

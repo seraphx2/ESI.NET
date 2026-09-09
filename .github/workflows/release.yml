@@ -1,0 +1,98 @@
+name: Release
+
+# Fires on every push to master — i.e. every dev->master merge — and publishes a
+# release: a CalVer version from today's date + existing tags, the NuGet package
+# pushed to nuget.org, and a GitHub Release (which creates the tag). Doc-only and
+# CI-only merges are skipped (paths-ignore); to opt any other merge out, put
+# "[skip release]" in the merge-commit message. workflow_dispatch stays for
+# manual drafts / re-runs — a draft build packs and attaches the .nupkg but does
+# not push to NuGet.
+on:
+  push:
+    branches: [master]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.github/**'
+  workflow_dispatch:
+    inputs:
+      draft:
+        description: "Draft: pack + attach the .nupkg, but don't push to NuGet"
+        type: boolean
+        default: false
+
+# One release at a time; never cancel a run that may have already published.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    # push: skip when the merge commit opts out. dispatch: always run.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      !contains(github.event.head_commit.message, '[skip release]')
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0 # need all tags so the CalVer build segment is correct
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Compute version
+        id: version
+        shell: bash
+        run: echo "value=$(bash scripts/compute-version.sh)" >> "$GITHUB_OUTPUT"
+
+      - name: Pack
+        shell: bash
+        run: >-
+          dotnet pack ESI.NET/ESI.NET.csproj
+          --configuration Release
+          --output ./nupkgs
+          -p:Version=${{ steps.version.outputs.value }}
+          -p:ContinuousIntegrationBuild=true
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-package
+          path: ./nupkgs/*.nupkg
+
+      - name: Push to NuGet.org
+        if: ${{ !inputs.draft }}
+        shell: bash
+        run: >-
+          dotnet nuget push "nupkgs/*.nupkg"
+          --api-key ${{ secrets.NUGET_API_KEY }}
+          --source https://api.nuget.org/v3/index.json
+          --skip-duplicate
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.value }}
+          name: ESI.NET ${{ steps.version.outputs.value }}
+          draft: ${{ inputs.draft || false }}
+          generate_release_notes: true
+          files: ./nupkgs/*.nupkg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Send Discord webhook
+        if: ${{ success() && !inputs.draft }}
+        env:
+          DISCORD_WEBHOOK: ${{ github.event_name == 'workflow_dispatch' && secrets.DISCORD_TEST_WEBHOOK_URL || secrets.DISCORD_WEBHOOK_URL }}
+        uses: Ilshidur/action-discord@0.3.2
+        with:
+          args: |
+            **ESI.NET ${{ steps.version.outputs.value }} NuGet package released**

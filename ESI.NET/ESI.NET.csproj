@@ -1,16 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup Label="Globals">
-    <SccProjectName>SAK</SccProjectName>
-    <SccProvider>SAK</SccProvider>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccLocalPath>SAK</SccLocalPath>
-  </PropertyGroup>
-
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;netstandard2.0;net462;net47;net471;net472;net48;net6.0;net7.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2023.12.12</Version>
+    <!-- Dev placeholder. Real versions are CalVer, computed and stamped in CI
+         (scripts/compute-version.sh + .github/workflows/release.yml). -->
+    <Version>0.0.0-dev</Version>
     <Authors>Psianna Archeia</Authors>
     <Company>Sukebe Corporation</Company>
     <Description>.NET Wrapper for the Eve Online API</Description>
@@ -37,12 +32,6 @@
     <None Include="..\LICENSE.txt">
       <Pack>True</Pack>
       <PackagePath>LICENSE.txt</PackagePath>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="GetBuildVersion.psm1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

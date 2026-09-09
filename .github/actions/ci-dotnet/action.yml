@@ -1,0 +1,22 @@
+name: CI — .NET
+description: >
+  Restore and Release-build ESI.NET across every target framework. Runs on
+  Linux; the net46x/net47x/net48 targets build against the .NET Framework
+  reference assemblies the SDK restores, no Mono needed. Assumes the repo is
+  already checked out.
+
+runs:
+  using: composite
+  steps:
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore
+      shell: bash
+      run: dotnet restore ESI.NET.sln
+
+    - name: Build (Release, all target frameworks)
+      shell: bash
+      run: dotnet build ESI.NET.sln --configuration Release --no-restore
