@@ -39,12 +39,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0 # need all tags so the CalVer build segment is correct
 
       - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '8.0.x'
 
@@ -63,7 +63,7 @@ jobs:
           -p:ContinuousIntegrationBuild=true
 
       - name: Upload package artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: nuget-package
           path: ./nupkgs/*.nupkg
@@ -78,7 +78,7 @@ jobs:
           --skip-duplicate
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.version.outputs.value }}
           name: ESI.NET ${{ steps.version.outputs.value }}
@@ -92,7 +92,7 @@ jobs:
         if: ${{ success() && !inputs.draft }}
         env:
           DISCORD_WEBHOOK: ${{ github.event_name == 'workflow_dispatch' && secrets.DISCORD_TEST_WEBHOOK_URL || secrets.DISCORD_WEBHOOK_URL }}
-        uses: Ilshidur/action-discord@0.3.2
+        uses: Ilshidur/action-discord@0.4.0
         with:
           args: |
             **ESI.NET ${{ steps.version.outputs.value }} NuGet package released**
