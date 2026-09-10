@@ -156,6 +156,10 @@ The wrapper was returning the wrong container or CLR type on these:
 New fields to match the spec: `Information.Title`, `CustomsOffice.TypeId`,
 `Stat.Pilots`, `Order.IssuedBy`.
 
+Removed fields ESI no longer returns anywhere: `Information.AncestryId`,
+`Order.AccountId`, `Order.IsCorp` (use the still-present `Order.IsCorporation`),
+`IDLookup.Structures`. They only ever deserialized to their default.
+
 `ResolvedInfoCategory.Structure` is removed — `POST /universe/names` (the only
 endpoint that populates `ResolvedInfo.Category`) stopped resolving structure IDs,
 so that value can no longer come back.

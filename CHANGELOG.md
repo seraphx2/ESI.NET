@@ -82,6 +82,9 @@ cancellation, pagination) is passed. **Every consumer needs code changes** — s
   `GoodStandingTaxRate`) are `decimal`; `ColonyLayout.Route.Quantity` is `decimal`.
 - New fields: `Information.Title`, `CustomsOffice.TypeId`, `Stat.Pilots`,
   `Order.IssuedBy`.
+- Removed fields ESI no longer sends on any endpoint: `Information.AncestryId`,
+  `Order.AccountId`, `Order.IsCorp` (`Order.IsCorporation` stays),
+  `IDLookup.Structures`.
 - `ResolvedInfoCategory.Structure` removed — `POST /universe/names` no longer
   resolves structure IDs, so `ResolvedInfo.Category` can never be `structure`.
 

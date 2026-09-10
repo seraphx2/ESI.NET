@@ -8,9 +8,6 @@ namespace ESI.NET.Models.Character
         [JsonProperty("alliance_id")]
         public long AllianceId { get; set; }
 
-        [JsonProperty("ancestry_id")]
-        public long AncestryId { get; set; }
-
         [JsonProperty("birthday")]
         public DateTime Birthday { get; set; }
 

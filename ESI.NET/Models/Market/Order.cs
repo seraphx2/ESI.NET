@@ -56,23 +56,12 @@ namespace ESI.NET.Models.Market
         [JsonProperty("min_volume")]
         public long MinVolume { get; set; }
 
-        /// <summary>
-        /// Only returned in /characters/{character_id}/orders/
-        /// </summary>
-        [JsonProperty("account_id")]
-        public long AccountId { get; set; }
-
         [JsonProperty("duration")]
         public long Duration { get; set; }
 
         /// <summary>
-        /// Only returned in /characters/{character_id}/orders/
-        /// </summary>
-        [JsonProperty("is_corp")]
-        public bool IsCorp { get; set; }
-
-        /// <summary>
-        /// Only returned in /characters/{character_id}/orders/history/
+        /// Whether the order was placed for a corporation. Returned on the
+        /// character and corporation order endpoints.
         /// </summary>
         [JsonProperty("is_corporation")]
         public bool IsCorporation { get; set; }
