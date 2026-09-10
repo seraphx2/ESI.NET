@@ -32,10 +32,34 @@ if (clientId.Length == 0 || secretKey.Length == 0)
 var port = int.TryParse(Env("ESI_CALLBACK_PORT"), out var parsedPort) ? parsedPort : 8080;
 var callbackUrl = $"http://localhost:{port}/callback";
 
-var scopes = (Env("ESI_SCOPES") is { Length: > 0 } raw ? raw : "esi-wallet.read_character_wallet.v1")
-    .Split(new[] { ' ', ',', '\t', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)
-    .Distinct()
-    .ToList();
+var scopesRaw = Env("ESI_SCOPES") is { Length: > 0 } raw ? raw : "esi-wallet.read_character_wallet.v1";
+List<string> scopes;
+if (string.Equals(scopesRaw.Trim(), "all", StringComparison.OrdinalIgnoreCase))
+{
+    Console.WriteLine("  scopes      : fetching every scope from the ESI spec ...");
+    scopes = await FetchAllScopesAsync();
+}
+else
+{
+    scopes = scopesRaw
+        .Split(new[] { ' ', ',', '\t', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)
+        .Distinct()
+        .ToList();
+}
+
+static async Task<List<string>> FetchAllScopesAsync()
+{
+    using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(30) };
+    http.DefaultRequestHeaders.UserAgent.ParseAdd("ESI.NET-mint-token/1.0");
+    http.DefaultRequestHeaders.Add("X-Compatibility-Date", ESI.NET.EsiVersion.CompatibilityDate);
+    using var doc = System.Text.Json.JsonDocument.Parse(
+        await http.GetStringAsync("https://esi.evetech.net/meta/openapi.json"));
+    var flows = doc.RootElement
+        .GetProperty("components").GetProperty("securitySchemes")
+        .GetProperty("OAuth2").GetProperty("flows").GetProperty("authorizationCode")
+        .GetProperty("scopes");
+    return flows.EnumerateObject().Select(p => p.Name).OrderBy(s => s, StringComparer.Ordinal).ToList();
+}
 
 var dataSource = Enum.TryParse<DataSource>(Env("ESI_DATASOURCE"), ignoreCase: true, out var ds)
     ? ds
