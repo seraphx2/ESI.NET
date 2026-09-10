@@ -16,20 +16,27 @@ namespace ESI.NET
         /// Initializes a new instance of the <see cref="EsiClient"/> class.
         /// </summary>
         /// <param name="_config">The configuration parameters of the <see cref="EsiClient"/>.</param>
-        /// <param name="_client">The <see cref="HttpClient"/> to use for HTTP requests.</param>
+        /// <param name="_client">
+        /// The <see cref="HttpClient"/> to use. When supplied (including via <c>AddEsi</c>'s
+        /// <see cref="System.Net.Http.IHttpClientFactory"/> pipeline) it is used as-is — the caller
+        /// / pipeline is responsible for the <c>X-User-Agent</c> and <c>Accept</c> headers and for
+        /// content decompression. When omitted, a default client is created and configured here.
+        /// </param>
         public EsiClient(IOptions<EsiConfig> _config, HttpClient _client = null)
         {
             config = _config.Value;
-            client = _client ?? new HttpClient(CreateDefaultHandler());
 
-            // Enforce user agent value
-            if (string.IsNullOrEmpty(config.UserAgent))
-                throw new ArgumentException("For your protection, please provide an X-User-Agent value. This can be your character name and/or project name. CCP will be more likely to contact you rather than just cut off access to ESI if you provide something that can identify you within the New Eden galaxy.");
-            client.DefaultRequestHeaders.Add("X-User-Agent", config.UserAgent);
+            if (_client != null)
+                client = _client;
+            else
+            {
+                if (string.IsNullOrWhiteSpace(config.UserAgent))
+                    throw new ArgumentException("EsiConfig.UserAgent is required. Set it to something that identifies your app (character and/or project name) so CCP can contact you rather than cut off ESI access.");
 
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
-            client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
+                client = new HttpClient(CreateDefaultHandler());
+                client.DefaultRequestHeaders.Add("X-User-Agent", config.UserAgent);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            }
 
 
             SSO = new SsoLogic(client, config);
@@ -111,7 +118,7 @@ namespace ESI.NET
         /// <see cref="PlatformNotSupportedException"/> from the setter, because the browser's fetch
         /// API performs content decoding itself. See https://github.com/seraphx2/ESI.NET/issues/77.
         /// </remarks>
-        private static HttpClientHandler CreateDefaultHandler()
+        internal static HttpClientHandler CreateDefaultHandler()
         {
             var handler = new HttpClientHandler();
 
