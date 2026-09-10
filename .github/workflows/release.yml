@@ -93,6 +93,7 @@ jobs:
           --skip-duplicate
 
       - name: Create GitHub Release
+        id: gh_release
         uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.version.outputs.value }}
@@ -103,11 +104,24 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Send Discord webhook
+      # Rich embed to the project Discord. Test webhook for manual dispatch runs,
+      # the real one for a dev->master release. jq builds the payload so nothing
+      # needs hand-escaping.
+      - name: Announce on Discord
         if: ${{ success() && !inputs.draft }}
+        shell: bash
         env:
           DISCORD_WEBHOOK: ${{ github.event_name == 'workflow_dispatch' && secrets.DISCORD_TEST_WEBHOOK_URL || secrets.DISCORD_WEBHOOK_URL }}
-        uses: Ilshidur/action-discord@0.4.0
-        with:
-          args: |
-            **ESI.NET ${{ steps.version.outputs.value }} NuGet package released**
+          VERSION: ${{ steps.version.outputs.value }}
+          RELEASE_URL: ${{ steps.gh_release.outputs.url }}
+        run: |
+          jq -n --arg v "$VERSION" --arg url "$RELEASE_URL" '{
+            embeds: [{
+              title: ("ESI.NET " + $v + " Release"),
+              url: $url,
+              description: "The ESI.NET build completed successfully and the NuGet package has been published (indexing may take a few minutes). Click the title for the release changelog.",
+              color: 3066993,
+              author: { name: "Psianna Archeia" },
+              fields: [{ name: "NuGet", value: ("https://www.nuget.org/packages/ESI.NET/" + $v) }]
+            }]
+          }' | curl -sS -f -H "Content-Type: application/json" -d @- "$DISCORD_WEBHOOK"
