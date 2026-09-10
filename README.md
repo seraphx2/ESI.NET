@@ -219,6 +219,6 @@ services.AddEsi(builder.Configuration.GetSection("EsiConfig"))
 
 ## Development
 
-Maintainer tooling lives in `tools/` — a weekly [spec-drift check](tools/SpecCheck)
+Maintainer tooling lives in `tools/` — a daily [spec-drift check](tools/SpecCheck)
 against the live ESI OpenAPI document — and `tests/` — unit tests plus live
 integration tests.

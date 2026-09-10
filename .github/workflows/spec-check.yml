@@ -2,14 +2,14 @@ name: SpecCheck
 
 # Drift check: the live ESI OpenAPI document vs what ESI.NET/Logic implements
 # (coverage) and vs each EsiResponse<T> model (schema). Deliberately NOT a PR or
-# push gate - it runs weekly and on demand, and a failed run emails the
+# push gate - it runs daily and on demand, and a failed run emails the
 # maintainer as the nudge to come back to it. See tools/SpecCheck.
 #
-# A network blip reaching esi.evetech.net also fails the run; for a weekly job
+# A network blip reaching esi.evetech.net also fails the run; for a daily job
 # that is acceptable noise.
 on:
   schedule:
-    - cron: '17 6 * * 1' # Mondays 06:17 UTC
+    - cron: '17 6 * * *' # daily 06:17 UTC
   workflow_dispatch:
 
 concurrency:

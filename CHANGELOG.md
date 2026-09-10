@@ -136,7 +136,7 @@ had changed short of a consumer filing a bug. That is now covered.
   tests (`tests/ESI.NET.IntegrationTests`) run a spread of public endpoints and
   an authenticated SSO probe — token exchange, JWKS validation, a bearer call,
   and transparent refresh — against the real API on a schedule.
-- **Spec-drift check** (`tools/SpecCheck`, weekly). Compares the wrapper against
+- **Spec-drift check** (`tools/SpecCheck`, daily). Compares the wrapper against
   the live ESI OpenAPI document: endpoints it still exposes that ESI dropped,
   endpoints ESI added that it doesn't cover, and every `EsiResponse<T>` model
   against its endpoint's 200 schema (type, integer width, enum values, missing
