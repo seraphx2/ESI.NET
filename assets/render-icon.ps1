@@ -34,33 +34,45 @@ $grad = [System.Drawing.Drawing2D.LinearGradientBrush]::new(
   [System.Drawing.ColorTranslator]::FromHtml('#08131F'), 90)
 $g.FillRectangle($grad, $rect)
 
-$cyan  = [System.Drawing.ColorTranslator]::FromHtml('#37C6E8')
-$lite  = [System.Drawing.ColorTranslator]::FromHtml('#7CE3F6')
-$core  = [System.Drawing.ColorTranslator]::FromHtml('#8FE9F8')
+# blue -> purple -> pink fade across the mark (EVE Evolved palette). The
+# background gradient above is untouched; this only colours the foreground.
+$fg = [System.Drawing.Drawing2D.LinearGradientBrush]::new(
+  [System.Drawing.RectangleF]::new(0, 0, $S, $S),
+  [System.Drawing.Color]::White, [System.Drawing.Color]::White, 0.0)
+$blend = [System.Drawing.Drawing2D.ColorBlend]::new(5)
+$blend.Colors = @(
+  [System.Drawing.ColorTranslator]::FromHtml('#33CFE8'),
+  [System.Drawing.ColorTranslator]::FromHtml('#33CFE8'),
+  [System.Drawing.ColorTranslator]::FromHtml('#8B5CF6'),
+  [System.Drawing.ColorTranslator]::FromHtml('#F25CB0'),
+  [System.Drawing.ColorTranslator]::FromHtml('#F25CB0'))
+$blend.Positions = @(0.0, 0.18, 0.5, 0.82, 1.0)
+$fg.InterpolationColors = $blend
+
+function GPen($w) {
+  $p = [System.Drawing.Pen]::new($fg, $w / 128 * $S)
+  $p.LineJoin = [System.Drawing.Drawing2D.LineJoin]::Round
+  $p
+}
 
 # outer aperture
 $outer = Hex 64 64 42
-$pen = [System.Drawing.Pen]::new($cyan, 7 / 128 * $S)
-$pen.LineJoin = [System.Drawing.Drawing2D.LineJoin]::Round
-$g.DrawPolygon($pen, [System.Drawing.PointF[]]$outer)
+$g.DrawPolygon((GPen 7), [System.Drawing.PointF[]]$outer)
 
 # vertex nodes
-$nb = [System.Drawing.SolidBrush]::new($cyan)
 foreach ($pt in $outer) {
   $rad = 5.5 / 128 * $S
-  $g.FillEllipse($nb, $pt.X - $rad, $pt.Y - $rad, $rad * 2, $rad * 2)
+  $g.FillEllipse($fg, $pt.X - $rad, $pt.Y - $rad, $rad * 2, $rad * 2)
 }
 
 # inner core hex
 $inner = Hex 64 64 20
-$fillIn = [System.Drawing.SolidBrush]::new([System.Drawing.Color]::FromArgb(40, $cyan))
+$fillIn = [System.Drawing.SolidBrush]::new([System.Drawing.Color]::FromArgb(34, 150, 110, 245))
 $g.FillPolygon($fillIn, [System.Drawing.PointF[]]$inner)
-$penIn = [System.Drawing.Pen]::new($lite, 3 / 128 * $S)
-$penIn.LineJoin = [System.Drawing.Drawing2D.LineJoin]::Round
-$g.DrawPolygon($penIn, [System.Drawing.PointF[]]$inner)
+$g.DrawPolygon((GPen 3), [System.Drawing.PointF[]]$inner)
 
-# core dot
-$cb = [System.Drawing.SolidBrush]::new($core)
+# core dot - kept bright so it still reads as lit
+$cb = [System.Drawing.SolidBrush]::new([System.Drawing.ColorTranslator]::FromHtml('#F3EEFF'))
 $cr = 9 / 128 * $S
 $g.FillEllipse($cb, $S / 2 - $cr, $S / 2 - $cr, $cr * 2, $cr * 2)
 
