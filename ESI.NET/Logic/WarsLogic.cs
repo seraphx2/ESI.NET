@@ -17,7 +17,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="max_war_id">Only return wars with ID smaller than this</param>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> All(long max_war_id = 0)
+        public async Task<EsiResponse<int[]>> All(long max_war_id = 0, EsiCallOptions options = null)
         {
             var parameters = new List<string>();
 
@@ -25,7 +25,8 @@ namespace ESI.NET.Logic
                 parameters.Add($"max_war_id={max_war_id}");
 
             var response = await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/wars/",
-                parameters: parameters.ToArray());
+                parameters: parameters.ToArray(),
+                options: options);
 
             return response;
         }
@@ -35,12 +36,14 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="war_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<War>> Information(int war_id)
+        public async Task<EsiResponse<War>> Information(int war_id, EsiCallOptions options = null)
             => await Execute<War>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/wars/{war_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "war_id", war_id.ToString() }
-                });
+                },
+                options: options);
+
 
         /// <summary>
         /// /wars/{warId}/killmails/
@@ -48,15 +51,12 @@ namespace ESI.NET.Logic
         /// <param name="war_id"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Models.Killmails.Killmail>>> Kills(int war_id, int page = 1)
+        public async Task<EsiResponse<List<Models.Killmails.Killmail>>> Kills(int war_id, EsiCallOptions options = null)
             => await Execute<List<Models.Killmails.Killmail>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/wars/{war_id}/killmails/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "war_id", war_id.ToString() }
                 },
-                parameters: new string[]
-                {
-                    $"page={page}"
-                });
+                options: options);
     }
 }

@@ -10,10 +10,11 @@ namespace ESI.NET
 {
     internal static class EsiRequest
     {
-        internal static string ETag;
-
-        public static async Task<EsiResponse<T>> Execute<T>(HttpClient client, EsiConfig config, RequestSecurity security, HttpMethod httpMethod, string endpoint, Dictionary<string, string> replacements = null, string[] parameters = null, object body = null, string token = null)
+        public static async Task<EsiResponse<T>> Execute<T>(HttpClient client, EsiConfig config, RequestSecurity security, HttpMethod httpMethod, string endpoint, EsiCallOptions options, Dictionary<string, string> replacements = null, string[] parameters = null, object body = null)
         {
+            if (options == null)
+                options = new EsiCallOptions();
+
             var path = $"{httpMethod}|{endpoint}";
 
             if (replacements != null)
@@ -26,29 +27,30 @@ namespace ESI.NET
             if (parameters != null)
                 url += $"&{string.Join("&", parameters)}";
 
+            if (options.Page.HasValue)
+                url += $"&page={options.Page.Value}";
+
             var request = new HttpRequestMessage(httpMethod, url);
 
             //Attach token to request header if this endpoint requires an authorized character
             if (security == RequestSecurity.Authenticated)
             {
-                if (token == null)
-                    throw new ArgumentException("The request endpoint requires SSO authentication and a Token has not been provided.");
+                var token = options.Character?.Token;
+                if (string.IsNullOrEmpty(token))
+                    throw new ArgumentException("The request endpoint requires SSO authentication; EsiCallOptions.Character (with a valid Token) has not been provided.");
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
 
-            if (ETag != null)
-            {
-                request.Headers.Add("If-None-Match", $"\"{ETag}\"");
-                ETag = null;
-            }
+            if (!string.IsNullOrEmpty(options.IfNoneMatch))
+                request.Headers.Add("If-None-Match", $"\"{options.IfNoneMatch.Trim('"')}\"");
 
             //Serialize post body data
             if (body != null)
                 request.Content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
 
             //Output final object
-            var response = await client.SendAsync(request).ConfigureAwait(false);
-            return await EsiResponse<T>.CreateAsync(response, path).ConfigureAwait(false);
+            var response = await client.SendAsync(request, options.CancellationToken).ConfigureAwait(false);
+            return await EsiResponse<T>.CreateAsync(response, path, options.CancellationToken).ConfigureAwait(false);
         }
 
         public enum RequestSecurity

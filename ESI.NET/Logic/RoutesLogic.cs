@@ -25,9 +25,10 @@ namespace ESI.NET.Logic
         public async Task<EsiResponse<int[]>> Map(
             int origin, 
             int destination, 
-            RoutesFlag flag = RoutesFlag.Shortest, 
-            int[] avoid = null, 
-            int[] connections = null)
+            RoutesFlag flag = RoutesFlag.Shortest,
+            int[] avoid = null,
+            int[] connections = null,
+            EsiCallOptions options = null)
         {
             var parameters = new List<string>() { $"flag={flag.ToEsiValue()}" };
 
@@ -43,7 +44,8 @@ namespace ESI.NET.Logic
                     { "origin", origin.ToString() },
                     { "destination", destination.ToString() }
                 },
-                parameters: parameters.ToArray());
+                parameters: parameters.ToArray(),
+                options: options);
 
             return response;
         }

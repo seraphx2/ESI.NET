@@ -1,5 +1,4 @@
 ﻿using ESI.NET.Models.Killmails;
-using ESI.NET.Models.SSO;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -11,20 +10,11 @@ namespace ESI.NET.Logic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
-        private readonly AuthorizedCharacterData _data;
-        private readonly int character_id, corporation_id;
 
-        public KillmailsLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
+        public KillmailsLogic(HttpClient client, EsiConfig config)
         {
             _client = client;
             _config = config;
-            _data = data;
-
-            if (data != null)
-            {
-                character_id = data.CharacterID;
-                corporation_id = data.CorporationID;
-            }
         }
 
         /// <summary>
@@ -32,34 +22,26 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Killmail>>> ForCharacter(int page = 1)
+        public async Task<EsiResponse<List<Killmail>>> ForCharacter(EsiCallOptions options)
             => await Execute<List<Killmail>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/killmails/recent/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString() }
                 },
-                parameters: new string[]
-                {
-                    $"page={page}"
-                },
-                token: _data.Token);
+                options: options);
 
         /// <summary>
         /// /corporations/{corporation_id}/killmails/recent/
         /// </summary>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Killmail>>> ForCorporation(int page = 1)
+        public async Task<EsiResponse<List<Killmail>>> ForCorporation(EsiCallOptions options)
             => await Execute<List<Killmail>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/killmails/recent/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                parameters: new string[]
-                {
-                    $"page={page}"
-                },
-                token: _data.Token);
+                options: options);
 
         /// <summary>
         /// /killmails/{killmail_id}/{killmail_hash}/
@@ -67,12 +49,14 @@ namespace ESI.NET.Logic
         /// <param name="killmail_hash">The killmail hash for verification</param>
         /// <param name="killmail_id">The killmail ID to be queried</param>
         /// <returns></returns>
-        public async Task<EsiResponse<Information>> Information(string killmail_hash, int killmail_id)
+        public async Task<EsiResponse<Information>> Information(string killmail_hash, int killmail_id, EsiCallOptions options = null)
             => await Execute<Information>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/killmails/{killmail_id}/{killmail_hash}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "killmail_id", killmail_id.ToString() },
                     { "killmail_hash", killmail_hash.ToString() }
-                });
+                },
+                options: options);
+
     }
 }

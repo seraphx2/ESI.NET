@@ -1,6 +1,5 @@
 ﻿using ESI.NET.Enumerations;
 using ESI.NET.Models.Fleets;
-using ESI.NET.Models.SSO;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -12,17 +11,11 @@ namespace ESI.NET.Logic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
-        private readonly AuthorizedCharacterData _data;
-        private readonly int character_id;
 
-        public FleetsLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
+        public FleetsLogic(HttpClient client, EsiConfig config)
         {
             _client = client;
             _config = config;
-            _data = data;
-
-            if (data != null)
-                character_id = data.CharacterID;
         }
 
         /// <summary>
@@ -30,13 +23,13 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="fleet_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Settings>> Settings(long fleet_id)
+        public async Task<EsiResponse<Settings>> Settings(long fleet_id, EsiCallOptions options)
             => await Execute<Settings>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/fleets/{fleet_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "fleet_id", fleet_id.ToString() }
                 },
-                token: _data.Token);
+                options: options);
 
         /// <summary>
         /// /fleets/{fleet_id}/
@@ -45,39 +38,39 @@ namespace ESI.NET.Logic
         /// <param name="motd"></param>
         /// <param name="is_free_move"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> UpdateSettings(long fleet_id, string motd = null, bool? is_free_move = null)
+        public async Task<EsiResponse<string>> UpdateSettings(long fleet_id, string motd = null, bool? is_free_move = null, EsiCallOptions options = null)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Put, "/fleets/{fleet_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "fleet_id", fleet_id.ToString() }
                 },
                 body: BuildUpdateSettingsObject(motd, is_free_move),
-                token: _data.Token);
+                options: options);
 
         /// <summary>
         /// /characters/{character_id}/fleet/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<FleetInfo>> FleetInfo()
+        public async Task<EsiResponse<FleetInfo>> FleetInfo(EsiCallOptions options)
             => await Execute<FleetInfo>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/fleet/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString() }
                 },
-                token: _data.Token);
+                options: options);
 
         /// <summary>
         /// /fleets/{fleet_id}/members/
         /// </summary>
         /// <param name="fleet_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Member>>> Members(long fleet_id)
+        public async Task<EsiResponse<List<Member>>> Members(long fleet_id, EsiCallOptions options)
             => await Execute<List<Member>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/fleets/{fleet_id}/members/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "fleet_id", fleet_id.ToString() }
                 },
-                token: _data.Token);
+                options: options);
 
         /// <summary>
         /// /fleets/{fleet_id}/members/
@@ -88,14 +81,14 @@ namespace ESI.NET.Logic
         /// <param name="wing_id"></param>
         /// <param name="squad_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> InviteCharacter(long fleet_id, int character_id, FleetRole role, long wing_id = 0, long squad_id = 0)
+        public async Task<EsiResponse<string>> InviteCharacter(long fleet_id, int character_id, FleetRole role, long wing_id = 0, long squad_id = 0, EsiCallOptions options = null)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/fleets/{fleet_id}/members/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "fleet_id", fleet_id.ToString() }
                 },
                 body: BuildFleetInviteObject(character_id, role, wing_id, squad_id),
-                token: _data.Token);
+                options: options);
 
         /// <summary>
         /// /fleets/{fleet_id}/members/{member_id}/
@@ -106,15 +99,15 @@ namespace ESI.NET.Logic
         /// <param name="wing_id"></param>
         /// <param name="squad_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> MoveCharacter(long fleet_id, int member_id, FleetRole role, long wing_id = 0, long squad_id = 0)
+        public async Task<EsiResponse<string>> MoveCharacter(long fleet_id, int member_id, FleetRole role, long wing_id = 0, long squad_id = 0, EsiCallOptions options = null)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Put, "/fleets/{fleet_id}/members/{member_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "fleet_id", fleet_id.ToString() },
                     { "member_id", member_id.ToString() }
                 },
-                body: BuildFleetInviteObject(character_id, role, wing_id, squad_id),
-                token: _data.Token);
+                body: BuildFleetInviteObject(options.Character.CharacterID, role, wing_id, squad_id),
+                options: options);
 
         /// <summary>
         /// /fleets/{fleet_id}/members/{member_id}/
@@ -122,40 +115,40 @@ namespace ESI.NET.Logic
         /// <param name="fleet_id"></param>
         /// <param name="member_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> KickCharacter(long fleet_id, int member_id)
+        public async Task<EsiResponse<string>> KickCharacter(long fleet_id, int member_id, EsiCallOptions options)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Delete, "/fleets/{fleet_id}/members/{member_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "fleet_id", fleet_id.ToString() },
                     { "member_id", member_id.ToString() }
                 },
-                token: _data.Token);
+                options: options);
 
         /// <summary>
         /// /fleets/{fleet_id}/wings/
         /// </summary>
         /// <param name="fleet_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Wing>>> Wings(long fleet_id)
+        public async Task<EsiResponse<List<Wing>>> Wings(long fleet_id, EsiCallOptions options)
             => await Execute<List<Wing>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/fleets/{fleet_id}/wings/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "fleet_id", fleet_id.ToString() }
                 },
-                token: _data.Token);
+                options: options);
 
         /// <summary>
         /// /fleets/{fleet_id}/wings/
         /// </summary>
         /// <param name="fleet_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<NewWing>> CreateWing(long fleet_id)
+        public async Task<EsiResponse<NewWing>> CreateWing(long fleet_id, EsiCallOptions options)
             => await Execute<NewWing>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/fleets/{fleet_id}/wings/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "fleet_id", fleet_id.ToString() }
                 },
-                token: _data.Token);
+                options: options);
 
         /// <summary>
         /// /fleets/{fleet_id}/wings/{wing_id}/
@@ -164,7 +157,7 @@ namespace ESI.NET.Logic
         /// <param name="wing_id"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> RenameWing(long fleet_id, long wing_id, string name)
+        public async Task<EsiResponse<string>> RenameWing(long fleet_id, long wing_id, string name, EsiCallOptions options)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Put, "/fleets/{fleet_id}/wings/{wing_id}/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -175,7 +168,7 @@ namespace ESI.NET.Logic
                 {
                     name
                 },
-                token: _data.Token);
+                options: options);
 
         /// <summary>
         /// /fleets/{fleet_id}/wings/{wing_id}/
@@ -183,14 +176,14 @@ namespace ESI.NET.Logic
         /// <param name="fleet_id"></param>
         /// <param name="wing_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> DeleteWing(long fleet_id, long wing_id)
+        public async Task<EsiResponse<string>> DeleteWing(long fleet_id, long wing_id, EsiCallOptions options)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Delete, "/fleets/{fleet_id}/wings/{wing_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "fleet_id", fleet_id.ToString() },
                     { "wing_id", wing_id.ToString() }
                 },
-                token: _data.Token);
+                options: options);
 
         /// <summary>
         /// /fleets/{fleet_id}/wings/{wing_id}/squads/
@@ -198,14 +191,14 @@ namespace ESI.NET.Logic
         /// <param name="fleet_id"></param>
         /// <param name="wing_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<NewSquad>> CreateSquad(long fleet_id, long wing_id)
+        public async Task<EsiResponse<NewSquad>> CreateSquad(long fleet_id, long wing_id, EsiCallOptions options)
             => await Execute<NewSquad>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/fleets/{fleet_id}/wings/{wing_id}/squads/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "fleet_id", fleet_id.ToString() },
                     { "wing_id", wing_id.ToString() }
                 },
-                token: _data.Token);
+                options: options);
 
         /// <summary>
         /// /fleets/{fleet_id}/squads/{squad_id}/
@@ -214,7 +207,7 @@ namespace ESI.NET.Logic
         /// <param name="squad_id"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> RenameSquad(long fleet_id, long squad_id, string name)
+        public async Task<EsiResponse<string>> RenameSquad(long fleet_id, long squad_id, string name, EsiCallOptions options)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Put, "/fleets/{fleet_id}/squads/{squad_id}/", replacements: new Dictionary<string, string>()
             {
                 { "fleet_id", fleet_id.ToString() },
@@ -222,7 +215,7 @@ namespace ESI.NET.Logic
             }, body: new
             {
                 name
-            }, token: _data.Token);
+            }, options: options);
 
         /// <summary>
         /// /fleets/{fleet_id}/squads/{squad_id}/
@@ -230,12 +223,12 @@ namespace ESI.NET.Logic
         /// <param name="fleet_id"></param>
         /// <param name="squad_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> DeleteSquad(long fleet_id, long squad_id)
+        public async Task<EsiResponse<string>> DeleteSquad(long fleet_id, long squad_id, EsiCallOptions options)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Delete, "/fleets/{fleet_id}/squads/{squad_id}/", replacements: new Dictionary<string, string>()
             {
                 { "fleet_id", fleet_id.ToString() },
                 { "squad_id", squad_id.ToString() }
-            }, token: _data.Token);
+            }, options: options);
         
         /// <summary>
         /// 

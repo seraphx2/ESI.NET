@@ -1,5 +1,4 @@
 ﻿using ESI.NET.Models.Fittings;
-using ESI.NET.Models.SSO;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -11,57 +10,51 @@ namespace ESI.NET.Logic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
-        private readonly AuthorizedCharacterData _data;
-        private readonly int character_id;
 
-        public FittingsLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
+        public FittingsLogic(HttpClient client, EsiConfig config)
         {
             _client = client;
             _config = config;
-            _data = data;
-
-            if (data != null)
-                character_id = data.CharacterID;
         }
 
         /// <summary>
         /// /characters/{character_id}/fittings/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Fitting>>> List()
+        public async Task<EsiResponse<List<Fitting>>> List(EsiCallOptions options)
             => await Execute<List<Fitting>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/fittings/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString() }
                 },
-                token: _data.Token);
+                options: options);
 
         /// <summary>
         /// /characters/{character_id}/fittings/
         /// </summary>
         /// <param name="fitting"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<NewFitting>> Add(object fitting)
+        public async Task<EsiResponse<NewFitting>> Add(object fitting, EsiCallOptions options)
             => await Execute<NewFitting>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/characters/{character_id}/fittings/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString() }
                 },
                 body: fitting,
-                token: _data.Token);
+                options: options);
 
         /// <summary>
         /// /characters/{character_id}/fittings/{fitting_id}/
         /// </summary>
         /// <param name="fitting_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> Delete(int fitting_id)
+        public async Task<EsiResponse<string>> Delete(int fitting_id, EsiCallOptions options)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Delete, "/characters/{character_id}/fittings/{fitting_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() },
+                    { "character_id", options.Character.CharacterID.ToString() },
                     { "fitting_id", fitting_id.ToString() }
                 },
-                token: _data.Token);
+                options: options);
     }
 }

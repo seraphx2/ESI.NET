@@ -1,5 +1,4 @@
 ﻿using ESI.NET.Logic;
-using ESI.NET.Models.SSO;
 using Microsoft.Extensions.Options;
 using System;
 using System.Net;
@@ -103,37 +102,6 @@ namespace ESI.NET
         public WarsLogic Wars { get; set; }
 
 
-        public void SetCharacterData(AuthorizedCharacterData data)
-        {
-            Assets = new AssetsLogic(client, config, data);
-            Bookmarks = new BookmarksLogic(client, config, data);
-            Calendar = new CalendarLogic(client, config, data);
-            Character = new CharacterLogic(client, config, data);
-            Clones = new ClonesLogic(client, config, data);
-            Contacts = new ContactsLogic(client, config, data);
-            Contracts = new ContractsLogic(client, config, data);
-            Corporation = new CorporationLogic(client, config, data);
-            FactionWarfare = new FactionWarfareLogic(client, config, data);
-            Fittings = new FittingsLogic(client, config, data);
-            Fleets = new FleetsLogic(client, config, data);
-            Industry = new IndustryLogic(client, config, data);
-            Killmails = new KillmailsLogic(client, config, data);
-            Location = new LocationLogic(client, config, data);
-            Loyalty = new LoyaltyLogic(client, config, data);
-            Mail = new MailLogic(client, config, data);
-            Market = new MarketLogic(client, config, data);
-            Opportunities = new OpportunitiesLogic(client, config, data);
-            PlanetaryInteraction = new PlanetaryInteractionLogic(client, config, data);
-            Search = new SearchLogic(client, config, data);
-            Skills = new SkillsLogic(client, config, data);
-            UserInterface = new UserInterfaceLogic(client, config, data);
-            Wallet = new WalletLogic(client, config, data);
-            Universe = new UniverseLogic(client, config, data);
-        }
-
-        public void SetIfNoneMatchHeader(string eTag)
-            => EsiRequest.ETag = eTag;
-
         /// <summary>
         /// Creates the <see cref="HttpClientHandler"/> used when no <see cref="HttpClient"/> is supplied.
         /// </summary>
@@ -196,8 +164,5 @@ namespace ESI.NET
         UserInterfaceLogic UserInterface { get; set; }
         WalletLogic Wallet { get; set; }
         WarsLogic Wars { get; set; }
-
-        void SetCharacterData(AuthorizedCharacterData data);
-        void SetIfNoneMatchHeader(string eTag);
     }
 }

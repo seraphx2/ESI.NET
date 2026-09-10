@@ -1,6 +1,5 @@
 ﻿using ESI.NET.Enumerations;
 using ESI.NET.Models;
-using ESI.NET.Models.SSO;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -12,17 +11,11 @@ namespace ESI.NET.Logic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
-        private readonly AuthorizedCharacterData _data;
-        private readonly int character_id;
 
-        public SearchLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
+        public SearchLogic(HttpClient client, EsiConfig config)
         {
             _client = client;
             _config = config;
-            _data = data;
-
-            if (data != null)
-                character_id = data.CharacterID;
         }
 
         /// <summary>
@@ -33,7 +26,7 @@ namespace ESI.NET.Logic
         /// <param name="isStrict">Whether the search should be a strict match</param>
         /// <param name="language">Language to use in the response</param>
         /// <returns></returns>
-        public async Task<EsiResponse<SearchResults>> Query(SearchType type, string search, SearchCategory categories, bool isStrict = false, string language = "en-us")
+        public async Task<EsiResponse<SearchResults>> Query(SearchType type, string search, SearchCategory categories, bool isStrict = false, string language = "en-us", EsiCallOptions options = null)
         {
             var categoryList = categories.ToEsiValue();
 
@@ -45,18 +38,20 @@ namespace ESI.NET.Logic
                 security = RequestSecurity.Authenticated;
                 replacements = new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString() }
                 };
                 endpoint = "/characters/{character_id}/search/";
             }
 
-            var response = await Execute<SearchResults>(_client, _config, security, HttpMethod.Get, endpoint, replacements, parameters: new string[] {
-                $"search={search}",
-                $"categories={categoryList}",
-                $"strict={isStrict}",
-                $"language={language}"
-            },
-            token: _data?.Token);
+            var response = await Execute<SearchResults>(_client, _config, security, HttpMethod.Get, endpoint,
+                options: options,
+                replacements: replacements,
+                parameters: new string[] {
+                    $"search={search}",
+                    $"categories={categoryList}",
+                    $"strict={isStrict}",
+                    $"language={language}"
+                });
 
             return response;
         }

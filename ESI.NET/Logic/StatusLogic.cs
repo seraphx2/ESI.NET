@@ -12,7 +12,9 @@ namespace ESI.NET.Logic
 
         public StatusLogic(HttpClient client, EsiConfig config) { _client = client; _config = config; }
 
-        public async Task<EsiResponse<Status>> Retrieve()
-            => await Execute<Status>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/status/");
+        public async Task<EsiResponse<Status>> Retrieve(EsiCallOptions options = null)
+            => await Execute<Status>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/status/",
+                options: options);
+
     }
 }

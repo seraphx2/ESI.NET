@@ -1,5 +1,4 @@
 ﻿using ESI.NET.Models.Bookmarks;
-using ESI.NET.Models.SSO;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -11,84 +10,59 @@ namespace ESI.NET.Logic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
-        private readonly AuthorizedCharacterData _data;
-        private readonly int character_id, corporation_id;
 
-        public BookmarksLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
+        public BookmarksLogic(HttpClient client, EsiConfig config)
         {
             _client = client;
             _config = config;
-            _data = data;
-
-            if (data != null)
-            {
-                corporation_id = data.CorporationID;
-                character_id = data.CharacterID;
-            }
         }
 
         /// <summary>
         /// /characters/{character_id}/bookmarks/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Bookmark>>> ForCharacter(int page = 1)
+        public async Task<EsiResponse<List<Bookmark>>> ForCharacter(EsiCallOptions options)
             => await Execute<List<Bookmark>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/bookmarks/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString() }
                 },
-                parameters: new string[]
-                {
-                    $"page={page}"
-                },
-                token: _data.Token);
+                options: options);
 
         /// <summary>
         /// /characters/{character_id}/bookmarks/folders/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Folder>>> FoldersForCharacter(int page = 1)
+        public async Task<EsiResponse<List<Folder>>> FoldersForCharacter(EsiCallOptions options)
             => await Execute<List<Folder>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/bookmarks/folders/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString() }
                 },
-                parameters: new string[]
-                {
-                    $"page={page}"
-                },
-                token: _data.Token);
+                options: options);
 
         /// <summary>
         /// /corporations/{corporation_id}/bookmarks/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Bookmark>>> ForCorporation(int page = 1)
+        public async Task<EsiResponse<List<Bookmark>>> ForCorporation(EsiCallOptions options)
             => await Execute<List<Bookmark>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/bookmarks/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                parameters: new string[]
-                {
-                    $"page={page}"
-                },
-                token: _data.Token);
+                options: options);
 
         /// <summary>
         /// /corporations/{corporation_id}/bookmarks/folders/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Folder>>> FoldersForCorporation(int page = 1)
+        public async Task<EsiResponse<List<Folder>>> FoldersForCorporation(EsiCallOptions options)
             => await Execute<List<Folder>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/bookmarks/folders/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                parameters: new string[]
-                {
-                    $"page={page}"
-                },
-                token: _data.Token);
+                options: options);
     }
 }
