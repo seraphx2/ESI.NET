@@ -69,6 +69,10 @@ _Migration_ below.
 - `EsiCallOptions.CancellationToken` — honoured by every request.
 - `EsiCallOptions.IfNoneMatch` + `EsiResponse<T>.ETag` — per-call conditional
   requests (`304 Not Modified`).
+- `EsiCallOptions.OnTokenRefreshed` — when set, an authenticated call whose
+  access token is within a minute of expiry is transparently refreshed with its
+  refresh token first; the `AuthorizedCharacterData` is updated in place and the
+  callback fires so you can persist the rotated refresh token.
 - `EsiErrorLimitHandler` — reads `X-Esi-Error-Limit-*` and blocks further sends
   on the client until the window resets; throws `EsiErrorLimitException` on
   `420`. Wired by `AddEsi`.

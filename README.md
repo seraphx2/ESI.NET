@@ -131,6 +131,18 @@ Pass the stored character on the call:
 var wallet = await _client.Wallet.CharacterWallet(new() { Character = authChar });
 ```
 
+### Transparent token refresh
+Set `OnTokenRefreshed` and an expired access token is refreshed before the call,
+`authChar` is updated in place, and your callback runs so you can persist the
+rotated refresh token:
+```cs
+var wallet = await _client.Wallet.CharacterWallet(new()
+{
+    Character = authChar,
+    OnTokenRefreshed = c => db.SaveCharacterAsync(c),
+});
+```
+
 ---
 
 See [CHANGELOG.md](CHANGELOG.md) for the migration guide from `2023.12.12`

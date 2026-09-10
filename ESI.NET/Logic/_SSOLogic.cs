@@ -12,6 +12,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ESI.NET
@@ -39,6 +40,63 @@ namespace ESI.NET
                     break;
             }
             _clientKey = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{config.ClientId}:{config.SecretKey}"));
+        }
+
+        /// <summary>The SSO host for the configured <see cref="DataSource"/>.</summary>
+        internal static string SsoHost(DataSource dataSource)
+        {
+            switch (dataSource)
+            {
+                case DataSource.Serenity: return "login.evepc.163.com";
+                default: return "login.eveonline.com";
+            }
+        }
+
+        /// <summary>
+        /// POSTs <paramref name="requestBody"/> to the SSO <c>/v2/oauth/token</c> endpoint. Uses HTTP
+        /// Basic auth when <see cref="EsiConfig.SecretKey"/> is set (confidential client); otherwise
+        /// the caller is expected to have put <c>client_id</c> in the body (PKCE client).
+        /// </summary>
+        internal static async Task<SsoToken> RequestTokenAsync(HttpClient client, EsiConfig config, string requestBody, CancellationToken cancellationToken = default)
+        {
+            var host = SsoHost(config.DataSource);
+            var request = new HttpRequestMessage(HttpMethod.Post, $"https://{host}/v2/oauth/token")
+            {
+                Content = new StringContent(requestBody, Encoding.UTF8, "application/x-www-form-urlencoded"),
+            };
+
+            if (!string.IsNullOrEmpty(config.SecretKey))
+            {
+                request.Headers.Authorization = new AuthenticationHeaderValue(
+                    "Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"{config.ClientId}:{config.SecretKey}")));
+                request.Headers.Host = host;
+            }
+
+            using (var response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false))
+            {
+                var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new ArgumentException(JsonConvert.DeserializeAnonymousType(content, new { error_description = string.Empty }).error_description);
+                return JsonConvert.DeserializeObject<SsoToken>(content);
+            }
+        }
+
+        /// <summary>
+        /// Exchanges <paramref name="character"/>'s refresh token for a new access token and updates
+        /// <see cref="AuthorizedCharacterData.Token"/>, <see cref="AuthorizedCharacterData.RefreshToken"/>
+        /// (EVE rotates it) and <see cref="AuthorizedCharacterData.ExpiresOn"/> in place.
+        /// </summary>
+        internal static async Task RefreshAccessTokenAsync(HttpClient client, EsiConfig config, AuthorizedCharacterData character, CancellationToken cancellationToken = default)
+        {
+            var body = $"grant_type={GrantType.RefreshToken.ToEsiValue()}&refresh_token={Uri.EscapeDataString(character.RefreshToken)}";
+            if (string.IsNullOrEmpty(config.SecretKey))
+                body += $"&client_id={config.ClientId}";
+
+            var token = await RequestTokenAsync(client, config, body, cancellationToken).ConfigureAwait(false);
+
+            character.Token = token.AccessToken;
+            character.RefreshToken = token.RefreshToken;
+            character.ExpiresOn = DateTime.UtcNow.AddSeconds(token.ExpiresIn);
         }
 
         /// <summary>

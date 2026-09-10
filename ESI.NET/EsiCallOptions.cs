@@ -1,5 +1,7 @@
 ﻿using ESI.NET.Models.SSO;
+using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace ESI.NET
 {
@@ -29,5 +31,14 @@ namespace ESI.NET
 
         /// <summary>1-based page for paginated endpoints; sent as <c>?page=</c>.</summary>
         public int? Page { get; set; }
+
+        /// <summary>
+        /// When set, an authenticated call whose <see cref="Character"/> access token is within a
+        /// minute of expiry (or already expired) is transparently refreshed with its refresh token
+        /// before the request is sent. <see cref="Character"/> is updated in place and this callback
+        /// is invoked with it, so you can persist the rotated refresh token. Requires
+        /// <c>EsiConfig.ClientId</c> (and <c>SecretKey</c> for a confidential client).
+        /// </summary>
+        public Func<AuthorizedCharacterData, Task> OnTokenRefreshed { get; set; }
     }
 }
