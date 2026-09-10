@@ -132,14 +132,38 @@ var wallet = await _client.Wallet.CharacterWallet(new() { Character = authChar }
 ```
 
 ### Transparent token refresh
-Set `OnTokenRefreshed` and an expired access token is refreshed before the call,
-`authChar` is updated in place, and your callback runs so you can persist the
-rotated refresh token:
+An authenticated call whose access token is within a minute of expiry is
+refreshed with its refresh token before the request goes out; `authChar` is
+updated in place. EVE rotates the refresh token, so you must persist the updated
+value.
+
+**Once, via DI (recommended).** Implement `IEsiTokenRefreshSink` — normal
+constructor injection works — and register it; it then covers every
+authenticated call:
+```cs
+public class DbTokenSink : IEsiTokenRefreshSink
+{
+    private readonly MyDbContext _db;
+    public DbTokenSink(MyDbContext db) => _db = db;
+    public async Task OnRefreshedAsync(AuthorizedCharacterData c)
+    {
+        _db.Characters.Update(c);
+        await _db.SaveChangesAsync();
+    }
+}
+
+services.AddScoped<IEsiTokenRefreshSink, DbTokenSink>();
+services.AddEsi(Configuration.GetSection("EsiConfig"));
+```
+The handler resolves the sink in a fresh scope each time it fires, so a scoped
+`DbContext` is safe.
+
+**Per call**, for one-offs or non-DI use:
 ```cs
 var wallet = await _client.Wallet.CharacterWallet(new()
 {
     Character = authChar,
-    OnTokenRefreshed = c => db.SaveCharacterAsync(c),
+    OnTokenRefreshed = async c => { /* persist c */ },
 });
 ```
 

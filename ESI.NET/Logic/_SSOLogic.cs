@@ -57,7 +57,7 @@ namespace ESI.NET
         /// Basic auth when <see cref="EsiConfig.SecretKey"/> is set (confidential client); otherwise
         /// the caller is expected to have put <c>client_id</c> in the body (PKCE client).
         /// </summary>
-        internal static async Task<SsoToken> RequestTokenAsync(HttpClient client, EsiConfig config, string requestBody, CancellationToken cancellationToken = default)
+        internal static async Task<SsoToken> RequestTokenAsync(Func<HttpRequestMessage, CancellationToken, Task<HttpResponseMessage>> send, EsiConfig config, string requestBody, CancellationToken cancellationToken = default)
         {
             var host = SsoHost(config.DataSource);
             var request = new HttpRequestMessage(HttpMethod.Post, $"https://{host}/v2/oauth/token")
@@ -72,7 +72,7 @@ namespace ESI.NET
                 request.Headers.Host = host;
             }
 
-            using (var response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false))
+            using (var response = await send(request, cancellationToken).ConfigureAwait(false))
             {
                 var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -86,13 +86,13 @@ namespace ESI.NET
         /// <see cref="AuthorizedCharacterData.Token"/>, <see cref="AuthorizedCharacterData.RefreshToken"/>
         /// (EVE rotates it) and <see cref="AuthorizedCharacterData.ExpiresOn"/> in place.
         /// </summary>
-        internal static async Task RefreshAccessTokenAsync(HttpClient client, EsiConfig config, AuthorizedCharacterData character, CancellationToken cancellationToken = default)
+        internal static async Task RefreshAccessTokenAsync(Func<HttpRequestMessage, CancellationToken, Task<HttpResponseMessage>> send, EsiConfig config, AuthorizedCharacterData character, CancellationToken cancellationToken = default)
         {
             var body = $"grant_type={GrantType.RefreshToken.ToEsiValue()}&refresh_token={Uri.EscapeDataString(character.RefreshToken)}";
             if (string.IsNullOrEmpty(config.SecretKey))
                 body += $"&client_id={config.ClientId}";
 
-            var token = await RequestTokenAsync(client, config, body, cancellationToken).ConfigureAwait(false);
+            var token = await RequestTokenAsync(send, config, body, cancellationToken).ConfigureAwait(false);
 
             character.Token = token.AccessToken;
             character.RefreshToken = token.RefreshToken;

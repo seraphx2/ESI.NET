@@ -69,10 +69,16 @@ _Migration_ below.
 - `EsiCallOptions.CancellationToken` — honoured by every request.
 - `EsiCallOptions.IfNoneMatch` + `EsiResponse<T>.ETag` — per-call conditional
   requests (`304 Not Modified`).
-- `EsiCallOptions.OnTokenRefreshed` — when set, an authenticated call whose
-  access token is within a minute of expiry is transparently refreshed with its
-  refresh token first; the `AuthorizedCharacterData` is updated in place and the
-  callback fires so you can persist the rotated refresh token.
+- **Transparent access-token refresh.** An authenticated call whose access token
+  is within a minute of expiry is refreshed with its refresh token before the
+  request goes out (done by `EsiTokenRefreshHandler` in the pipeline); the
+  `AuthorizedCharacterData` is updated in place. The rotated refresh token is
+  surfaced two ways, and both fire:
+  - `IEsiTokenRefreshSink` — implement it, register one
+    (`services.AddScoped<IEsiTokenRefreshSink, YourSink>()`), and it covers every
+    authenticated call. This is the DI-friendly "persist once" hook.
+  - `EsiCallOptions.OnTokenRefreshed` — a per-call `Func<AuthorizedCharacterData, Task>`
+    for one-offs or non-DI use.
 - `EsiErrorLimitHandler` — reads `X-Esi-Error-Limit-*` and blocks further sends
   on the client until the window resets; throws `EsiErrorLimitException` on
   `420`. Wired by `AddEsi`.

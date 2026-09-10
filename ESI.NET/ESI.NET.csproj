@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <!-- Dev placeholder. Real versions are CalVer, computed and stamped in CI
          (scripts/compute-version.sh + .github/workflows/release.yml). -->

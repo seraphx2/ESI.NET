@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using ESI.NET.Http;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -35,12 +36,16 @@ namespace ESI.NET
             //Attach token to request header if this endpoint requires an authorized character
             if (security == RequestSecurity.Authenticated)
             {
-                await RefreshIfNeededAsync(client, config, options).ConfigureAwait(false);
-
                 var token = options.Character?.Token;
                 if (string.IsNullOrEmpty(token))
                     throw new ArgumentException("The request endpoint requires SSO authentication; EsiCallOptions.Character (with a valid Token) has not been provided.");
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                // Hand the character (and any per-call refresh callback) to EsiTokenRefreshHandler,
+                // which refreshes a near-expired token and swaps this header before the send.
+                EsiRequestState.SetCharacter(request, options.Character);
+                if (options.OnTokenRefreshed != null)
+                    EsiRequestState.SetCallback(request, options.OnTokenRefreshed);
             }
 
             if (!string.IsNullOrEmpty(options.IfNoneMatch))
@@ -53,25 +58,6 @@ namespace ESI.NET
             //Output final object
             var response = await client.SendAsync(request, options.CancellationToken).ConfigureAwait(false);
             return await EsiResponse<T>.CreateAsync(response, path, options.CancellationToken).ConfigureAwait(false);
-        }
-
-        private static Task RefreshIfNeededAsync(HttpClient client, EsiConfig config, EsiCallOptions options)
-        {
-            var character = options.Character;
-            if (options.OnTokenRefreshed == null
-                || character == null
-                || string.IsNullOrEmpty(character.RefreshToken)
-                || character.ExpiresOn == default
-                || character.ExpiresOn > DateTime.UtcNow.AddMinutes(1))
-                return Task.CompletedTask;
-
-            return RefreshAndNotifyAsync(client, config, options);
-        }
-
-        private static async Task RefreshAndNotifyAsync(HttpClient client, EsiConfig config, EsiCallOptions options)
-        {
-            await SsoLogic.RefreshAccessTokenAsync(client, config, options.Character, options.CancellationToken).ConfigureAwait(false);
-            await options.OnTokenRefreshed(options.Character).ConfigureAwait(false);
         }
 
         public enum RequestSecurity

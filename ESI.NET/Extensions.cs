@@ -42,9 +42,11 @@ namespace ESI.NET
             services.AddSingleton<EsiErrorLimitState>();
             services.AddTransient<EsiHeadersHandler>();
             services.AddTransient<EsiErrorLimitHandler>();
+            services.AddTransient<EsiTokenRefreshHandler>();
 
             return services.AddHttpClient<IEsiClient, EsiClient>()
                 .ConfigurePrimaryHttpMessageHandler(() => EsiClient.CreateDefaultHandler())
+                .AddHttpMessageHandler<EsiTokenRefreshHandler>()
                 .AddHttpMessageHandler<EsiHeadersHandler>()
                 .AddHttpMessageHandler<EsiErrorLimitHandler>();
         }

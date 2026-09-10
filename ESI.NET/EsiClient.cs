@@ -1,4 +1,5 @@
-﻿using ESI.NET.Logic;
+﻿using ESI.NET.Http;
+using ESI.NET.Logic;
 using Microsoft.Extensions.Options;
 using System;
 using System.Net;
@@ -33,7 +34,10 @@ namespace ESI.NET
                 if (string.IsNullOrWhiteSpace(config.UserAgent))
                     throw new ArgumentException("EsiConfig.UserAgent is required. Set it to something that identifies your app (character and/or project name) so CCP can contact you rather than cut off ESI access.");
 
-                client = new HttpClient(CreateDefaultHandler());
+                // No DI pipeline here, so wire the token-refresh handler in manually. Without an
+                // IServiceScopeFactory it honours EsiCallOptions.OnTokenRefreshed but not a sink.
+                var handler = new EsiTokenRefreshHandler(_config) { InnerHandler = CreateDefaultHandler() };
+                client = new HttpClient(handler);
                 client.DefaultRequestHeaders.Add("X-User-Agent", config.UserAgent);
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             }
