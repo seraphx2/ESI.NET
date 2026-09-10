@@ -59,6 +59,41 @@ namespace ESI.NET.Tests
 
             Assert.Equal("just text", r.Message);
             Assert.Null(r.Data);
+            Assert.Null(r.Exception);
+        }
+
+        [Fact]
+        public async Task Ok_with_a_trailing_newline_still_populates_Data()
+        {
+            // Regression: ESI ends some bodies with "\n", which defeated the
+            // body.EndsWith("}") check and silently left Data null.
+            var r = await EsiResponse<Dictionary<string, int>>.CreateAsync(
+                Message(HttpStatusCode.OK, "{ \"a\": 1 }\n"), "GET|/x/");
+
+            Assert.Equal(1, r.Data["a"]);
+            Assert.Null(r.Message);
+            Assert.Null(r.Exception);
+        }
+
+        [Fact]
+        public async Task Ok_with_surrounding_whitespace_still_populates_Data()
+        {
+            var r = await EsiResponse<int[]>.CreateAsync(
+                Message(HttpStatusCode.OK, "  [1, 2, 3]\r\n"), "GET|/x/");
+
+            Assert.Equal(new[] { 1, 2, 3 }, r.Data);
+        }
+
+        [Fact]
+        public async Task Ok_with_a_bare_scalar_body_populates_Data()
+        {
+            // e.g. GET /characters/{id}/wallet/ returns just a number.
+            var r = await EsiResponse<decimal>.CreateAsync(
+                Message(HttpStatusCode.OK, "123456.78\n"), "GET|/x/");
+
+            Assert.Equal(123456.78m, r.Data);
+            Assert.Null(r.Message);
+            Assert.Null(r.Exception);
         }
 
         [Fact]

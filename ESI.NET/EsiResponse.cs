@@ -70,9 +70,13 @@ namespace ESI.NET
                 else if (response.StatusCode == HttpStatusCode.OK ||
                          response.StatusCode == HttpStatusCode.Created)
                 {
-                    if ((body.StartsWith("{") && body.EndsWith("}")) ||
-                        (body.StartsWith("[") && body.EndsWith("]")))
-                        Data = JsonConvert.DeserializeObject<T>(body);
+                    // ESI returns JSON on 200/201 - an object, an array, or a bare
+                    // scalar (a wallet balance, a CSPA cost). Trim first: some
+                    // endpoints end the body with a newline, which defeated the old
+                    // "{ }" / "[ ]" check and silently left Data null.
+                    var json = body.Trim();
+                    if (json.Length > 0 && "{[\"-0123456789tfn".IndexOf(json[0]) >= 0)
+                        Data = JsonConvert.DeserializeObject<T>(json);
                     else
                         Message = body;
                 }
