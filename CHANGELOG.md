@@ -103,7 +103,30 @@ cancellation, pagination) is passed. **Every consumer needs code changes** — s
   reading a value back (`long id = character.Data.CorporationId;`) or a
   `List<int>` / `int[]` built to pass in — the compiler flags each one.
 
+**ESI compatibility-date versioning**
+
+- Requests now send `X-Compatibility-Date` (this build pins `2026-08-18`, in
+  `ESI.NET.EsiVersion.CompatibilityDate`) and `X-Tenant` instead of the `/latest`
+  route prefix and `?datasource=`. ESI freezes each dated snapshot; consumers
+  stay on this contract until they upgrade the package.
+- `Routes.Map` is now a `POST` to `/route/{origin_system_id}/{destination_system_id}`
+  with `avoid_systems` / `connections` in the body and an `EsiResponse<RouteResult>`
+  return; `RoutesFlag` values are `Shorter` / `Safer` / `LessSecure`.
+- `Sovereignty.Systems` → `/sovereignty/systems` (`EsiResponse<SovereigntySystems>`);
+  `Sovereignty.Structures` removed.
+- `Information`: `title` removed, `AchievementScore` / `CharacterTitleId` /
+  `CorporationTitle` added. `Corporation`: `FactionId` → `EnlistedFactionId`,
+  `TaxRate` → `TaxRates` object, `FriendlyFire` / `Palette` / `State` / `Type` added.
+
 ### Added
+
+- **Every ESI endpoint added since 2020 is now wrapped** (coverage 233/233 at
+  compatibility date `2026-08-18`). New accessors: `FreelanceJobs`,
+  `MilitaryCampaigns`, `Structures` (skyhooks / sovereignty hubs / mercenary
+  dens), `Cosmetics` (SKINR + Paragon Hub), `Meta` (changelog / compatibility
+  dates / name / status). New methods on existing accessors:
+  `Corporation.Projects*` (Corporation Projects), `Character.AccessLists*`,
+  `Character.MercenaryTacticalOperations*`. See MIGRATION.md §13 for the scopes.
 
 - `EsiCallOptions.CancellationToken` — honoured by every request.
 - `EsiCallOptions.IfNoneMatch` + `EsiResponse<T>.ETag` — per-call conditional

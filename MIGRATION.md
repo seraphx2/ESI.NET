@@ -192,6 +192,54 @@ What the compiler flags is the other direction: a value you *read back* is now
 `long`, so `int id = character.Data.CorporationId;` becomes `long id = …`, and a
 `List<int>` / `int[]` you built to pass in becomes `List<long>` / `long[]`.
 
+## 12. ESI compatibility-date versioning
+
+ESI is moving off the `/latest` route prefix and the `?datasource=` query
+parameter and onto a per-request **`X-Compatibility-Date`** header that pins a
+frozen dated snapshot of the API. This build targets **`2026-08-18`**
+(`ESI.NET.EsiVersion.CompatibilityDate`). It is not a config knob — you stay on
+this contract until you upgrade the package, and each bump ships with its own
+migration note. Nothing to do; every request now sends the header, and the
+`DataSource` travels as `X-Tenant` instead of `?datasource=`.
+
+Consequences of moving from the old (effectively `2020-01-01`) view to
+`2026-08-18`:
+
+- `GET /route/{origin}/{destination}` is now
+  `POST /route/{origin_system_id}/{destination_system_id}`. `Routes.Map` keeps
+  its name but takes `origin_system_id` / `destination_system_id`, moves
+  `avoid_systems` / `connections` into the request body (`connections` is now
+  `[from, to]` pairs), adds `security_penalty`, and returns
+  `EsiResponse<RouteResult>` (`RouteResult.Route` is the system-id array).
+  `RoutesFlag` values are `Shorter` / `Safer` / `LessSecure`.
+- `Sovereignty.Systems` moved from `/sovereignty/map` to `/sovereignty/systems`
+  (the rework that folded in `/sovereignty/structures`) and returns
+  `EsiResponse<SovereigntySystems>`. `Sovereignty.Structures` is removed.
+- `Character` (`Information`): `title` is gone; `AchievementScore`,
+  `CharacterTitleId`, `CorporationTitle` are new.
+- `Corporation`: `FactionId` → `EnlistedFactionId`; `TaxRate` (a `decimal`) →
+  `TaxRates` (`{ Isk, LoyaltyPoint }`); `FriendlyFire`, `Palette`, `State`,
+  `Type` are new.
+
+## 13. New endpoint groups
+
+Everything ESI added since 2020 is now wrapped. New accessors on `IEsiClient`:
+
+| Accessor | Endpoints | Scope(s) |
+| --- | --- | --- |
+| `FreelanceJobs` | public listing, character & corporation views | `esi-characters.read_freelance_jobs.v1`, `esi-corporations.read_freelance_jobs.v1` |
+| `MilitaryCampaigns` | campaigns, objectives, the character's objective progress | `esi.activity.char:read` |
+| `Structures` | skyhooks, sovereignty hubs, mercenary dens, raidable skyhooks | `esi-structures.read_corporation.v1`, `esi-structures.read_character.v1` |
+| `Cosmetics` | SKINR designs, licenses, components; Paragon Hub listings | `esi.cosmetic.char:read` |
+| `Meta` | `/meta/changelog`, `/meta/compatibility-dates`, `/meta/name`, `/meta/status` | — |
+
+Plus new methods on existing accessors: `Corporation.Projects` /
+`Corporation.Project` / `Corporation.ProjectContributors` /
+`Corporation.ProjectContribution` (`esi-corporations.read_projects.v1`);
+`Character.AccessLists` / `Character.AccessList` (`esi-access.read_lists.v1`);
+`Character.MercenaryTacticalOperations` / `Character.MercenaryTacticalOperation`
+(`esi-activities.read_character.v1`).
+
 ---
 
 ## What did not change

@@ -35,9 +35,13 @@ Add an `EsiConfig` section to `appsettings.json`:
 - **`UserAgent` is required.** Use something that identifies you — a character
   and/or project name. CCP will contact you before cutting off access if they can
   tell who you are. The client throws on construction without it.
-- `DataSource` is `Tranquility`, `Singularity`, or `Serenity`.
+- `DataSource` is `Tranquility` or `Singularity` (sent as ESI's `X-Tenant`).
 - `ClientId` / `SecretKey` / `CallbackUrl` are only needed for
   [authenticated requests](#authenticated-requests-sso).
+
+Every request pins an ESI **compatibility date** (`X-Compatibility-Date`), so the
+response shapes this package binds to stay fixed until you upgrade it. The
+current target is in `ESI.NET.EsiVersion.CompatibilityDate`.
 
 Register it and take `IEsiClient` in your constructor:
 

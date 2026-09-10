@@ -96,8 +96,11 @@ namespace ESI.NET.IntegrationTests
             Ok.NonEmpty(await LiveFixture.Call(() => Esi.Insurance.Levels()));
 
         [Fact]
-        public async Task Sovereignty_map() =>
-            Ok.NonEmpty(await LiveFixture.Call(() => Esi.Sovereignty.Systems()));
+        public async Task Sovereignty_systems()
+        {
+            var r = Ok.Response(await LiveFixture.Call(() => Esi.Sovereignty.Systems()));
+            Assert.NotEmpty(r.Data.SolarSystems);
+        }
 
         [Fact]
         public async Task Industry_facilities_and_systems()
@@ -116,12 +119,49 @@ namespace ESI.NET.IntegrationTests
         [Fact]
         public async Task Route_between_two_hubs()
         {
-            var r = await LiveFixture.Call(() => Esi.Routes.Map(_f.JitaSystemId, _f.AmarrSystemId));
-            Ok.NonEmpty(r);
+            var r = Ok.Response(await LiveFixture.Call(() => Esi.Routes.Map(_f.JitaSystemId, _f.AmarrSystemId)));
+            Assert.NotEmpty(r.Data.Route);
         }
 
         [Fact]
         public async Task Loyalty_store_offers() =>
             Ok.NonEmpty(await LiveFixture.Call(() => Esi.Loyalty.Offers(_f.LpCorporationId)));
+
+        // ---- endpoints added in the 2026 snapshot -------------------------
+
+        [Fact]
+        public async Task Meta_compatibility_dates_lists_the_pinned_one()
+        {
+            var r = Ok.Response(await LiveFixture.Call(() => Esi.Meta.CompatibilityDates()));
+            Assert.Contains(ESI.NET.EsiVersion.CompatibilityDate, r.Data.CompatibilityDates);
+        }
+
+        [Fact]
+        public async Task Meta_status_reports_route_health()
+        {
+            var r = Ok.Response(await LiveFixture.Call(() => Esi.Meta.Status()));
+            Assert.NotEmpty(r.Data.Routes);
+        }
+
+        [Fact]
+        public async Task Military_campaigns_round_trip()
+        {
+            var r = Ok.Response(await LiveFixture.Call(() => Esi.MilitaryCampaigns.All()));
+            Assert.NotNull(r.Data.Campaigns);
+        }
+
+        [Fact]
+        public async Task Freelance_jobs_public_listing()
+        {
+            var r = Ok.Response(await LiveFixture.Call(() => Esi.FreelanceJobs.All()));
+            Assert.NotNull(r.Data.FreelanceJobs);
+        }
+
+        [Fact]
+        public async Task Raidable_skyhooks_round_trip()
+        {
+            var r = Ok.Response(await LiveFixture.Call(() => Esi.Structures.RaidableSkyhooks()));
+            Assert.NotNull(r.Data.Skyhooks);
+        }
     }
 }
