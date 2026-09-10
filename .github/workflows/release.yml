@@ -1,12 +1,17 @@
 name: Release
 
-# Fires on every push to master — i.e. every dev->master merge — and publishes a
-# release: a CalVer version from today's date + existing tags, the NuGet package
-# pushed to nuget.org via Trusted Publishing (OIDC, no stored key), and a GitHub
-# Release (which creates the tag). Doc-only and CI-only merges are skipped
-# (paths-ignore); to opt any other merge out, put "[skip release]" in the
-# merge-commit message. workflow_dispatch stays for manual drafts / re-runs — a
-# draft build packs and attaches the .nupkg but does not push to NuGet.
+# push to master (every dev->master merge) -> full release:
+#   a CalVer version (YYYY.(MM*100+DD).BUILD from today + existing tags), pushed
+#   to nuget.org via Trusted Publishing (OIDC, no stored key) and mirrored to
+#   GitHub Packages, a GitHub Release (which creates the tag), and a Discord
+#   embed. Doc-/CI-only merges are skipped (paths-ignore); put "[skip release]"
+#   in the merge commit to opt any other merge out.
+#
+# workflow_dispatch -> prerelease by default:
+#   packs <version>-<label>.<run_number>, pushes it to nuget.org + GitHub
+#   Packages, and stops - no tag, no GitHub Release, no Discord. Consumers opt in
+#   with `dotnet add package ESI.NET --prerelease`; same feed, no repo switch.
+#   Set prerelease=false on the dispatch to cut a full release by hand instead.
 on:
   push:
     branches: [master]
@@ -16,10 +21,14 @@ on:
       - '.github/**'
   workflow_dispatch:
     inputs:
-      draft:
-        description: "Draft: pack + attach the .nupkg, but don't push to NuGet"
+      prerelease:
+        description: 'Prerelease: publish <version>-<label>.<run#> to NuGet; no tag / release / announce'
         type: boolean
-        default: false
+        default: true
+      prerelease_label:
+        description: 'Prerelease label (beta, rc, alpha, ...)'
+        type: string
+        default: beta
 
 # One release at a time; never cancel a run that may have already published.
 concurrency:
@@ -29,6 +38,7 @@ concurrency:
 permissions:
   contents: write
   id-token: write # OIDC token for NuGet Trusted Publishing (no stored API key)
+  packages: write # GitHub Packages mirror
 
 jobs:
   release:
@@ -49,10 +59,22 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      # A dispatch with prerelease=true (the default) appends -<label>.<run_number>
+      # to the CalVer base. run_number is monotonic, so betas order correctly
+      # under SemVer. Prereleases never create a tag, so compute-version.sh only
+      # ever sees real releases.
       - name: Compute version
         id: version
         shell: bash
-        run: echo "value=$(bash scripts/compute-version.sh)" >> "$GITHUB_OUTPUT"
+        run: |
+          base=$(bash scripts/compute-version.sh)
+          if [ "${{ inputs.prerelease }}" = "true" ]; then
+            echo "value=${base}-${{ inputs.prerelease_label }}.${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+            echo "prerelease=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=${base}" >> "$GITHUB_OUTPUT"
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Test
         shell: bash
@@ -78,13 +100,11 @@ jobs:
       # for seraphx2/ESI.NET -> release.yml. No secret is stored.
       - name: NuGet login (OIDC)
         id: nuget_login
-        if: ${{ !inputs.draft }}
         uses: NuGet/login@v1
         with:
           user: robmburke
 
       - name: Push to NuGet.org
-        if: ${{ !inputs.draft }}
         shell: bash
         run: >-
           dotnet nuget push "nupkgs/*.nupkg"
@@ -92,23 +112,33 @@ jobs:
           --source https://api.nuget.org/v3/index.json
           --skip-duplicate
 
+      # Mirror. Auth is the automatic GITHUB_TOKEN. Note: consuming from here
+      # needs a PAT with read:packages - it is a backup feed, not the public one.
+      - name: Push to GitHub Packages
+        shell: bash
+        run: >-
+          dotnet nuget push "nupkgs/*.nupkg"
+          --api-key ${{ secrets.GITHUB_TOKEN }}
+          --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+          --skip-duplicate
+
       - name: Create GitHub Release
         id: gh_release
+        if: ${{ steps.version.outputs.prerelease == 'false' }}
         uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.version.outputs.value }}
           name: ESI.NET ${{ steps.version.outputs.value }}
-          draft: ${{ inputs.draft || false }}
           generate_release_notes: true
           files: ./nupkgs/*.nupkg
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Rich embed to the project Discord. Test webhook for manual dispatch runs,
-      # the real one for a dev->master release. jq builds the payload so nothing
-      # needs hand-escaping.
+      # Rich embed to the project Discord. Full releases only. Test webhook for a
+      # manual dispatch, the real one for a dev->master merge. jq builds the
+      # payload so nothing needs hand-escaping.
       - name: Announce on Discord
-        if: ${{ success() && !inputs.draft }}
+        if: ${{ success() && steps.version.outputs.prerelease == 'false' }}
         shell: bash
         env:
           DISCORD_WEBHOOK: ${{ github.event_name == 'workflow_dispatch' && secrets.DISCORD_TEST_WEBHOOK_URL || secrets.DISCORD_WEBHOOK_URL }}
