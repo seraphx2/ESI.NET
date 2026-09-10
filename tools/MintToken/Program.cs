@@ -32,7 +32,10 @@ if (clientId.Length == 0 || secretKey.Length == 0)
 var port = int.TryParse(Env("ESI_CALLBACK_PORT"), out var parsedPort) ? parsedPort : 8080;
 var callbackUrl = $"http://localhost:{port}/callback";
 
-var scopesRaw = Env("ESI_SCOPES") is { Length: > 0 } raw ? raw : "esi-wallet.read_character_wallet.v1";
+var wantAll = args.Any(a => a is "--all-scopes" or "--all");
+var scopesRaw = wantAll ? "all"
+    : Env("ESI_SCOPES") is { Length: > 0 } raw ? raw
+    : "esi-wallet.read_character_wallet.v1";
 List<string> scopes;
 if (string.Equals(scopesRaw.Trim(), "all", StringComparison.OrdinalIgnoreCase))
 {

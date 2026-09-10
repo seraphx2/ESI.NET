@@ -41,7 +41,7 @@ argv or shell history). Answer `y`, or skip it and copy the printed command.
 | --- | --- | --- |
 | `ESI_CLIENT_ID` | *(prompt)* | Application Client ID |
 | `ESI_SECRET_KEY` | *(masked prompt)* | Application Secret Key |
-| `ESI_SCOPES` | `esi-wallet.read_character_wallet.v1` | space- or comma-separated scope list, or `all` to request every scope in the ESI spec (used by `probe.yml`) |
+| `ESI_SCOPES` | `esi-wallet.read_character_wallet.v1` | space/comma scope list, or `all` for every scope in the ESI spec (or pass `--all-scopes`) |
 | `ESI_CALLBACK_PORT` | `8080` | loopback port; the callback becomes `http://localhost:<port>/callback` |
 | `ESI_DATASOURCE` | `Tranquility` | `Tranquility` or `Serenity` |
 | `ESI_SET_SECRET` | *(unset)* | `1` / `true` / `yes` → set the secret with `gh` without prompting |
