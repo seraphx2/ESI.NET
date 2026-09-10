@@ -10,6 +10,15 @@ response's field set / shape / enum changed. Type width, `string`-vs-typed-enum,
 and date-as-string are not checked; a model authored from the spec gets those
 right, and they are not what "the API changed" looks like.
 
+**Target: the latest published ESI compatibility date.** SpecCheck reads
+`/meta/compatibility-dates`, takes the newest, and checks the wrapper against that
+snapshot — not against the date the wrapper currently pins
+(`ESI.NET.EsiVersion.CompatibilityDate`). So when CCP publishes a new date the run
+goes red with the diff (new endpoints, changed shapes), which is the signal to do
+a catch-up release: wrap/fix the changes, bump `EsiVersion.CompatibilityDate` to
+match, and the run goes green again. When the two dates are equal the wrapper is
+current.
+
 Deliberate exceptions live in [`allowlist.txt`](allowlist.txt): spec endpoints
 the wrapper intentionally does not implement. Shared model fields are **not**
 listed there — SchemaCheck works those out itself (below).

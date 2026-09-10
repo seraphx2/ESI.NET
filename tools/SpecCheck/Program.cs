@@ -38,9 +38,38 @@ if (sourceDir is null || !Directory.Exists(sourceDir))
 
 using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(30) };
 http.DefaultRequestHeaders.UserAgent.ParseAdd("ESI.NET-spec-check/1.0");
-// Validate against the exact snapshot ESI.NET pins.
-http.DefaultRequestHeaders.Add("X-Compatibility-Date", ESI.NET.EsiVersion.CompatibilityDate);
-Console.WriteLine($"checking against ESI compatibility date {ESI.NET.EsiVersion.CompatibilityDate}");
+
+// SpecCheck targets the LATEST published ESI snapshot, not the date the wrapper
+// currently pins. A newly published compatibility date then shows up as drift to
+// act on (wrap the new endpoints, fix the changed shapes, bump
+// EsiVersion.CompatibilityDate, cut a release) instead of a silent gap.
+var pinnedDate = EsiVersion.CompatibilityDate;
+if (specSource.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+{
+    var targetDate = pinnedDate;
+    try
+    {
+        using var datesResponse = await http.GetAsync("https://esi.evetech.net/meta/compatibility-dates");
+        datesResponse.EnsureSuccessStatusCode();
+        using var doc = System.Text.Json.JsonDocument.Parse(await datesResponse.Content.ReadAsStringAsync());
+        var latest = doc.RootElement.GetProperty("compatibility_dates").EnumerateArray()
+            .Select(e => e.GetString())
+            .Where(d => !string.IsNullOrEmpty(d))
+            .OrderByDescending(d => d, StringComparer.Ordinal)
+            .FirstOrDefault();
+        if (!string.IsNullOrEmpty(latest))
+            targetDate = latest!;
+    }
+    catch (Exception ex)
+    {
+        Console.Error.WriteLine($"(could not read /meta/compatibility-dates: {ex.Message} - falling back to the pinned date)");
+    }
+
+    http.DefaultRequestHeaders.Add("X-Compatibility-Date", targetDate);
+    Console.WriteLine(targetDate == pinnedDate
+        ? $"ESI compatibility date {targetDate} (EsiVersion.CompatibilityDate is current)"
+        : $"checking against latest ESI compatibility date {targetDate}; the wrapper pins {pinnedDate} - a catch-up release is due");
+}
 
 Spec spec;
 try
