@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#123253"/>
+      <stop offset="1" stop-color="#08131F"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="128" height="128" rx="24" ry="24" fill="url(#bg)"/>
+
+  <!-- outer aperture -->
+  <polygon points="64,22 100.4,43 100.4,85 64,106 27.6,85 27.6,43"
+           fill="none" stroke="#37C6E8" stroke-width="7" stroke-linejoin="round"/>
+
+  <!-- vertex nodes -->
+  <circle cx="64"    cy="22"  r="5.5" fill="#37C6E8"/>
+  <circle cx="100.4" cy="43"  r="5.5" fill="#37C6E8"/>
+  <circle cx="100.4" cy="85"  r="5.5" fill="#37C6E8"/>
+  <circle cx="64"    cy="106" r="5.5" fill="#37C6E8"/>
+  <circle cx="27.6"  cy="85"  r="5.5" fill="#37C6E8"/>
+  <circle cx="27.6"  cy="43"  r="5.5" fill="#37C6E8"/>
+
+  <!-- inner core -->
+  <polygon points="64,44 82.5,54.5 82.5,73.5 64,84 45.5,73.5 45.5,54.5"
+           fill="#37C6E8" fill-opacity="0.16" stroke="#7CE3F6" stroke-width="3" stroke-linejoin="round"/>
+  <circle cx="64" cy="64" r="9" fill="#8FE9F8"/>
+</svg>

@@ -14,6 +14,11 @@
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>https://github.com/seraphx2/ESI.NET</PackageProjectUrl>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageTags>eve-online;eve;esi;ccp;api;wrapper;sso</PackageTags>
+    <Copyright>Copyright © Robert Burke</Copyright>
+    <PackageReleaseNotes>See CHANGELOG.md and MIGRATION.md in the repository.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -37,6 +42,14 @@
     <None Include="..\LICENSE.txt">
       <Pack>True</Pack>
       <PackagePath>LICENSE.txt</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\assets\icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
     </None>
   </ItemGroup>
 
