@@ -31,8 +31,9 @@ namespace ESI.NET.Models.Universe
         [JsonProperty("race_id")]
         public long RaceId { get; set; }
 
+        /// <summary>Null for bloodlines with no associated starter ship (the spec claims non-null; ESI sends null).</summary>
         [JsonProperty("ship_type_id")]
-        public long ShipTypeId { get; set; }
+        public long? ShipTypeId { get; set; }
 
         [JsonProperty("willpower")]
         public long Willpower { get; set; }
