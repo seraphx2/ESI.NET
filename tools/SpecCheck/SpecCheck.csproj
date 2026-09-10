@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    CI drift check. Compares the live ESI OpenAPI document against what
+    ESI.NET/Logic/*.cs actually implements:
+
+      Tier 1  coverage  - endpoints in the spec but not the wrapper, and
+                          endpoints in the wrapper but no longer in the spec
+      Tier 2  schema    - each EsiResponse<T> model vs the endpoint's 200 schema
+
+    Exit code drives .github/workflows/spec-check.yml. Not packed, not shipped.
+    See tools/SpecCheck/README.md.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>ESI.NET.Tools.SpecCheck</RootNamespace>
+    <AssemblyName>spec-check</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ESI.NET\ESI.NET.csproj" />
+  </ItemGroup>
+
+</Project>
