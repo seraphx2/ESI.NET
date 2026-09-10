@@ -296,10 +296,15 @@ namespace ESI.NET
             // Best-effort enrichment: a failure here does not invalidate the token.
             try
             {
-                var url = $"{_config.EsiUrl}latest/characters/affiliation/?datasource={_config.DataSource.ToEsiValue()}";
-                var body = new StringContent(JsonConvert.SerializeObject(new[] { authorizedCharacter.CharacterID }), Encoding.UTF8, "application/json");
+                var url = $"{_config.EsiUrl.TrimEnd('/')}/characters/affiliation/";
+                var request = new HttpRequestMessage(HttpMethod.Post, url)
+                {
+                    Content = new StringContent(JsonConvert.SerializeObject(new[] { authorizedCharacter.CharacterID }), Encoding.UTF8, "application/json"),
+                };
+                request.Headers.Add("X-Compatibility-Date", EsiVersion.CompatibilityDate);
+                request.Headers.Add("X-Tenant", _config.DataSource.ToEsiValue());
 
-                var affiliationResponse = await _client.PostAsync(url, body).ConfigureAwait(false);
+                var affiliationResponse = await _client.SendAsync(request).ConfigureAwait(false);
                 var affiliations = await EsiResponse<List<Affiliation>>.CreateAsync(affiliationResponse, "Post|/character/affiliations/").ConfigureAwait(false);
 
                 if (affiliations.StatusCode == HttpStatusCode.OK && affiliations.Data?.Count > 0)

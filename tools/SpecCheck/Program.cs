@@ -38,6 +38,9 @@ if (sourceDir is null || !Directory.Exists(sourceDir))
 
 using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(30) };
 http.DefaultRequestHeaders.UserAgent.ParseAdd("ESI.NET-spec-check/1.0");
+// Validate against the exact snapshot ESI.NET pins.
+http.DefaultRequestHeaders.Add("X-Compatibility-Date", ESI.NET.EsiVersion.CompatibilityDate);
+Console.WriteLine($"checking against ESI compatibility date {ESI.NET.EsiVersion.CompatibilityDate}");
 
 Spec spec;
 try

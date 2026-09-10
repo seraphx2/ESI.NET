@@ -5,6 +5,9 @@ namespace ESI.NET.Models.Character
 {
     public class Information
     {
+        [JsonProperty("achievement_score")]
+        public long AchievementScore { get; set; }
+
         [JsonProperty("alliance_id")]
         public long AllianceId { get; set; }
 
@@ -14,8 +17,14 @@ namespace ESI.NET.Models.Character
         [JsonProperty("bloodline_id")]
         public long BloodlineId { get; set; }
 
+        [JsonProperty("character_title_id")]
+        public string CharacterTitleId { get; set; }
+
         [JsonProperty("corporation_id")]
         public long CorporationId { get; set; }
+
+        [JsonProperty("corporation_title")]
+        public string CorporationTitle { get; set; }
 
         [JsonProperty("description")]
         public string Description { get; set; }
@@ -34,8 +43,5 @@ namespace ESI.NET.Models.Character
 
         [JsonProperty("security_status")]
         public decimal SecurityStatus { get; set; }
-
-        [JsonProperty("title")]
-        public string Title { get; set; }
     }
 }

@@ -20,8 +20,12 @@ namespace ESI.NET.Models.Corporation
         [JsonProperty("description")]
         public string Description { get; set; }
 
-        [JsonProperty("faction_id")]
-        public long FactionId { get; set; }
+        [JsonProperty("enlisted_faction_id")]
+        public long EnlistedFactionId { get; set; }
+
+        /// <summary>"legal" or "illegal"</summary>
+        [JsonProperty("friendly_fire")]
+        public string FriendlyFire { get; set; }
 
         [JsonProperty("home_station_id")]
         public long HomeStationId { get; set; }
@@ -32,19 +36,51 @@ namespace ESI.NET.Models.Corporation
         [JsonProperty("name")]
         public string Name { get; set; }
 
+        [JsonProperty("palette")]
+        public CorporationPalette Palette { get; set; }
+
         [JsonProperty("shares")]
         public long Shares { get; set; }
 
-        [JsonProperty("tax_rate")]
-        public decimal TaxRate { get; set; }
+        /// <summary>"active" or "closed"</summary>
+        [JsonProperty("state")]
+        public string State { get; set; }
+
+        [JsonProperty("tax_rates")]
+        public CorporationTaxRates TaxRates { get; set; }
 
         [JsonProperty("ticker")]
         public string Ticker { get; set; }
+
+        /// <summary>"player_owned" or "npc_owned"</summary>
+        [JsonProperty("type")]
+        public string Type { get; set; }
 
         [JsonProperty("url")]
         public string Url { get; set; }
 
         [JsonProperty("war_eligible")]
         public bool WarEligible { get; set; }
+    }
+
+    public class CorporationTaxRates
+    {
+        [JsonProperty("isk")]
+        public decimal Isk { get; set; }
+
+        [JsonProperty("loyalty_point")]
+        public decimal LoyaltyPoint { get; set; }
+    }
+
+    public class CorporationPalette
+    {
+        [JsonProperty("main_color")]
+        public string MainColor { get; set; }
+
+        [JsonProperty("secondary_color")]
+        public string SecondaryColor { get; set; }
+
+        [JsonProperty("tertiary_color")]
+        public string TertiaryColor { get; set; }
     }
 }

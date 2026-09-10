@@ -22,16 +22,22 @@ namespace ESI.NET
                 foreach (var property in replacements)
                     endpoint = endpoint.Replace($"{{{property.Key}}}", property.Value);
 
-            var url = $"{config.EsiUrl}latest{endpoint}?datasource={config.DataSource.ToEsiValue()}";
+            var url = $"{config.EsiUrl.TrimEnd('/')}{endpoint}";
 
             //Attach query string parameters
+            var query = new List<string>();
             if (parameters != null)
-                url += $"&{string.Join("&", parameters)}";
-
+                query.AddRange(parameters);
             if (options.Page.HasValue)
-                url += $"&page={options.Page.Value}";
+                query.Add($"page={options.Page.Value}");
+            if (query.Count > 0)
+                url += $"?{string.Join("&", query)}";
 
             var request = new HttpRequestMessage(httpMethod, url);
+
+            // ESI is versioned by a frozen dated snapshot, selected per request.
+            request.Headers.Add("X-Compatibility-Date", EsiVersion.CompatibilityDate);
+            request.Headers.Add("X-Tenant", config.DataSource.ToEsiValue());
 
             //Attach token to request header if this endpoint requires an authorized character
             if (security == RequestSecurity.Authenticated)

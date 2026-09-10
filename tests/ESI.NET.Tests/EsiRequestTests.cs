@@ -49,12 +49,14 @@ namespace ESI.NET.Tests
             new EsiCallOptions { Character = new AuthorizedCharacterData { Token = token, CharacterID = 42 } };
 
         [Fact]
-        public async Task Public_call_builds_the_url_with_datasource()
+        public async Task Public_call_builds_a_bare_url_and_sends_the_version_headers()
         {
             var (client, h) = NewClient();
             await Execute<object>(client, Config, RequestSecurity.Public, HttpMethod.Get, "/status/", options: new EsiCallOptions());
 
-            Assert.Equal("https://esi.evetech.net/latest/status/?datasource=tranquility", h.Last.RequestUri.ToString());
+            Assert.Equal("https://esi.evetech.net/status/", h.Last.RequestUri.ToString());
+            Assert.Equal(EsiVersion.CompatibilityDate, string.Join("", h.Last.Headers.GetValues("X-Compatibility-Date")));
+            Assert.Equal("tranquility", string.Join("", h.Last.Headers.GetValues("X-Tenant")));
         }
 
         [Fact]
@@ -64,7 +66,7 @@ namespace ESI.NET.Tests
             await Execute<object>(client, Config, RequestSecurity.Public, HttpMethod.Get, "/x/{id}/",
                 replacements: new Dictionary<string, string> { { "id", "999" } }, options: new EsiCallOptions());
 
-            Assert.Contains("/latest/x/999/?", h.Last.RequestUri.ToString());
+            Assert.Equal("https://esi.evetech.net/x/999/", h.Last.RequestUri.ToString());
         }
 
         [Fact]
@@ -92,7 +94,7 @@ namespace ESI.NET.Tests
             var options = new EsiCallOptions { Page = 4 };
             await Execute<object>(client, Config, RequestSecurity.Public, HttpMethod.Get, "/x/", options: options);
 
-            Assert.Contains("&page=4", h.Last.RequestUri.ToString());
+            Assert.Contains("page=4", h.Last.RequestUri.ToString());
         }
 
         [Fact]

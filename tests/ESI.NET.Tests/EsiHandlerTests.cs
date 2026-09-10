@@ -140,7 +140,7 @@ namespace ESI.NET.Tests
             var response = await client.Status.Retrieve();   // public endpoint
 
             Assert.Equal("wiring-test", string.Join("", stub.Last.Headers.GetValues("X-User-Agent")));
-            Assert.Contains("/latest/status/", stub.Last.RequestUri.ToString());
+            Assert.Contains("esi.evetech.net/status/", stub.Last.RequestUri.ToString());
         }
     }
 }

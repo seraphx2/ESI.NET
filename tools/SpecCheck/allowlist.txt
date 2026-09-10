@@ -1,13 +1,66 @@
 # SpecCheck allowlist - deliberate exceptions.
 #
 # One "METHOD /path" per line. Listed endpoints are exempt from the
-# "missing-endpoint" check: they exist in the ESI spec but the wrapper
-# intentionally does not implement them. Delete a line to make SpecCheck
-# demand the endpoint again.
+# "missing-endpoint" check. Delete a line to make SpecCheck demand it.
 #
-# Cross-endpoint model fields do NOT belong here - SchemaCheck figures those
-# out on its own (a property is only "extra" if it is in no schema for any
-# endpoint using that model class).
+# Cross-endpoint model fields do NOT belong here - SchemaCheck works those out
+# on its own (a property is only "extra" if it is in no schema for any endpoint
+# using that model class).
 
+# --- Deferred coverage: new since the 2020 snapshot, being wrapped in the
+#     current release. Each line is removed as the endpoint lands. ---
+
+# Corporation Projects (2025-08-26)
+GET /corporations/{corporation_id}/projects
+GET /corporations/{corporation_id}/projects/{project_id}
+GET /corporations/{corporation_id}/projects/{project_id}/contribution/{character_id}
+GET /corporations/{corporation_id}/projects/{project_id}/contributors
+
+# Freelance Jobs (2025-12-16)
+GET /freelance-jobs
+GET /freelance-jobs/{job_id}
+GET /characters/{character_id}/freelance-jobs
+GET /characters/{character_id}/freelance-jobs/{job_id}/participation
+GET /corporations/{corporation_id}/freelance-jobs
+GET /corporations/{corporation_id}/freelance-jobs/{job_id}/participants
+
+# Military Campaigns
+GET /military-campaigns
+GET /military-campaigns/{campaign_id}
+GET /military-campaigns/{campaign_id}/objectives
+GET /military-campaigns/{campaign_id}/objectives/{objective_id}
+GET /characters/{character_id}/military-campaigns/objectives
+GET /characters/{character_id}/military-campaigns/objectives/{objective_id}
+
+# Structures: skyhooks / mercenary dens / sovereignty hubs
+GET /corporations/{corporation_id}/structures/skyhooks
+GET /corporations/{corporation_id}/structures/skyhooks/{skyhook_id}
+GET /corporations/{corporation_id}/structures/sovereignty-hubs
+GET /corporations/{corporation_id}/structures/sovereignty-hubs/{sovereignty_hub_id}
+GET /characters/{character_id}/structures/mercenary-dens
+GET /characters/{character_id}/structures/mercenary-dens/{mercenary_den_id}
+GET /skyhooks/raidable
+
+# SKINR / Paragon Hub
+GET /paragon-hub/skinr
+GET /paragon-hub/skinr/alliances/{alliance_id}
+GET /paragon-hub/skinr/characters/{character_id}
+GET /paragon-hub/skinr/corporations/{corporation_id}
+GET /characters/{character_id}/paragon-hub/skinr
+GET /cosmetics/skinr/{skinr_id}
+GET /characters/{character_id}/cosmetics/skinr
+GET /characters/{character_id}/cosmetics/skinr/components
+
+# Access Lists
+GET /characters/{character_id}/access-lists
+GET /characters/{character_id}/access-lists/{access_list_id}
+
+# Mercenary Tactical Operations
+GET /characters/{character_id}/mercenary-tactical-operations
+GET /characters/{character_id}/mercenary-tactical-operations/{operation_id}
+
+# Meta
 GET /meta/changelog
 GET /meta/compatibility-dates
+GET /meta/name
+GET /meta/status
