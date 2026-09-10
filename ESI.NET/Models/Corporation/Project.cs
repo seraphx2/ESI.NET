@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 
@@ -59,11 +58,11 @@ namespace ESI.NET.Models.Corporation
         public ProjectContributionConfig Contribution { get; set; }
 
         /// <summary>
-        /// The objective config - a per-project-type discriminated union. Left as raw
-        /// JSON; inspect the single populated key (e.g. <c>deliver_item</c>, <c>mine_material</c>).
+        /// The objective config - a per-project-type discriminated union. Left as a
+        /// loose map; inspect the single populated key (e.g. <c>deliver_item</c>, <c>mine_material</c>).
         /// </summary>
         [JsonProperty("configuration")]
-        public JObject Configuration { get; set; }
+        public Dictionary<string, object> Configuration { get; set; }
     }
 
     public class ProjectProgress

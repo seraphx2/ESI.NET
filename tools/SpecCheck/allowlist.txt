@@ -13,12 +13,6 @@
 # Corporation Projects (2025-08-26)
 
 # Freelance Jobs (2025-12-16)
-GET /freelance-jobs
-GET /freelance-jobs/{job_id}
-GET /characters/{character_id}/freelance-jobs
-GET /characters/{character_id}/freelance-jobs/{job_id}/participation
-GET /corporations/{corporation_id}/freelance-jobs
-GET /corporations/{corporation_id}/freelance-jobs/{job_id}/participants
 
 # Military Campaigns
 GET /military-campaigns

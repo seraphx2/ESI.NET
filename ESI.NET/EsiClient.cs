@@ -56,6 +56,7 @@ namespace ESI.NET
             FactionWarfare = new FactionWarfareLogic(client, config);
             Fittings = new FittingsLogic(client, config);
             Fleets = new FleetsLogic(client, config);
+            FreelanceJobs = new FreelanceJobsLogic(client, config);
             Incursions = new IncursionsLogic(client, config);
             Industry = new IndustryLogic(client, config);
             Insurance = new InsuranceLogic(client, config);
@@ -89,6 +90,7 @@ namespace ESI.NET
         public FactionWarfareLogic FactionWarfare { get; set; }
         public FleetsLogic Fleets { get; set; }
         public FittingsLogic Fittings { get; set; }
+        public FreelanceJobsLogic FreelanceJobs { get; set; }
         public IncursionsLogic Incursions { get; set; }
         public IndustryLogic Industry { get; set; }
         public InsuranceLogic Insurance { get; set; }
@@ -151,6 +153,7 @@ namespace ESI.NET
         FactionWarfareLogic FactionWarfare { get; set; }
         FittingsLogic Fittings { get; set; }
         FleetsLogic Fleets { get; set; }
+        FreelanceJobsLogic FreelanceJobs { get; set; }
         IncursionsLogic Incursions { get; set; }
         IndustryLogic Industry { get; set; }
         InsuranceLogic Insurance { get; set; }
