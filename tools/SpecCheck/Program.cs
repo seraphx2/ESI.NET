@@ -12,6 +12,7 @@ using ESI.NET.Tools.SpecCheck;
 var specSource = "https://esi.evetech.net/meta/openapi.json";
 string? sourceDir = null;
 var runSchema = true;
+var runProbe = false;
 
 for (var i = 0; i < args.Length; i++)
 {
@@ -20,8 +21,9 @@ for (var i = 0; i < args.Length; i++)
         case "--spec" when i + 1 < args.Length: specSource = args[++i]; break;
         case "--source" when i + 1 < args.Length: sourceDir = args[++i]; break;
         case "--no-schema": runSchema = false; break;
+        case "--probe": runProbe = true; break;
         case "-h" or "--help":
-            Console.WriteLine("usage: spec-check [--spec <url|path>] [--source <dir>] [--no-schema]");
+            Console.WriteLine("usage: spec-check [--spec <url|path>] [--source <dir>] [--no-schema] [--probe]");
             return 0;
         default:
             Console.Error.WriteLine($"unknown argument: {args[i]}");
@@ -86,7 +88,12 @@ var wrapper = Wrapper.Scan(sourceDir, typeof(EsiClient).Assembly);
 var notWrapped = LoadAllowlist(sourceDir);
 var coverage = CoverageCheck.Run(spec, wrapper, notWrapped);
 var schema = runSchema ? SchemaCheck.Run(spec, wrapper) : null;
-return Report.Render(spec, wrapper, coverage, schema);
+var exit = Report.Render(spec, wrapper, coverage, schema);
+
+if (runProbe)
+    exit |= await Probe.RunAsync(spec, wrapper, "https://esi.evetech.net", pinnedDate);
+
+return exit;
 
 // tools/SpecCheck/allowlist.txt sits beside this project; sourceDir is <root>/ESI.NET/Logic.
 static IReadOnlySet<string> LoadAllowlist(string logicDir)

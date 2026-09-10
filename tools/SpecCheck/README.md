@@ -27,12 +27,14 @@ listed there — SchemaCheck works those out itself (below).
 dotnet run --project tools/SpecCheck            # live spec, default source
 dotnet run --project tools/SpecCheck -- --spec ./openapi.json --source ./ESI.NET/Logic
 dotnet run --project tools/SpecCheck -- --no-schema   # Tier 1 only
+dotnet run --project tools/SpecCheck -- --probe       # + live-deserialize every public GET
 ```
 
 | Flag | Default | |
 | --- | --- | --- |
 | `--spec <url\|path>` | `https://esi.evetech.net/meta/openapi.json` | OpenAPI 3.1 document |
 | `--source <dir>` | auto-detected (`ESI.NET/Logic` under the repo root) | Logic sources to scan |
+| `--probe` | off | after the checks, fetch every public GET (path params from a fixture set) live and deserialize the real body into the wrapper's model — catches nullable fields the spec claims are non-null |
 | `--no-schema` | off | Tier 1 (coverage) only |
 
 ## How it reads the wrapper

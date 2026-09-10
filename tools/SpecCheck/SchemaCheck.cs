@@ -110,10 +110,16 @@ public static class SchemaCheck
 
     public static Node FromClr(Type type, int depth, HashSet<Type> seen)
     {
+        // A property is null-tolerant if it is Nullable<T> or a reference type
+        // (string, a class). A bare value type (long, bool, DateTime, an enum) is not.
+        var nullTolerant = !type.IsValueType || Nullable.GetUnderlyingType(type) is not null;
         type = Nullable.GetUnderlyingType(type) is { } underlying ? underlying : type;
 
         if (TryScalar(type, out var scalar)) // also handles enums
+        {
+            scalar.Nullable = nullTolerant;
             return scalar;
+        }
 
         if (depth >= MaxDepth)
             return Node.Unknown("max depth");
@@ -351,6 +357,12 @@ public static class SchemaCheck
         var s = spec.JsonType;
         if (s is null || m is null)
             return;
+
+        // The spec explicitly allows null but the model is a bare value type -> throws.
+        // (ESI's spec rarely declares this; the runtime `--probe` catches the rest.)
+        if (spec.Nullable && !model.Nullable)
+            add(Severity.Error, "schema-nullable",
+                "spec allows null here; the model is a non-nullable value type and will throw on null");
 
         if (m == s)
         {
