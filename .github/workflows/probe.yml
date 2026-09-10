@@ -1,0 +1,37 @@
+name: probe (live deserialize)
+
+# Fetches every reachable GET endpoint live and deserializes the real body into
+# the wrapper's model - the check the OpenAPI document can't give us, because ESI
+# barely declares nullability. Public endpoints always; authenticated endpoints
+# when the SSO secrets are present.
+#
+# workflow_dispatch only. It exchanges ESI_REFRESH_TOKEN, which EVE rotates, so a
+# run invalidates the stored token - re-mint with tools/MintToken afterwards (the
+# scheduled integration workflow needs a valid one). That is why this is not on a
+# schedule.
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: probe-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    env:
+      ESI_USER_AGENT: 'ESI.NET probe (github.com/seraphx2/ESI.NET)'
+      ESI_CLIENT_ID: ${{ secrets.ESI_CLIENT_ID }}
+      ESI_SECRET_KEY: ${{ secrets.ESI_SECRET_KEY }}
+      ESI_REFRESH_TOKEN: ${{ secrets.ESI_REFRESH_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '8.0.x'
+      - name: Probe
+        run: dotnet run --project tools/SpecCheck --configuration Release -- --probe --no-schema
