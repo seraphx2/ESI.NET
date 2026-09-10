@@ -5,7 +5,7 @@ namespace ESI.NET.Models.Universe
     public class Moon
     {
         [JsonProperty("moon_id")]
-        public int MoonId { get; set; }
+        public long MoonId { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -14,6 +14,6 @@ namespace ESI.NET.Models.Universe
         public Position Position { get; set; }
 
         [JsonProperty("system_id")]
-        public int SystemId { get; set; }
+        public long SystemId { get; set; }
     }
 }

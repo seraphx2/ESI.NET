@@ -24,7 +24,7 @@ namespace ESI.NET.Models.Wallet
         public string Description { get; set; }
 
         [JsonProperty("first_party_id")]
-        public int FirstPartyId { get; set; }
+        public long FirstPartyId { get; set; }
 
         [JsonProperty("id")]
         public long Id { get; set; }
@@ -36,12 +36,12 @@ namespace ESI.NET.Models.Wallet
         public string RefType { get; set; }
 
         [JsonProperty("second_party_id")]
-        public int SecondPartyId { get; set; }
+        public long SecondPartyId { get; set; }
 
         [JsonProperty("tax")]
         public decimal Tax { get; set; }
 
         [JsonProperty("tax_receiver_id")]
-        public int TaxReceiverId { get; set; }
+        public long TaxReceiverId { get; set; }
     }
 }

@@ -33,8 +33,8 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/implants/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Implants(EsiCallOptions options)
-            => await Execute<int[]>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/implants/",
+        public async Task<EsiResponse<long[]>> Implants(EsiCallOptions options)
+            => await Execute<long[]>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/implants/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", options.Character.CharacterID.ToString() }

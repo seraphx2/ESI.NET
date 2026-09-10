@@ -8,7 +8,7 @@ namespace ESI.NET.Models.Corporation
         public long ShareCount { get; set; }
 
         [JsonProperty("shareholder_id")]
-        public int ShareholderId { get; set; }
+        public long ShareholderId { get; set; }
 
         [JsonProperty("shareholder_type")]
         public string ShareholderType { get; set; }

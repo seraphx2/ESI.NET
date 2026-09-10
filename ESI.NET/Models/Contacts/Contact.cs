@@ -12,7 +12,7 @@ namespace ESI.NET.Models.Contacts
         public string ContactType { get; set; }
 
         [JsonProperty("contact_id")]
-        public int ContactId { get; set; }
+        public long ContactId { get; set; }
 
         [JsonProperty("is_watched")]
         public bool IsWatched { get; set; }

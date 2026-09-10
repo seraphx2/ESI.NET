@@ -9,13 +9,13 @@ namespace ESI.NET.Models.Corporation
         public string Action { get; set; }
 
         [JsonProperty("character_id")]
-        public int CharacterId { get; set; }
+        public long CharacterId { get; set; }
 
         [JsonProperty("container_id")]
         public long ContainerId { get; set; }
 
         [JsonProperty("container_type_id")]
-        public int ContainerTypeId { get; set; }
+        public long ContainerTypeId { get; set; }
 
         [JsonProperty("location_flag")]
         public string LocationFlag { get; set; }
@@ -27,18 +27,18 @@ namespace ESI.NET.Models.Corporation
         public DateTime LoggedAt { get; set; }
 
         [JsonProperty("new_config_bitmask")]
-        public int NewConfigBitmask { get; set; }
+        public long NewConfigBitmask { get; set; }
 
         [JsonProperty("old_config_bitmask")]
-        public int OldConfigBitmask { get; set; }
+        public long OldConfigBitmask { get; set; }
 
         [JsonProperty("password_type")]
         public string PasswordType { get; set; }
 
         [JsonProperty("quantity")]
-        public int Quantity { get; set; }
+        public long Quantity { get; set; }
 
         [JsonProperty("type_id")]
-        public int TypeId { get; set; }
+        public long TypeId { get; set; }
     }
 }

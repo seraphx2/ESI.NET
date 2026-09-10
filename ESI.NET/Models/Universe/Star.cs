@@ -11,10 +11,10 @@ namespace ESI.NET.Models.Universe
         public string Name { get; set; }
 
         [JsonProperty("solar_system_id")]
-        public int SolarSystemId { get; set; }
+        public long SolarSystemId { get; set; }
 
         [JsonProperty("type_id")]
-        public int TypeId { get; set; }
+        public long TypeId { get; set; }
 
         [JsonProperty("age")]
         public long Age { get; set; }
@@ -29,6 +29,6 @@ namespace ESI.NET.Models.Universe
         public string SpectralClass { get; set; }
 
         [JsonProperty("temperature")]
-        public int Temperature { get; set; }
+        public long Temperature { get; set; }
     }
 }

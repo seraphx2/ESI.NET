@@ -9,13 +9,13 @@ namespace ESI.NET.Models.Market
         public long OrderId { get; set; }
 
         [JsonProperty("type_id")]
-        public int TypeId { get; set; }
+        public long TypeId { get; set; }
 
         /// <summary>
         /// Only returned in /characters/{character_id}/orders/
         /// </summary>
         [JsonProperty("region_id")]
-        public int RegionId { get; set; }
+        public long RegionId { get; set; }
 
         [JsonProperty("system_id")]
         public long SystemId { get; set; }
@@ -33,10 +33,10 @@ namespace ESI.NET.Models.Market
         public decimal Price { get; set; }
 
         [JsonProperty("volume_total")]
-        public int VolumeTotal { get; set; }
+        public long VolumeTotal { get; set; }
 
         [JsonProperty("volume_remain")]
-        public int VolumeRemain { get; set; }
+        public long VolumeRemain { get; set; }
 
         [JsonProperty("issued")]
         public DateTime Issued { get; set; }
@@ -54,16 +54,16 @@ namespace ESI.NET.Models.Market
         public string State { get; set; }
 
         [JsonProperty("min_volume")]
-        public int MinVolume { get; set; }
+        public long MinVolume { get; set; }
 
         /// <summary>
         /// Only returned in /characters/{character_id}/orders/
         /// </summary>
         [JsonProperty("account_id")]
-        public int AccountId { get; set; }
+        public long AccountId { get; set; }
 
         [JsonProperty("duration")]
-        public int Duration { get; set; }
+        public long Duration { get; set; }
 
         /// <summary>
         /// Only returned in /characters/{character_id}/orders/
@@ -87,6 +87,6 @@ namespace ESI.NET.Models.Market
         /// Only returned in /corporations/{corporation_id}/orders/
         /// </summary>
         [JsonProperty("wallet_division")]
-        public int WalletDivision { get; set; }
+        public long WalletDivision { get; set; }
     }
 }

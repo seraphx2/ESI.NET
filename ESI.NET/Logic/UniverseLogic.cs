@@ -30,8 +30,8 @@ namespace ESI.NET.Logic
         /// /universe/categories/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Categories(EsiCallOptions options = null)
-            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/categories/",
+        public async Task<EsiResponse<long[]>> Categories(EsiCallOptions options = null)
+            => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/categories/",
                 options: options);
 
 
@@ -52,8 +52,8 @@ namespace ESI.NET.Logic
         /// /universe/constellations/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Constellations(EsiCallOptions options = null)
-            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/constellations/",
+        public async Task<EsiResponse<long[]>> Constellations(EsiCallOptions options = null)
+            => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/constellations/",
                 options: options);
 
 
@@ -83,8 +83,8 @@ namespace ESI.NET.Logic
         /// /universe/graphics/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Graphics(EsiCallOptions options = null)
-            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/graphics/",
+        public async Task<EsiResponse<long[]>> Graphics(EsiCallOptions options = null)
+            => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/graphics/",
                 options: options);
 
 
@@ -106,8 +106,8 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Groups(EsiCallOptions options = null)
-            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/groups/",
+        public async Task<EsiResponse<long[]>> Groups(EsiCallOptions options = null)
+            => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/groups/",
                 options: options);
 
         /// <summary>
@@ -182,8 +182,8 @@ namespace ESI.NET.Logic
         /// /universe/regions/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Regions(EsiCallOptions options = null)
-            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/regions/",
+        public async Task<EsiResponse<long[]>> Regions(EsiCallOptions options = null)
+            => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/regions/",
                 options: options);
 
 
@@ -237,8 +237,8 @@ namespace ESI.NET.Logic
         /// /universe/systems/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Systems(EsiCallOptions options = null)
-            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/systems/",
+        public async Task<EsiResponse<long[]>> Systems(EsiCallOptions options = null)
+            => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/systems/",
                 options: options);
 
 
@@ -260,8 +260,8 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Types(EsiCallOptions options = null)
-            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/types/",
+        public async Task<EsiResponse<long[]>> Types(EsiCallOptions options = null)
+            => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/types/",
                 options: options);
 
         /// <summary>

@@ -22,7 +22,7 @@ namespace ESI.NET.Models.Wars
         public DateTime Finished { get; set; }
 
         [JsonProperty("id")]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         [JsonProperty("mutual")]
         public bool Mutual { get; set; }
@@ -42,24 +42,24 @@ namespace ESI.NET.Models.Wars
     public class Combatant
     {
         [JsonProperty("alliance_id")]
-        public int AllianceId { get; set; }
+        public long AllianceId { get; set; }
 
         [JsonProperty("corporation_id")]
-        public int CorporationId { get; set; }
+        public long CorporationId { get; set; }
 
         [JsonProperty("isk_destroyed")]
         public float IskDestroyed { get; set; }
 
         [JsonProperty("ships_killed")]
-        public int ShipsKilled { get; set; }
+        public long ShipsKilled { get; set; }
     }
 
     public class Ally
     {
         [JsonProperty("alliance_id")]
-        public int AllianceId { get; set; }
+        public long AllianceId { get; set; }
 
         [JsonProperty("corporation_id")]
-        public int CorporationId { get; set; }
+        public long CorporationId { get; set; }
     }
 }

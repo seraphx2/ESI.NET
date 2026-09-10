@@ -12,7 +12,7 @@ namespace ESI.NET.Models.Character
         public long NotificationId { get; set; }
 
         [JsonProperty("sender_id")]
-        public int SenderId { get; set; }
+        public long SenderId { get; set; }
 
         [JsonProperty("sender_type")]
         public string SenderType { get; set; }

@@ -254,7 +254,7 @@ namespace ESI.NET
                 Token = token.AccessToken,
                 CharacterName = nameClaim,
                 CharacterOwnerHash = ownerClaim,
-                CharacterID = int.Parse(subjectClaim.Split(':').Last()),
+                CharacterID = long.Parse(subjectClaim.Split(':').Last()),
                 ExpiresOn = jwt.ValidTo,
                 Scopes = scopesClaim,
             };

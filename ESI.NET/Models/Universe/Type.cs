@@ -19,16 +19,16 @@ namespace ESI.NET.Models.Universe
         public List<Dogma.Effect> DogmaEffects { get; set; } = new List<Dogma.Effect>();
 
         [JsonProperty("graphic_id")]
-        public int GraphicId { get; set; }
+        public long GraphicId { get; set; }
 
         [JsonProperty("group_id")]
-        public int GroupId { get; set; }
+        public long GroupId { get; set; }
 
         [JsonProperty("icon_id")]
-        public int IconId { get; set; }
+        public long IconId { get; set; }
 
         [JsonProperty("market_group_id")]
-        public int MarketGroupId { get; set; }
+        public long MarketGroupId { get; set; }
 
         [JsonProperty("mass")]
         public float Mass { get; set; }
@@ -40,7 +40,7 @@ namespace ESI.NET.Models.Universe
         public float PackagedVolume { get; set; }
 
         [JsonProperty("portion_size")]
-        public int PortionSize { get; set; }
+        public long PortionSize { get; set; }
 
         [JsonProperty("published")]
         public bool Published { get; set; }
@@ -49,7 +49,7 @@ namespace ESI.NET.Models.Universe
         public float Radius { get; set; }
 
         [JsonProperty("type_id")]
-        public int TypeId { get; set; }
+        public long TypeId { get; set; }
 
         [JsonProperty("volume")]
         public float Volume { get; set; }

@@ -8,10 +8,10 @@ namespace ESI.NET.Models.Corporation
     public class Outpost
     {
         [JsonProperty("owner_id")]
-        public int OwnerId { get; set; }
+        public long OwnerId { get; set; }
 
         [JsonProperty("system_id")]
-        public int SystemId { get; set; }
+        public long SystemId { get; set; }
 
         [JsonProperty("docking_cost_per_ship_volume")]
         public decimal DockingCostPerShipVolume { get; set; }
@@ -20,7 +20,7 @@ namespace ESI.NET.Models.Corporation
         public long OfficeRentalCost { get; set; }
 
         [JsonProperty("type_id")]
-        public int TypeId { get; set; }
+        public long TypeId { get; set; }
 
         [JsonProperty("reprocessing_efficiency")]
         public decimal ReprocessingEfficiency { get; set; }
@@ -29,7 +29,7 @@ namespace ESI.NET.Models.Corporation
         public decimal ReprocessingStationTake { get; set; }
 
         [JsonProperty("standing_owner_id")]
-        public int StandingOwnerId { get; set; }
+        public long StandingOwnerId { get; set; }
 
         [JsonProperty("coordinates")]
         public Position Coordinates { get; set; }

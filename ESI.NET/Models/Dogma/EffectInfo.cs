@@ -10,7 +10,7 @@ namespace ESI.NET.Models.Dogma
     public class EffectInfo
     {
         [JsonProperty("effect_id")]
-        public int EffectId { get; set; }
+        public long EffectId { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -22,16 +22,16 @@ namespace ESI.NET.Models.Dogma
         public string Description { get; set; }
 
         [JsonProperty("icon_id")]
-        public int IconId { get; set; }
+        public long IconId { get; set; }
 
         [JsonProperty("effect_category")]
-        public int EffectCategory { get; set; }
+        public long EffectCategory { get; set; }
 
         [JsonProperty("pre_expression")]
-        public int PreExpression { get; set; }
+        public long PreExpression { get; set; }
 
         [JsonProperty("post_expression")]
-        public int PostExpression { get; set; }
+        public long PostExpression { get; set; }
 
         [JsonProperty("is_offensive")]
         public bool IsOffensive { get; set; }
@@ -55,19 +55,19 @@ namespace ESI.NET.Models.Dogma
         public bool ElectronicChance { get; set; }
 
         [JsonProperty("duration_attribute_id")]
-        public int DurationAttributeId { get; set; }
+        public long DurationAttributeId { get; set; }
 
         [JsonProperty("tracking_speed_attribute_id")]
-        public int TrackingSpeedAttributeId { get; set; }
+        public long TrackingSpeedAttributeId { get; set; }
 
         [JsonProperty("discharge_attribute_id")]
-        public int DischargeAttributeId { get; set; }
+        public long DischargeAttributeId { get; set; }
 
         [JsonProperty("range_attribute_id")]
-        public int RangeAttributeId { get; set; }
+        public long RangeAttributeId { get; set; }
 
         [JsonProperty("falloff_attribute_id")]
-        public int FalloffAttributeId { get; set; }
+        public long FalloffAttributeId { get; set; }
 
         [JsonProperty("modifiers")]
         public List<Modifier> Modifiers { get; set; } = new List<Modifier>();
@@ -82,15 +82,15 @@ namespace ESI.NET.Models.Dogma
         public string Domain { get; set; }
 
         [JsonProperty("modified_attribute_id")]
-        public int ModifiedAttributeId { get; set; }
+        public long ModifiedAttributeId { get; set; }
 
         [JsonProperty("modifying_attribute_id")]
-        public int ModifyingAttributeId { get; set; }
+        public long ModifyingAttributeId { get; set; }
 
         [JsonProperty("effect_id")]
-        public int EffectId { get; set; }
+        public long EffectId { get; set; }
 
         [JsonProperty("operator")]
-        public int Operator { get; set; }
+        public long Operator { get; set; }
     }
 }

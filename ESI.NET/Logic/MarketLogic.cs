@@ -94,8 +94,8 @@ namespace ESI.NET.Logic
         /// /markets/groups/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Groups(EsiCallOptions options = null)
-            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/groups/",
+        public async Task<EsiResponse<long[]>> Groups(EsiCallOptions options = null)
+            => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/groups/",
                 options: options);
 
 
@@ -144,8 +144,8 @@ namespace ESI.NET.Logic
         /// <param name="region_id"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Types(int region_id, EsiCallOptions options = null)
-            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/{region_id}/types/",
+        public async Task<EsiResponse<long[]>> Types(int region_id, EsiCallOptions options = null)
+            => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/{region_id}/types/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "region_id", region_id.ToString() }

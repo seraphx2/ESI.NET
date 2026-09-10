@@ -10,7 +10,7 @@ namespace ESI.NET.Models.Dogma
     public class Effect
     {
         [JsonProperty("effect_id")]
-        public int EffectId { get; set; }
+        public long EffectId { get; set; }
 
         [JsonProperty("is_default")]
         public bool IsDefault { get; set; }

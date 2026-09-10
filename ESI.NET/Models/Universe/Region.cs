@@ -5,7 +5,7 @@ namespace ESI.NET.Models.Universe
     public class Region
     {
         [JsonProperty("region_id")]
-        public int RegionId { get; set; }
+        public long RegionId { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -14,6 +14,6 @@ namespace ESI.NET.Models.Universe
         public string Description { get; set; }
 
         [JsonProperty("constellations")]
-        public int[] Constellations { get; set; }
+        public long[] Constellations { get; set; }
     }
 }

@@ -85,6 +85,19 @@ cancellation, pagination) is passed. **Every consumer needs code changes** — s
 - `ResolvedInfoCategory.Structure` removed — `POST /universe/names` no longer
   resolves structure IDs, so `ResolvedInfo.Category` can never be `structure`.
 
+**Integer response fields widened to `long`**
+
+- Every `int` property on a response model is now `long` (`int[]` → `long[]`).
+  ESI types every integer in a response body as int64 and EVE IDs are already at
+  the int32 boundary. Includes `AuthorizedCharacterData.CharacterID` /
+  `AllianceID` / `CorporationID` / `FactionID`.
+- Methods returning a bare id list or scalar (`Alliance.All`, `Corporation.Members`,
+  `Corporation.MemberLimit`, `Dogma.Attributes`/`Effects`, `Mail.New`,
+  `Routes.Map`, `Wars.All`, the `Universe.*` id lists, …) now return
+  `EsiResponse<long[]>` / `EsiResponse<long>`.
+- Method parameters are unchanged (`int` still widens on its own); only storing a
+  result back into an `int` needs a change, and the compiler flags each one.
+
 ### Added
 
 - `EsiCallOptions.CancellationToken` — honoured by every request.

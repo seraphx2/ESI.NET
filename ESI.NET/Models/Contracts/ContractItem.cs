@@ -8,13 +8,13 @@ namespace ESI.NET.Models.Contracts
         public long RecordId { get; set; }
 
         [JsonProperty("type_id")]
-        public int TypeId { get; set; }
+        public long TypeId { get; set; }
 
         [JsonProperty("quantity")]
-        public int Quantity { get; set; }
+        public long Quantity { get; set; }
 
         [JsonProperty("raw_quantity")]
-        public int RawQuantity { get; set; }
+        public long RawQuantity { get; set; }
 
         [JsonProperty("is_singleton")]
         public bool IsSingleton { get; set; }
@@ -29,12 +29,12 @@ namespace ESI.NET.Models.Contracts
         public long ItemId { get; set; }
 
         [JsonProperty("material_efficiency")]
-        public int MaterialEfficiency { get; set; }
+        public long MaterialEfficiency { get; set; }
 
         [JsonProperty("runs")]
-        public int Runs { get; set; }
+        public long Runs { get; set; }
 
         [JsonProperty("time_efficiency")]
-        public int TimeEfficiency { get; set; }
+        public long TimeEfficiency { get; set; }
     }
 }

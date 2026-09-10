@@ -6,22 +6,22 @@ namespace ESI.NET.Models.Skills
     public class Attributes
     {
         [JsonProperty("charisma")]
-        public int Charisma { get; set; }
+        public long Charisma { get; set; }
 
         [JsonProperty("intelligence")]
-        public int Intelligence { get; set; }
+        public long Intelligence { get; set; }
 
         [JsonProperty("memory")]
-        public int Memory { get; set; }
+        public long Memory { get; set; }
 
         [JsonProperty("perception")]
-        public int Perception { get; set; }
+        public long Perception { get; set; }
 
         [JsonProperty("willpower")]
-        public int Willpower { get; set; }
+        public long Willpower { get; set; }
 
         [JsonProperty("bonus_remaps")]
-        public int BonusRemaps { get; set; }
+        public long BonusRemaps { get; set; }
 
         [JsonProperty("last_remap_date")]
         public DateTime LastRemapDate { get; set; }

@@ -80,7 +80,7 @@ namespace ESI.NET.IntegrationTests
         {
             var hit = list?.Find(x => string.Equals(x.Name, name, StringComparison.OrdinalIgnoreCase));
             Assert.True(hit != null, $"/universe/ids did not resolve \"{name}\"");
-            return hit.Id;
+            return (int)hit.Id; // ResolvedInfo.Id is long now; these fixtures are all small, well-known ids
         }
 
         /// <summary>

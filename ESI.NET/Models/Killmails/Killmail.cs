@@ -8,6 +8,6 @@ namespace ESI.NET.Models.Killmails
         public string Hash { get; set; }
 
         [JsonProperty("killmail_id")]
-        public int Id { get; set; }
+        public long Id { get; set; }
     }
 }

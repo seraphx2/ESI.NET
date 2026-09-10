@@ -32,7 +32,7 @@ namespace ESI.NET.Models.Clones
     public class JumpClone
     {
         [JsonProperty("jump_clone_id")]
-        public int JumpCloneId { get; set; }
+        public long JumpCloneId { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -44,6 +44,6 @@ namespace ESI.NET.Models.Clones
         public string LocationType { get; set; }
 
         [JsonProperty("implants")]
-        public int[] Implants { get; set; }
+        public long[] Implants { get; set; }
     }
 }

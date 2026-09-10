@@ -5,6 +5,6 @@ namespace ESI.NET.Models.Fittings
     public class NewFitting
     {
         [JsonProperty("fitting_id")]
-        public int FittingId { get; set; }
+        public long FittingId { get; set; }
     }
 }

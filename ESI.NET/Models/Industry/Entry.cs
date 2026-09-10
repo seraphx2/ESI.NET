@@ -11,10 +11,10 @@ namespace ESI.NET.Models.Industry
         public DateTime Date { get; set; }
 
         [JsonProperty("solar_system_id")]
-        public int SolarSystemId { get; set; }
+        public long SolarSystemId { get; set; }
 
         [JsonProperty("type_id")]
-        public int TypeId { get; set; }
+        public long TypeId { get; set; }
 
         [JsonProperty("quantity")]
         public long Quantity { get; set; }

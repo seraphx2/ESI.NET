@@ -12,7 +12,7 @@ namespace ESI.NET.Models.Mail
         public string Subject { get; set; }
 
         [JsonProperty("from")]
-        public int From { get; set; }
+        public long From { get; set; }
 
         [JsonProperty("timestamp")]
         public string Timestamp { get; set; }

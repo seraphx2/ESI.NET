@@ -18,8 +18,8 @@ namespace ESI.NET.Logic
         /// /alliances/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> All(EsiCallOptions options = null)
-            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/alliances/",
+        public async Task<EsiResponse<long[]>> All(EsiCallOptions options = null)
+            => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/alliances/",
                 options: options);
 
 
@@ -42,8 +42,8 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="alliance_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Corporations(int alliance_id, EsiCallOptions options = null)
-            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/alliances/{alliance_id}/corporations/",
+        public async Task<EsiResponse<long[]>> Corporations(int alliance_id, EsiCallOptions options = null)
+            => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/alliances/{alliance_id}/corporations/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "alliance_id", alliance_id.ToString() }

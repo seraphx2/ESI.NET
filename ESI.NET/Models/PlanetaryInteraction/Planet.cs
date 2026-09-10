@@ -9,7 +9,7 @@ namespace ESI.NET.Models.PlanetaryInteraction
         public DateTime LastUpdate { get; set; }
 
         [JsonProperty("num_pins")]
-        public int NumberOfPins { get; set; }
+        public long NumberOfPins { get; set; }
 
         [JsonProperty("owner_id")]
         public long OwnerId { get; set; }
@@ -24,6 +24,6 @@ namespace ESI.NET.Models.PlanetaryInteraction
         public long SolarSystemId { get; set; }
 
         [JsonProperty("upgrade_level")]
-        public int UpgradeLevel { get; set; }
+        public long UpgradeLevel { get; set; }
     }
 }

@@ -5,10 +5,10 @@ namespace ESI.NET.Models.Incursions
     public class Incursion
     {
         [JsonProperty("constellation_id")]
-        public int ConstellationId { get; set; }
+        public long ConstellationId { get; set; }
 
         [JsonProperty("faction_id")]
-        public int FactionId { get; set; }
+        public long FactionId { get; set; }
 
         [JsonProperty("has_boss")]
         public bool HasBoss { get; set; }

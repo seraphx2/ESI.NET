@@ -22,8 +22,8 @@ namespace ESI.NET.Logic
         /// /corporations/npccorps/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> NpcCorps(EsiCallOptions options = null)
-            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/corporations/npccorps/",
+        public async Task<EsiResponse<long[]>> NpcCorps(EsiCallOptions options = null)
+            => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/corporations/npccorps/",
                 options: options);
 
 
@@ -149,8 +149,8 @@ namespace ESI.NET.Logic
         /// /corporations/{corporation_id}/members/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Members(EsiCallOptions options)
-            => await Execute<int[]>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/members/",
+        public async Task<EsiResponse<long[]>> Members(EsiCallOptions options)
+            => await Execute<long[]>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/members/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
@@ -161,8 +161,8 @@ namespace ESI.NET.Logic
         /// /corporations/{corporation_id}/members/limit/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<int>> MemberLimit(EsiCallOptions options)
-            => await Execute<int>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/members/limit/",
+        public async Task<EsiResponse<long>> MemberLimit(EsiCallOptions options)
+            => await Execute<long>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/members/limit/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }

@@ -6,22 +6,22 @@ namespace ESI.NET.Models.Loyalty
     public class Offer
     {
         [JsonProperty("offer_id")]
-        public int OfferId { get; set; }
+        public long OfferId { get; set; }
 
         [JsonProperty("type_id")]
-        public int TypeId { get; set; }
+        public long TypeId { get; set; }
 
         [JsonProperty("quantity")]
-        public int Quantity { get; set; }
+        public long Quantity { get; set; }
 
         [JsonProperty("lp_cost")]
-        public int LpCost { get; set; }
+        public long LpCost { get; set; }
 
         [JsonProperty("isk_cost")]
         public long IskCost { get; set; }
 
         [JsonProperty("ak_cost")]
-        public int AkCost { get; set; }
+        public long AkCost { get; set; }
 
         [JsonProperty("required_items")]
         public List<Item> RequiredItems { get; set; } = new List<Item>();
@@ -30,9 +30,9 @@ namespace ESI.NET.Models.Loyalty
     public class Item
     {
         [JsonProperty("type_id")]
-        public int TypeId { get; set; }
+        public long TypeId { get; set; }
 
         [JsonProperty("quantity")]
-        public int Quantity { get; set; }
+        public long Quantity { get; set; }
     }
 }

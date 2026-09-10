@@ -10,7 +10,7 @@ namespace ESI.NET.Models.Dogma
     public class Attribute
     {
         [JsonProperty("attribute_id")]
-        public int AttributeId { get; set; }
+        public long AttributeId { get; set; }
 
         [JsonProperty("value")]
         public double Value { get; set; }

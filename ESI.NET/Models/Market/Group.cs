@@ -5,7 +5,7 @@ namespace ESI.NET.Models.Market
     public class Group
     {
         [JsonProperty("market_group_id")]
-        public int MarketGroupId { get; set; }
+        public long MarketGroupId { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -14,9 +14,9 @@ namespace ESI.NET.Models.Market
         public string Description { get; set; }
 
         [JsonProperty("types")]
-        public int[] Types { get; set; }
+        public long[] Types { get; set; }
 
         [JsonProperty("parent_group_id")]
-        public int ParentGroupId { get; set; }
+        public long ParentGroupId { get; set; }
     }
 }

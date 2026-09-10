@@ -33,10 +33,10 @@ namespace ESI.NET.Models.PlanetaryInteraction
         public long Id { get; set; }
 
         [JsonProperty("reinforce_exit_end")]
-        public int ReinforceExitEnd { get; set; }
+        public long ReinforceExitEnd { get; set; }
 
         [JsonProperty("reinforce_exit_start")]
-        public int ReinforceExitStart { get; set; }
+        public long ReinforceExitStart { get; set; }
 
         [JsonProperty("standing_level")]
         public string StandingLevel { get; set; }

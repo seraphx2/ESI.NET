@@ -10,7 +10,7 @@ namespace ESI.NET.Models.Dogma
     public class DynamicItem
     {
         [JsonProperty("created_by")]
-        public int CreatedBy { get; set; }
+        public long CreatedBy { get; set; }
 
         [JsonProperty("dogma_attributes")]
         public List<Attribute> DogmaAttributes { get; set; } = new List<Attribute>();
@@ -19,9 +19,9 @@ namespace ESI.NET.Models.Dogma
         public List<Effect> DogmaEffects { get; set; } = new List<Effect>();
 
         [JsonProperty("mutator_type_id")]
-        public int MutatorTypeId { get; set; }
+        public long MutatorTypeId { get; set; }
 
         [JsonProperty("source_type_id")]
-        public int SourceTypeId { get; set; }
+        public long SourceTypeId { get; set; }
     }
 }

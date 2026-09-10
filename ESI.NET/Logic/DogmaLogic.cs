@@ -17,8 +17,8 @@ namespace ESI.NET.Logic
         /// /dogma/attributes/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Attributes(EsiCallOptions options = null)
-            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/dogma/attributes/",
+        public async Task<EsiResponse<long[]>> Attributes(EsiCallOptions options = null)
+            => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/dogma/attributes/",
                 options: options);
 
 
@@ -40,8 +40,8 @@ namespace ESI.NET.Logic
         /// /dogma/effects/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Effects(EsiCallOptions options = null)
-            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/dogma/effects/",
+        public async Task<EsiResponse<long[]>> Effects(EsiCallOptions options = null)
+            => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/dogma/effects/",
                 options: options);
 
 

@@ -15,6 +15,6 @@ namespace ESI.NET.Models.Location
         public DateTime LastLogout { get; set; }
 
         [JsonProperty("logins")]
-        public int Logins { get; set; }
+        public long Logins { get; set; }
     }
 }

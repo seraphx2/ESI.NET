@@ -9,7 +9,7 @@ namespace ESI.NET.Models.Dogma
     public class AttributeInfo
     {
         [JsonProperty("attribute_id")]
-        public int AttributeId { get; set; }
+        public long AttributeId { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -18,7 +18,7 @@ namespace ESI.NET.Models.Dogma
         public string Description { get; set; }
 
         [JsonProperty("icon_id")]
-        public int IconId { get; set; }
+        public long IconId { get; set; }
 
         [JsonProperty("default_value")]
         public double DefaultValue { get; set; }
@@ -30,7 +30,7 @@ namespace ESI.NET.Models.Dogma
         public string DisplayName { get; set; }
 
         [JsonProperty("unit_id")]
-        public int UnitId { get; set; }
+        public long UnitId { get; set; }
 
         [JsonProperty("stackable")]
         public bool Stackable { get; set; }

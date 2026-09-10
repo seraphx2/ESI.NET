@@ -5,7 +5,7 @@ namespace ESI.NET.Models.Universe
     public class Race
     {
         [JsonProperty("race_id")]
-        public int RaceId { get; set; }
+        public long RaceId { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -14,6 +14,6 @@ namespace ESI.NET.Models.Universe
         public string Description { get; set; }
 
         [JsonProperty("alliance_id")]
-        public int AllianceId { get; set; }
+        public long AllianceId { get; set; }
     }
 }

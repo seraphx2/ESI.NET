@@ -50,8 +50,8 @@ namespace ESI.NET.Logic
         /// <param name="body"></param>
         /// <param name="approved_cost"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<int>> New(object[] recipients, string subject, string body, int approved_cost = 0, EsiCallOptions options = null)
-            => await Execute<int>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/characters/{character_id}/mail/",
+        public async Task<EsiResponse<long>> New(object[] recipients, string subject, string body, int approved_cost = 0, EsiCallOptions options = null)
+            => await Execute<long>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/characters/{character_id}/mail/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", options.Character.CharacterID.ToString() }

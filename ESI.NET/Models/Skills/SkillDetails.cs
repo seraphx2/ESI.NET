@@ -12,21 +12,21 @@ namespace ESI.NET.Models.Skills
         public long TotalSp { get; set; }
 
         [JsonProperty("unallocated_sp")]
-        public int UnallocatedSp { get; set; }
+        public long UnallocatedSp { get; set; }
     }
 
     public class Skill
     {
         [JsonProperty("skill_id")]
-        public int SkillId { get; set; }
+        public long SkillId { get; set; }
 
         [JsonProperty("skillpoints_in_skill")]
         public long SkillpointsInSkill { get; set; }
 
         [JsonProperty("trained_skill_level")]
-        public int TrainedSkillLevel { get; set; }
+        public long TrainedSkillLevel { get; set; }
 
         [JsonProperty("active_skill_level")]
-        public int ActiveSkillLevel { get; set; }
+        public long ActiveSkillLevel { get; set; }
     }
 }

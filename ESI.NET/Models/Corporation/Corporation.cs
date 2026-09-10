@@ -6,13 +6,13 @@ namespace ESI.NET.Models.Corporation
     public class Corporation
     {
         [JsonProperty("alliance_id")]
-        public int AllianceId { get; set; }
+        public long AllianceId { get; set; }
 
         [JsonProperty("ceo_id")]
-        public int CeoId { get; set; }
+        public long CeoId { get; set; }
 
         [JsonProperty("creator_id")]
-        public int CreatorId { get; set; }
+        public long CreatorId { get; set; }
 
         [JsonProperty("date_founded")]
         public DateTime DateFounded { get; set; }
@@ -21,13 +21,13 @@ namespace ESI.NET.Models.Corporation
         public string Description { get; set; }
 
         [JsonProperty("faction_id")]
-        public int FactionId { get; set; }
+        public long FactionId { get; set; }
 
         [JsonProperty("home_station_id")]
-        public int HomeStationId { get; set; }
+        public long HomeStationId { get; set; }
 
         [JsonProperty("member_count")]
-        public int MemberCount { get; set; }
+        public long MemberCount { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }

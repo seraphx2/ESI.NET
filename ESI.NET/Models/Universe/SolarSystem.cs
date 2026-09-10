@@ -8,10 +8,10 @@ namespace ESI.NET.Models.Universe
     public class SolarSystem
     {
         [JsonProperty("star_id")]
-        public int StarId { get; set; }
+        public long StarId { get; set; }
 
         [JsonProperty("system_id")]
-        public int SystemId { get; set; }
+        public long SystemId { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -26,15 +26,15 @@ namespace ESI.NET.Models.Universe
         public string SecurityClass { get; set; }
 
         [JsonProperty("constellation_id")]
-        public int ConstellationId { get; set; }
+        public long ConstellationId { get; set; }
 
         [JsonProperty("planets")]
         public List<Planet> Planets { get; set; } = new List<Planet>();
 
         [JsonProperty("stargates")]
-        public int[] Stargates { get; set; }
+        public long[] Stargates { get; set; }
 
         [JsonProperty("stations")]
-        public int[] Stations { get; set; }
+        public long[] Stations { get; set; }
     }
 }

@@ -9,10 +9,10 @@ namespace ESI.NET.Models.Corporation
         public DateTime ChangedAt { get; set; }
 
         [JsonProperty("character_id")]
-        public int CharacterId { get; set; }
+        public long CharacterId { get; set; }
 
         [JsonProperty("issuer_id")]
-        public int IssuerId { get; set; }
+        public long IssuerId { get; set; }
 
         [JsonProperty("new_roles")]
         public string[] NewRoles { get; set; }

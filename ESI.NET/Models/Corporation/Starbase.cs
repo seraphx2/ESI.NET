@@ -6,7 +6,7 @@ namespace ESI.NET.Models.Corporation
     public class Starbase
     {
         [JsonProperty("moon_id")]
-        public int MoonId { get; set; }
+        public long MoonId { get; set; }
 
         [JsonProperty("onlined_since")]
         public DateTime OnlinedSince { get; set; }
@@ -21,10 +21,10 @@ namespace ESI.NET.Models.Corporation
         public string State { get; set; }
 
         [JsonProperty("system_id")]
-        public int SystemId { get; set; }
+        public long SystemId { get; set; }
 
         [JsonProperty("type_id")]
-        public int TypeId { get; set; }
+        public long TypeId { get; set; }
 
         [JsonProperty("unanchor_at")]
         public DateTime UnanchorAt { get; set; }

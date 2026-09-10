@@ -65,7 +65,7 @@ namespace ESI.NET.Logic
         /// <param name="label_ids"></param>
         /// <param name="watched"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Add(int[] contact_ids, decimal standing, int[] label_ids = null, bool? watched = null, EsiCallOptions options = null)
+        public async Task<EsiResponse<long[]>> Add(int[] contact_ids, decimal standing, int[] label_ids = null, bool? watched = null, EsiCallOptions options = null)
         {
             var body = contact_ids;
 
@@ -77,7 +77,7 @@ namespace ESI.NET.Logic
             if (watched != null)
                 parameters.Add($"watched={watched}");
 
-            return await Execute<int[]>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/characters/{character_id}/contacts/",
+            return await Execute<long[]>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/characters/{character_id}/contacts/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", options.Character.CharacterID.ToString() }

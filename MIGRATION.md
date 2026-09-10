@@ -160,6 +160,26 @@ New fields to match the spec: `Information.Title`, `CustomsOffice.TypeId`,
 endpoint that populates `ResolvedInfo.Category`) stopped resolving structure IDs,
 so that value can no longer come back.
 
+## 11. Integer response fields are now `long`
+
+ESI's schema types **every** integer in a response body as a 64-bit integer, and
+EVE's own IDs are already at the 32-bit boundary. Every `int` property on a
+response model is now `long` (and `int[]` is `long[]`). This also covers:
+
+- `AuthorizedCharacterData.CharacterID` / `AllianceID` / `CorporationID` /
+  `FactionID`.
+- The methods that return a bare list or scalar of IDs — `Alliance.All`,
+  `Alliance.Corporations`, `Clones.Implants`, `Contacts.Add`, `Corporation.NpcCorps`,
+  `Corporation.Members`, `Corporation.MemberLimit`, `Dogma.Attributes`,
+  `Dogma.Effects`, `Mail.New`, `Market.Groups`, `Market.Types`, `Routes.Map`,
+  `Wars.All`, and every `Universe.*` id-list method — now return
+  `EsiResponse<long[]>` / `EsiResponse<long>`.
+
+Method **parameters** are unchanged — they still take `int` and an `int` argument
+widens on its own, so existing call sites compile. What breaks is storing a
+result in an `int`: `int id = character.Data.CorporationId;` becomes
+`long id = ...`. The compiler flags every one.
+
 ---
 
 ## What did not change

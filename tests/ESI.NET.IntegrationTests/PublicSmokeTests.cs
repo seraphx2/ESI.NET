@@ -62,7 +62,7 @@ namespace ESI.NET.IntegrationTests
             var ids = await LiveFixture.Call(() => Esi.Dogma.Attributes());
             Ok.NonEmpty(ids);
 
-            var detail = Ok.Response(await LiveFixture.Call(() => Esi.Dogma.Attribute(ids.Data.First())));
+            var detail = Ok.Response(await LiveFixture.Call(() => Esi.Dogma.Attribute((int)ids.Data.First())));
             Assert.False(string.IsNullOrEmpty(detail.Data.Name));
         }
 

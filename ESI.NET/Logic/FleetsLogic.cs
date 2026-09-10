@@ -259,7 +259,7 @@ namespace ESI.NET.Logic
         /// <param name="squad_id"></param>
         /// <param name="body"></param>
         /// <returns></returns>
-        private static dynamic BuildFleetInviteObject(int character_id, FleetRole role, long wing_id, long squad_id)
+        private static dynamic BuildFleetInviteObject(long character_id, FleetRole role, long wing_id, long squad_id)
         {
             dynamic body = null;
 

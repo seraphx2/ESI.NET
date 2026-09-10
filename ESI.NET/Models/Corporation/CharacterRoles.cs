@@ -5,7 +5,7 @@ namespace ESI.NET.Models.Corporation
     public class CharacterRoles
     {
         [JsonProperty("character_id")]
-        public int CharacterId { get; set; }
+        public long CharacterId { get; set; }
 
         [JsonProperty("grantable_roles")]
         public string[] GrantableRoles { get; set; }

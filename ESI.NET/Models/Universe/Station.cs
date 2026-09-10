@@ -5,25 +5,25 @@ namespace ESI.NET.Models.Universe
     public class Station
     {
         [JsonProperty("station_id")]
-        public int StationId { get; set; }
+        public long StationId { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
 
         [JsonProperty("owner")]
-        public int Owner { get; set; }
+        public long Owner { get; set; }
 
         [JsonProperty("type_id")]
-        public int TypeId { get; set; }
+        public long TypeId { get; set; }
 
         [JsonProperty("race_id")]
-        public int RaceId { get; set; }
+        public long RaceId { get; set; }
 
         [JsonProperty("position")]
         public Position Position { get; set; }
 
         [JsonProperty("system_id")]
-        public int SystemId { get; set; }
+        public long SystemId { get; set; }
 
         [JsonProperty("reprocessing_efficiency")]
         public decimal ReprocessingEfficiency { get; set; }

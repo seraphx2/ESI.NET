@@ -22,7 +22,7 @@ namespace ESI.NET.Logic
         /// <param name="avoid"></param>
         /// <param name="connections"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Map(
+        public async Task<EsiResponse<long[]>> Map(
             int origin, 
             int destination, 
             RoutesFlag flag = RoutesFlag.Shortest,
@@ -38,7 +38,7 @@ namespace ESI.NET.Logic
             if (connections != null)
                 parameters.Add($"&connections={string.Join(",", connections)}");
 
-            var response = await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/route/{origin}/{destination}/",
+            var response = await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/route/{origin}/{destination}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "origin", origin.ToString() },

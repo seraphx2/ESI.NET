@@ -5,7 +5,7 @@ namespace ESI.NET.Models.Corporation
     public class Title
     {
         [JsonProperty("title_id")]
-        public int TitleId { get; set; }
+        public long TitleId { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }

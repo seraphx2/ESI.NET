@@ -6,7 +6,7 @@ namespace ESI.NET.Models.Insurance
     public class Insurance
     {
         [JsonProperty("type_id")]
-        public int TypeID { get; set; }
+        public long TypeID { get; set; }
 
         [JsonProperty("levels")]
         public List<Levels> Levels { get; set; } = new List<Levels>();

@@ -11,15 +11,15 @@ namespace ESI.NET.Models.Industry
         public decimal Tax { get; set; }
 
         [JsonProperty("owner_id")]
-        public int OwnerId { get; set; }
+        public long OwnerId { get; set; }
 
         [JsonProperty("type_id")]
-        public int TypeId { get; set; }
+        public long TypeId { get; set; }
 
         [JsonProperty("solar_system_id")]
-        public int SolarSystemId { get; set; }
+        public long SolarSystemId { get; set; }
 
         [JsonProperty("region_id")]
-        public int RegionId { get; set; }
+        public long RegionId { get; set; }
     }
 }
