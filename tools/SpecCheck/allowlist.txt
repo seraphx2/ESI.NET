@@ -15,12 +15,6 @@
 # Freelance Jobs (2025-12-16)
 
 # Military Campaigns
-GET /military-campaigns
-GET /military-campaigns/{campaign_id}
-GET /military-campaigns/{campaign_id}/objectives
-GET /military-campaigns/{campaign_id}/objectives/{objective_id}
-GET /characters/{character_id}/military-campaigns/objectives
-GET /characters/{character_id}/military-campaigns/objectives/{objective_id}
 
 # Structures: skyhooks / mercenary dens / sovereignty hubs
 GET /corporations/{corporation_id}/structures/skyhooks
