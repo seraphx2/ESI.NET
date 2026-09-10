@@ -130,6 +130,28 @@ namespace ESI.NET.Tests
         }
 
         [Fact]
+        public async System.Threading.Tasks.Task Verify_throws_InvalidOperationException_when_the_token_is_bad()
+        {
+            var jwks = Jwks();
+            var handler = new StubResponder(_ => new System.Net.Http.HttpResponseMessage(System.Net.HttpStatusCode.OK)
+            {
+                Content = new System.Net.Http.StringContent(jwks),
+            });
+            var sso = new SsoLogic(new System.Net.Http.HttpClient(handler),
+                new EsiConfig { DataSource = ESI.NET.Enumerations.DataSource.Tranquility, EsiUrl = "https://esi.evetech.net/", ClientId = "id", SecretKey = "secret" });
+
+            await Assert.ThrowsAsync<System.InvalidOperationException>(() => sso.Verify(Token("not-a-real-jwt")));
+        }
+
+        private sealed class StubResponder : System.Net.Http.HttpMessageHandler
+        {
+            private readonly System.Func<System.Net.Http.HttpRequestMessage, System.Net.Http.HttpResponseMessage> _fn;
+            public StubResponder(System.Func<System.Net.Http.HttpRequestMessage, System.Net.Http.HttpResponseMessage> fn) => _fn = fn;
+            protected override System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage> SendAsync(System.Net.Http.HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
+                => System.Threading.Tasks.Task.FromResult(_fn(request));
+        }
+
+        [Fact]
         public void Pinned_real_eve_jwks_parses_under_current_IdentityModel()
         {
             // Snapshot of https://login.eveonline.com/oauth/jwks (public keys only). Proves the real

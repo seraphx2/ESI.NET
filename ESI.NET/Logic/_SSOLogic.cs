@@ -203,37 +203,50 @@ namespace ESI.NET
         }
 
         /// <summary>
-        /// Verifies the Character information for the provided Token information.
-        /// While this method represents the oauth/verify request, in addition to the verified data that ESI returns, this object also stores the Token and Refresh token
-        /// and this method also uses ESI retrieves other information pertinent to making calls in the ESI.NET API. (alliance_id, corporation_id, faction_id)
-        /// You will need a record in your database that stores at least this information. Serialize and store this object for quick retrieval and token refreshing.
+        /// Validates <paramref name="token"/>'s access token against the EVE SSO JWKS and returns an
+        /// <see cref="AuthorizedCharacterData"/> carrying the character identity, the granted scopes,
+        /// the token/refresh token, and (best-effort) the current alliance/corporation/faction.
+        /// Persist this per character; you need at least <c>RefreshToken</c> and
+        /// <c>CharacterOwnerHash</c> for the long term.
         /// </summary>
-        /// <param name="token"></param>
-        /// <returns></returns>
+        /// <remarks>
+        /// Compare <see cref="AuthorizedCharacterData.CharacterOwnerHash"/> against your stored value
+        /// on every re-login: EVE reissues it when a character is transferred to another account, and
+        /// a mismatch means the stored token/data belongs to a previous owner and must be discarded.
+        /// </remarks>
+        /// <exception cref="InvalidOperationException">The access token failed validation.</exception>
         public async Task<AuthorizedCharacterData> Verify(SsoToken token)
         {
-            AuthorizedCharacterData authorizedCharacter = new AuthorizedCharacterData();
+            AuthorizedCharacterData authorizedCharacter;
 
             try
             {
-                // Get the Eve Online JWKS to validate the access token against
+                // Get the EVE Online JWKS to validate the access token against
                 var jwksUrl = $"https://{_ssoUrl}/oauth/jwks";
-                var jwksJson = await (await _client.GetAsync(jwksUrl)).Content.ReadAsStringAsync();
+                string jwksJson;
+                using (var jwksResponse = await _client.GetAsync(jwksUrl).ConfigureAwait(false))
+                    jwksJson = await jwksResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 authorizedCharacter = ValidateAccessToken(token, _ssoUrl, jwksJson);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException(
+                    "SSO access-token verification failed. The token may be expired, malformed, or issued for a different SSO host.", ex);
+            }
 
-                // Get more specifc details about authorized character to be used in API calls that require this data about the character
+            // Best-effort enrichment: a failure here does not invalidate the token.
+            try
+            {
                 var url = $"{_config.EsiUrl}latest/characters/affiliation/?datasource={_config.DataSource.ToEsiValue()}";
-                var body = new StringContent(JsonConvert.SerializeObject(new int[] { authorizedCharacter.CharacterID }), Encoding.UTF8, "application/json");
+                var body = new StringContent(JsonConvert.SerializeObject(new[] { authorizedCharacter.CharacterID }), Encoding.UTF8, "application/json");
 
-                var client = new HttpClient();
-                var characterResponse = await client.PostAsync(url, body).ConfigureAwait(false);
+                var affiliationResponse = await _client.PostAsync(url, body).ConfigureAwait(false);
+                var affiliations = await EsiResponse<List<Affiliation>>.CreateAsync(affiliationResponse, "Post|/character/affiliations/").ConfigureAwait(false);
 
-                if (characterResponse.StatusCode == HttpStatusCode.OK)
+                if (affiliations.StatusCode == HttpStatusCode.OK && affiliations.Data?.Count > 0)
                 {
-                    var affiliations = await EsiResponse<List<Affiliation>>.CreateAsync(characterResponse, "Post|/character/affiliations/").ConfigureAwait(false);
                     var characterData = affiliations.Data.First();
-
                     authorizedCharacter.AllianceID = characterData.AllianceId;
                     authorizedCharacter.CorporationID = characterData.CorporationId;
                     authorizedCharacter.FactionID = characterData.FactionId;
@@ -241,7 +254,7 @@ namespace ESI.NET
             }
             catch
             {
-                // validation failed
+                // affiliation enrichment is best-effort
             }
 
             return authorizedCharacter;
