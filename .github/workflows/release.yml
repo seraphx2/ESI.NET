@@ -2,11 +2,11 @@ name: Release
 
 # Fires on every push to master — i.e. every dev->master merge — and publishes a
 # release: a CalVer version from today's date + existing tags, the NuGet package
-# pushed to nuget.org, and a GitHub Release (which creates the tag). Doc-only and
-# CI-only merges are skipped (paths-ignore); to opt any other merge out, put
-# "[skip release]" in the merge-commit message. workflow_dispatch stays for
-# manual drafts / re-runs — a draft build packs and attaches the .nupkg but does
-# not push to NuGet.
+# pushed to nuget.org via Trusted Publishing (OIDC, no stored key), and a GitHub
+# Release (which creates the tag). Doc-only and CI-only merges are skipped
+# (paths-ignore); to opt any other merge out, put "[skip release]" in the
+# merge-commit message. workflow_dispatch stays for manual drafts / re-runs — a
+# draft build packs and attaches the .nupkg but does not push to NuGet.
 on:
   push:
     branches: [master]
@@ -28,6 +28,7 @@ concurrency:
 
 permissions:
   contents: write
+  id-token: write # OIDC token for NuGet Trusted Publishing (no stored API key)
 
 jobs:
   release:
@@ -68,12 +69,22 @@ jobs:
           name: nuget-package
           path: ./nupkgs/*.nupkg
 
+      # Trusted Publishing: exchanges this job's GitHub OIDC token for a NuGet
+      # API key valid ~1 hour. Requires a trusted-publishing policy on nuget.org
+      # for seraphx2/ESI.NET -> release.yml. No secret is stored.
+      - name: NuGet login (OIDC)
+        id: nuget_login
+        if: ${{ !inputs.draft }}
+        uses: NuGet/login@v1
+        with:
+          user: robmburke
+
       - name: Push to NuGet.org
         if: ${{ !inputs.draft }}
         shell: bash
         run: >-
           dotnet nuget push "nupkgs/*.nupkg"
-          --api-key ${{ secrets.NUGET_API_KEY }}
+          --api-key ${{ steps.nuget_login.outputs.NUGET_API_KEY }}
           --source https://api.nuget.org/v3/index.json
           --skip-duplicate
 
