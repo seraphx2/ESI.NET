@@ -5,12 +5,39 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ESI.NET
 {
     public class EsiResponse<T>
     {
-        public EsiResponse(HttpResponseMessage response, string path)
+        /// <summary>
+        /// Reads <paramref name="response"/> and projects its headers and body onto an
+        /// <see cref="EsiResponse{T}"/>. The response is disposed before this returns.
+        /// </summary>
+        internal static async Task<EsiResponse<T>> CreateAsync(HttpResponseMessage response, string path, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                string body = null;
+
+                if (response.StatusCode != HttpStatusCode.NoContent)
+#if NET
+                    body = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+#else
+                    body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+#endif
+
+                return new EsiResponse<T>(response, path, body);
+            }
+            finally
+            {
+                response.Dispose();
+            }
+        }
+
+        private EsiResponse(HttpResponseMessage response, string path, string body)
         {
             try
             {
@@ -38,35 +65,26 @@ namespace ESI.NET
                 if (response.Headers.Contains("X-Esi-Error-Limit-Reset"))
                     ErrorLimitReset = int.Parse(response.Headers.GetValues("X-Esi-Error-Limit-Reset").First());
 
-                if (response.StatusCode != HttpStatusCode.NoContent)
+                if (response.StatusCode == HttpStatusCode.NoContent)
+                    Message = _noContentMessage.TryGetValue(path, out var noContent) ? noContent : "No Content";
+                else if (response.StatusCode == HttpStatusCode.OK ||
+                         response.StatusCode == HttpStatusCode.Created)
                 {
-                    var result = response.Content.ReadAsStringAsync().Result;
-
-                    if (response.StatusCode == HttpStatusCode.OK ||
-                        response.StatusCode == HttpStatusCode.Created)
-                    {
-                        if ((result.StartsWith("{") && result.EndsWith("}")) || result.StartsWith("[") && result.EndsWith("]"))
-                            Data = JsonConvert.DeserializeObject<T>(result);
-                        else
-                            Message = result;
-                    }
-                    else if (response.StatusCode == HttpStatusCode.NotModified)
-                        Message = "Not Modified";
+                    if ((body.StartsWith("{") && body.EndsWith("}")) ||
+                        (body.StartsWith("[") && body.EndsWith("]")))
+                        Data = JsonConvert.DeserializeObject<T>(body);
                     else
-                        Message = JsonConvert.DeserializeAnonymousType(result, new { error = string.Empty }).error;
+                        Message = body;
                 }
-                else if (response.StatusCode == HttpStatusCode.NoContent)
-                    Message = _noContentMessage[path];
-
+                else if (response.StatusCode == HttpStatusCode.NotModified)
+                    Message = "Not Modified";
+                else
+                    Message = JsonConvert.DeserializeAnonymousType(body, new { error = string.Empty }).error;
             }
             catch (Exception ex)
             {
-                Message = response.Content.ReadAsStringAsync().Result;
+                Message = body;
                 Exception = ex;
-            }
-            finally
-            {
-                response.Dispose();
             }
         }
 
@@ -84,7 +102,7 @@ namespace ESI.NET
         public T Data { get; set; }
         public Exception Exception { get; set; }
 
-        private readonly ImmutableDictionary<string, string> _noContentMessage = new Dictionary<string, string>()
+        private static readonly ImmutableDictionary<string, string> _noContentMessage = new Dictionary<string, string>()
         {
             //Calendar
             {"PUT|/characters/{character_id}/calendar/{event_id}/", "Event updated"},

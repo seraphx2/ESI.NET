@@ -231,7 +231,7 @@ namespace ESI.NET
 
                 if (characterResponse.StatusCode == HttpStatusCode.OK)
                 {
-                    EsiResponse<List<Affiliation>> affiliations = new EsiResponse<List<Affiliation>>(characterResponse, "Post|/character/affiliations/");
+                    var affiliations = await EsiResponse<List<Affiliation>>.CreateAsync(characterResponse, "Post|/character/affiliations/").ConfigureAwait(false);
                     var characterData = affiliations.Data.First();
 
                     authorizedCharacter.AllianceID = characterData.AllianceId;

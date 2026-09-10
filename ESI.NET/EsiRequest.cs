@@ -47,7 +47,8 @@ namespace ESI.NET
                 request.Content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
 
             //Output final object
-            return new EsiResponse<T>(await client.SendAsync(request).ConfigureAwait(false), path);
+            var response = await client.SendAsync(request).ConfigureAwait(false);
+            return await EsiResponse<T>.CreateAsync(response, path).ConfigureAwait(false);
         }
 
         public enum RequestSecurity
