@@ -1,4 +1,4 @@
-name: Spec check
+name: SpecCheck
 
 # Drift check: the live ESI OpenAPI document vs what ESI.NET/Logic implements
 # (coverage) and vs each EsiResponse<T> model (schema). Deliberately NOT a PR or
