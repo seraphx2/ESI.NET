@@ -298,5 +298,71 @@ namespace ESI.NET.Logic
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
                 options: options);
+
+
+        // ---- Corporation Projects (scope: esi-corporations.read_projects.v1) ----
+
+        /// <summary>
+        /// /corporations/{corporation_id}/projects/ - a page of the corporation's projects.
+        /// </summary>
+        /// <param name="state">Filter by project state (Active, Closed, Completed, ...)</param>
+        /// <param name="after">Cursor for the next page (from a previous response's cursor.after)</param>
+        /// <param name="before">Cursor for the previous page</param>
+        /// <param name="limit">Page size</param>
+        public async Task<EsiResponse<ProjectList>> Projects(string state = null, string after = null, string before = null, int? limit = null, EsiCallOptions options = null)
+            => await Execute<ProjectList>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/projects/",
+                replacements: new Dictionary<string, string>()
+                {
+                    { "corporation_id", options.Character.CorporationID.ToString() }
+                },
+                parameters: BuildCursorParams(("state", state), ("after", after), ("before", before), ("limit", limit?.ToString())),
+                options: options);
+
+        /// <summary>
+        /// /corporations/{corporation_id}/projects/{project_id}/ - full detail for one project.
+        /// </summary>
+        public async Task<EsiResponse<Project>> Project(string project_id, EsiCallOptions options)
+            => await Execute<Project>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/projects/{project_id}/",
+                replacements: new Dictionary<string, string>()
+                {
+                    { "corporation_id", options.Character.CorporationID.ToString() },
+                    { "project_id", project_id }
+                },
+                options: options);
+
+        /// <summary>
+        /// /corporations/{corporation_id}/projects/{project_id}/contributors/ - a page of contributors.
+        /// </summary>
+        public async Task<EsiResponse<ProjectContributors>> ProjectContributors(string project_id, string after = null, string before = null, int? limit = null, EsiCallOptions options = null)
+            => await Execute<ProjectContributors>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/projects/{project_id}/contributors/",
+                replacements: new Dictionary<string, string>()
+                {
+                    { "corporation_id", options.Character.CorporationID.ToString() },
+                    { "project_id", project_id }
+                },
+                parameters: BuildCursorParams(("after", after), ("before", before), ("limit", limit?.ToString())),
+                options: options);
+
+        /// <summary>
+        /// /corporations/{corporation_id}/projects/{project_id}/contribution/{character_id}/ - one character's contribution.
+        /// </summary>
+        public async Task<EsiResponse<ProjectContribution>> ProjectContribution(string project_id, long character_id, EsiCallOptions options)
+            => await Execute<ProjectContribution>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/projects/{project_id}/contribution/{character_id}/",
+                replacements: new Dictionary<string, string>()
+                {
+                    { "corporation_id", options.Character.CorporationID.ToString() },
+                    { "project_id", project_id },
+                    { "character_id", character_id.ToString() }
+                },
+                options: options);
+
+        private static string[] BuildCursorParams(params (string Key, string Value)[] pairs)
+        {
+            var list = new List<string>();
+            foreach (var (key, value) in pairs)
+                if (!string.IsNullOrEmpty(value))
+                    list.Add($"{key}={value}");
+            return list.Count > 0 ? list.ToArray() : null;
+        }
     }
 }

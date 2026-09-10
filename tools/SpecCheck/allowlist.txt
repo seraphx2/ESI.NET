@@ -11,10 +11,6 @@
 #     current release. Each line is removed as the endpoint lands. ---
 
 # Corporation Projects (2025-08-26)
-GET /corporations/{corporation_id}/projects
-GET /corporations/{corporation_id}/projects/{project_id}
-GET /corporations/{corporation_id}/projects/{project_id}/contribution/{character_id}
-GET /corporations/{corporation_id}/projects/{project_id}/contributors
 
 # Freelance Jobs (2025-12-16)
 GET /freelance-jobs
