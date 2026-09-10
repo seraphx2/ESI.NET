@@ -5,7 +5,7 @@
 The first release since `2023.12.12`. It modernizes the target frameworks and
 dependencies and reworks how per-call state (the authorized character, the ETag,
 cancellation, pagination) is passed. **Every consumer needs code changes** — see
-_Migration_ below.
+**[MIGRATION.md](MIGRATION.md)**.
 
 ### Breaking changes
 
@@ -87,6 +87,29 @@ _Migration_ below.
   `IHttpClientBuilder` that `AddEsi` returns, after referencing
   `Microsoft.Extensions.Http.Resilience`.
 
+### Tooling & tests
+
+Before this release the library had no automated tests and no way to notice ESI
+had changed short of a consumer filing a bug. That is now covered.
+
+- **Test suite.** Unit tests (`tests/ESI.NET.Tests`) cover the request/response
+  pipeline, the delegating handlers, and SSO token validation. Live integration
+  tests (`tests/ESI.NET.IntegrationTests`) run a spread of public endpoints and
+  an authenticated SSO probe — token exchange, JWKS validation, a bearer call,
+  and transparent refresh — against the real API on a schedule.
+- **Spec-drift check** (`tools/SpecCheck`, weekly). Compares the wrapper against
+  the live ESI OpenAPI document: endpoints it still exposes that ESI dropped,
+  endpoints ESI added that it doesn't cover, and every `EsiResponse<T>` model
+  against its endpoint's 200 schema (type, integer width, enum values, missing
+  and extra properties, object-vs-array shape). API changes surface here.
+- **CI and release automation.** GitHub Actions builds every PR and `dev`
+  commit; a merge to `master` publishes a CalVer version to nuget.org via
+  Trusted Publishing (OIDC, no stored key), mirrors it to GitHub Packages, tags
+  the release, and posts to Discord. A manual dispatch publishes a `-beta`
+  prerelease to nuget.org only.
+- `tools/MintToken` — a one-shot local utility that runs the SSO flow and prints
+  a refresh token for the integration probe.
+
 ### Fixed
 
 - Constructing `EsiClient` under Blazor WebAssembly no longer throws
@@ -97,15 +120,11 @@ _Migration_ below.
   throws `KeyNotFoundException` internally.
 - `SsoLogic.Verify()` reuses the injected `HttpClient` instead of `new`-ing one
   per call, and no longer swallows every exception.
+- `EsiResponse<T>` trims the response body before deciding whether it is JSON.
+  Endpoints whose body ends in a newline no longer come back as a `200` with
+  `Data` null and the payload in `Message`; bare-scalar bodies (a wallet
+  balance, a CSPA cost) now bind to `Data`.
 
 ### Migration
 
-| Before | After |
-| --- | --- |
-| `client.SetCharacterData(data);`<br>`await client.Clones.List();` | `await client.Clones.List(new() { Character = data });` |
-| `client.SetIfNoneMatchHeader(etag);`<br>`await client.Universe.Names(ids);` | `await client.Universe.Names(ids, new() { IfNoneMatch = etag });` |
-| `await client.Assets.ForCharacter(2);` | `await client.Assets.ForCharacter(new() { Character = data, Page = 2 });` |
-| `services.AddEsi(cfg);` *(returns `IServiceCollection`)* | `services.AddEsi(cfg);` *(returns `IHttpClientBuilder`)* — optionally `.AddStandardResilienceHandler()` |
-| `dogma.Attribute(id).Data.Name` | `dogma.Attribute(id).Data.Name` — the payload type is now `AttributeInfo` |
-| `var d = dogma.DynamicItem(t, i).Data;` *(was `Effect`)* | `var d = dogma.DynamicItem(t, i).Data;` *(now `DynamicItem`)* |
-| `var c = await sso.Verify(token);`<br>`if (c.CharacterID == 0) { /* failed */ }` | `try { var c = await sso.Verify(token); }`<br>`catch (InvalidOperationException) { /* failed */ }` |
+See **[MIGRATION.md](MIGRATION.md)**.

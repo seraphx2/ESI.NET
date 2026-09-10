@@ -1,176 +1,191 @@
 [![CI](https://github.com/seraphx2/ESI.NET/actions/workflows/ci.yml/badge.svg)](https://github.com/seraphx2/ESI.NET/actions/workflows/ci.yml) [![NuGet](https://img.shields.io/nuget/v/ESI.NET.svg)](https://www.nuget.org/packages/ESI.NET)
 
-# What is ESI.NET?
+# ESI.NET
 
-**ESI.NET** is a .NET wrapper for the [Eve Online ESI API](https://esi.evetech.net/). This wrapper simplifies the process of integrating ESI into your .NET application.
+A .NET wrapper for the [EVE Online ESI API](https://esi.evetech.net/). Every ESI
+endpoint is a typed method; SSO, transparent token refresh, conditional requests,
+and the ESI error limit are handled for you.
 
-### Resources
+> **Upgrading from `2023.12.12` or earlier?** Every consumer needs (mechanical)
+> code changes — see **[MIGRATION.md](MIGRATION.md)**.
 
-- [Discord - E.N](https://discord.gg/SvdN39f) - This channel is where you can contact me (Psianna Archeia) for questions and where automated webhook notifications will be pushed for github and when builds are completed.
-- [Tweetfleet - #esi](https://tweetfleet.slack.com/messages/C30KX8UUX/) - This is the official slack channel to speak with CCP devs (and developers) concerning ESI.
-- [ESI Application Keys](https://developers.eveonline.com/)
-- [ESI OpenAPI Definition](https://esi.evetech.net/meta/openapi.json)
-- [ESI-Docs](https://docs.esi.evetech.net/) ([source](https://github.com/esi/esi-docs)) - This is the best documentation concerning ESI and the SSO process.
+## Install
 
-It is extremely important to not solely rely on ESI.NET. You may need to refer to the official specifications to understand what data is expected to be provided. For example, in some instances, ESI.NET will ask for specific values in the endpoint method and construct the JSON object that needs to be sent in the POST request body because it is a simple object that requires a few values. Some of the more complex objects will need to be constructed with anonymous objects by the developer and this can be determined when the endpoint method requires an `object` instead of an `int` or a `string`. Refer to the official documentation and construct the anonymous object to reflect what is expected as Json.NET will be able to convert that anonymous object into the appropriate JSON data.
+```
+dotnet add package ESI.NET
+```
 
-## ESI.NET on NuGet
+## Setup
 
-https://www.nuget.org/packages/ESI.NET
+`ESI.NET` registers as a typed `HttpClient` through `IHttpClientFactory`.
 
-`dotnet add package ESI.NET `
-
-## Client Instantiation
-
-ESI.NET is Dependency Injection compatible. There are a few parts required to set this up properly in a .NET Standard/Core application:
-
-### .NET Standard (Dependency Injection)
-
-In your appsettings.json, add the following object and fill it in appropriately:
+Add an `EsiConfig` section to `appsettings.json`:
 
 ```json
 "EsiConfig": {
-    "EsiUrl": "https://esi.evetech.net/",
-    "DataSource": "Tranquility",
-    "ClientId": "**********",
-    "SecretKey": "**********",
-    "CallbackUrl": "",
-    "UserAgent": ""
-  }
-```
-
-_For your protection (and mine), you are required to supply a user_agent value. This can be your character name and/or project name. CCP will be more likely to contact you than just cut off access to ESI if you provide something that can identify you within the New Eden galaxy. Without this property populated, the wrapper will not work._
-
-Register the client. `AddEsi` binds the config, registers `IEsiClient` as a typed
-`HttpClient` (via `IHttpClientFactory`), and returns an `IHttpClientBuilder`:
-
-```cs
-services.AddEsi(Configuration.GetSection("EsiConfig"));
-
-// or configure inline:
-services.AddEsi(esi => { esi.EsiUrl = "https://esi.evetech.net/"; esi.DataSource = DataSource.Tranquility; esi.UserAgent = "my-app / me"; });
-```
-
-Opt in to Polly resilience by adding the `Microsoft.Extensions.Http.Resilience`
-package and chaining off the returned builder:
-
-```cs
-services.AddEsi(Configuration.GetSection("EsiConfig"))
-        .AddStandardResilienceHandler();
-```
-
-Then take `IEsiClient` in your constructor:
-
-```cs
-private readonly IEsiClient _client;
-public ApiTestController(IEsiClient client) { _client = client; }
-```
-
-### .NET Framework
-
-If you are using a .NET Standard-compatible .NET Framework application, you can instantiate the client in this manner:
-
-```cs
-IOptions<EsiConfig> config = Options.Create(new EsiConfig()
-{
-    EsiUrl = "https://esi.evetech.net/",
-    DataSource = DataSource.Tranquility,
-    ClientId = "**********",
-    SecretKey = "**********",
-    CallbackUrl = "",
-    UserAgent = ""
-});
-
-EsiClient client = new EsiClient(config);
-```
-
-_For your protection (and mine), you are required to supply a user_agent value. This can be your character name and/or project name. CCP will be more likely to contact you than just cut off access to ESI if you provide something that can identify you within the New Eden galaxy. Without this property populated, the wrapper will not work._
-
-NOTE: You will need to import `Microsoft.Extensions.Options` to accomplish the above.
-
-### Public endpoint
-
-```cs
-EsiResponse<List<ResolvedInfo>> response = await _client.Universe.Names(new List<long>
-{
-    1590304510, 99006319, 20000006
-});
-```
-
-### Per-call options
-
-Every endpoint method takes a trailing `EsiCallOptions`. It is **optional** on
-public endpoints and **required** on authenticated ones:
-
-```cs
-public sealed class EsiCallOptions
-{
-    public AuthorizedCharacterData Character { get; set; } // required for authenticated endpoints
-    public CancellationToken CancellationToken { get; set; }
-    public string IfNoneMatch { get; set; }               // conditional request; a match -> 304, no body
-    public int? Page { get; set; }                        // paginated endpoints
+  "EsiUrl": "https://esi.evetech.net/",
+  "DataSource": "Tranquility",
+  "UserAgent": "my-app / my-character-name",
+  "ClientId": "",
+  "SecretKey": "",
+  "CallbackUrl": ""
 }
 ```
 
-```cs
-var page2 = await _client.Universe.Groups(new() { Page = 2, CancellationToken = ct });
+- **`UserAgent` is required.** Use something that identifies you — a character
+  and/or project name. CCP will contact you before cutting off access if they can
+  tell who you are. The client throws on construction without it.
+- `DataSource` is `Tranquility`, `Singularity`, or `Serenity`.
+- `ClientId` / `SecretKey` / `CallbackUrl` are only needed for
+  [authenticated requests](#authenticated-requests-sso).
 
-var fresh = await _client.Market.RegionOrders(region_id, new() { IfNoneMatch = previous.ETag });
-if (fresh.StatusCode == HttpStatusCode.NotModified) { /* use your cache */ }
+Register it and take `IEsiClient` in your constructor:
+
+```csharp
+// Program.cs
+services.AddEsi(builder.Configuration.GetSection("EsiConfig"));
+
+// or configure inline:
+services.AddEsi(esi =>
+{
+    esi.EsiUrl = "https://esi.evetech.net/";
+    esi.DataSource = DataSource.Tranquility;
+    esi.UserAgent = "my-app / my-character-name";
+});
 ```
 
-## SSO Example
-
-### SSO Login URL generator
-
-ESI.NET has a helper method to generate the URL required to authenticate a character or authorize roles (by providing a `List<string>` of scopes) for the Eve Online SSO. You should also provide a value for "state" that you verify when it is returned (it will be included in the callback).
-
-```cs
-var url = _client.SSO.CreateAuthenticationUrl();
+```csharp
+public class MarketService
+{
+    private readonly IEsiClient _esi;
+    public MarketService(IEsiClient esi) => _esi = esi;
+}
 ```
 
-### Initial SSO Token Request
+<details>
+<summary>Without dependency injection (.NET Framework, console apps)</summary>
 
-`Verify` throws `InvalidOperationException` if the token fails validation.
+```csharp
+using Microsoft.Extensions.Options;
 
-```cs
-SsoToken token = await _client.SSO.GetToken(GrantType.AuthorizationCode, code);
-AuthorizedCharacterData authChar = await _client.SSO.Verify(token);
-// persist authChar (at least RefreshToken + CharacterOwnerHash) in your database.
-// On every re-login, compare the fresh CharacterOwnerHash to your stored one — a
-// mismatch means the character was transferred and the old data must be discarded.
+var config = Options.Create(new EsiConfig
+{
+    EsiUrl = "https://esi.evetech.net/",
+    DataSource = DataSource.Tranquility,
+    UserAgent = "my-app / my-character-name",
+});
+
+var client = new EsiClient(config);
 ```
 
-### Refresh Token Request
+</details>
 
-```cs
-SsoToken token = await _client.SSO.GetToken(GrantType.RefreshToken, authChar.RefreshToken);
+## Making a request
+
+```csharp
+EsiResponse<List<ResolvedInfo>> response = await _esi.Universe.Names(new List<int>
+{
+    1590304510, 99006319, 20000006
+});
+
+foreach (var item in response.Data)
+    Console.WriteLine($"{item.Category}: {item.Name}");
 ```
 
-### Authenticated request
+Every call returns `EsiResponse<T>`:
 
-Pass the stored character on the call:
+| member | |
+| --- | --- |
+| `Data` | the deserialized payload (`T`) |
+| `StatusCode` | the HTTP status |
+| `Message` | ESI's error string on failure, or a status message |
+| `Exception` | set if deserialization failed (`Data` is then `null`) |
+| `Pages` | total pages on a paginated endpoint (`X-Pages`) |
+| `ETag` | for the next conditional request |
+| `Expires` / `LastModified` | cache headers |
 
-```cs
-var wallet = await _client.Wallet.CharacterWallet(new() { Character = authChar });
+### Per-call options
+
+Every method takes an optional trailing `EsiCallOptions`:
+
+```csharp
+// a specific page, with cancellation
+var groups = await _esi.Universe.Groups(new() { Page = 2, CancellationToken = ct });
+
+// conditional request — 304 and no body if nothing changed
+var prices = await _esi.Market.Prices(new() { IfNoneMatch = cached.ETag });
+if (prices.StatusCode == HttpStatusCode.NotModified) { /* use your cache */ }
 ```
 
-### Transparent token refresh
+### POST bodies
+
+Simple POST endpoints take the values as method arguments. Where a method asks
+for `object`, build an anonymous object shaped like the JSON ESI expects (the
+[ESI reference](https://docs.esi.evetech.net/) has the schema) — Json.NET
+serializes it.
+
+## Authenticated requests (SSO)
+
+1. Register an application at
+   [developers.eveonline.com](https://developers.eveonline.com/) and put its
+   **Client ID**, **Secret Key**, and **Callback URL** into `EsiConfig`.
+
+2. Send the user to EVE SSO with the scopes you need and a `state` value you
+   check on the way back:
+
+   ```csharp
+   var url = _esi.SSO.CreateAuthenticationUrl(
+       new List<string> { "esi-wallet.read_character_wallet.v1" },
+       state: "a-value-you-verify-later");
+   // redirect the browser to `url`
+   ```
+
+3. On the callback, exchange the `code` and validate it:
+
+   ```csharp
+   SsoToken token = await _esi.SSO.GetToken(GrantType.AuthorizationCode, code);
+   AuthorizedCharacterData authChar = await _esi.SSO.Verify(token);
+   // Verify throws InvalidOperationException if the token is bad.
+   ```
+
+4. Persist `authChar` — at least `RefreshToken` and `CharacterOwnerHash`. On
+   every re-login, compare the fresh `CharacterOwnerHash` to your stored one; a
+   mismatch means the character was transferred and the stored data must be
+   discarded.
+
+5. Pass the character on authenticated calls:
+
+   ```csharp
+   var wallet = await _esi.Wallet.CharacterWallet(new() { Character = authChar });
+   ```
+
+### Desktop, console, and GUI apps
+
+No web server receives the callback, so register a **loopback** callback
+(`http://localhost:<port>/callback`) and catch the redirect with a short-lived
+`HttpListener`. A shipped app can't keep a client secret — register a
+**native / PKCE** application, leave `EsiConfig.SecretKey` empty, and use
+`SSO.GenerateChallengeCode()` with the `challengeCode` / `codeChallenge`
+overloads of `CreateAuthenticationUrl` and `GetToken`. Everything from `GetToken`
+on is identical to the web flow, and transparent refresh handles the no-secret
+case.
+
+[`tools/MintToken`](tools/MintToken) is a complete, runnable example of this flow.
+
+### Token refresh
 
 An authenticated call whose access token is within a minute of expiry is
-refreshed with its refresh token before the request goes out; `authChar` is
-updated in place. EVE rotates the refresh token, so you must persist the updated
-value.
+refreshed automatically before the request goes out, and `authChar` is updated in
+place. **EVE rotates the refresh token, so you must persist the new value.**
 
-**Once, via DI (recommended).** Implement `IEsiTokenRefreshSink` — normal
-constructor injection works — and register it; it then covers every
-authenticated call:
+Handle that once, for every call, with an `IEsiTokenRefreshSink`:
 
-```cs
+```csharp
 public class DbTokenSink : IEsiTokenRefreshSink
 {
     private readonly MyDbContext _db;
     public DbTokenSink(MyDbContext db) => _db = db;
+
     public async Task OnRefreshedAsync(AuthorizedCharacterData c)
     {
         _db.Characters.Update(c);
@@ -179,24 +194,31 @@ public class DbTokenSink : IEsiTokenRefreshSink
 }
 
 services.AddScoped<IEsiTokenRefreshSink, DbTokenSink>();
-services.AddEsi(Configuration.GetSection("EsiConfig"));
+services.AddEsi(builder.Configuration.GetSection("EsiConfig"));
 ```
 
 The handler resolves the sink in a fresh scope each time it fires, so a scoped
-`DbContext` is safe.
+`DbContext` is safe. For one-offs or non-DI code, set `OnTokenRefreshed` on the
+call's `EsiCallOptions` instead.
 
-**Per call**, for one-offs or non-DI use:
+## Resilience
 
-```cs
-var wallet = await _client.Wallet.CharacterWallet(new()
-{
-    Character = authChar,
-    OnTokenRefreshed = async c => { /* persist c */ },
-});
+Add retries, timeouts, and a circuit breaker — reference
+`Microsoft.Extensions.Http.Resilience` and chain off `AddEsi`:
+
+```csharp
+services.AddEsi(builder.Configuration.GetSection("EsiConfig"))
+        .AddStandardResilienceHandler();
 ```
 
----
+## Links
 
-See [CHANGELOG.md](CHANGELOG.md) for the migration guide from `2023.12.12`
-(`SetCharacterData` / `SetIfNoneMatchHeader` removal, the Dogma model split, TFM
-and dependency changes).
+- [CHANGELOG.md](CHANGELOG.md) · [MIGRATION.md](MIGRATION.md)
+- [Discord](https://discord.gg/SvdN39f) — questions, and where GitHub / build notifications post
+- [ESI-Docs](https://docs.esi.evetech.net/) — the ESI and SSO reference
+
+## Development
+
+Maintainer tooling lives in `tools/` — a weekly [spec-drift check](tools/SpecCheck)
+against the live ESI OpenAPI document — and `tests/` — unit tests plus live
+integration tests.
