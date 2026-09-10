@@ -193,5 +193,52 @@ namespace ESI.NET.Logic
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
                 options: options);
+
+
+        /// <summary>
+        /// /characters/{character_id}/access-lists/ - scope esi-access.read_lists.v1
+        /// </summary>
+        public async Task<EsiResponse<AccessListRefList>> AccessLists(EsiCallOptions options)
+            => await Execute<AccessListRefList>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/access-lists/",
+                replacements: new Dictionary<string, string>()
+                {
+                    { "character_id", options.Character.CharacterID.ToString() }
+                },
+                options: options);
+
+        /// <summary>
+        /// /characters/{character_id}/access-lists/{access_list_id}/ - scope esi-access.read_lists.v1
+        /// </summary>
+        public async Task<EsiResponse<AccessList>> AccessList(long access_list_id, EsiCallOptions options)
+            => await Execute<AccessList>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/access-lists/{access_list_id}/",
+                replacements: new Dictionary<string, string>()
+                {
+                    { "character_id", options.Character.CharacterID.ToString() },
+                    { "access_list_id", access_list_id.ToString() }
+                },
+                options: options);
+
+        /// <summary>
+        /// /characters/{character_id}/mercenary-tactical-operations/ - scope esi-activities.read_character.v1
+        /// </summary>
+        public async Task<EsiResponse<MercenaryTacticalOperationList>> MercenaryTacticalOperations(EsiCallOptions options)
+            => await Execute<MercenaryTacticalOperationList>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/mercenary-tactical-operations/",
+                replacements: new Dictionary<string, string>()
+                {
+                    { "character_id", options.Character.CharacterID.ToString() }
+                },
+                options: options);
+
+        /// <summary>
+        /// /characters/{character_id}/mercenary-tactical-operations/{operation_id}/ - scope esi-activities.read_character.v1
+        /// </summary>
+        public async Task<EsiResponse<MercenaryTacticalOperation>> MercenaryTacticalOperation(string operation_id, EsiCallOptions options)
+            => await Execute<MercenaryTacticalOperation>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/mercenary-tactical-operations/{operation_id}/",
+                replacements: new Dictionary<string, string>()
+                {
+                    { "character_id", options.Character.CharacterID.ToString() },
+                    { "operation_id", operation_id }
+                },
+                options: options);
     }
 }

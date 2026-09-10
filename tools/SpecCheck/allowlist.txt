@@ -6,30 +6,3 @@
 # Cross-endpoint model fields do NOT belong here - SchemaCheck works those out
 # on its own (a property is only "extra" if it is in no schema for any endpoint
 # using that model class).
-
-# --- Deferred coverage: new since the 2020 snapshot, being wrapped in the
-#     current release. Each line is removed as the endpoint lands. ---
-
-# Corporation Projects (2025-08-26)
-
-# Freelance Jobs (2025-12-16)
-
-# Military Campaigns
-
-# Structures: skyhooks / mercenary dens / sovereignty hubs
-
-# SKINR / Paragon Hub
-
-# Access Lists
-GET /characters/{character_id}/access-lists
-GET /characters/{character_id}/access-lists/{access_list_id}
-
-# Mercenary Tactical Operations
-GET /characters/{character_id}/mercenary-tactical-operations
-GET /characters/{character_id}/mercenary-tactical-operations/{operation_id}
-
-# Meta
-GET /meta/changelog
-GET /meta/compatibility-dates
-GET /meta/name
-GET /meta/status

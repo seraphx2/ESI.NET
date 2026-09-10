@@ -66,6 +66,7 @@ namespace ESI.NET
             Loyalty = new LoyaltyLogic(client, config);
             Mail = new MailLogic(client, config);
             Market = new MarketLogic(client, config);
+            Meta = new MetaLogic(client, config);
             MilitaryCampaigns = new MilitaryCampaignsLogic(client, config);
             PlanetaryInteraction = new PlanetaryInteractionLogic(client, config);
             Routes = new RoutesLogic(client, config);
@@ -103,6 +104,7 @@ namespace ESI.NET
         public LoyaltyLogic Loyalty { get; set; }
         public MailLogic Mail { get; set; }
         public MarketLogic Market { get; set; }
+        public MetaLogic Meta { get; set; }
         public MilitaryCampaignsLogic MilitaryCampaigns { get; set; }
         public PlanetaryInteractionLogic PlanetaryInteraction { get; set; }
         public RoutesLogic Routes { get; set; }
@@ -169,6 +171,7 @@ namespace ESI.NET
         LoyaltyLogic Loyalty { get; set; }
         MailLogic Mail { get; set; }
         MarketLogic Market { get; set; }
+        MetaLogic Meta { get; set; }
         MilitaryCampaignsLogic MilitaryCampaigns { get; set; }
         PlanetaryInteractionLogic PlanetaryInteraction { get; set; }
         RoutesLogic Routes { get; set; }
