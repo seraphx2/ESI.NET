@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
-using opportunities = ESI.NET.Models.Opportunities;
+using Opportunities = ESI.NET.Models.Opportunities;
 
 namespace ESI.NET.Logic
 {
@@ -36,8 +36,8 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="group_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<opportunities.Group>> Group(int group_id)
-            => await Execute<opportunities.Group>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/opportunities/groups/{group_id}/",
+        public async Task<EsiResponse<Opportunities.Group>> Group(int group_id)
+            => await Execute<Opportunities.Group>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/opportunities/groups/{group_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "group_id", group_id.ToString() }
@@ -55,8 +55,8 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="task_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<opportunities.Task>> Task(int task_id)
-            => await Execute<opportunities.Task>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/opportunities/tasks/{task_id}/",
+        public async Task<EsiResponse<Opportunities.Task>> Task(int task_id)
+            => await Execute<Opportunities.Task>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/opportunities/tasks/{task_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "task_id", task_id.ToString() }
@@ -67,8 +67,8 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="character_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<opportunities.CompletedTask>>> CompletedTasks()
-            => await Execute<List<opportunities.CompletedTask>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/opportunities/",
+        public async Task<EsiResponse<List<Opportunities.CompletedTask>>> CompletedTasks()
+            => await Execute<List<Opportunities.CompletedTask>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/opportunities/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", character_id.ToString() }
