@@ -17,13 +17,6 @@
 # Military Campaigns
 
 # Structures: skyhooks / mercenary dens / sovereignty hubs
-GET /corporations/{corporation_id}/structures/skyhooks
-GET /corporations/{corporation_id}/structures/skyhooks/{skyhook_id}
-GET /corporations/{corporation_id}/structures/sovereignty-hubs
-GET /corporations/{corporation_id}/structures/sovereignty-hubs/{sovereignty_hub_id}
-GET /characters/{character_id}/structures/mercenary-dens
-GET /characters/{character_id}/structures/mercenary-dens/{mercenary_den_id}
-GET /skyhooks/raidable
 
 # SKINR / Paragon Hub
 GET /paragon-hub/skinr

@@ -72,6 +72,7 @@ namespace ESI.NET
             Skills = new SkillsLogic(client, config);
             Sovereignty = new SovereigntyLogic(client, config);
             Status = new StatusLogic(client, config);
+            Structures = new StructuresLogic(client, config);
             Universe = new UniverseLogic(client, config);
             UserInterface = new UserInterfaceLogic(client, config);
             Wallet = new WalletLogic(client, config);
@@ -106,6 +107,7 @@ namespace ESI.NET
         public SearchLogic Search { get; set; }
         public SkillsLogic Skills { get; set; }
         public StatusLogic Status { get; set; }
+        public StructuresLogic Structures { get; set; }
         public SovereigntyLogic Sovereignty { get; set; }
         public UniverseLogic Universe { get; set; }
         public UserInterfaceLogic UserInterface { get; set; }
@@ -171,6 +173,7 @@ namespace ESI.NET
         SkillsLogic Skills { get; set; }
         SovereigntyLogic Sovereignty { get; set; }
         StatusLogic Status { get; set; }
+        StructuresLogic Structures { get; set; }
         UniverseLogic Universe { get; set; }
         UserInterfaceLogic UserInterface { get; set; }
         WalletLogic Wallet { get; set; }
