@@ -21,7 +21,7 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/mail/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Header>>> Headers(long[] labels = null, int last_mail_id = 0, EsiCallOptions options = null)
+        public async Task<EsiResponse<List<Header>>> Headers(long[] labels = null, long last_mail_id = 0, EsiCallOptions options = null)
         {
             var parameters = new List<string>();
 
@@ -50,7 +50,7 @@ namespace ESI.NET.Logic
         /// <param name="body"></param>
         /// <param name="approved_cost"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<long>> New(object[] recipients, string subject, string body, int approved_cost = 0, EsiCallOptions options = null)
+        public async Task<EsiResponse<long>> New(object[] recipients, string subject, string body, long approved_cost = 0, EsiCallOptions options = null)
             => await Execute<long>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/characters/{character_id}/mail/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -127,7 +127,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="mail_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Message>> Retrieve(int mail_id, EsiCallOptions options)
+        public async Task<EsiResponse<Message>> Retrieve(long mail_id, EsiCallOptions options)
             => await Execute<Message>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/mail/{mail_id}/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -143,7 +143,7 @@ namespace ESI.NET.Logic
         /// <param name="is_read"></param>
         /// <param name="labels"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Message>> Update(int mail_id, bool? is_read = null, int[] labels = null, EsiCallOptions options = null)
+        public async Task<EsiResponse<Message>> Update(long mail_id, bool? is_read = null, long[] labels = null, EsiCallOptions options = null)
             => await Execute<Message>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Put, "/characters/{character_id}/mail/{mail_id}/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -158,7 +158,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="mail_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Message>> Delete(int mail_id, EsiCallOptions options)
+        public async Task<EsiResponse<Message>> Delete(long mail_id, EsiCallOptions options)
             => await Execute<Message>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Delete, "/characters/{character_id}/mail/{mail_id}/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -173,7 +173,7 @@ namespace ESI.NET.Logic
         /// <param name="is_read"></param>
         /// <param name="labels"></param>
         /// <returns></returns>
-        private static dynamic BuildUpdateObject(bool? is_read, int[] labels = null)
+        private static dynamic BuildUpdateObject(bool? is_read, long[] labels = null)
         {
             dynamic body = null;
 

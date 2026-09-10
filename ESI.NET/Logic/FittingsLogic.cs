@@ -48,7 +48,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="fitting_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> Delete(int fitting_id, EsiCallOptions options)
+        public async Task<EsiResponse<string>> Delete(long fitting_id, EsiCallOptions options)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Delete, "/characters/{character_id}/fittings/{fitting_id}/",
                 replacements: new Dictionary<string, string>()
                 {

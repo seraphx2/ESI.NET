@@ -23,11 +23,11 @@ namespace ESI.NET.Logic
         /// <param name="connections"></param>
         /// <returns></returns>
         public async Task<EsiResponse<long[]>> Map(
-            int origin, 
-            int destination, 
+            long origin, 
+            long destination, 
             RoutesFlag flag = RoutesFlag.Shortest,
-            int[] avoid = null,
-            int[] connections = null,
+            long[] avoid = null,
+            long[] connections = null,
             EsiCallOptions options = null)
         {
             var parameters = new List<string>() { $"flag={flag.ToEsiValue()}" };

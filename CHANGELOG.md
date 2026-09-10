@@ -85,18 +85,17 @@ cancellation, pagination) is passed. **Every consumer needs code changes** — s
 - `ResolvedInfoCategory.Structure` removed — `POST /universe/names` no longer
   resolves structure IDs, so `ResolvedInfo.Category` can never be `structure`.
 
-**Integer response fields widened to `long`**
+**`int` → `long` throughout**
 
-- Every `int` property on a response model is now `long` (`int[]` → `long[]`).
-  ESI types every integer in a response body as int64 and EVE IDs are already at
-  the int32 boundary. Includes `AuthorizedCharacterData.CharacterID` /
-  `AllianceID` / `CorporationID` / `FactionID`.
-- Methods returning a bare id list or scalar (`Alliance.All`, `Corporation.Members`,
-  `Corporation.MemberLimit`, `Dogma.Attributes`/`Effects`, `Mail.New`,
-  `Routes.Map`, `Wars.All`, the `Universe.*` id lists, …) now return
-  `EsiResponse<long[]>` / `EsiResponse<long>`.
-- Method parameters are unchanged (`int` still widens on its own); only storing a
-  result back into an `int` needs a change, and the compiler flags each one.
+- ESI types every integer — response fields, path/query/body parameters — as
+  int64, and EVE IDs are already at the int32 boundary. Every `int` is now `long`:
+  response-model properties (`int[]` → `long[]`), `AuthorizedCharacterData` ids,
+  the bare id-list/scalar return types (`Alliance.All`, `Corporation.Members`,
+  `Dogma.Attributes`/`Effects`, `Mail.New`, `Routes.Map`, `Wars.All`, the
+  `Universe.*` id lists, …), and every id-shaped method parameter.
+- Passing an `int` to a `long` parameter still compiles. What needs a change is
+  reading a value back (`long id = character.Data.CorporationId;`) or a
+  `List<int>` / `int[]` built to pass in — the compiler flags each one.
 
 ### Added
 

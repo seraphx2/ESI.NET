@@ -65,7 +65,7 @@ namespace ESI.NET.Logic
         /// <param name="label_ids"></param>
         /// <param name="watched"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<long[]>> Add(int[] contact_ids, decimal standing, int[] label_ids = null, bool? watched = null, EsiCallOptions options = null)
+        public async Task<EsiResponse<long[]>> Add(long[] contact_ids, decimal standing, long[] label_ids = null, bool? watched = null, EsiCallOptions options = null)
         {
             var body = contact_ids;
 
@@ -95,7 +95,7 @@ namespace ESI.NET.Logic
         /// <param name="label_id"></param>
         /// <param name="watched"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> Update(int[] contact_ids, decimal standing, int[] label_ids = null, bool? watched = null, EsiCallOptions options = null)
+        public async Task<EsiResponse<string>> Update(long[] contact_ids, decimal standing, long[] label_ids = null, bool? watched = null, EsiCallOptions options = null)
         {
             var body = contact_ids;
 
@@ -122,7 +122,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="contact_ids"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> Delete(int[] contact_ids, EsiCallOptions options)
+        public async Task<EsiResponse<string>> Delete(long[] contact_ids, EsiCallOptions options)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Delete, "/characters/{character_id}/contacts/",
                 replacements: new Dictionary<string, string>()
                 {

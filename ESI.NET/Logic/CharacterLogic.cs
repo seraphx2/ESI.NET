@@ -23,7 +23,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="characterIds">dynamic = long</param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Affiliation>>> Affiliation(int[] character_ids, EsiCallOptions options = null)
+        public async Task<EsiResponse<List<Affiliation>>> Affiliation(long[] character_ids, EsiCallOptions options = null)
             => await Execute<List<Affiliation>>(_client, _config, RequestSecurity.Public, HttpMethod.Post, "/characters/affiliation/",
                 body: character_ids,
                 options: options);
@@ -34,7 +34,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="character_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Information>> Information(int character_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Information>> Information(long character_id, EsiCallOptions options = null)
             => await Execute<Information>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/characters/{character_id}/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -73,7 +73,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="character_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<CorporationHistory>>> CorporationHistory(int character_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<List<CorporationHistory>>> CorporationHistory(long character_id, EsiCallOptions options = null)
             => await Execute<List<CorporationHistory>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/characters/{character_id}/corporationhistory/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -149,7 +149,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="character_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Images>> Portrait(int character_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Images>> Portrait(long character_id, EsiCallOptions options = null)
             => await Execute<Images>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/characters/{character_id}/portrait/",
                 replacements: new Dictionary<string, string>()
                 {

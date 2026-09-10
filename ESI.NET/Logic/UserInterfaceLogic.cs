@@ -20,7 +20,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="type_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> MarketDetails(int type_id, EsiCallOptions options)
+        public async Task<EsiResponse<string>> MarketDetails(long type_id, EsiCallOptions options)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/ui/openwindow/marketdetails/",
                 parameters: new string[]
                 {
@@ -33,7 +33,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="contract_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> Contract(int contract_id, EsiCallOptions options)
+        public async Task<EsiResponse<string>> Contract(long contract_id, EsiCallOptions options)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/ui/openwindow/contract/",
                 parameters: new string[]
                 {
@@ -46,7 +46,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="target_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> Information(int target_id, EsiCallOptions options)
+        public async Task<EsiResponse<string>> Information(long target_id, EsiCallOptions options)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/ui/openwindow/information/",
                 parameters: new string[]
                 {
@@ -80,7 +80,7 @@ namespace ESI.NET.Logic
         /// <param name="to_mailing_list_id"></param>
         /// <param name="to_corp_or_alliance_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> NewMail(string subject, string body, int[] recipients, EsiCallOptions options)
+        public async Task<EsiResponse<string>> NewMail(string subject, string body, long[] recipients, EsiCallOptions options)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/ui/openwindow/newmail/",
                 body: new
                 {

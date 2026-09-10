@@ -49,7 +49,7 @@ namespace ESI.NET.Logic
         /// <param name="killmail_hash">The killmail hash for verification</param>
         /// <param name="killmail_id">The killmail ID to be queried</param>
         /// <returns></returns>
-        public async Task<EsiResponse<Information>> Information(string killmail_hash, int killmail_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Information>> Information(string killmail_hash, long killmail_id, EsiCallOptions options = null)
             => await Execute<Information>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/killmails/{killmail_id}/{killmail_hash}/",
                 replacements: new Dictionary<string, string>()
                 {

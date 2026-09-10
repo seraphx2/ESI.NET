@@ -76,7 +76,7 @@ namespace ESI.NET.Logic
         /// <param name="division"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<JournalEntry>>> CorporationJournal(int division, EsiCallOptions options)
+        public async Task<EsiResponse<List<JournalEntry>>> CorporationJournal(long division, EsiCallOptions options)
             => await Execute<List<JournalEntry>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/wallets/{division}/journal/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -91,7 +91,7 @@ namespace ESI.NET.Logic
         /// <param name="division"></param>
         /// <param name="from_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Transaction>>> CorporationTransactions(int division, long from_id, EsiCallOptions options)
+        public async Task<EsiResponse<List<Transaction>>> CorporationTransactions(long division, long from_id, EsiCallOptions options)
             => await Execute<List<Transaction>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/wallets/{division}/transactions/",
                 replacements: new Dictionary<string, string>()
                 {

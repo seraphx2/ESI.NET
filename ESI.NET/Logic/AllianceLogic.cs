@@ -28,7 +28,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="allianceId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Alliance>> Information(int alliance_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Alliance>> Information(long alliance_id, EsiCallOptions options = null)
             => await Execute<Alliance>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/alliances/{alliance_id}/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -42,7 +42,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="alliance_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<long[]>> Corporations(int alliance_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<long[]>> Corporations(long alliance_id, EsiCallOptions options = null)
             => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/alliances/{alliance_id}/corporations/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -56,7 +56,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="alliance_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Images>> Icons(int alliance_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Images>> Icons(long alliance_id, EsiCallOptions options = null)
             => await Execute<Images>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/alliances/{alliance_id}/icons/",
                 replacements: new Dictionary<string, string>()
                 {

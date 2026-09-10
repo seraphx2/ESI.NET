@@ -35,7 +35,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="contract_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Event>> Event(int event_id, EsiCallOptions options)
+        public async Task<EsiResponse<Event>> Event(long event_id, EsiCallOptions options)
             => await Execute<Event>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/calendar/{event_id}/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -50,7 +50,7 @@ namespace ESI.NET.Logic
         /// <param name="event_id"></param>
         /// <param name="response"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Event>> Respond(int event_id, EventResponse eventResponse, EsiCallOptions options)
+        public async Task<EsiResponse<Event>> Respond(long event_id, EventResponse eventResponse, EsiCallOptions options)
             => await Execute<Event>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Put, "/characters/{character_id}/calendar/{event_id}/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -68,7 +68,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="contract_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Response>>> Responses(int event_id, EsiCallOptions options)
+        public async Task<EsiResponse<List<Response>>> Responses(long event_id, EsiCallOptions options)
             => await Execute<List<Response>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/calendar/{event_id}/attendees/",
                 replacements: new Dictionary<string, string>()
                 {

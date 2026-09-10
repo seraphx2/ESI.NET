@@ -40,7 +40,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="category_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Category>> Category(int category_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Category>> Category(long category_id, EsiCallOptions options = null)
             => await Execute<Category>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/categories/{category_id}/", replacements: new Dictionary<string, string>()
             {
                 { "category_id", category_id.ToString() }
@@ -62,7 +62,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="constellation_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Constellation>> Constellation(int constellation_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Constellation>> Constellation(long constellation_id, EsiCallOptions options = null)
             => await Execute<Constellation>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/constellations/{constellation_id}/", replacements: new Dictionary<string, string>()
             {
                 { "constellation_id", constellation_id.ToString() }
@@ -93,7 +93,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="graphic_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Graphic>> Graphic(int graphic_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Graphic>> Graphic(long graphic_id, EsiCallOptions options = null)
             => await Execute<Graphic>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/graphics/{graphic_id}/", replacements: new Dictionary<string, string>()
             {
                 { "graphic_id", graphic_id.ToString() }
@@ -115,7 +115,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="group_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Group>> Group(int group_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Group>> Group(long group_id, EsiCallOptions options = null)
             => await Execute<Group>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/groups/{group_id}/", replacements: new Dictionary<string, string>()
             {
                 { "group_id", group_id.ToString() }
@@ -128,7 +128,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="moon_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Moon>> Moon(int moon_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Moon>> Moon(long moon_id, EsiCallOptions options = null)
             => await Execute<Moon>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/moons/{moon_id}/", replacements: new Dictionary<string, string>()
             {
                 { "moon_id", moon_id.ToString() }
@@ -141,7 +141,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="any_ids">The ids to resolve; Supported IDs for resolving are: Characters, Corporations, Alliances, Stations, Solar Systems, Constellations, Regions, Types.</param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<ResolvedInfo>>> Names(List<int> any_ids, EsiCallOptions options = null)
+        public async Task<EsiResponse<List<ResolvedInfo>>> Names(List<long> any_ids, EsiCallOptions options = null)
             => await Execute<List<ResolvedInfo>>(_client, _config, RequestSecurity.Public, HttpMethod.Post, "/universe/names/", body: any_ids.ToArray(),
                 options: options);
 
@@ -161,7 +161,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="planet_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Planet>> Planet(int planet_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Planet>> Planet(long planet_id, EsiCallOptions options = null)
             => await Execute<Planet>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/planets/{planet_id}/", replacements: new Dictionary<string, string>()
             {
                 { "planet_id", planet_id.ToString() }
@@ -192,7 +192,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="region_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Region>> Region(int region_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Region>> Region(long region_id, EsiCallOptions options = null)
             => await Execute<Region>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/regions/{region_id}/", replacements: new Dictionary<string, string>()
             {
                 { "region_id", region_id.ToString() }
@@ -205,7 +205,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="station_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Station>> Station(int station_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Station>> Station(long station_id, EsiCallOptions options = null)
             => await Execute<Station>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/stations/{station_id}/", replacements: new Dictionary<string, string>()
             {
                 { "station_id", station_id.ToString() }
@@ -247,7 +247,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="system_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<SolarSystem>> System(int system_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<SolarSystem>> System(long system_id, EsiCallOptions options = null)
             => await Execute<SolarSystem>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/systems/{system_id}/", replacements: new Dictionary<string, string>()
             {
                 { "system_id", system_id.ToString() }
@@ -269,7 +269,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="type_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Type>> Type(int type_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Type>> Type(long type_id, EsiCallOptions options = null)
             => await Execute<Type>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/types/{type_id}/", replacements: new Dictionary<string, string>()
             {
                 { "type_id", type_id.ToString() }
@@ -282,7 +282,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="stargate_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Stargate>> Stargate(int stargate_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Stargate>> Stargate(long stargate_id, EsiCallOptions options = null)
             => await Execute<Stargate>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/stargates/{stargate_id}/", replacements: new Dictionary<string, string>()
             {
                 { "stargate_id", stargate_id.ToString() }
@@ -313,7 +313,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="star_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Star>> Star(int star_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Star>> Star(long star_id, EsiCallOptions options = null)
             => await Execute<Star>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/stars/{star_id}/", replacements: new Dictionary<string, string>()
             {
                 { "star_id", star_id.ToString() }
@@ -334,7 +334,7 @@ namespace ESI.NET.Logic
         /// /universe/asteroid_belts/{asteroid_belt_id}/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<AsteroidBelt>> AsteroidBelt(int asteroid_belt_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<AsteroidBelt>> AsteroidBelt(long asteroid_belt_id, EsiCallOptions options = null)
             => await Execute<AsteroidBelt>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/asteroid_belts/{asteroid_belt_id}/", replacements: new Dictionary<string, string>()
             {
                 { "asteroid_belt_id", asteroid_belt_id.ToString() }

@@ -81,7 +81,7 @@ namespace ESI.NET.Logic
         /// <param name="wing_id"></param>
         /// <param name="squad_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> InviteCharacter(long fleet_id, int character_id, FleetRole role, long wing_id = 0, long squad_id = 0, EsiCallOptions options = null)
+        public async Task<EsiResponse<string>> InviteCharacter(long fleet_id, long character_id, FleetRole role, long wing_id = 0, long squad_id = 0, EsiCallOptions options = null)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/fleets/{fleet_id}/members/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -99,7 +99,7 @@ namespace ESI.NET.Logic
         /// <param name="wing_id"></param>
         /// <param name="squad_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> MoveCharacter(long fleet_id, int member_id, FleetRole role, long wing_id = 0, long squad_id = 0, EsiCallOptions options = null)
+        public async Task<EsiResponse<string>> MoveCharacter(long fleet_id, long member_id, FleetRole role, long wing_id = 0, long squad_id = 0, EsiCallOptions options = null)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Put, "/fleets/{fleet_id}/members/{member_id}/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -115,7 +115,7 @@ namespace ESI.NET.Logic
         /// <param name="fleet_id"></param>
         /// <param name="member_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> KickCharacter(long fleet_id, int member_id, EsiCallOptions options)
+        public async Task<EsiResponse<string>> KickCharacter(long fleet_id, long member_id, EsiCallOptions options)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Delete, "/fleets/{fleet_id}/members/{member_id}/",
                 replacements: new Dictionary<string, string>()
                 {

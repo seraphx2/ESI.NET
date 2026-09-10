@@ -50,7 +50,7 @@ namespace ESI.NET.IntegrationTests
         [Fact]
         public async Task Universe_names_round_trip()
         {
-            var r = await LiveFixture.Call(() => Esi.Universe.Names(new List<int> { _f.TritaniumTypeId, _f.JitaSystemId }));
+            var r = await LiveFixture.Call(() => Esi.Universe.Names(new List<long> { _f.TritaniumTypeId, _f.JitaSystemId }));
             Ok.Response(r);
             Assert.Contains(r.Data, x => x.Name == "Tritanium");
             Assert.Contains(r.Data, x => x.Name == "Jita");
@@ -62,7 +62,7 @@ namespace ESI.NET.IntegrationTests
             var ids = await LiveFixture.Call(() => Esi.Dogma.Attributes());
             Ok.NonEmpty(ids);
 
-            var detail = Ok.Response(await LiveFixture.Call(() => Esi.Dogma.Attribute((int)ids.Data.First())));
+            var detail = Ok.Response(await LiveFixture.Call(() => Esi.Dogma.Attribute(ids.Data.First())));
             Assert.False(string.IsNullOrEmpty(detail.Data.Name));
         }
 

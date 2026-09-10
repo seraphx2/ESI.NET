@@ -22,7 +22,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="region_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Contract>>> Contracts(int region_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<List<Contract>>> Contracts(long region_id, EsiCallOptions options = null)
             => await Execute<List<Contract>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/contracts/public/{region_id}/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -35,7 +35,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="contract_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<ContractItem>>> ContractItems(int contract_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<List<ContractItem>>> ContractItems(long contract_id, EsiCallOptions options = null)
             => await Execute<List<ContractItem>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/contracts/public/items/{contract_id}/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -48,7 +48,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="contract_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Bid>>> ContractBids(int contract_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<List<Bid>>> ContractBids(long contract_id, EsiCallOptions options = null)
             => await Execute<List<Bid>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/contracts/public/bids/{contract_id}/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -73,7 +73,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="contract_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<ContractItem>>> CharacterContractItems(int contract_id, EsiCallOptions options)
+        public async Task<EsiResponse<List<ContractItem>>> CharacterContractItems(long contract_id, EsiCallOptions options)
             => await Execute<List<ContractItem>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/contracts/{contract_id}/items/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -87,7 +87,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="contract_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Bid>>> CharacterContractBids(int contract_id, EsiCallOptions options)
+        public async Task<EsiResponse<List<Bid>>> CharacterContractBids(long contract_id, EsiCallOptions options)
             => await Execute<List<Bid>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/contracts/{contract_id}/bids/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -113,7 +113,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="contract_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<ContractItem>>> CorporationContractItems(int contract_id, EsiCallOptions options)
+        public async Task<EsiResponse<List<ContractItem>>> CorporationContractItems(long contract_id, EsiCallOptions options)
             => await Execute<List<ContractItem>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/contracts/{contract_id}/items/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -127,7 +127,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="contract_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Bid>>> CorporationContractBids(int contract_id, EsiCallOptions options)
+        public async Task<EsiResponse<List<Bid>>> CorporationContractBids(long contract_id, EsiCallOptions options)
             => await Execute<List<Bid>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/contracts/{contract_id}/bids/",
                 replacements: new Dictionary<string, string>()
                 {

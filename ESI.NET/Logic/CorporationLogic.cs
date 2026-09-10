@@ -32,7 +32,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="corporation_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Corporation>> Information(int corporation_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Corporation>> Information(long corporation_id, EsiCallOptions options = null)
             => await Execute<Corporation>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/corporations/{corporation_id}/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -46,7 +46,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="corporation_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<AllianceHistory>>> AllianceHistory(int corporation_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<List<AllianceHistory>>> AllianceHistory(long corporation_id, EsiCallOptions options = null)
             => await Execute<List<AllianceHistory>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/corporations/{corporation_id}/alliancehistory/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -110,7 +110,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="corporationId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Images>> Icons(int corporation_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Images>> Icons(long corporation_id, EsiCallOptions options = null)
             => await Execute<Images>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/corporations/{corporation_id}/icons/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -262,7 +262,7 @@ namespace ESI.NET.Logic
         /// <param name="starbase_id"></param>
         /// <param name="system_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<StarbaseInfo>> Starbase(long starbase_id, int system_id, EsiCallOptions options)
+        public async Task<EsiResponse<StarbaseInfo>> Starbase(long starbase_id, long system_id, EsiCallOptions options)
             => await Execute<StarbaseInfo>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/starbases/{starbase_id}/",
                 replacements: new Dictionary<string, string>()
                 {

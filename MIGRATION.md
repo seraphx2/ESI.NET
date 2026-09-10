@@ -160,25 +160,30 @@ New fields to match the spec: `Information.Title`, `CustomsOffice.TypeId`,
 endpoint that populates `ResolvedInfo.Category`) stopped resolving structure IDs,
 so that value can no longer come back.
 
-## 11. Integer response fields are now `long`
+## 11. Every integer is now `long`
 
-ESI's schema types **every** integer in a response body as a 64-bit integer, and
-EVE's own IDs are already at the 32-bit boundary. Every `int` property on a
-response model is now `long` (and `int[]` is `long[]`). This also covers:
+ESI's schema types **every** integer — response fields, path/query/body
+parameters, the lot — as a 64-bit integer, and EVE's own IDs are already at the
+32-bit boundary. So `int` is now `long` throughout:
 
-- `AuthorizedCharacterData.CharacterID` / `AllianceID` / `CorporationID` /
+- Every `int` property on a response model (`int[]` → `long[]`), including
+  `AuthorizedCharacterData.CharacterID` / `AllianceID` / `CorporationID` /
   `FactionID`.
-- The methods that return a bare list or scalar of IDs — `Alliance.All`,
+- Methods returning a bare list or scalar of IDs — `Alliance.All`,
   `Alliance.Corporations`, `Clones.Implants`, `Contacts.Add`, `Corporation.NpcCorps`,
   `Corporation.Members`, `Corporation.MemberLimit`, `Dogma.Attributes`,
   `Dogma.Effects`, `Mail.New`, `Market.Groups`, `Market.Types`, `Routes.Map`,
-  `Wars.All`, and every `Universe.*` id-list method — now return
-  `EsiResponse<long[]>` / `EsiResponse<long>`.
+  `Wars.All`, every `Universe.*` id-list method — now return `EsiResponse<long[]>`
+  / `EsiResponse<long>`.
+- Every id-shaped method parameter — `Universe.Type(long type_id)`,
+  `Character.Information(long character_id)`, `Contracts.ContractItems(long contract_id)`,
+  `Wallet.CorporationJournal(long division)`, `Character.Affiliation(long[] character_ids)`,
+  `Universe.Names(List<long> any_ids)`, and so on.
 
-Method **parameters** are unchanged — they still take `int` and an `int` argument
-widens on its own, so existing call sites compile. What breaks is storing a
-result in an `int`: `int id = character.Data.CorporationId;` becomes
-`long id = ...`. The compiler flags every one.
+Passing an `int` to a `long` parameter needs no change — it widens on its own.
+What the compiler flags is the other direction: a value you *read back* is now
+`long`, so `int id = character.Data.CorporationId;` becomes `long id = …`, and a
+`List<int>` / `int[]` you built to pass in becomes `List<long>` / `long[]`.
 
 ---
 

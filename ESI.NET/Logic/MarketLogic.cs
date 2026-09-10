@@ -36,9 +36,9 @@ namespace ESI.NET.Logic
         /// <param name="type_id"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Order>>> RegionOrders(
-            int region_id,
+            long region_id,
             MarketOrderType order_type = MarketOrderType.All,
-            int? type_id = null,
+            long? type_id = null,
             EsiCallOptions options = null)
         {
             var parameters = new List<string>() { $"order_type={order_type.ToEsiValue()}" };
@@ -63,7 +63,7 @@ namespace ESI.NET.Logic
         /// <param name="region_id"></param>
         /// <param name="type_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Statistic>>> TypeHistoryInRegion(int region_id, int type_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<List<Statistic>>> TypeHistoryInRegion(long region_id, long type_id, EsiCallOptions options = null)
             => await Execute<List<Statistic>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/{region_id}/history/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -104,7 +104,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="market_group_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Group>> Group(int market_group_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Group>> Group(long market_group_id, EsiCallOptions options = null)
             => await Execute<Group>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/groups/{market_group_id}/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -144,7 +144,7 @@ namespace ESI.NET.Logic
         /// <param name="region_id"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<long[]>> Types(int region_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<long[]>> Types(long region_id, EsiCallOptions options = null)
             => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/{region_id}/types/",
                 replacements: new Dictionary<string, string>()
                 {

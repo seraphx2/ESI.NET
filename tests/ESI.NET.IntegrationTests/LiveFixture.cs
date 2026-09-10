@@ -37,12 +37,12 @@ namespace ESI.NET.IntegrationTests
     {
         public IEsiClient Client { get; private set; }
 
-        public int JitaSystemId { get; private set; }
-        public int AmarrSystemId { get; private set; }
-        public int TritaniumTypeId { get; private set; }
-        public int TheForgeRegionId { get; private set; }
-        public int LpCorporationId { get; private set; } // Federal Navy Academy - has an LP store
-        public int AllianceId { get; private set; }
+        public long JitaSystemId { get; private set; }
+        public long AmarrSystemId { get; private set; }
+        public long TritaniumTypeId { get; private set; }
+        public long TheForgeRegionId { get; private set; }
+        public long LpCorporationId { get; private set; } // Federal Navy Academy - has an LP store
+        public long AllianceId { get; private set; }
 
         public async Task InitializeAsync()
         {
@@ -76,11 +76,11 @@ namespace ESI.NET.IntegrationTests
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        private static int Resolve(List<ResolvedInfo> list, string name)
+        private static long Resolve(List<ResolvedInfo> list, string name)
         {
             var hit = list?.Find(x => string.Equals(x.Name, name, StringComparison.OrdinalIgnoreCase));
             Assert.True(hit != null, $"/universe/ids did not resolve \"{name}\"");
-            return (int)hit.Id; // ResolvedInfo.Id is long now; these fixtures are all small, well-known ids
+            return hit.Id;
         }
 
         /// <summary>

@@ -36,7 +36,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="war_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<War>> Information(int war_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<War>> Information(long war_id, EsiCallOptions options = null)
             => await Execute<War>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/wars/{war_id}/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -51,7 +51,7 @@ namespace ESI.NET.Logic
         /// <param name="war_id"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Models.Killmails.Killmail>>> Kills(int war_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<List<Models.Killmails.Killmail>>> Kills(long war_id, EsiCallOptions options = null)
             => await Execute<List<Models.Killmails.Killmail>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/wars/{war_id}/killmails/",
                 replacements: new Dictionary<string, string>()
                 {
