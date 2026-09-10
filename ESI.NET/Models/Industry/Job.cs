@@ -17,6 +17,12 @@ namespace ESI.NET.Models.Industry
         [JsonProperty("station_id")]
         public long StationId { get; set; }
 
+        /// <summary>
+        /// Returned by the corporation industry-jobs endpoint (structures have no station id).
+        /// </summary>
+        [JsonProperty("location_id")]
+        public long LocationId { get; set; }
+
         [JsonProperty("activity_id")]
         public long ActivityId { get; set; }
 

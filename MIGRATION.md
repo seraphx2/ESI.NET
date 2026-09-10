@@ -152,9 +152,12 @@ The wrapper was returning the wrong container or CLR type on these:
 | `CustomsOffice.CorporationTaxRate` | `string` | `decimal` |
 | `CustomsOffice.ExcellentStandingTaxRate` / `GoodStandingTaxRate` | `long` / `int` | `decimal` |
 | `ColonyLayout.Route.Quantity` | `long` | `decimal` |
+| `ItemLocation` (asset `/locations`) | flat `X` / `Y` / `Z` | nested `Position` (`.Position.X` …) |
 
 New fields to match the spec: `Information.Title`, `CustomsOffice.TypeId`,
-`Stat.Pilots`, `Order.IssuedBy`.
+`Stat.Pilots`, `Order.IssuedBy`, `FleetInfo.FleetBossId`, `Job.LocationId`
+(corporation industry jobs), `Stat.SystemsControlled` (`GET /fw/stats`),
+`Universe.Structure.OwnerId`.
 
 Removed fields ESI no longer returns anywhere: `Information.AncestryId`,
 `Order.AccountId`, `Order.IsCorp` (use the still-present `Order.IsCorporation`),

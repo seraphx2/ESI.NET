@@ -81,7 +81,10 @@ cancellation, pagination) is passed. **Every consumer needs code changes** — s
 - `CustomsOffice` tax-rate fields (`CorporationTaxRate`, `ExcellentStandingTaxRate`,
   `GoodStandingTaxRate`) are `decimal`; `ColonyLayout.Route.Quantity` is `decimal`.
 - New fields: `Information.Title`, `CustomsOffice.TypeId`, `Stat.Pilots`,
-  `Order.IssuedBy`.
+  `Order.IssuedBy`, `FleetInfo.FleetBossId`, `Job.LocationId`,
+  `Stat.SystemsControlled`, `Universe.Structure.OwnerId`.
+- `ItemLocation` (asset `.../locations`) exposes `Position` instead of flat
+  `X` / `Y` / `Z` — the spec nests them and the flat fields never bound.
 - Removed fields ESI no longer sends on any endpoint: `Information.AncestryId`,
   `Order.AccountId`, `Order.IsCorp` (`Order.IsCorporation` stays),
   `IDLookup.Structures`.

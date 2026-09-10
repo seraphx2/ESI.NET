@@ -20,6 +20,9 @@ namespace ESI.NET.Models.FactionWarfare
         [JsonProperty("pilots")]
         public long Pilots { get; set; }
 
+        [JsonProperty("systems_controlled")]
+        public long SystemsControlled { get; set; }
+
         [JsonProperty("kills")]
         public Totals Kills { get; set; }
 
