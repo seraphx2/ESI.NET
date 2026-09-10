@@ -22,12 +22,12 @@ public sealed class CoverageResult
 
 /// <summary>
 /// Tier 1. Set-difference between the spec's (method, path) operations and the
-/// wrapper's. Orphaned endpoints are an error; missing endpoints and parameter-name
-/// drift are warnings.
+/// wrapper's. Orphaned endpoints, missing endpoints, and parameter-name drift all
+/// fail the run; endpoints listed in the allowlist are exempt from the missing check.
 /// </summary>
 public static class CoverageCheck
 {
-    public static CoverageResult Run(Spec spec, Wrapper wrapper, bool strict)
+    public static CoverageResult Run(Spec spec, Wrapper wrapper, IReadOnlySet<string> notWrapped)
     {
         var specByKey = spec.Operations
             .GroupBy(o => o.Key)
@@ -54,8 +54,10 @@ public static class CoverageCheck
             var looselyCovered = wrapper.Endpoints.Any(e => e.LooseKey == op.LooseKey);
             if (looselyCovered)
                 continue; // handled below as a parameter-name mismatch
+            if (notWrapped.Contains(op.Key))
+                continue; // deliberately not wrapped - see tools/SpecCheck/allowlist.txt
             findings.Add(new Finding(
-                strict ? Severity.Error : Severity.Warning,
+                Severity.Warning,
                 "missing-endpoint", op.Key,
                 $"in the spec (tag {op.Tag}, {op.OperationId}) but not implemented"));
         }
@@ -71,7 +73,7 @@ public static class CoverageCheck
             {
                 paramMismatch.Add((endpoint, loose[0]));
                 findings.Add(new Finding(
-                    strict ? Severity.Error : Severity.Warning,
+                    Severity.Warning,
                     "parameter-name", endpoint.Key,
                     $"{endpoint.Class}.{endpoint.Method} - route matches {loose[0].Key} but the parameter name(s) differ"));
             }
@@ -85,8 +87,9 @@ public static class CoverageCheck
             }
         }
 
+        // How SpecCheck read a route, not an API change - informational only.
         foreach (var warning in wrapper.Warnings)
-            findings.Add(new Finding(Severity.Warning, "scan", "-", warning));
+            findings.Add(new Finding(Severity.Info, "scan", "-", warning));
 
         var covered = spec.Operations.Count(o => wrapperKeys.Contains(o.Key));
 

@@ -5,12 +5,12 @@ namespace ESI.NET.Tools.SpecCheck;
 /// <summary>
 /// Renders the check results to stdout, appends a markdown summary to
 /// <c>$GITHUB_STEP_SUMMARY</c> when running in Actions, and returns the process
-/// exit code (non-zero if any <see cref="Severity.Error"/>, or any
-/// <see cref="Severity.Warning"/> when <paramref name="strict"/>).
+/// exit code: non-zero if any finding is <see cref="Severity.Warning"/> or
+/// <see cref="Severity.Error"/>. <see cref="Severity.Info"/> never fails the run.
 /// </summary>
 public static class Report
 {
-    public static int Render(Spec spec, Wrapper wrapper, CoverageResult coverage, SchemaResult? schema, bool strict)
+    public static int Render(Spec spec, Wrapper wrapper, CoverageResult coverage, SchemaResult? schema)
     {
         var findings = coverage.Findings.Concat(schema?.Findings ?? Enumerable.Empty<Finding>()).ToList();
 
@@ -40,7 +40,7 @@ public static class Report
                           + $"({Percent(coverage.TotalCovered, coverage.TotalOperations)})"
                           + (schema is not null ? $"; schema-checked {schema.Checked} endpoint(s)." : "."));
 
-        var failed = errors > 0 || (strict && warnings > 0);
+        var failed = errors > 0 || warnings > 0;
         Console.WriteLine(failed ? "RESULT: drift detected." : "RESULT: clean.");
         return failed ? 1 : 0;
     }

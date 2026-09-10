@@ -22,15 +22,17 @@ public static class SchemaCheck
 {
     private const int MaxDepth = 12;
 
-    public static SchemaResult Run(Spec spec, Wrapper wrapper, bool strict)
+    public static SchemaResult Run(Spec spec, Wrapper wrapper)
     {
         var specByKey = spec.Operations
             .GroupBy(o => o.Key)
             .ToDictionary(g => g.Key, g => g.First());
 
         var findings = new List<Finding>();
-        int checkedCount = 0, noSchema = 0, noModel = 0;
+        int noSchema = 0, noModel = 0;
 
+        // Pass 1: build the (model, schema) node trees for every checkable endpoint.
+        var pairs = new List<(string Key, Node Model, Node Schema)>();
         foreach (var endpoint in wrapper.Endpoints)
         {
             if (!specByKey.TryGetValue(endpoint.Key, out var op))
@@ -47,19 +49,61 @@ public static class SchemaCheck
                 continue;
             }
 
-            var model = FromClr(clrType, 0, new HashSet<Type>());
-            var schema = FromSchema(schemaElement, spec, 0, new HashSet<string>());
-            Compare(model, schema, "Data", endpoint.Key, strict, findings);
-            checkedCount++;
+            pairs.Add((endpoint.Key,
+                FromClr(clrType, 0, new HashSet<Type>()),
+                FromSchema(schemaElement, spec, 0, new HashSet<string>())));
         }
+
+        // For each CLR object type, the union of every schema property name lined up
+        // against it across all endpoints. A model class serving several endpoints is a
+        // superset of any one of them; a field only counts as "extra" if it appears in
+        // NONE of that type's schemas (genuinely dropped upstream).
+        var knownByType = new Dictionary<Type, HashSet<string>>();
+        foreach (var (_, model, schema) in pairs)
+            CollectKnownProps(model, schema, knownByType, new HashSet<(Node, Node)>());
+
+        // Pass 2: the actual comparison.
+        foreach (var (key, model, schema) in pairs)
+            Compare(model, schema, "Data", key, knownByType, findings);
 
         return new SchemaResult
         {
             Findings = findings,
-            Checked = checkedCount,
+            Checked = pairs.Count,
             SkippedNoSchema = noSchema,
             SkippedNoModel = noModel,
         };
+    }
+
+    /// <summary>
+    /// Records, per CLR object type, every schema property name that ever lines up with it.
+    /// </summary>
+    private static void CollectKnownProps(
+        Node model, Node schema, Dictionary<Type, HashSet<string>> acc, HashSet<(Node, Node)> visited)
+    {
+        if (model.Kind != schema.Kind || !visited.Add((model, schema)))
+            return;
+
+        switch (model.Kind)
+        {
+            case NodeKind.Object:
+                if (model.ClrType is { } type)
+                {
+                    if (!acc.TryGetValue(type, out var names))
+                        acc[type] = names = new HashSet<string>(StringComparer.Ordinal);
+                    foreach (var name in schema.Members.Keys)
+                        names.Add(name);
+                }
+                foreach (var (name, schemaMember) in schema.Members)
+                    if (model.Members.TryGetValue(name, out var modelMember))
+                        CollectKnownProps(modelMember.Node, schemaMember.Node, acc, visited);
+                break;
+
+            case NodeKind.Array:
+                if (model.Items is not null && schema.Items is not null)
+                    CollectKnownProps(model.Items, schema.Items, acc, visited);
+                break;
+        }
     }
 
     // ---- CLR type -> Node ---------------------------------------------------
@@ -87,6 +131,7 @@ public static class SchemaCheck
                 return Node.Unknown("recursive type " + type.Name);
 
             var node = Node.Object();
+            node.ClrType = type;
             foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 if (property.GetIndexParameters().Length > 0)
@@ -240,12 +285,12 @@ public static class SchemaCheck
 
     // ---- compare ----------------------------------------------------------
 
-    public static void Compare(Node model, Node spec, string crumb, string endpoint, bool strict, List<Finding> findings)
+    public static void Compare(
+        Node model, Node spec, string crumb, string endpoint,
+        IReadOnlyDictionary<Type, HashSet<string>> knownByType, List<Finding> findings)
     {
         void Add(Severity sev, string category, string message) =>
             findings.Add(new Finding(sev, category, endpoint, $"{crumb}: {message}"));
-
-        var warn = strict ? Severity.Error : Severity.Warning;
 
         if (model.Kind == NodeKind.Unknown || spec.Kind == NodeKind.Unknown)
         {
@@ -267,33 +312,40 @@ public static class SchemaCheck
                 foreach (var (name, member) in spec.Members)
                 {
                     if (!model.Members.ContainsKey(name))
-                        Add(warn, "schema-missing-property",
+                        Add(Severity.Warning, "schema-missing-property",
                             $"spec has \"{name}\"{(member.Required ? " (required)" : "")}, model does not");
                 }
                 foreach (var name in model.Members.Keys)
                 {
-                    if (!spec.Members.ContainsKey(name))
-                        Add(warn, "schema-extra-property", $"model has \"{name}\", spec does not");
+                    if (spec.Members.ContainsKey(name))
+                        continue;
+                    // Present in another endpoint's schema for the same model class -> shared, not drift.
+                    if (model.ClrType is { } ct
+                        && knownByType.TryGetValue(ct, out var known)
+                        && known.Contains(name))
+                        continue;
+                    Add(Severity.Warning, "schema-extra-property",
+                        $"model has \"{name}\", not in the spec for any endpoint using this model");
                 }
                 foreach (var (name, member) in spec.Members)
                 {
                     if (model.Members.TryGetValue(name, out var modelMember))
-                        Compare(modelMember.Node, member.Node, $"{crumb}.{name}", endpoint, strict, findings);
+                        Compare(modelMember.Node, member.Node, $"{crumb}.{name}", endpoint, knownByType, findings);
                 }
                 break;
 
             case NodeKind.Array:
                 if (model.Items is not null && spec.Items is not null)
-                    Compare(model.Items, spec.Items, $"{crumb}[]", endpoint, strict, findings);
+                    Compare(model.Items, spec.Items, $"{crumb}[]", endpoint, knownByType, findings);
                 break;
 
             case NodeKind.Scalar:
-                CompareScalar(model, spec, Add, warn);
+                CompareScalar(model, spec, Add);
                 break;
         }
     }
 
-    private static void CompareScalar(Node model, Node spec, Action<Severity, string, string> add, Severity warn)
+    private static void CompareScalar(Node model, Node spec, Action<Severity, string, string> add)
     {
         var m = model.JsonType;
         var s = spec.JsonType;
@@ -302,29 +354,14 @@ public static class SchemaCheck
 
         if (m == s)
         {
-            // ESI types every id as int64; ESI.NET overwhelmingly uses int. A real latent
-            // overflow (structure / item / journal ids already exceed int32) but systemic
-            // and long-shipping, so it is a warning unless --strict.
-            if (m == "integer" && model.Format == "int32" && spec.Format == "int64")
-                add(warn, "schema-int-width", "model is int (int32), spec is int64 - overflow risk");
-
-            if (m == "string")
+            // Enum values that drifted (a typo, or ESI added/removed a value).
+            if (m == "string" && spec.EnumValues is { Count: > 0 } specEnum && model.EnumValues is not null)
             {
-                if (spec.EnumValues is { Count: > 0 } specEnum)
-                {
-                    if (model.EnumValues is null)
-                        add(Severity.Info, "schema-enum-unmodelled", $"spec is an enum ({specEnum.Count} values), model is a plain string");
-                    else
-                    {
-                        var extra = model.EnumValues.Except(specEnum).ToList();
-                        var gone = specEnum.Except(model.EnumValues).ToList();
-                        if (extra.Count > 0 || gone.Count > 0)
-                            add(warn, "schema-enum-drift",
-                                $"enum differs - model-only [{string.Join(", ", extra)}], spec-only [{string.Join(", ", gone)}]");
-                    }
-                }
-                else if (spec.Format == "date-time" && model.Format != "date-time")
-                    add(Severity.Info, "schema-date-as-string", "spec is date-time, model is a plain string");
+                var extra = model.EnumValues.Except(specEnum).ToList();
+                var gone = specEnum.Except(model.EnumValues).ToList();
+                if (extra.Count > 0 || gone.Count > 0)
+                    add(Severity.Warning, "schema-enum-drift",
+                        $"enum differs - model-only [{string.Join(", ", extra)}], spec-only [{string.Join(", ", gone)}]");
             }
             return;
         }

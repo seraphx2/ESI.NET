@@ -1,0 +1,13 @@
+# SpecCheck allowlist - deliberate exceptions.
+#
+# One "METHOD /path" per line. Listed endpoints are exempt from the
+# "missing-endpoint" check: they exist in the ESI spec but the wrapper
+# intentionally does not implement them. Delete a line to make SpecCheck
+# demand the endpoint again.
+#
+# Cross-endpoint model fields do NOT belong here - SchemaCheck figures those
+# out on its own (a property is only "extra" if it is in no schema for any
+# endpoint using that model class).
+
+GET /meta/changelog
+GET /meta/compatibility-dates

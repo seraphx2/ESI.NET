@@ -15,6 +15,13 @@ public sealed class Node
     // Object
     public Dictionary<string, NodeMember> Members { get; } = new(StringComparer.Ordinal);
 
+    /// <summary>
+    /// The CLR type this object node was built from (<see cref="SchemaCheck.FromClr"/> only).
+    /// Lets the schema check tell that a model class is shared across endpoints, so a
+    /// property absent from one endpoint's schema but present in a sibling's is not "extra".
+    /// </summary>
+    public Type? ClrType { get; set; }
+
     // Array
     public Node? Items { get; private set; }
 

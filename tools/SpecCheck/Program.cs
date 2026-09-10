@@ -1,16 +1,16 @@
 ﻿using ESI.NET;
 using ESI.NET.Tools.SpecCheck;
 
-// spec-check [--spec <url|path>] [--source <dir>] [--strict] [--no-schema]
+// spec-check [--spec <url|path>] [--source <dir>] [--no-schema]
 //
 //   --spec       OpenAPI document. Default: the live ESI meta spec.
 //   --source     ESI.NET/Logic directory. Default: auto-detected from the repo root.
-//   --strict     Warnings fail the build too.
 //   --no-schema  Tier 1 (coverage) only; skip Tier 2 (schema drift).
+//
+// Any finding fails the run. Deliberate exceptions go in tools/SpecCheck/allowlist.txt.
 
 var specSource = "https://esi.evetech.net/meta/openapi.json";
 string? sourceDir = null;
-var strict = false;
 var runSchema = true;
 
 for (var i = 0; i < args.Length; i++)
@@ -19,10 +19,9 @@ for (var i = 0; i < args.Length; i++)
     {
         case "--spec" when i + 1 < args.Length: specSource = args[++i]; break;
         case "--source" when i + 1 < args.Length: sourceDir = args[++i]; break;
-        case "--strict": strict = true; break;
         case "--no-schema": runSchema = false; break;
         case "-h" or "--help":
-            Console.WriteLine("usage: spec-check [--spec <url|path>] [--source <dir>] [--strict] [--no-schema]");
+            Console.WriteLine("usage: spec-check [--spec <url|path>] [--source <dir>] [--no-schema]");
             return 0;
         default:
             Console.Error.WriteLine($"unknown argument: {args[i]}");
@@ -52,9 +51,24 @@ catch (Exception ex)
 }
 
 var wrapper = Wrapper.Scan(sourceDir, typeof(EsiClient).Assembly);
-var coverage = CoverageCheck.Run(spec, wrapper, strict);
-var schema = runSchema ? SchemaCheck.Run(spec, wrapper, strict) : null;
-return Report.Render(spec, wrapper, coverage, schema, strict);
+var notWrapped = LoadAllowlist(sourceDir);
+var coverage = CoverageCheck.Run(spec, wrapper, notWrapped);
+var schema = runSchema ? SchemaCheck.Run(spec, wrapper) : null;
+return Report.Render(spec, wrapper, coverage, schema);
+
+// tools/SpecCheck/allowlist.txt sits beside this project; sourceDir is <root>/ESI.NET/Logic.
+static IReadOnlySet<string> LoadAllowlist(string logicDir)
+{
+    var root = Directory.GetParent(logicDir)?.Parent?.FullName;
+    var path = root is null ? null : Path.Combine(root, "tools", "SpecCheck", "allowlist.txt");
+    if (path is null || !File.Exists(path))
+        return new HashSet<string>();
+
+    return File.ReadAllLines(path)
+        .Select(l => l.Trim())
+        .Where(l => l.Length > 0 && !l.StartsWith('#'))
+        .ToHashSet(StringComparer.Ordinal);
+}
 
 // Walk up from the working directory (and from the binary) until a folder holds
 // ESI.NET.sln, then return its ESI.NET/Logic.
