@@ -21,17 +21,7 @@ namespace ESI.NET
         public EsiClient(IOptions<EsiConfig> _config, HttpClient _client = null)
         {
             config = _config.Value;
-            client = _client ?? new HttpClient(new HttpClientHandler
-            {
-
-
-// Switch to All which adds brotli encoding for .net core due to https://github.com/ccpgames/sso-issues/issues/81
-#if NET
-                AutomaticDecompression = DecompressionMethods.All                
-#else
-                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
-#endif
-            });
+            client = _client ?? new HttpClient(CreateDefaultHandler());
 
             // Enforce user agent value
             if (string.IsNullOrEmpty(config.UserAgent))
@@ -143,6 +133,32 @@ namespace ESI.NET
 
         public void SetIfNoneMatchHeader(string eTag)
             => EsiRequest.ETag = eTag;
+
+        /// <summary>
+        /// Creates the <see cref="HttpClientHandler"/> used when no <see cref="HttpClient"/> is supplied.
+        /// </summary>
+        /// <remarks>
+        /// Automatic decompression is only configured when the handler reports support for it.
+        /// On Blazor WebAssembly the underlying browser handler throws
+        /// <see cref="PlatformNotSupportedException"/> from the setter, because the browser's fetch
+        /// API performs content decoding itself. See https://github.com/seraphx2/ESI.NET/issues/77.
+        /// </remarks>
+        private static HttpClientHandler CreateDefaultHandler()
+        {
+            var handler = new HttpClientHandler();
+
+            if (handler.SupportsAutomaticDecompression)
+            {
+                // Switch to All which adds brotli encoding for .net core due to https://github.com/ccpgames/sso-issues/issues/81
+#if NET
+                handler.AutomaticDecompression = DecompressionMethods.All;
+#else
+                handler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+#endif
+            }
+
+            return handler;
+        }
     }
 
     public interface IEsiClient
