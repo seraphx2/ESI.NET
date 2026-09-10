@@ -19,14 +19,6 @@
 # Structures: skyhooks / mercenary dens / sovereignty hubs
 
 # SKINR / Paragon Hub
-GET /paragon-hub/skinr
-GET /paragon-hub/skinr/alliances/{alliance_id}
-GET /paragon-hub/skinr/characters/{character_id}
-GET /paragon-hub/skinr/corporations/{corporation_id}
-GET /characters/{character_id}/paragon-hub/skinr
-GET /cosmetics/skinr/{skinr_id}
-GET /characters/{character_id}/cosmetics/skinr
-GET /characters/{character_id}/cosmetics/skinr/components
 
 # Access Lists
 GET /characters/{character_id}/access-lists

@@ -50,6 +50,7 @@ namespace ESI.NET
             Character = new CharacterLogic(client, config);
             Clones = new ClonesLogic(client, config);
             Contacts = new ContactsLogic(client, config);
+            Cosmetics = new CosmeticsLogic(client, config);
             Contracts = new ContractsLogic(client, config);
             Corporation = new CorporationLogic(client, config);
             Dogma = new DogmaLogic(client, config);
@@ -86,6 +87,7 @@ namespace ESI.NET
         public CharacterLogic Character { get; set; }
         public ClonesLogic Clones { get; set; }
         public ContactsLogic Contacts { get; set; }
+        public CosmeticsLogic Cosmetics { get; set; }
         public ContractsLogic Contracts { get; set; }
         public CorporationLogic Corporation { get; set; }
         public DogmaLogic Dogma { get; set; }
@@ -151,6 +153,7 @@ namespace ESI.NET
         CharacterLogic Character { get; set; }
         ClonesLogic Clones { get; set; }
         ContactsLogic Contacts { get; set; }
+        CosmeticsLogic Cosmetics { get; set; }
         ContractsLogic Contracts { get; set; }
         CorporationLogic Corporation { get; set; }
         DogmaLogic Dogma { get; set; }
