@@ -39,10 +39,23 @@ Set-difference on `(METHOD, path)` after normalising trailing slashes.
 
 ## Tier 2 — schema
 
-_(next commit)_ For every covered endpoint, walk the `EsiResponse<T>` model with
-reflection and compare it to the resolved 200 schema: properties present in the
-spec but not the model, properties in the model the spec no longer has, and type
-mismatches (`int` vs `int64`, scalar vs array, enum value drift).
+For every covered endpoint, `SchemaCheck` flattens the `EsiResponse<T>` model
+(reflection) and the resolved 200 schema into a common `Node` tree and walks them
+together.
+
+| Finding | Severity | |
+| --- | --- | --- |
+| `schema-shape` | error | model is an object where the spec is an array (or vice versa) |
+| `schema-type` | error | `string`↔`number`, `integer` where the spec is `number`, … |
+| `schema-int-width` | warning¹ | model `int` where the spec is `int64` (ESI types every id as int64) |
+| `schema-missing-property` | warning¹ | spec has a property the model does not bind |
+| `schema-extra-property` | warning¹ | model has a property the spec no longer returns |
+| `schema-enum-drift` | warning¹ | modelled enum values differ from the spec's |
+| `schema-enum-unmodelled` | info | spec property is an enum, model types it `string` |
+| `schema-date-as-string` | info | spec `date-time`, model `string` |
+| `schema-unverified` | info | `oneOf`/`anyOf`, dictionary, or a recursive `$ref` |
+
+¹ error under `--strict`.
 
 ## Files
 
@@ -51,7 +64,8 @@ mismatches (`int` vs `int64`, scalar vs array, enum value drift).
 | `Spec.cs` | loads the OpenAPI document, enumerates operations, resolves `$ref` |
 | `Wrapper.cs` | Roslyn scan of `Logic/*.cs` + reflection join → implemented endpoints |
 | `CoverageCheck.cs` | Tier 1 diff |
-| `SchemaCheck.cs` | Tier 2 diff _(next commit)_ |
+| `Node.cs` | shared structural view of a type (object / array / scalar / unknown) |
+| `SchemaCheck.cs` | Tier 2 — schema→`Node`, CLR→`Node`, and the walk that compares them |
 | `Finding.cs` | severity + message |
 | `Report.cs` | stdout + `$GITHUB_STEP_SUMMARY`, exit code |
 | `Program.cs` | argument parsing, orchestration |

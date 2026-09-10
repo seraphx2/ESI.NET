@@ -10,30 +10,102 @@ namespace ESI.NET.Tools.SpecCheck;
 /// </summary>
 public static class Report
 {
-    public static int Render(Spec spec, Wrapper wrapper, CoverageResult coverage, bool strict)
+    public static int Render(Spec spec, Wrapper wrapper, CoverageResult coverage, SchemaResult? schema, bool strict)
     {
-        var findings = coverage.Findings;
-        var text = BuildText(spec, wrapper, coverage);
-        Console.WriteLine(text);
+        var findings = coverage.Findings.Concat(schema?.Findings ?? Enumerable.Empty<Finding>()).ToList();
+
+        Console.WriteLine(BuildText(spec, wrapper, coverage));
+        if (schema is not null)
+            Console.WriteLine(BuildSchemaText(schema));
 
         var summaryPath = Environment.GetEnvironmentVariable("GITHUB_STEP_SUMMARY");
         if (!string.IsNullOrEmpty(summaryPath))
         {
-            try { File.AppendAllText(summaryPath, BuildMarkdown(spec, coverage)); }
+            try
+            {
+                File.AppendAllText(summaryPath, BuildMarkdown(spec, coverage));
+                if (schema is not null)
+                    File.AppendAllText(summaryPath, BuildSchemaMarkdown(schema));
+            }
             catch (Exception ex) { Console.Error.WriteLine($"(could not write GITHUB_STEP_SUMMARY: {ex.Message})"); }
         }
 
         var errors = findings.Count(f => f.Severity == Severity.Error);
         var warnings = findings.Count(f => f.Severity == Severity.Warning);
+        var infos = findings.Count(f => f.Severity == Severity.Info);
 
         Console.WriteLine();
-        Console.WriteLine($"{errors} error(s), {warnings} warning(s). "
+        Console.WriteLine($"{errors} error(s), {warnings} warning(s), {infos} info. "
                           + $"Coverage {coverage.TotalCovered}/{coverage.TotalOperations} "
-                          + $"({Percent(coverage.TotalCovered, coverage.TotalOperations)}).");
+                          + $"({Percent(coverage.TotalCovered, coverage.TotalOperations)})"
+                          + (schema is not null ? $"; schema-checked {schema.Checked} endpoint(s)." : "."));
 
         var failed = errors > 0 || (strict && warnings > 0);
         Console.WriteLine(failed ? "RESULT: drift detected." : "RESULT: clean.");
         return failed ? 1 : 0;
+    }
+
+    private static string BuildSchemaText(SchemaResult schema)
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine();
+        sb.AppendLine("SCHEMA DRIFT (Tier 2)");
+        sb.AppendLine($"  checked {schema.Checked} endpoint(s); "
+                      + $"skipped {schema.SkippedNoSchema} (no JSON schema), {schema.SkippedNoModel} (model type unresolved)");
+
+        var byCategory = schema.Findings
+            .GroupBy(f => (f.Severity, f.Category))
+            .OrderByDescending(g => g.Key.Severity)
+            .ThenByDescending(g => g.Count());
+        foreach (var group in byCategory)
+            sb.AppendLine($"    {group.Key.Severity,-7} {group.Key.Category,-26} {group.Count()}");
+
+        foreach (var endpoint in schema.Findings.GroupBy(f => f.Where).OrderBy(g => g.Key))
+        {
+            sb.AppendLine();
+            sb.AppendLine($"  {endpoint.Key}");
+            foreach (var f in endpoint.OrderByDescending(x => x.Severity))
+                sb.AppendLine($"    {f.Severity.ToString().ToUpperInvariant(),-7} {f.Message}");
+        }
+
+        return sb.ToString().TrimEnd();
+    }
+
+    private static string BuildSchemaMarkdown(SchemaResult schema)
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine();
+        sb.AppendLine("## Schema drift (Tier 2)");
+        sb.AppendLine();
+        sb.AppendLine($"Checked **{schema.Checked}** endpoints. "
+                      + $"Skipped {schema.SkippedNoSchema} (no schema) + {schema.SkippedNoModel} (unresolved model).");
+        sb.AppendLine();
+
+        if (schema.Findings.Count == 0)
+        {
+            sb.AppendLine("No schema drift. ✅");
+            return sb.ToString();
+        }
+
+        sb.AppendLine("| Severity | Category | Count |");
+        sb.AppendLine("| --- | --- | --- |");
+        foreach (var group in schema.Findings
+                     .GroupBy(f => (f.Severity, f.Category))
+                     .OrderByDescending(g => g.Key.Severity).ThenByDescending(g => g.Count()))
+            sb.AppendLine($"| {group.Key.Severity} | {group.Key.Category} | {group.Count()} |");
+        sb.AppendLine();
+
+        sb.AppendLine($"<details><summary>{schema.Findings.Count} finding(s) by endpoint</summary>");
+        sb.AppendLine();
+        foreach (var endpoint in schema.Findings.GroupBy(f => f.Where).OrderBy(g => g.Key))
+        {
+            sb.AppendLine($"**`{endpoint.Key}`**");
+            foreach (var f in endpoint.OrderByDescending(x => x.Severity))
+                sb.AppendLine($"- {f.Severity}: {f.Message}");
+            sb.AppendLine();
+        }
+        sb.AppendLine("</details>");
+        return sb.ToString();
     }
 
     private static string BuildText(Spec spec, Wrapper wrapper, CoverageResult coverage)
