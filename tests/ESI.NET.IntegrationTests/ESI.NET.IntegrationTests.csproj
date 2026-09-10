@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Live integration tests. Deliberately NOT part of ESI.NET.sln: they hit the
+    real ESI API and must never run in the normal `dotnet test ESI.NET.sln` CI
+    path. They run only from .github/workflows/integration.yml (weekly + manual).
+
+    Public smoke tests need no secrets. The auth-probe tests self-skip unless
+    ESI_CLIENT_ID + ESI_SECRET_KEY + ESI_REFRESH_TOKEN are all set (mint the
+    refresh token with tools/MintToken).
+  -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
+    <PackageReference Include="Xunit.SkippableFact" Version="1.5.23" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ESI.NET\ESI.NET.csproj" />
+  </ItemGroup>
+
+</Project>
