@@ -3,7 +3,11 @@ using System.Collections.Generic;
 
 namespace ESI.NET.Models.Dogma
 {
-    class DynamicItem
+    /// <summary>
+    /// Response of <c>/dogma/dynamic/items/{type_id}/{item_id}/</c> — a mutated (abyssal) item:
+    /// its source and mutator types, who created it, and the rolled dogma attributes/effects.
+    /// </summary>
+    public class DynamicItem
     {
         [JsonProperty("created_by")]
         public int CreatedBy { get; set; }

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Dogma = ESI.NET.Models.Dogma;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace ESI.NET.Models.Universe
@@ -12,10 +13,10 @@ namespace ESI.NET.Models.Universe
         public string Description { get; set; }
 
         [JsonProperty("dogma_attributes")]
-        public List<Attribute> DogmaAttributes { get; set; } = new List<Attribute>();
+        public List<Dogma.Attribute> DogmaAttributes { get; set; } = new List<Dogma.Attribute>();
 
         [JsonProperty("dogma_effects")]
-        public List<Effect> DogmaEffects { get; set; } = new List<Effect>();
+        public List<Dogma.Effect> DogmaEffects { get; set; } = new List<Dogma.Effect>();
 
         [JsonProperty("graphic_id")]
         public int GraphicId { get; set; }
@@ -52,23 +53,5 @@ namespace ESI.NET.Models.Universe
 
         [JsonProperty("volume")]
         public float Volume { get; set; }
-    }
-
-    public class Attribute
-    {
-        [JsonProperty("attribute_id")]
-        public int AttributeId { get; set; }
-
-        [JsonProperty("value")]
-        public float Value { get; set; }
-    }
-
-    public class Effect
-    {
-        [JsonProperty("effect_id")]
-        public int EffectId { get; set; }
-
-        [JsonProperty("is_default")]
-        public bool IsDefault { get; set; }
     }
 }

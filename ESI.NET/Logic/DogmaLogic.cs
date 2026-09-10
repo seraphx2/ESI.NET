@@ -25,8 +25,8 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="attribute_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Attribute>> Attribute(int attribute_id)
-            => await Execute<Attribute>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/dogma/attributes/{attribute_id}/",
+        public async Task<EsiResponse<AttributeInfo>> Attribute(int attribute_id)
+            => await Execute<AttributeInfo>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/dogma/attributes/{attribute_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "attribute_id", attribute_id.ToString() }
@@ -44,8 +44,8 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="effect_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Effect>> Effect(int effect_id)
-            => await Execute<Effect>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/dogma/effects/{effect_id}/",
+        public async Task<EsiResponse<EffectInfo>> Effect(int effect_id)
+            => await Execute<EffectInfo>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/dogma/effects/{effect_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "effect_id", effect_id.ToString() }
@@ -57,8 +57,8 @@ namespace ESI.NET.Logic
         /// <param name="type_id"></param>
         /// <param name="item_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Effect>> DynamicItem(int type_id, long item_id)
-            => await Execute<Effect>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/dogma/dynamic/items/{type_id}/{item_id}/",
+        public async Task<EsiResponse<DynamicItem>> DynamicItem(int type_id, long item_id)
+            => await Execute<DynamicItem>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/dogma/dynamic/items/{type_id}/{item_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "type_id", type_id.ToString() },
