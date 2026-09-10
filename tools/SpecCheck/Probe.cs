@@ -117,7 +117,8 @@ public static class Probe
         http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
         // --- identity ---
-        var characterId = JwtSubject(accessToken);
+        var (characterId, scopeCount) = JwtSubjectAndScopes(accessToken);
+        Console.WriteLine($"PROBE (auth) - access token carries {scopeCount} scope(s)");
         string corporationId, allianceId = null!;
         try
         {
@@ -287,13 +288,16 @@ public static class Probe
         return http;
     }
 
-    private static string JwtSubject(string jwt)
+    private static (string CharacterId, int ScopeCount) JwtSubjectAndScopes(string jwt)
     {
         var payload = jwt.Split('.')[1].Replace('-', '+').Replace('_', '/');
         payload += (payload.Length % 4) switch { 2 => "==", 3 => "=", _ => "" };
         using var doc = JsonDocument.Parse(Encoding.UTF8.GetString(Convert.FromBase64String(payload)));
         var sub = doc.RootElement.GetProperty("sub").GetString()!; // "CHARACTER:EVE:2112625428"
-        return sub.Split(':').Last();
+        var scopes = doc.RootElement.TryGetProperty("scp", out var scp)
+            ? scp.ValueKind == JsonValueKind.Array ? scp.GetArrayLength() : 1
+            : 0;
+        return (sub.Split(':').Last(), scopes);
     }
 
     private static string Substitute(string template, Dictionary<string, string> values)
