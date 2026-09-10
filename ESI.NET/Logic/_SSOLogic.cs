@@ -160,6 +160,49 @@ namespace ESI.NET
         }
 
         /// <summary>
+        /// Validates <paramref name="token"/>'s access token against the SSO JWKS and projects the
+        /// identity claims (character id, name, owner hash, scopes, expiry) onto a fresh
+        /// <see cref="AuthorizedCharacterData"/>. Throws if the token fails validation.
+        /// Split out of <see cref="Verify"/> so the validation path can be exercised without a
+        /// live SSO endpoint. The affiliation lookup stays in <see cref="Verify"/>.
+        /// </summary>
+        internal static AuthorizedCharacterData ValidateAccessToken(SsoToken token, string ssoUrl, string jwksJson)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwks = new JsonWebKeySet(jwksJson);
+            var jwk = jwks.Keys.First();
+
+            var tokenValidationParams = new TokenValidationParameters
+            {
+                ValidateAudience = false,
+                ValidateIssuer = true,
+                ValidIssuer = $"https://{ssoUrl}",
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = jwk,
+                ClockSkew = TimeSpan.FromSeconds(2), // CCP's servers seem slightly ahead (~1s)
+            };
+            tokenHandler.ValidateToken(token.AccessToken, tokenValidationParams, out var validatedToken);
+
+            var jwt = (JwtSecurityToken)validatedToken;
+
+            var subjectClaim = jwt.Claims.SingleOrDefault(c => c.Type == "sub").Value;
+            var nameClaim = jwt.Claims.SingleOrDefault(c => c.Type == "name").Value;
+            var ownerClaim = jwt.Claims.SingleOrDefault(c => c.Type == "owner").Value;
+            var scopesClaim = string.Join(" ", jwt.Claims.Where(c => c.Type == "scp").Select(s => s.Value));
+
+            return new AuthorizedCharacterData
+            {
+                RefreshToken = token.RefreshToken,
+                Token = token.AccessToken,
+                CharacterName = nameClaim,
+                CharacterOwnerHash = ownerClaim,
+                CharacterID = int.Parse(subjectClaim.Split(':').Last()),
+                ExpiresOn = jwt.ValidTo,
+                Scopes = scopesClaim,
+            };
+        }
+
+        /// <summary>
         /// Verifies the Character information for the provided Token information.
         /// While this method represents the oauth/verify request, in addition to the verified data that ESI returns, this object also stores the Token and Refresh token
         /// and this method also uses ESI retrieves other information pertinent to making calls in the ESI.NET API. (alliance_id, corporation_id, faction_id)
@@ -173,44 +216,11 @@ namespace ESI.NET
 
             try
             {
-                var tokenHandler = new JwtSecurityTokenHandler();
+                // Get the Eve Online JWKS to validate the access token against
+                var jwksUrl = $"https://{_ssoUrl}/oauth/jwks";
+                var jwksJson = await (await _client.GetAsync(jwksUrl)).Content.ReadAsStringAsync();
 
-                // Get the eve online JWT to validate against
-                var jwtksUrl = $"https://{_ssoUrl}/oauth/jwks";
-                var response = await _client.GetAsync(jwtksUrl).Result.Content.ReadAsStringAsync();
-                var jwks = new JsonWebKeySet(response);
-                var jwk = jwks.Keys.First();
-
-                SecurityToken validatedToken;
-
-                // Validate the token
-                TokenValidationParameters tokenValidationParams = new TokenValidationParameters
-                {
-                    ValidateAudience = false,
-                    ValidateIssuer = true,
-                    ValidIssuer = $"https://{_ssoUrl}",
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = jwk,
-                    ClockSkew = TimeSpan.FromSeconds(2), // CCP's servers seem slightly ahead (~1s)
-                };
-                tokenHandler.ValidateToken(token.AccessToken, tokenValidationParams, out validatedToken);
-
-                JwtSecurityToken jwtValidatedToken = validatedToken as JwtSecurityToken;
-
-                var subjectClaim = jwtValidatedToken.Claims.SingleOrDefault(c => c.Type == "sub").Value;
-                var nameClaim = jwtValidatedToken.Claims.SingleOrDefault(c => c.Type == "name").Value;
-                var ownerClaim = jwtValidatedToken.Claims.SingleOrDefault(c => c.Type == "owner").Value;
-                
-                var returnedScopes = jwtValidatedToken.Claims.Where(c => c.Type == "scp");
-                var scopesClaim = string.Join(" ", returnedScopes.Select(s => s.Value));
-
-                authorizedCharacter.RefreshToken = token.RefreshToken;
-                authorizedCharacter.Token = token.AccessToken;
-                authorizedCharacter.CharacterName = nameClaim;
-                authorizedCharacter.CharacterOwnerHash = ownerClaim;
-                authorizedCharacter.CharacterID = int.Parse(subjectClaim.Split(':').Last());
-                authorizedCharacter.ExpiresOn = jwtValidatedToken.ValidTo;
-                authorizedCharacter.Scopes = scopesClaim;
+                authorizedCharacter = ValidateAccessToken(token, _ssoUrl, jwksJson);
 
                 // Get more specifc details about authorized character to be used in API calls that require this data about the character
                 var url = $"{_config.EsiUrl}latest/characters/affiliation/?datasource={_config.DataSource.ToEsiValue()}";

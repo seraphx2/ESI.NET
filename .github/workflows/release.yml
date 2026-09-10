@@ -54,6 +54,10 @@ jobs:
         shell: bash
         run: echo "value=$(bash scripts/compute-version.sh)" >> "$GITHUB_OUTPUT"
 
+      - name: Test
+        shell: bash
+        run: dotnet test ESI.NET.sln --configuration Release
+
       - name: Pack
         shell: bash
         run: >-
