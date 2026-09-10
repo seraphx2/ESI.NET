@@ -6,8 +6,9 @@ namespace ESI.NET.Enumerations
     [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
     public enum EventResponse
     {
-        [EnumMember(Value="accepted")]  /**/ Accepted,
-        [EnumMember(Value="declined")]  /**/ Declined,
-        [EnumMember(Value="tentative")] /**/ Tentative
+        [EnumMember(Value="accepted")]      /**/ Accepted,
+        [EnumMember(Value="declined")]      /**/ Declined,
+        [EnumMember(Value="not_responded")] /**/ NotResponded,
+        [EnumMember(Value="tentative")]     /**/ Tentative
     }
 }

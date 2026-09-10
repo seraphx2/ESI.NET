@@ -74,7 +74,7 @@ namespace ESI.NET.Models.PlanetaryInteraction
         public long DestinationPinId { get; set; }
 
         [JsonProperty("quantity")]
-        public long Quantity { get; set; }
+        public decimal Quantity { get; set; }
 
         [JsonProperty("route_id")]
         public long RouteId { get; set; }

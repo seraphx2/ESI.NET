@@ -42,6 +42,12 @@ namespace ESI.NET.Models.Market
         public DateTime Issued { get; set; }
 
         /// <summary>
+        /// Only returned in /corporations/{corporation_id}/orders/ and .../orders/history/
+        /// </summary>
+        [JsonProperty("issued_by")]
+        public long IssuedBy { get; set; }
+
+        /// <summary>
         /// Returned in /characters/{character_id}/orders/ and /corporations/{corporation_id}/orders/
         /// </summary>
         [JsonProperty("state")]

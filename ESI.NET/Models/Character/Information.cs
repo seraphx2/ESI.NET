@@ -37,5 +37,8 @@ namespace ESI.NET.Models.Character
 
         [JsonProperty("security_status")]
         public decimal SecurityStatus { get; set; }
+
+        [JsonProperty("title")]
+        public string Title { get; set; }
     }
 }

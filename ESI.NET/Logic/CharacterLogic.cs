@@ -30,20 +30,6 @@ namespace ESI.NET.Logic
 
 
         /// <summary>
-        /// /characters/names/
-        /// </summary>
-        /// <param name="characterIds"></param>
-        /// <returns></returns>
-        public async Task<EsiResponse<List<Character>>> Names(int[] character_ids, EsiCallOptions options = null)
-            => await Execute<List<Character>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/characters/names/",
-                parameters: new string[]
-                {
-                    $"character_ids={string.Join(",", character_ids)}"
-                },
-                options: options);
-
-
-        /// <summary>
         /// /characters/{character_id}/
         /// </summary>
         /// <param name="character_id"></param>
@@ -76,18 +62,6 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<List<Blueprint>>> Blueprints(EsiCallOptions options)
             => await Execute<List<Blueprint>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/blueprints/",
-                replacements: new Dictionary<string, string>()
-                {
-                    { "character_id", options.Character.CharacterID.ToString() }
-                },
-                options: options);
-
-        /// <summary>
-        /// /characters/{character_id}/chat_channels/
-        /// </summary>
-        /// <returns></returns>
-        public async Task<EsiResponse<List<ChatChannel>>> ChatChannels(EsiCallOptions options)
-            => await Execute<List<ChatChannel>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/chat_channels/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", options.Character.CharacterID.ToString() }

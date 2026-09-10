@@ -334,8 +334,8 @@ namespace ESI.NET.Logic
         /// /universe/asteroid_belts/{asteroid_belt_id}/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<AsteroidBelt>>> AsteroidBelt(int asteroid_belt_id, EsiCallOptions options = null)
-            => await Execute<List<AsteroidBelt>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/asteroid_belts/{asteroid_belt_id}/", replacements: new Dictionary<string, string>()
+        public async Task<EsiResponse<AsteroidBelt>> AsteroidBelt(int asteroid_belt_id, EsiCallOptions options = null)
+            => await Execute<AsteroidBelt>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/asteroid_belts/{asteroid_belt_id}/", replacements: new Dictionary<string, string>()
             {
                 { "asteroid_belt_id", asteroid_belt_id.ToString() }
             },

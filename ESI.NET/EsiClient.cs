@@ -46,7 +46,6 @@ namespace ESI.NET
             SSO = new SsoLogic(client, config);
             Alliance = new AllianceLogic(client, config);
             Assets = new AssetsLogic(client, config);
-            Bookmarks = new BookmarksLogic(client, config);
             Calendar = new CalendarLogic(client, config);
             Character = new CharacterLogic(client, config);
             Clones = new ClonesLogic(client, config);
@@ -65,7 +64,6 @@ namespace ESI.NET
             Loyalty = new LoyaltyLogic(client, config);
             Mail = new MailLogic(client, config);
             Market = new MarketLogic(client, config);
-            Opportunities = new OpportunitiesLogic(client, config);
             PlanetaryInteraction = new PlanetaryInteractionLogic(client, config);
             Routes = new RoutesLogic(client, config);
             Search = new SearchLogic(client, config);
@@ -81,7 +79,6 @@ namespace ESI.NET
         public SsoLogic SSO { get; set; }
         public AllianceLogic Alliance { get; set; }
         public AssetsLogic Assets { get; set; }
-        public BookmarksLogic Bookmarks { get; set; }
         public CalendarLogic Calendar { get; set; }
         public CharacterLogic Character { get; set; }
         public ClonesLogic Clones { get; set; }
@@ -100,7 +97,6 @@ namespace ESI.NET
         public LoyaltyLogic Loyalty { get; set; }
         public MailLogic Mail { get; set; }
         public MarketLogic Market { get; set; }
-        public OpportunitiesLogic Opportunities { get; set; }
         public PlanetaryInteractionLogic PlanetaryInteraction { get; set; }
         public RoutesLogic Routes { get; set; }
         public SearchLogic Search { get; set; }
@@ -145,7 +141,6 @@ namespace ESI.NET
         SsoLogic SSO { get; set; }
         AllianceLogic Alliance { get; set; }
         AssetsLogic Assets { get; set; }
-        BookmarksLogic Bookmarks { get; set; }
         CalendarLogic Calendar { get; set; }
         CharacterLogic Character { get; set; }
         ClonesLogic Clones { get; set; }
@@ -164,7 +159,6 @@ namespace ESI.NET
         LoyaltyLogic Loyalty { get; set; }
         MailLogic Mail { get; set; }
         MarketLogic Market { get; set; }
-        OpportunitiesLogic Opportunities { get; set; }
         PlanetaryInteractionLogic PlanetaryInteraction { get; set; }
         RoutesLogic Routes { get; set; }
         SearchLogic Search { get; set; }

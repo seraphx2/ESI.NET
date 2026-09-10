@@ -17,6 +17,9 @@ namespace ESI.NET.Models.FactionWarfare
         [JsonProperty("highest_rank")]
         public int HighestRank { get; set; }
 
+        [JsonProperty("pilots")]
+        public int Pilots { get; set; }
+
         [JsonProperty("kills")]
         public Totals Kills { get; set; }
 

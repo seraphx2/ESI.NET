@@ -14,8 +14,6 @@ namespace ESI.NET.Enumerations
         [EnumMember(Value = "region")] Region,
         [EnumMember(Value = "solar_system")] SolarSystem,
         [EnumMember(Value = "station")] Station,
-        [EnumMember(Value = "faction")] Faction,
-        [EnumMember(Value = "structure")] Structure
-
+        [EnumMember(Value = "faction")] Faction
     }
 }

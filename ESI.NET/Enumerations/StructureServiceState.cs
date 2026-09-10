@@ -8,6 +8,6 @@ namespace ESI.NET.Enumerations
     {
         [EnumMember(Value = "online")] Online,
         [EnumMember(Value = "offline")] Offline,
-        [EnumMember(Value = "cleamup")] Cleanup
+        [EnumMember(Value = "cleanup")] Cleanup
     }
 }

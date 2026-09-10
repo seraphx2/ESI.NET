@@ -19,33 +19,23 @@ namespace ESI.NET.Logic
         }
 
         /// <summary>
-        /// /search/ and /characters/{character_id}/search/
+        /// /characters/{character_id}/search/
         /// </summary>
         /// <param name="search">The string to search on</param>
         /// <param name="categories">Type of entities to search for</param>
         /// <param name="isStrict">Whether the search should be a strict match</param>
         /// <param name="language">Language to use in the response</param>
         /// <returns></returns>
-        public async Task<EsiResponse<SearchResults>> Query(SearchType type, string search, SearchCategory categories, bool isStrict = false, string language = "en-us", EsiCallOptions options = null)
+        public async Task<EsiResponse<SearchResults>> Query(string search, SearchCategory categories, EsiCallOptions options, bool isStrict = false, string language = "en-us")
         {
             var categoryList = categories.ToEsiValue();
 
-            var endpoint = "/search/";
-            Dictionary<string, string> replacements = null;
-            RequestSecurity security = RequestSecurity.Public;
-            if (type == SearchType.Character)
-            {
-                security = RequestSecurity.Authenticated;
-                replacements = new Dictionary<string, string>()
+            var response = await Execute<SearchResults>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/search/",
+                options: options,
+                replacements: new Dictionary<string, string>()
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
-                };
-                endpoint = "/characters/{character_id}/search/";
-            }
-
-            var response = await Execute<SearchResults>(_client, _config, security, HttpMethod.Get, endpoint,
-                options: options,
-                replacements: replacements,
+                },
                 parameters: new string[] {
                     $"search={search}",
                     $"categories={categoryList}",

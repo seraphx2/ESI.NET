@@ -114,6 +114,52 @@ handler decompresses.
 
 It is built by an internal async factory now. Consumers never constructed it.
 
+## 9. Removed endpoints
+
+CCP deleted these from ESI, so the wrapper methods are gone:
+
+| Removed | Replacement / note |
+| --- | --- |
+| `client.Bookmarks.*` (all of `BookmarksLogic`) | none — bookmark read access was removed in the 2019 ACL rework |
+| `client.Opportunities.*` (all of `OpportunitiesLogic`) | none — the feature was retired |
+| `client.Character.Names(ids)` | `client.Universe.Names(ids)` (`POST /universe/names`) |
+| `client.Character.ChatChannels()` | none |
+| `client.Search.Query(SearchType.Public, ...)` | character search only (see below) |
+
+`IEsiClient.Bookmarks` and `IEsiClient.Opportunities` are gone from the interface.
+
+`Search.Query` lost its `SearchType` argument — only `/characters/{character_id}/search/`
+still exists, so it is always an authenticated character search and now takes
+`EsiCallOptions` as a required third argument:
+
+```csharp
+// before
+await client.Search.Query(SearchType.Character, "Jita", SearchCategory.SolarSystem,
+                          options: new() { Character = c });
+
+// after
+await client.Search.Query("Jita", SearchCategory.SolarSystem, new() { Character = c });
+```
+
+## 10. A few response types changed shape
+
+The wrapper was returning the wrong container or CLR type on these:
+
+| Method | before | after |
+| --- | --- | --- |
+| `Corporation.Standings(...)` | `EsiResponse<Standing>` | `EsiResponse<List<Standing>>` |
+| `Universe.AsteroidBelt(id)` | `EsiResponse<List<AsteroidBelt>>` | `EsiResponse<AsteroidBelt>` |
+| `CustomsOffice.CorporationTaxRate` | `string` | `decimal` |
+| `CustomsOffice.ExcellentStandingTaxRate` / `GoodStandingTaxRate` | `long` / `int` | `decimal` |
+| `ColonyLayout.Route.Quantity` | `long` | `decimal` |
+
+New fields to match the spec: `Information.Title`, `CustomsOffice.TypeId`,
+`Stat.Pilots`, `Order.IssuedBy`.
+
+`ResolvedInfoCategory.Structure` is removed — `POST /universe/names` (the only
+endpoint that populates `ResolvedInfo.Category`) stopped resolving structure IDs,
+so that value can no longer come back.
+
 ---
 
 ## What did not change

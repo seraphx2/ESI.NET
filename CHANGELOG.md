@@ -64,6 +64,27 @@ cancellation, pagination) is passed. **Every consumer needs code changes** — s
 - `EsiResponse<T>`'s public constructor is removed; it is built by an internal
   async factory. Consumers never constructed it.
 
+**Removed endpoints** (CCP deleted them from ESI)
+
+- `client.Bookmarks.*` and `client.Opportunities.*` — the whole logic classes,
+  and `IEsiClient.Bookmarks` / `IEsiClient.Opportunities`.
+- `client.Character.Names(ids)` — use `client.Universe.Names(ids)`.
+- `client.Character.ChatChannels()`.
+- `Search.Query` lost its `SearchType` argument (only character search remains)
+  and now takes `EsiCallOptions` as a required argument.
+
+**Response types corrected to match the spec**
+
+- `Corporation.Standings(...)` returns `EsiResponse<List<Standing>>` (was a single
+  `Standing`); `Universe.AsteroidBelt(id)` returns `EsiResponse<AsteroidBelt>`
+  (was a `List<>`).
+- `CustomsOffice` tax-rate fields (`CorporationTaxRate`, `ExcellentStandingTaxRate`,
+  `GoodStandingTaxRate`) are `decimal`; `ColonyLayout.Route.Quantity` is `decimal`.
+- New fields: `Information.Title`, `CustomsOffice.TypeId`, `Stat.Pilots`,
+  `Order.IssuedBy`.
+- `ResolvedInfoCategory.Structure` removed — `POST /universe/names` no longer
+  resolves structure IDs, so `ResolvedInfo.Category` can never be `structure`.
+
 ### Added
 
 - `EsiCallOptions.CancellationToken` — honoured by every request.
@@ -124,6 +145,10 @@ had changed short of a consumer filing a bug. That is now covered.
   Endpoints whose body ends in a newline no longer come back as a `200` with
   `Data` null and the payload in `Message`; bare-scalar bodies (a wallet
   balance, a CSPA cost) now bind to `Data`.
+- Enum values that never matched ESI: `ContractType.Loan` (`"loan "` → `"loan"`),
+  `Contested.Vulnerable` (`"vulnerable "` → `"vulnerable"`),
+  `StructureServiceState.Cleanup` (`"cleamup"` → `"cleanup"`), and a missing
+  `EventResponse.NotResponded` (`"not_responded"`).
 
 ### Migration
 
