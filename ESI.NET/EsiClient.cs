@@ -10,75 +10,75 @@ namespace ESI.NET
 {
     public class EsiClient : IEsiClient
     {
-        readonly HttpClient client;
-        readonly EsiConfig config;
+        readonly HttpClient _client;
+        readonly EsiConfig _config;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EsiClient"/> class.
         /// </summary>
-        /// <param name="_config">The configuration parameters of the <see cref="EsiClient"/>.</param>
-        /// <param name="_client">
+        /// <param name="config">The configuration parameters of the <see cref="EsiClient"/>.</param>
+        /// <param name="client">
         /// The <see cref="HttpClient"/> to use. When supplied (including via <c>AddEsi</c>'s
         /// <see cref="System.Net.Http.IHttpClientFactory"/> pipeline) it is used as-is — the caller
         /// / pipeline is responsible for the <c>X-User-Agent</c> and <c>Accept</c> headers and for
         /// content decompression. When omitted, a default client is created and configured here.
         /// </param>
-        public EsiClient(IOptions<EsiConfig> _config, HttpClient _client = null)
+        public EsiClient(IOptions<EsiConfig> config, HttpClient client = null)
         {
-            config = _config.Value;
+            _config = config.Value;
 
-            if (_client != null)
-                client = _client;
+            if (client != null)
+                _client = client;
             else
             {
-                if (string.IsNullOrWhiteSpace(config.UserAgent))
+                if (string.IsNullOrWhiteSpace(_config.UserAgent))
                     throw new ArgumentException("EsiConfig.UserAgent is required. Set it to something that identifies your app (character and/or project name) so CCP can contact you rather than cut off ESI access.");
 
                 // No DI pipeline here, so wire the token-refresh handler in manually. Without an
                 // IServiceScopeFactory it honours EsiCallOptions.OnTokenRefreshed but not a sink.
-                var handler = new EsiTokenRefreshHandler(_config) { InnerHandler = CreateDefaultHandler() };
-                client = new HttpClient(handler);
-                client.DefaultRequestHeaders.Add("X-User-Agent", config.UserAgent);
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                var handler = new EsiTokenRefreshHandler(config) { InnerHandler = CreateDefaultHandler() };
+                _client = new HttpClient(handler);
+                _client.DefaultRequestHeaders.Add("X-User-Agent", _config.UserAgent);
+                _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             }
 
 
-            SSO = new SsoLogic(client, config);
-            Alliance = new AllianceLogic(client, config);
-            Assets = new AssetsLogic(client, config);
-            Calendar = new CalendarLogic(client, config);
-            Character = new CharacterLogic(client, config);
-            Clones = new ClonesLogic(client, config);
-            Contacts = new ContactsLogic(client, config);
-            Cosmetics = new CosmeticsLogic(client, config);
-            Contracts = new ContractsLogic(client, config);
-            Corporation = new CorporationLogic(client, config);
-            Dogma = new DogmaLogic(client, config);
-            FactionWarfare = new FactionWarfareLogic(client, config);
-            Fittings = new FittingsLogic(client, config);
-            Fleets = new FleetsLogic(client, config);
-            FreelanceJobs = new FreelanceJobsLogic(client, config);
-            Incursions = new IncursionsLogic(client, config);
-            Industry = new IndustryLogic(client, config);
-            Insurance = new InsuranceLogic(client, config);
-            Killmails = new KillmailsLogic(client, config);
-            Location = new LocationLogic(client, config);
-            Loyalty = new LoyaltyLogic(client, config);
-            Mail = new MailLogic(client, config);
-            Market = new MarketLogic(client, config);
-            Meta = new MetaLogic(client, config);
-            MilitaryCampaigns = new MilitaryCampaignsLogic(client, config);
-            PlanetaryInteraction = new PlanetaryInteractionLogic(client, config);
-            Routes = new RoutesLogic(client, config);
-            Search = new SearchLogic(client, config);
-            Skills = new SkillsLogic(client, config);
-            Sovereignty = new SovereigntyLogic(client, config);
-            Status = new StatusLogic(client, config);
-            Structures = new StructuresLogic(client, config);
-            Universe = new UniverseLogic(client, config);
-            UserInterface = new UserInterfaceLogic(client, config);
-            Wallet = new WalletLogic(client, config);
-            Wars = new WarsLogic(client, config);
+            SSO = new SsoLogic(_client, _config);
+            Alliance = new AllianceLogic(_client, _config);
+            Assets = new AssetsLogic(_client, _config);
+            Calendar = new CalendarLogic(_client, _config);
+            Character = new CharacterLogic(_client, _config);
+            Clones = new ClonesLogic(_client, _config);
+            Contacts = new ContactsLogic(_client, _config);
+            Cosmetics = new CosmeticsLogic(_client, _config);
+            Contracts = new ContractsLogic(_client, _config);
+            Corporation = new CorporationLogic(_client, _config);
+            Dogma = new DogmaLogic(_client, _config);
+            FactionWarfare = new FactionWarfareLogic(_client, _config);
+            Fittings = new FittingsLogic(_client, _config);
+            Fleets = new FleetsLogic(_client, _config);
+            FreelanceJobs = new FreelanceJobsLogic(_client, _config);
+            Incursions = new IncursionsLogic(_client, _config);
+            Industry = new IndustryLogic(_client, _config);
+            Insurance = new InsuranceLogic(_client, _config);
+            Killmails = new KillmailsLogic(_client, _config);
+            Location = new LocationLogic(_client, _config);
+            Loyalty = new LoyaltyLogic(_client, _config);
+            Mail = new MailLogic(_client, _config);
+            Market = new MarketLogic(_client, _config);
+            Meta = new MetaLogic(_client, _config);
+            MilitaryCampaigns = new MilitaryCampaignsLogic(_client, _config);
+            PlanetaryInteraction = new PlanetaryInteractionLogic(_client, _config);
+            Routes = new RoutesLogic(_client, _config);
+            Search = new SearchLogic(_client, _config);
+            Skills = new SkillsLogic(_client, _config);
+            Sovereignty = new SovereigntyLogic(_client, _config);
+            Status = new StatusLogic(_client, _config);
+            Structures = new StructuresLogic(_client, _config);
+            Universe = new UniverseLogic(_client, _config);
+            UserInterface = new UserInterfaceLogic(_client, _config);
+            Wallet = new WalletLogic(_client, _config);
+            Wars = new WarsLogic(_client, _config);
         }
 
         public SsoLogic SSO { get; set; }

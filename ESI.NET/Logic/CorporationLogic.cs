@@ -31,13 +31,13 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /corporations/{corporation_id}/
         /// </summary>
-        /// <param name="corporation_id"></param>
+        /// <param name="corporationId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Corporation>> Information(long corporation_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Corporation>> Information(long corporationId, EsiCallOptions options = null)
             => await Execute<Corporation>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/corporations/{corporation_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString(CultureInfo.InvariantCulture) }
+                    { "corporation_id", corporationId.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -45,13 +45,13 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /corporations/{corporation_id}/alliancehistory/
         /// </summary>
-        /// <param name="corporation_id"></param>
+        /// <param name="corporationId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<AllianceHistory>>> AllianceHistory(long corporation_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<List<AllianceHistory>>> AllianceHistory(long corporationId, EsiCallOptions options = null)
             => await Execute<List<AllianceHistory>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/corporations/{corporation_id}/alliancehistory/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString(CultureInfo.InvariantCulture) }
+                    { "corporation_id", corporationId.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -111,11 +111,11 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="corporationId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Images>> Icons(long corporation_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Images>> Icons(long corporationId, EsiCallOptions options = null)
             => await Execute<Images>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/corporations/{corporation_id}/icons/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString(CultureInfo.InvariantCulture) }
+                    { "corporation_id", corporationId.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -260,19 +260,19 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /corporations/{corporation_id}/starbases/{starbase_id}/
         /// </summary>
-        /// <param name="starbase_id"></param>
-        /// <param name="system_id"></param>
+        /// <param name="starbaseId"></param>
+        /// <param name="systemId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<StarbaseInfo>> Starbase(long starbase_id, long system_id, EsiCallOptions options)
+        public async Task<EsiResponse<StarbaseInfo>> Starbase(long starbaseId, long systemId, EsiCallOptions options)
             => await Execute<StarbaseInfo>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/starbases/{starbase_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) },
-                    { "starbase_id", starbase_id.ToString(CultureInfo.InvariantCulture) }
+                    { "starbase_id", starbaseId.ToString(CultureInfo.InvariantCulture) }
                 },
                 parameters: new string[]
                 {
-                    $"system_id={system_id}"
+                    $"system_id={systemId}"
                 },
                 options: options).ConfigureAwait(false);
 
@@ -322,24 +322,24 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /corporations/{corporation_id}/projects/{project_id}/ - full detail for one project.
         /// </summary>
-        public async Task<EsiResponse<Project>> Project(string project_id, EsiCallOptions options)
+        public async Task<EsiResponse<Project>> Project(string projectId, EsiCallOptions options)
             => await Execute<Project>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/projects/{project_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) },
-                    { "project_id", project_id }
+                    { "project_id", projectId }
                 },
                 options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/projects/{project_id}/contributors/ - a page of contributors.
         /// </summary>
-        public async Task<EsiResponse<ProjectContributors>> ProjectContributors(string project_id, string after = null, string before = null, int? limit = null, EsiCallOptions options = null)
+        public async Task<EsiResponse<ProjectContributors>> ProjectContributors(string projectId, string after = null, string before = null, int? limit = null, EsiCallOptions options = null)
             => await Execute<ProjectContributors>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/projects/{project_id}/contributors/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) },
-                    { "project_id", project_id }
+                    { "project_id", projectId }
                 },
                 parameters: BuildCursorParams(("after", after), ("before", before), ("limit", limit?.ToString(CultureInfo.InvariantCulture))),
                 options: options).ConfigureAwait(false);
@@ -347,13 +347,13 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /corporations/{corporation_id}/projects/{project_id}/contribution/{character_id}/ - one character's contribution.
         /// </summary>
-        public async Task<EsiResponse<ProjectContribution>> ProjectContribution(string project_id, long character_id, EsiCallOptions options)
+        public async Task<EsiResponse<ProjectContribution>> ProjectContribution(string projectId, long characterId, EsiCallOptions options)
             => await Execute<ProjectContribution>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/projects/{project_id}/contribution/{character_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) },
-                    { "project_id", project_id },
-                    { "character_id", character_id.ToString(CultureInfo.InvariantCulture) }
+                    { "project_id", projectId },
+                    { "character_id", characterId.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 

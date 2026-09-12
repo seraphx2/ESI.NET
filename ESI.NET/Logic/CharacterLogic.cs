@@ -24,22 +24,22 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="characterIds">dynamic = long</param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Affiliation>>> Affiliation(long[] character_ids, EsiCallOptions options = null)
+        public async Task<EsiResponse<List<Affiliation>>> Affiliation(long[] characterIds, EsiCallOptions options = null)
             => await Execute<List<Affiliation>>(_client, _config, RequestSecurity.Public, HttpMethod.Post, "/characters/affiliation/",
-                body: character_ids,
+                body: characterIds,
                 options: options).ConfigureAwait(false);
 
 
         /// <summary>
         /// /characters/{character_id}/
         /// </summary>
-        /// <param name="character_id"></param>
+        /// <param name="characterId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Information>> Information(long character_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Information>> Information(long characterId, EsiCallOptions options = null)
             => await Execute<Information>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/characters/{character_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString(CultureInfo.InvariantCulture) }
+                    { "character_id", characterId.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -72,13 +72,13 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /characters/{character_id}/corporationhistory/
         /// </summary>
-        /// <param name="character_id"></param>
+        /// <param name="characterId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<CorporationHistory>>> CorporationHistory(long character_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<List<CorporationHistory>>> CorporationHistory(long characterId, EsiCallOptions options = null)
             => await Execute<List<CorporationHistory>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/characters/{character_id}/corporationhistory/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString(CultureInfo.InvariantCulture) }
+                    { "character_id", characterId.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -86,15 +86,15 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /characters/{character_id}/cspa/
         /// </summary>
-        /// <param name="character_ids">The target characters to calculate the charge for</param>
+        /// <param name="characterIds">The target characters to calculate the charge for</param>
         /// <returns></returns>
-        public async Task<EsiResponse<decimal>> CSPA(object character_ids, EsiCallOptions options)
+        public async Task<EsiResponse<decimal>> CSPA(object characterIds, EsiCallOptions options)
             => await Execute<decimal>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/characters/{character_id}/cspa/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
-                body: character_ids,
+                body: characterIds,
                 options: options).ConfigureAwait(false);
 
         /// <summary>
@@ -148,13 +148,13 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /characters/{character_id}/portrait/
         /// </summary>
-        /// <param name="character_id"></param>
+        /// <param name="characterId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Images>> Portrait(long character_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Images>> Portrait(long characterId, EsiCallOptions options = null)
             => await Execute<Images>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/characters/{character_id}/portrait/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString(CultureInfo.InvariantCulture) }
+                    { "character_id", characterId.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -210,12 +210,12 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /characters/{character_id}/access-lists/{access_list_id}/ - scope esi-access.read_lists.v1
         /// </summary>
-        public async Task<EsiResponse<AccessList>> AccessList(long access_list_id, EsiCallOptions options)
+        public async Task<EsiResponse<AccessList>> AccessList(long accessListId, EsiCallOptions options)
             => await Execute<AccessList>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/access-lists/{access_list_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) },
-                    { "access_list_id", access_list_id.ToString(CultureInfo.InvariantCulture) }
+                    { "access_list_id", accessListId.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -233,12 +233,12 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /characters/{character_id}/mercenary-tactical-operations/{operation_id}/ - scope esi-activities.read_character.v1
         /// </summary>
-        public async Task<EsiResponse<MercenaryTacticalOperation>> MercenaryTacticalOperation(string operation_id, EsiCallOptions options)
+        public async Task<EsiResponse<MercenaryTacticalOperation>> MercenaryTacticalOperation(string operationId, EsiCallOptions options)
             => await Execute<MercenaryTacticalOperation>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/mercenary-tactical-operations/{operation_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) },
-                    { "operation_id", operation_id }
+                    { "operation_id", operationId }
                 },
                 options: options).ConfigureAwait(false);
     }

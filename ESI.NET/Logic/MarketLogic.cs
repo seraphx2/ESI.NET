@@ -31,26 +31,26 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /markets/{region_id}/orders/
         /// </summary>
-        /// <param name="region_id"></param>
-        /// <param name="order_type"></param>
+        /// <param name="regionId"></param>
+        /// <param name="orderType"></param>
         /// <param name="page"></param>
-        /// <param name="type_id"></param>
+        /// <param name="typeId"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Order>>> RegionOrders(
-            long region_id,
-            MarketOrderType order_type = MarketOrderType.All,
-            long? type_id = null,
+            long regionId,
+            MarketOrderType orderType = MarketOrderType.All,
+            long? typeId = null,
             EsiCallOptions options = null)
         {
-            var parameters = new List<string>() { $"order_type={order_type.ToEsiValue()}" };
+            var parameters = new List<string>() { $"order_type={orderType.ToEsiValue()}" };
 
-            if (type_id != null)
-                parameters.Add($"type_id={type_id}");
+            if (typeId != null)
+                parameters.Add($"type_id={typeId}");
 
             var response = await Execute<List<Order>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/{region_id}/orders/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "region_id", region_id.ToString(CultureInfo.InvariantCulture) }
+                    { "region_id", regionId.ToString(CultureInfo.InvariantCulture) }
                 },
                 parameters: parameters.ToArray(),
                 options: options).ConfigureAwait(false);
@@ -61,18 +61,18 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /markets/{region_id}/history/
         /// </summary>
-        /// <param name="region_id"></param>
-        /// <param name="type_id"></param>
+        /// <param name="regionId"></param>
+        /// <param name="typeId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Statistic>>> TypeHistoryInRegion(long region_id, long type_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<List<Statistic>>> TypeHistoryInRegion(long regionId, long typeId, EsiCallOptions options = null)
             => await Execute<List<Statistic>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/{region_id}/history/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "region_id", region_id.ToString(CultureInfo.InvariantCulture) }
+                    { "region_id", regionId.ToString(CultureInfo.InvariantCulture) }
                 },
                 parameters: new string[]
                 {
-                    $"type_id={type_id}"
+                    $"type_id={typeId}"
                 },
                 options: options).ConfigureAwait(false);
 
@@ -80,14 +80,14 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /markets/structures/{structure_id}/
         /// </summary>
-        /// <param name="structure_id"></param>
+        /// <param name="structureId"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Order>>> StructureOrders(long structure_id, EsiCallOptions options)
+        public async Task<EsiResponse<List<Order>>> StructureOrders(long structureId, EsiCallOptions options)
             => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/markets/structures/{structure_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "structure_id", structure_id.ToString(CultureInfo.InvariantCulture) }
+                    { "structure_id", structureId.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -103,13 +103,13 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /markets/groups/{market_group_id}/
         /// </summary>
-        /// <param name="market_group_id"></param>
+        /// <param name="marketGroupId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Group>> Group(long market_group_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Group>> Group(long marketGroupId, EsiCallOptions options = null)
             => await Execute<Group>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/groups/{market_group_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "market_group_id", market_group_id.ToString(CultureInfo.InvariantCulture) }
+                    { "market_group_id", marketGroupId.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -142,14 +142,14 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /markets/{region_id}/types/
         /// </summary>
-        /// <param name="region_id"></param>
+        /// <param name="regionId"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<long[]>> Types(long region_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<long[]>> Types(long regionId, EsiCallOptions options = null)
             => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/{region_id}/types/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "region_id", region_id.ToString(CultureInfo.InvariantCulture) }
+                    { "region_id", regionId.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 

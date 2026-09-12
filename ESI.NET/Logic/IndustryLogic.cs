@@ -39,9 +39,9 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /characters/{character_id}/industry/jobs/
         /// </summary>
-        /// <param name="include_completed"></param>
+        /// <param name="includeCompleted"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Job>>> JobsForCharacter(bool include_completed = false, EsiCallOptions options = null)
+        public async Task<EsiResponse<List<Job>>> JobsForCharacter(bool includeCompleted = false, EsiCallOptions options = null)
             => await Execute<List<Job>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/industry/jobs/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -49,7 +49,7 @@ namespace ESI.NET.Logic
                 },
                 parameters: new string[]
                 {
-                    $"include_completed={include_completed}"
+                    $"include_completed={includeCompleted}"
                 },
                 options: options).ConfigureAwait(false);
 
@@ -82,25 +82,25 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /corporation/{corporation_id}/mining/observers/{observer_id}/
         /// </summary>
-        /// <param name="observer_id"></param>
+        /// <param name="observerId"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<ObserverInfo>>> ObservedMining(long observer_id, EsiCallOptions options)
+        public async Task<EsiResponse<List<ObserverInfo>>> ObservedMining(long observerId, EsiCallOptions options)
             => await Execute<List<ObserverInfo>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporation/{corporation_id}/mining/observers/{observer_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) },
-                    { "observer_id", observer_id.ToString(CultureInfo.InvariantCulture) }
+                    { "observer_id", observerId.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/industry/jobs/
         /// </summary>
-        /// <param name="include_completed"></param>
+        /// <param name="includeCompleted"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Job>>> JobsForCorporation(bool include_completed = false, EsiCallOptions options = null)
+        public async Task<EsiResponse<List<Job>>> JobsForCorporation(bool includeCompleted = false, EsiCallOptions options = null)
             => await Execute<List<Job>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/industry/jobs/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -108,7 +108,7 @@ namespace ESI.NET.Logic
                 },
                 parameters: new string[]
                 {
-                    $"include_completed={include_completed}"
+                    $"include_completed={includeCompleted}"
                 },
                 options: options).ConfigureAwait(false);
 

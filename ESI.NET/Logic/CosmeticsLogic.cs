@@ -26,23 +26,23 @@ namespace ESI.NET.Logic
                 options: options).ConfigureAwait(false);
 
         /// <summary>/paragon-hub/skinr/alliances/{alliance_id}/</summary>
-        public async Task<EsiResponse<ParagonListingPage>> ParagonAllianceListings(long alliance_id, string after = null, string before = null, int? limit = null, EsiCallOptions options = null)
+        public async Task<EsiResponse<ParagonListingPage>> ParagonAllianceListings(long allianceId, string after = null, string before = null, int? limit = null, EsiCallOptions options = null)
             => await Execute<ParagonListingPage>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/paragon-hub/skinr/alliances/{alliance_id}/",
-                replacements: new Dictionary<string, string>() { { "alliance_id", alliance_id.ToString(CultureInfo.InvariantCulture) } },
+                replacements: new Dictionary<string, string>() { { "alliance_id", allianceId.ToString(CultureInfo.InvariantCulture) } },
                 parameters: Cursor(("after", after), ("before", before), ("limit", limit?.ToString(CultureInfo.InvariantCulture))),
                 options: options).ConfigureAwait(false);
 
         /// <summary>/paragon-hub/skinr/characters/{character_id}/</summary>
-        public async Task<EsiResponse<ParagonListingPage>> ParagonCharacterListings(long character_id, string after = null, string before = null, int? limit = null, EsiCallOptions options = null)
+        public async Task<EsiResponse<ParagonListingPage>> ParagonCharacterListings(long characterId, string after = null, string before = null, int? limit = null, EsiCallOptions options = null)
             => await Execute<ParagonListingPage>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/paragon-hub/skinr/characters/{character_id}/",
-                replacements: new Dictionary<string, string>() { { "character_id", character_id.ToString(CultureInfo.InvariantCulture) } },
+                replacements: new Dictionary<string, string>() { { "character_id", characterId.ToString(CultureInfo.InvariantCulture) } },
                 parameters: Cursor(("after", after), ("before", before), ("limit", limit?.ToString(CultureInfo.InvariantCulture))),
                 options: options).ConfigureAwait(false);
 
         /// <summary>/paragon-hub/skinr/corporations/{corporation_id}/</summary>
-        public async Task<EsiResponse<ParagonListingPage>> ParagonCorporationListings(long corporation_id, string after = null, string before = null, int? limit = null, EsiCallOptions options = null)
+        public async Task<EsiResponse<ParagonListingPage>> ParagonCorporationListings(long corporationId, string after = null, string before = null, int? limit = null, EsiCallOptions options = null)
             => await Execute<ParagonListingPage>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/paragon-hub/skinr/corporations/{corporation_id}/",
-                replacements: new Dictionary<string, string>() { { "corporation_id", corporation_id.ToString(CultureInfo.InvariantCulture) } },
+                replacements: new Dictionary<string, string>() { { "corporation_id", corporationId.ToString(CultureInfo.InvariantCulture) } },
                 parameters: Cursor(("after", after), ("before", before), ("limit", limit?.ToString(CultureInfo.InvariantCulture))),
                 options: options).ConfigureAwait(false);
 
@@ -54,9 +54,9 @@ namespace ESI.NET.Logic
                 options: options).ConfigureAwait(false);
 
         /// <summary>/cosmetics/skinr/{skinr_id}/ - a public SKINR design lookup.</summary>
-        public async Task<EsiResponse<SkinrDesign>> Skinr(string skinr_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<SkinrDesign>> Skinr(string skinrId, EsiCallOptions options = null)
             => await Execute<SkinrDesign>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/cosmetics/skinr/{skinr_id}/",
-                replacements: new Dictionary<string, string>() { { "skinr_id", skinr_id } },
+                replacements: new Dictionary<string, string>() { { "skinr_id", skinrId } },
                 options: options).ConfigureAwait(false);
 
         /// <summary>/characters/{character_id}/cosmetics/skinr/ - the character's SKINR licenses.</summary>

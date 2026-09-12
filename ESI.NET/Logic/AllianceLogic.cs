@@ -29,11 +29,11 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="allianceId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Alliance>> Information(long alliance_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Alliance>> Information(long allianceId, EsiCallOptions options = null)
             => await Execute<Alliance>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/alliances/{alliance_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "alliance_id", alliance_id.ToString(CultureInfo.InvariantCulture) }
+                    { "alliance_id", allianceId.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -41,13 +41,13 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /alliances/{alliance_id}/corporations/
         /// </summary>
-        /// <param name="alliance_id"></param>
+        /// <param name="allianceId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<long[]>> Corporations(long alliance_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<long[]>> Corporations(long allianceId, EsiCallOptions options = null)
             => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/alliances/{alliance_id}/corporations/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "alliance_id", alliance_id.ToString(CultureInfo.InvariantCulture) }
+                    { "alliance_id", allianceId.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -55,13 +55,13 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /alliances/{alliance_id}/icons/
         /// </summary>
-        /// <param name="alliance_id"></param>
+        /// <param name="allianceId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Images>> Icons(long alliance_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Images>> Icons(long allianceId, EsiCallOptions options = null)
             => await Execute<Images>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/alliances/{alliance_id}/icons/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "alliance_id", alliance_id.ToString(CultureInfo.InvariantCulture) }
+                    { "alliance_id", allianceId.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 

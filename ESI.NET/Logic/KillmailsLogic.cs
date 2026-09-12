@@ -47,15 +47,15 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /killmails/{killmail_id}/{killmail_hash}/
         /// </summary>
-        /// <param name="killmail_hash">The killmail hash for verification</param>
-        /// <param name="killmail_id">The killmail ID to be queried</param>
+        /// <param name="killmailHash">The killmail hash for verification</param>
+        /// <param name="killmailId">The killmail ID to be queried</param>
         /// <returns></returns>
-        public async Task<EsiResponse<Information>> Information(string killmail_hash, long killmail_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Information>> Information(string killmailHash, long killmailId, EsiCallOptions options = null)
             => await Execute<Information>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/killmails/{killmail_id}/{killmail_hash}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "killmail_id", killmail_id.ToString(CultureInfo.InvariantCulture) },
-                    { "killmail_hash", killmail_hash.ToString() }
+                    { "killmail_id", killmailId.ToString(CultureInfo.InvariantCulture) },
+                    { "killmail_hash", killmailHash.ToString() }
                 },
                 options: options).ConfigureAwait(false);
 

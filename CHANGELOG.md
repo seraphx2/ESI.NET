@@ -18,6 +18,15 @@ cancellation, pagination) is passed. **Every consumer needs code changes** — s
 - `Newtonsoft.Json` → `13.0.4`. Removed the explicit `System.Net.Http` package
   reference (in-box on both targets).
 
+**Parameter naming**
+
+- Every `snake_case` method parameter (mirroring ESI's own field names -
+  `alliance_id`, `character_id`, `max_war_id`, ...) is renamed to `camelCase`
+  (`allianceId`, `characterId`, `maxWarId`). This only affects callers using
+  named arguments (`Information(alliance_id: 123)` → `Information(allianceId: 123)`);
+  positional calls are unaffected. `EsiClient`'s constructor parameters are
+  `config` / `client` (were `_config` / `_client`).
+
 **Per-call options**
 
 - Every endpoint method takes a trailing `EsiCallOptions` parameter

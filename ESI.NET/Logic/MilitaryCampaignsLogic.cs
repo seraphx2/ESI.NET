@@ -24,25 +24,25 @@ namespace ESI.NET.Logic
                 options: options).ConfigureAwait(false);
 
         /// <summary>/military-campaigns/{campaign_id}/</summary>
-        public async Task<EsiResponse<MilitaryCampaign>> Get(string campaign_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<MilitaryCampaign>> Get(string campaignId, EsiCallOptions options = null)
             => await Execute<MilitaryCampaign>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/military-campaigns/{campaign_id}/",
-                replacements: new Dictionary<string, string>() { { "campaign_id", campaign_id } },
+                replacements: new Dictionary<string, string>() { { "campaign_id", campaignId } },
                 options: options).ConfigureAwait(false);
 
         /// <summary>/military-campaigns/{campaign_id}/objectives/</summary>
-        public async Task<EsiResponse<MilitaryObjectiveList>> Objectives(string campaign_id, string after = null, string before = null, int? limit = null, EsiCallOptions options = null)
+        public async Task<EsiResponse<MilitaryObjectiveList>> Objectives(string campaignId, string after = null, string before = null, int? limit = null, EsiCallOptions options = null)
             => await Execute<MilitaryObjectiveList>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/military-campaigns/{campaign_id}/objectives/",
-                replacements: new Dictionary<string, string>() { { "campaign_id", campaign_id } },
+                replacements: new Dictionary<string, string>() { { "campaign_id", campaignId } },
                 parameters: Cursor(("after", after), ("before", before), ("limit", limit?.ToString(CultureInfo.InvariantCulture))),
                 options: options).ConfigureAwait(false);
 
         /// <summary>/military-campaigns/{campaign_id}/objectives/{objective_id}/</summary>
-        public async Task<EsiResponse<MilitaryObjective>> Objective(string campaign_id, string objective_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<MilitaryObjective>> Objective(string campaignId, string objectiveId, EsiCallOptions options = null)
             => await Execute<MilitaryObjective>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/military-campaigns/{campaign_id}/objectives/{objective_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "campaign_id", campaign_id },
-                    { "objective_id", objective_id }
+                    { "campaign_id", campaignId },
+                    { "objective_id", objectiveId }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -54,12 +54,12 @@ namespace ESI.NET.Logic
                 options: options).ConfigureAwait(false);
 
         /// <summary>/characters/{character_id}/military-campaigns/objectives/{objective_id}/ - scope esi.activity.char:read</summary>
-        public async Task<EsiResponse<CharacterMilitaryObjective>> CharacterObjective(string objective_id, EsiCallOptions options)
+        public async Task<EsiResponse<CharacterMilitaryObjective>> CharacterObjective(string objectiveId, EsiCallOptions options)
             => await Execute<CharacterMilitaryObjective>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/military-campaigns/objectives/{objective_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) },
-                    { "objective_id", objective_id }
+                    { "objective_id", objectiveId }
                 },
                 options: options).ConfigureAwait(false);
 

@@ -240,6 +240,24 @@ Plus new methods on existing accessors: `Corporation.Projects` /
 `Character.MercenaryTacticalOperations` / `Character.MercenaryTacticalOperation`
 (`esi-activities.read_character.v1`).
 
+## 14. Parameter names are `camelCase`
+
+Every method parameter that mirrored ESI's own `snake_case` field name
+(`alliance_id`, `character_id`, `max_war_id`, ...) is renamed to `camelCase`
+(`allianceId`, `characterId`, `maxWarId`). Only affects callers using named
+arguments:
+
+```csharp
+// before
+client.Alliance.Information(alliance_id: 99005338);
+// after
+client.Alliance.Information(allianceId: 99005338);
+```
+
+Positional calls (`client.Alliance.Information(99005338)`, by far the common
+case) need no change. `EsiClient`'s own constructor parameters are `config` /
+`client` (were `_config` / `_client`).
+
 ---
 
 ## What did not change

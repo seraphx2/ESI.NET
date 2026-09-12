@@ -16,14 +16,14 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /wars/
         /// </summary>
-        /// <param name="max_war_id">Only return wars with ID smaller than this</param>
+        /// <param name="maxWarId">Only return wars with ID smaller than this</param>
         /// <returns></returns>
-        public async Task<EsiResponse<long[]>> All(long max_war_id = 0, EsiCallOptions options = null)
+        public async Task<EsiResponse<long[]>> All(long maxWarId = 0, EsiCallOptions options = null)
         {
             var parameters = new List<string>();
 
-            if (max_war_id > 0)
-                parameters.Add($"max_war_id={max_war_id}");
+            if (maxWarId > 0)
+                parameters.Add($"max_war_id={maxWarId}");
 
             var response = await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/wars/",
                 parameters: parameters.ToArray(),
@@ -35,13 +35,13 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /wars/{warId}/
         /// </summary>
-        /// <param name="war_id"></param>
+        /// <param name="warId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<War>> Information(long war_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<War>> Information(long warId, EsiCallOptions options = null)
             => await Execute<War>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/wars/{war_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "war_id", war_id.ToString(CultureInfo.InvariantCulture) }
+                    { "war_id", warId.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -49,14 +49,14 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /wars/{warId}/killmails/
         /// </summary>
-        /// <param name="war_id"></param>
+        /// <param name="warId"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Models.Killmails.Killmail>>> Kills(long war_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<List<Models.Killmails.Killmail>>> Kills(long warId, EsiCallOptions options = null)
             => await Execute<List<Models.Killmails.Killmail>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/wars/{war_id}/killmails/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "war_id", war_id.ToString(CultureInfo.InvariantCulture) }
+                    { "war_id", warId.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
     }

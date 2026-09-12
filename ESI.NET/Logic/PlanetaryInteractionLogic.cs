@@ -33,14 +33,14 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /characters/{character_id}/planets/{planet_id}/
         /// </summary>
-        /// <param name="planet_id"></param>
+        /// <param name="planetId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<ColonyLayout>> ColonyLayout(long planet_id, EsiCallOptions options)
+        public async Task<EsiResponse<ColonyLayout>> ColonyLayout(long planetId, EsiCallOptions options)
             => await Execute<ColonyLayout>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/planets/{planet_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) },
-                    { "planet_id", planet_id.ToString(CultureInfo.InvariantCulture) }
+                    { "planet_id", planetId.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -59,13 +59,13 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /universe/schematics/{schematic_id}/
         /// </summary>
-        /// <param name="schematic_id"></param>
+        /// <param name="schematicId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Schematic>> SchematicInformation(long schematic_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<Schematic>> SchematicInformation(long schematicId, EsiCallOptions options = null)
             => await Execute<Schematic>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/schematics/{schematic_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "schematic_id", schematic_id.ToString(CultureInfo.InvariantCulture) }
+                    { "schematic_id", schematicId.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 

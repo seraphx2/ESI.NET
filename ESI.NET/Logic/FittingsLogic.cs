@@ -47,14 +47,14 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /characters/{character_id}/fittings/{fitting_id}/
         /// </summary>
-        /// <param name="fitting_id"></param>
+        /// <param name="fittingId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> Delete(long fitting_id, EsiCallOptions options)
+        public async Task<EsiResponse<string>> Delete(long fittingId, EsiCallOptions options)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Delete, "/characters/{character_id}/fittings/{fitting_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) },
-                    { "fitting_id", fitting_id.ToString(CultureInfo.InvariantCulture) }
+                    { "fitting_id", fittingId.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
     }

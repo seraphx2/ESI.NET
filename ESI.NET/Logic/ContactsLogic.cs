@@ -61,19 +61,19 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /characters/{character_id}/contacts/
         /// </summary>
-        /// <param name="contact_ids"></param>
+        /// <param name="contactIds"></param>
         /// <param name="standing"></param>
-        /// <param name="label_ids"></param>
+        /// <param name="labelIds"></param>
         /// <param name="watched"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<long[]>> Add(long[] contact_ids, decimal standing, long[] label_ids = null, bool? watched = null, EsiCallOptions options = null)
+        public async Task<EsiResponse<long[]>> Add(long[] contactIds, decimal standing, long[] labelIds = null, bool? watched = null, EsiCallOptions options = null)
         {
-            var body = contact_ids;
+            var body = contactIds;
 
             var parameters = new List<string>() { $"standing={standing}" };
 
-            if (label_ids != null)
-                parameters.Add($"label_ids={string.Join(",", label_ids)}");
+            if (labelIds != null)
+                parameters.Add($"label_ids={string.Join(",", labelIds)}");
 
             if (watched != null)
                 parameters.Add($"watched={watched}");
@@ -96,14 +96,14 @@ namespace ESI.NET.Logic
         /// <param name="label_id"></param>
         /// <param name="watched"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> Update(long[] contact_ids, decimal standing, long[] label_ids = null, bool? watched = null, EsiCallOptions options = null)
+        public async Task<EsiResponse<string>> Update(long[] contactIds, decimal standing, long[] labelIds = null, bool? watched = null, EsiCallOptions options = null)
         {
-            var body = contact_ids;
+            var body = contactIds;
 
             var parameters = new List<string>() { $"standing={standing}" };
 
-            if (label_ids != null)
-                parameters.Add($"label_ids={string.Join(",", label_ids)}");
+            if (labelIds != null)
+                parameters.Add($"label_ids={string.Join(",", labelIds)}");
 
             if (watched != null)
                 parameters.Add($"watched={watched}");
@@ -121,9 +121,9 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /characters/{character_id}/contacts/
         /// </summary>
-        /// <param name="contact_ids"></param>
+        /// <param name="contactIds"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> Delete(long[] contact_ids, EsiCallOptions options)
+        public async Task<EsiResponse<string>> Delete(long[] contactIds, EsiCallOptions options)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Delete, "/characters/{character_id}/contacts/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -131,7 +131,7 @@ namespace ESI.NET.Logic
                 },
                 parameters: new string[]
                 {
-                    $"contact_ids={string.Join(",", contact_ids)}"
+                    $"contact_ids={string.Join(",", contactIds)}"
                 },
                 options: options).ConfigureAwait(false);
 

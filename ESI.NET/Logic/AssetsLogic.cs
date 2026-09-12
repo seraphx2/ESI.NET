@@ -34,29 +34,29 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /characters/{character_id}/assets/locations/
         /// </summary>
-        /// <param name="item_ids"></param>
+        /// <param name="itemIds"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<ItemLocation>>> LocationsForCharacter(List<long> item_ids, EsiCallOptions options)
+        public async Task<EsiResponse<List<ItemLocation>>> LocationsForCharacter(List<long> itemIds, EsiCallOptions options)
             => await Execute<List<ItemLocation>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/characters/{character_id}/assets/locations/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
-                body: item_ids.ToArray(),
+                body: itemIds.ToArray(),
                 options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/assets/names/
         /// </summary>
-        /// <param name="item_ids"></param>
+        /// <param name="itemIds"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<ItemName>>> NamesForCharacter(List<long> item_ids, EsiCallOptions options)
+        public async Task<EsiResponse<List<ItemName>>> NamesForCharacter(List<long> itemIds, EsiCallOptions options)
             => await Execute<List<ItemName>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/characters/{character_id}/assets/names/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
-                body: item_ids.ToArray(),
+                body: itemIds.ToArray(),
                 options: options).ConfigureAwait(false);
 
 
@@ -76,29 +76,29 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /corporations/{corporation_id}/assets/locations/
         /// </summary>
-        /// <param name="item_ids"></param>
+        /// <param name="itemIds"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<ItemLocation>>> LocationsForCorporation(List<long> item_ids, EsiCallOptions options)
+        public async Task<EsiResponse<List<ItemLocation>>> LocationsForCorporation(List<long> itemIds, EsiCallOptions options)
             => await Execute<List<ItemLocation>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/corporations/{corporation_id}/assets/locations/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
-                body: item_ids.ToArray(),
+                body: itemIds.ToArray(),
                 options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/assets/names/
         /// </summary>
-        /// <param name="item_ids"></param>
+        /// <param name="itemIds"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<ItemName>>> NamesForCorporation(List<long> item_ids, EsiCallOptions options)
+        public async Task<EsiResponse<List<ItemName>>> NamesForCorporation(List<long> itemIds, EsiCallOptions options)
             => await Execute<List<ItemName>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/corporations/{corporation_id}/assets/names/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
-                body: item_ids.ToArray(),
+                body: itemIds.ToArray(),
                 options: options).ConfigureAwait(false);
     }
 }

@@ -22,15 +22,15 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/mail/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Header>>> Headers(long[] labels = null, long last_mail_id = 0, EsiCallOptions options = null)
+        public async Task<EsiResponse<List<Header>>> Headers(long[] labels = null, long lastMailId = 0, EsiCallOptions options = null)
         {
             var parameters = new List<string>();
 
             if (labels != null)
                 parameters.Add($"labels={string.Join(",", labels)}");
 
-            if (last_mail_id > 0)
-                parameters.Add($"last_mail_id={last_mail_id}");
+            if (lastMailId > 0)
+                parameters.Add($"last_mail_id={lastMailId}");
 
             var response = await Execute<List<Header>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/mail/",
                 replacements: new Dictionary<string, string>()
@@ -49,9 +49,9 @@ namespace ESI.NET.Logic
         /// <param name="recipients"></param>
         /// <param name="subject"></param>
         /// <param name="body"></param>
-        /// <param name="approved_cost"></param>
+        /// <param name="approvedCost"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<long>> New(object[] recipients, string subject, string body, long approved_cost = 0, EsiCallOptions options = null)
+        public async Task<EsiResponse<long>> New(object[] recipients, string subject, string body, long approvedCost = 0, EsiCallOptions options = null)
             => await Execute<long>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/characters/{character_id}/mail/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -62,7 +62,7 @@ namespace ESI.NET.Logic
                     recipients,
                     subject,
                     body,
-                    approved_cost
+                    approvedCost
                 },
                 options: options).ConfigureAwait(false);
 
@@ -100,14 +100,14 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /characters/{character_id}/mail/labels/{label_id}/
         /// </summary>
-        /// <param name="label_id"></param>
+        /// <param name="labelId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> DeleteLabel(long label_id, EsiCallOptions options)
+        public async Task<EsiResponse<string>> DeleteLabel(long labelId, EsiCallOptions options)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Delete, "/characters/{character_id}/mail/labels/{label_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) },
-                    { "label_id", label_id.ToString(CultureInfo.InvariantCulture) }
+                    { "label_id", labelId.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -126,45 +126,45 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /characters/{character_id}/mail/{mail_id}/
         /// </summary>
-        /// <param name="mail_id"></param>
+        /// <param name="mailId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Message>> Retrieve(long mail_id, EsiCallOptions options)
+        public async Task<EsiResponse<Message>> Retrieve(long mailId, EsiCallOptions options)
             => await Execute<Message>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/mail/{mail_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) },
-                    { "mail_id", mail_id.ToString(CultureInfo.InvariantCulture) }
+                    { "mail_id", mailId.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/mail/{mail_id}/
         /// </summary>
-        /// <param name="mail_id"></param>
-        /// <param name="is_read"></param>
+        /// <param name="mailId"></param>
+        /// <param name="isRead"></param>
         /// <param name="labels"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Message>> Update(long mail_id, bool? is_read = null, long[] labels = null, EsiCallOptions options = null)
+        public async Task<EsiResponse<Message>> Update(long mailId, bool? isRead = null, long[] labels = null, EsiCallOptions options = null)
             => await Execute<Message>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Put, "/characters/{character_id}/mail/{mail_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) },
-                    { "mail_id", mail_id.ToString(CultureInfo.InvariantCulture) }
+                    { "mail_id", mailId.ToString(CultureInfo.InvariantCulture) }
                 },
-                body: BuildUpdateObject(is_read, labels),
+                body: BuildUpdateObject(isRead, labels),
                 options: options).ConfigureAwait(false);
         
         /// <summary>
         /// /characters/{character_id}/mail/{mail_id}/
         /// </summary>
-        /// <param name="mail_id"></param>
+        /// <param name="mailId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Message>> Delete(long mail_id, EsiCallOptions options)
+        public async Task<EsiResponse<Message>> Delete(long mailId, EsiCallOptions options)
             => await Execute<Message>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Delete, "/characters/{character_id}/mail/{mail_id}/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) },
-                    { "mail_id", mail_id.ToString(CultureInfo.InvariantCulture) }
+                    { "mail_id", mailId.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 

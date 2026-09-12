@@ -45,9 +45,9 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /characters/{character_id}/wallet/transactions/
         /// </summary>
-        /// <param name="from_id"></param>
+        /// <param name="fromId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Transaction>>> CharacterTransactions(long from_id, EsiCallOptions options)
+        public async Task<EsiResponse<List<Transaction>>> CharacterTransactions(long fromId, EsiCallOptions options)
             => await Execute<List<Transaction>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/wallet/transactions/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -55,7 +55,7 @@ namespace ESI.NET.Logic
                 },
                 parameters: new string[]
                 {
-                    $"from_id={from_id}"
+                    $"from_id={fromId}"
                 },
                 options: options).ConfigureAwait(false);
 
@@ -90,9 +90,9 @@ namespace ESI.NET.Logic
         /// /corporations/{corporation_id}/wallets/{division}/transactions/
         /// </summary>
         /// <param name="division"></param>
-        /// <param name="from_id"></param>
+        /// <param name="fromId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Transaction>>> CorporationTransactions(long division, long from_id, EsiCallOptions options)
+        public async Task<EsiResponse<List<Transaction>>> CorporationTransactions(long division, long fromId, EsiCallOptions options)
             => await Execute<List<Transaction>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/wallets/{division}/transactions/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -101,7 +101,7 @@ namespace ESI.NET.Logic
                 },
                 parameters: new string[]
                 {
-                    $"from_id={from_id}"
+                    $"from_id={fromId}"
                 },
                 options: options).ConfigureAwait(false);
     }

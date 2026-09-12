@@ -22,11 +22,11 @@ namespace ESI.NET.Logic
         /// /loyalty/stores/{corporation_id}/offers/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Offer>>> Offers(long corporation_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<List<Offer>>> Offers(long corporationId, EsiCallOptions options = null)
             => await Execute<List<Offer>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/loyalty/stores/{corporation_id}/offers/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString(CultureInfo.InvariantCulture) }
+                    { "corporation_id", corporationId.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 

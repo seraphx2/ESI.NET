@@ -22,17 +22,17 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /freelance-jobs/ - the public listing, optionally scoped to one corporation.
         /// </summary>
-        public async Task<EsiResponse<FreelanceJobList>> All(long? corporation_id = null, string after = null, string before = null, int? limit = null, EsiCallOptions options = null)
+        public async Task<EsiResponse<FreelanceJobList>> All(long? corporationId = null, string after = null, string before = null, int? limit = null, EsiCallOptions options = null)
             => await Execute<FreelanceJobList>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/freelance-jobs/",
-                parameters: Cursor(("corporation_id", corporation_id?.ToString(CultureInfo.InvariantCulture)), ("after", after), ("before", before), ("limit", limit?.ToString(CultureInfo.InvariantCulture))),
+                parameters: Cursor(("corporation_id", corporationId?.ToString(CultureInfo.InvariantCulture)), ("after", after), ("before", before), ("limit", limit?.ToString(CultureInfo.InvariantCulture))),
                 options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /freelance-jobs/{job_id}/ - full public detail for one job.
         /// </summary>
-        public async Task<EsiResponse<FreelanceJob>> Get(string job_id, EsiCallOptions options = null)
+        public async Task<EsiResponse<FreelanceJob>> Get(string jobId, EsiCallOptions options = null)
             => await Execute<FreelanceJob>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/freelance-jobs/{job_id}/",
-                replacements: new Dictionary<string, string>() { { "job_id", job_id } },
+                replacements: new Dictionary<string, string>() { { "job_id", jobId } },
                 options: options).ConfigureAwait(false);
 
         /// <summary>
@@ -46,12 +46,12 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /characters/{character_id}/freelance-jobs/{job_id}/participation/ - the character's participation record.
         /// </summary>
-        public async Task<EsiResponse<FreelanceParticipation>> CharacterParticipation(string job_id, EsiCallOptions options)
+        public async Task<EsiResponse<FreelanceParticipation>> CharacterParticipation(string jobId, EsiCallOptions options)
             => await Execute<FreelanceParticipation>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/freelance-jobs/{job_id}/participation/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) },
-                    { "job_id", job_id }
+                    { "job_id", jobId }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -67,12 +67,12 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /corporations/{corporation_id}/freelance-jobs/{job_id}/participants/ - a page of participants.
         /// </summary>
-        public async Task<EsiResponse<FreelanceParticipants>> CorporationParticipants(string job_id, string after = null, string before = null, int? limit = null, EsiCallOptions options = null)
+        public async Task<EsiResponse<FreelanceParticipants>> CorporationParticipants(string jobId, string after = null, string before = null, int? limit = null, EsiCallOptions options = null)
             => await Execute<FreelanceParticipants>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/freelance-jobs/{job_id}/participants/",
                 replacements: new Dictionary<string, string>()
                 {
                     { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) },
-                    { "job_id", job_id }
+                    { "job_id", jobId }
                 },
                 parameters: Cursor(("after", after), ("before", before), ("limit", limit?.ToString(CultureInfo.InvariantCulture))),
                 options: options).ConfigureAwait(false);
