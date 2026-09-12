@@ -1,4 +1,4 @@
-using ESI.NET.Models.Universe;
+﻿using ESI.NET.Models.Universe;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;

@@ -1,4 +1,4 @@
-using ESI.NET.Models;
+﻿using ESI.NET.Models;
 using ESI.NET.Models.Character;
 using System.Collections.Generic;
 using System.Globalization;

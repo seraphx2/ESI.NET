@@ -1,4 +1,4 @@
-using ESI.NET.Models.Clones;
+﻿using ESI.NET.Models.Clones;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;

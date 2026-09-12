@@ -1,4 +1,4 @@
-using ESI.NET.Models.Industry;
+﻿using ESI.NET.Models.Industry;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;

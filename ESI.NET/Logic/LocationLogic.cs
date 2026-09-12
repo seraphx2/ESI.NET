@@ -1,4 +1,4 @@
-using ESI.NET.Models.Location;
+﻿using ESI.NET.Models.Location;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;

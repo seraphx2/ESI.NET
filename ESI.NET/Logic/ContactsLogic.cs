@@ -1,4 +1,4 @@
-using ESI.NET.Models.Contacts;
+﻿using ESI.NET.Models.Contacts;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;

@@ -1,4 +1,4 @@
-using ESI.NET.Models.Cosmetics;
+﻿using ESI.NET.Models.Cosmetics;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;

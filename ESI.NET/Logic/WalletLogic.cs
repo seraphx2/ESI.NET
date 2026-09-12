@@ -1,4 +1,4 @@
-using ESI.NET.Models.Wallet;
+﻿using ESI.NET.Models.Wallet;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;

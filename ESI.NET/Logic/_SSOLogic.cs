@@ -1,4 +1,4 @@
-using ESI.NET.Enumerations;
+﻿using ESI.NET.Enumerations;
 using ESI.NET.Models.Character;
 using ESI.NET.Models.SSO;
 using Microsoft.IdentityModel.Tokens;

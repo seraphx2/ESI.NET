@@ -1,4 +1,4 @@
-using ESI.NET.Models.Contracts;
+﻿using ESI.NET.Models.Contracts;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;

@@ -1,4 +1,4 @@
-using ESI.NET.Models.FactionWarfare;
+﻿using ESI.NET.Models.FactionWarfare;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;

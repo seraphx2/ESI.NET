@@ -1,4 +1,4 @@
-using ESI.NET.Models.Mail;
+﻿using ESI.NET.Models.Mail;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;

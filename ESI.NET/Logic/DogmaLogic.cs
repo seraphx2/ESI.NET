@@ -1,4 +1,4 @@
-using ESI.NET.Models.Dogma;
+﻿using ESI.NET.Models.Dogma;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;

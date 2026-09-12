@@ -1,4 +1,4 @@
-using ESI.NET.Models.Loyalty;
+﻿using ESI.NET.Models.Loyalty;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;

@@ -1,4 +1,4 @@
-using ESI.NET.Enumerations;
+﻿using ESI.NET.Enumerations;
 using ESI.NET.Models;
 using System.Collections.Generic;
 using System.Globalization;

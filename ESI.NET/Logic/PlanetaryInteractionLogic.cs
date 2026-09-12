@@ -1,4 +1,4 @@
-using ESI.NET.Models.PlanetaryInteraction;
+﻿using ESI.NET.Models.PlanetaryInteraction;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;

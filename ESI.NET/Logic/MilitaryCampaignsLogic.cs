@@ -1,4 +1,4 @@
-using ESI.NET.Models.MilitaryCampaigns;
+﻿using ESI.NET.Models.MilitaryCampaigns;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;

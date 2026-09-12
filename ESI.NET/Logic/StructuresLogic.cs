@@ -1,4 +1,4 @@
-using ESI.NET.Models.Structures;
+﻿using ESI.NET.Models.Structures;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;

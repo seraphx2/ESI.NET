@@ -1,4 +1,4 @@
-using ESI.NET.Models.FreelanceJobs;
+﻿using ESI.NET.Models.FreelanceJobs;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;
