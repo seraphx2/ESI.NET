@@ -1,0 +1,14 @@
+<Project>
+
+  <!-- Repo-wide analyzer settings. This is the free replacement for SonarCloud:
+       the .NET SDK already ships Microsoft.CodeAnalysis.NetAnalyzers, this just
+       turns them up to every category (not just "recommended") on every build,
+       for every project in the repo - no external service, no token, nothing
+       that can go stale. Warnings only for now; nothing here fails the build
+       until we've seen what it actually flags. -->
+  <PropertyGroup>
+    <AnalysisLevel>latest-all</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+
+</Project>
