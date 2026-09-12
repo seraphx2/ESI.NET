@@ -1,4 +1,5 @@
 ﻿using ESI.NET.Models.SSO;
+using System;
 using System.Threading.Tasks;
 
 namespace ESI.NET.Http
@@ -16,5 +17,13 @@ namespace ESI.NET.Http
         /// <c>RefreshToken</c> and <c>ExpiresOn</c> already updated in place.
         /// </summary>
         Task OnRefreshedAsync(AuthorizedCharacterData character);
+
+        /// <summary>
+        /// Called when a refresh attempt itself throws (the refresh token was revoked, expired, or
+        /// scopes changed). <paramref name="character"/> is unchanged from before the attempt.
+        /// The triggering call still fails — this is fired just before that exception propagates —
+        /// so use it to react (e.g. flag the character as needing re-authorization), not to recover.
+        /// </summary>
+        Task OnRefreshFailedAsync(AuthorizedCharacterData character, Exception exception);
     }
 }

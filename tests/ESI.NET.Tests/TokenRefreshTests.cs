@@ -24,18 +24,26 @@ namespace ESI.NET.Tests
         private const string NewTokenJson =
             @"{ ""access_token"": ""NEW-ACCESS"", ""token_type"": ""Bearer"", ""expires_in"": 1200, ""refresh_token"": ""NEW-REFRESH"" }";
 
+        private const string InvalidGrantJson = @"{ ""error"": ""invalid_grant"", ""error_description"": ""The refresh token is invalid or expired."" }";
+
         private sealed class RoutingHandler : HttpMessageHandler
         {
             public HttpRequestMessage LastApiRequest;
             public int TokenCalls;
             public string ApiBody = "{}";
 
+            /// <summary>When set, the token endpoint returns this instead of a fresh token — simulates EVE rejecting the refresh (revoked/expired/rescoped).</summary>
+            public HttpStatusCode? TokenFailureStatus;
+            public string TokenFailureBody = InvalidGrantJson;
+
             protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
             {
                 if (request.RequestUri.AbsolutePath == "/v2/oauth/token")
                 {
                     TokenCalls++;
-                    return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(NewTokenJson) });
+                    return Task.FromResult(TokenFailureStatus.HasValue
+                        ? new HttpResponseMessage(TokenFailureStatus.Value) { Content = new StringContent(TokenFailureBody) }
+                        : new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(NewTokenJson) });
                 }
 
                 LastApiRequest = request;
@@ -46,7 +54,10 @@ namespace ESI.NET.Tests
         private sealed class FakeSink : IEsiTokenRefreshSink
         {
             public AuthorizedCharacterData Received;
+            public AuthorizedCharacterData FailedCharacter;
+            public Exception FailedException;
             public Task OnRefreshedAsync(AuthorizedCharacterData character) { Received = character; return Task.CompletedTask; }
+            public Task OnRefreshFailedAsync(AuthorizedCharacterData character, Exception exception) { FailedCharacter = character; FailedException = exception; return Task.CompletedTask; }
         }
 
         private static readonly EsiConfig Config = new EsiConfig
@@ -136,6 +147,24 @@ namespace ESI.NET.Tests
             await SendThrough(handler, routing, AuthedRequest(character));
 
             Assert.Same(character, sink.Received);
+        }
+
+        [Fact]
+        public async Task Failed_refresh_notifies_the_sink_and_still_throws()
+        {
+            var sink = new FakeSink();
+            var provider = new ServiceCollection().AddSingleton<IEsiTokenRefreshSink>(sink).BuildServiceProvider();
+            var routing = new RoutingHandler { TokenFailureStatus = HttpStatusCode.BadRequest };
+            var character = Character(DateTime.UtcNow.AddMinutes(-5));
+            var handler = new EsiTokenRefreshHandler(Options.Create(Config), provider.GetRequiredService<IServiceScopeFactory>());
+
+            await Assert.ThrowsAsync<ArgumentException>(() => SendThrough(handler, routing, AuthedRequest(character)));
+
+            Assert.Same(character, sink.FailedCharacter);
+            Assert.NotNull(sink.FailedException);
+            Assert.Null(sink.Received); // OnRefreshedAsync must not fire on a failed refresh
+            Assert.Equal("OLD-ACCESS", character.Token); // unchanged - the failed exchange never got to mutate it
+            Assert.Equal("OLD-REFRESH", character.RefreshToken);
         }
 
         [Fact]
