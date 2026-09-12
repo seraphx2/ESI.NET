@@ -233,6 +233,13 @@ had changed short of a consumer filing a bug. That is now covered.
   `Extensions.ToEsiValue(e)`, `AssetsLogic`'s four `itemIds` parameters,
   `KillmailsLogic.Information(killmailHash, ...)`, and `UniverseLogic.Names(anyIds)`
   / `.IDs(names)`.
+- The remaining 123 "validate this parameter" analyzer hits were all the same
+  parameter - every endpoint method's trailing `EsiCallOptions options = null`
+  - and are documented `[SuppressMessage]`s, not fixes: `options` is
+  deliberately optional, `null` is the correct value for the overwhelming
+  majority of calls, and the default is already substituted centrally in
+  `EsiRequest.Execute<T>`. Throwing here would break the library's single
+  most common call shape.
 
 ### Migration
 

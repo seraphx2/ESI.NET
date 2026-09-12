@@ -27,6 +27,8 @@ namespace ESI.NET.Logic
         /// <param name="isStrict">Whether the search should be a strict match</param>
         /// <param name="language">Language to use in the response</param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
+            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<SearchResults>> Query(string search, SearchCategory categories, EsiCallOptions options, bool isStrict = false, string language = "en-us")
         {
             var categoryList = categories.ToEsiValue();

@@ -47,6 +47,8 @@ namespace ESI.NET.Logic
                 options: options).ConfigureAwait(false);
 
         /// <summary>/characters/{character_id}/paragon-hub/skinr/ - the caller's own listings (each carries a target).</summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
+            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<ParagonListingPage>> MyParagonListings(string after = null, string before = null, int? limit = null, EsiCallOptions options = null)
             => await Execute<ParagonListingPage>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/paragon-hub/skinr/",
                 replacements: new Dictionary<string, string>() { { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) } },
@@ -60,12 +62,16 @@ namespace ESI.NET.Logic
                 options: options).ConfigureAwait(false);
 
         /// <summary>/characters/{character_id}/cosmetics/skinr/ - the character's SKINR licenses.</summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
+            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<SkinrLicenses>> MyLicenses(EsiCallOptions options)
             => await Execute<SkinrLicenses>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/cosmetics/skinr/",
                 replacements: new Dictionary<string, string>() { { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) } },
                 options: options).ConfigureAwait(false);
 
         /// <summary>/characters/{character_id}/cosmetics/skinr/components/ - the character's SKINR components.</summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
+            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<SkinrComponents>> MyComponents(EsiCallOptions options)
             => await Execute<SkinrComponents>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/cosmetics/skinr/components/",
                 replacements: new Dictionary<string, string>() { { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) } },

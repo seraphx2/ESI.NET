@@ -61,6 +61,8 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/contracts/
         /// </summary>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
+            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<List<Contract>>> CharacterContracts(EsiCallOptions options)
             => await Execute<List<Contract>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/contracts/",
                 replacements: new Dictionary<string, string>()
@@ -74,6 +76,8 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="contractId"></param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
+            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<List<ContractItem>>> CharacterContractItems(long contractId, EsiCallOptions options)
             => await Execute<List<ContractItem>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/contracts/{contract_id}/items/",
                 replacements: new Dictionary<string, string>()
@@ -88,6 +92,8 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="contractId"></param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
+            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<List<Bid>>> CharacterContractBids(long contractId, EsiCallOptions options)
             => await Execute<List<Bid>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/contracts/{contract_id}/bids/",
                 replacements: new Dictionary<string, string>()
@@ -101,6 +107,8 @@ namespace ESI.NET.Logic
         /// /corporations/{corporation_id}/contracts/
         /// </summary>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
+            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<List<Contract>>> CorporationContracts(EsiCallOptions options)
             => await Execute<List<Contract>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/contracts/",
                 replacements: new Dictionary<string, string>()
@@ -114,6 +122,8 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="contractId"></param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
+            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<List<ContractItem>>> CorporationContractItems(long contractId, EsiCallOptions options)
             => await Execute<List<ContractItem>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/contracts/{contract_id}/items/",
                 replacements: new Dictionary<string, string>()
@@ -128,6 +138,8 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="contractId"></param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
+            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<List<Bid>>> CorporationContractBids(long contractId, EsiCallOptions options)
             => await Execute<List<Bid>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/contracts/{contract_id}/bids/",
                 replacements: new Dictionary<string, string>()

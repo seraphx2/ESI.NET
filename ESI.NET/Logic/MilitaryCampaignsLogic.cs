@@ -47,6 +47,8 @@ namespace ESI.NET.Logic
                 options: options).ConfigureAwait(false);
 
         /// <summary>/characters/{character_id}/military-campaigns/objectives/ - scope esi.activity.char:read</summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
+            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<CharacterMilitaryObjectiveList>> CharacterObjectives(string after = null, string before = null, int? limit = null, EsiCallOptions options = null)
             => await Execute<CharacterMilitaryObjectiveList>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/military-campaigns/objectives/",
                 replacements: new Dictionary<string, string>() { { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) } },
@@ -54,6 +56,8 @@ namespace ESI.NET.Logic
                 options: options).ConfigureAwait(false);
 
         /// <summary>/characters/{character_id}/military-campaigns/objectives/{objective_id}/ - scope esi.activity.char:read</summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
+            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<CharacterMilitaryObjective>> CharacterObjective(string objectiveId, EsiCallOptions options)
             => await Execute<CharacterMilitaryObjective>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/military-campaigns/objectives/{objective_id}/",
                 replacements: new Dictionary<string, string>()

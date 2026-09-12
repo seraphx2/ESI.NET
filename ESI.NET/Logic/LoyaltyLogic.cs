@@ -35,6 +35,8 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/loyalty/points/
         /// </summary>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
+            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<List<Points>>> Points(EsiCallOptions options)
             => await Execute<List<Points>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/loyalty/points/",
                 replacements: new Dictionary<string, string>()
