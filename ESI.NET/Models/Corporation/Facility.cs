@@ -8,9 +8,9 @@ namespace ESI.NET.Models.Corporation
         public long FacilityId { get; set; }
 
         [JsonProperty("system_id")]
-        public int SystemId { get; set; }
+        public long SystemId { get; set; }
 
         [JsonProperty("type_id")]
-        public int TypeId { get; set; }
+        public long TypeId { get; set; }
     }
 }

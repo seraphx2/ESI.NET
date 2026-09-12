@@ -6,10 +6,10 @@ namespace ESI.NET.Models.Fleets
     public class Member
     {
         [JsonProperty("character_id")]
-        public int CharacterId { get; set; }
+        public long CharacterId { get; set; }
 
         [JsonProperty("ship_type_id")]
-        public int ShipTypeId { get; set; }
+        public long ShipTypeId { get; set; }
 
         [JsonProperty("wing_id")]
         public long WingId { get; set; }
@@ -30,7 +30,7 @@ namespace ESI.NET.Models.Fleets
         public bool TakesFleetWarp { get; set; }
 
         [JsonProperty("solar_system_id")]
-        public int SolarSystemId { get; set; }
+        public long SolarSystemId { get; set; }
 
         [JsonProperty("station_id")]
         public long StationId { get; set; }

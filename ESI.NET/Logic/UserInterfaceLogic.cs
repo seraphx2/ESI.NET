@@ -1,6 +1,5 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
-using ESI.NET.Models.SSO;
 using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
@@ -9,70 +8,68 @@ namespace ESI.NET.Logic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
-        private readonly AuthorizedCharacterData _data;
 
-        public UserInterfaceLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
+        public UserInterfaceLogic(HttpClient client, EsiConfig config)
         {
             _client = client;
             _config = config;
-            _data = data;
         }
 
         /// <summary>
         /// /ui/openwindow/marketdetails/
         /// </summary>
-        /// <param name="type_id"></param>
+        /// <param name="typeId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> MarketDetails(int type_id)
+        public async Task<EsiResponse<string>> MarketDetails(long typeId, EsiCallOptions options)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/ui/openwindow/marketdetails/",
                 parameters: new string[]
                 {
-                    $"type_id={type_id}"
+                    $"type_id={typeId}"
                 },
-                token: _data.Token);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /ui/openwindow/contract/
         /// </summary>
-        /// <param name="contract_id"></param>
+        /// <param name="contractId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> Contract(int contract_id)
+        public async Task<EsiResponse<string>> Contract(long contractId, EsiCallOptions options)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/ui/openwindow/contract/",
                 parameters: new string[]
                 {
-                    $"contract_id={contract_id}"
+                    $"contract_id={contractId}"
                 },
-                token: _data.Token);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /ui/openwindow/information/
         /// </summary>
-        /// <param name="target_id"></param>
+        /// <param name="targetId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> Information(int target_id)
+        public async Task<EsiResponse<string>> Information(long targetId, EsiCallOptions options)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/ui/openwindow/information/",
                 parameters: new string[]
                 {
-                    $"target_id={target_id}"
+                    $"target_id={targetId}"
                 },
-                token: _data.Token);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /ui/autopilot/waypoint/
         /// </summary>
-        /// <param name="destination_id"></param>
-        /// <param name="add_to_beginning"></param>
-        /// <param name="clear_other_waypoints"></param>
+        /// <param name="destinationId"></param>
+        /// <param name="addToBeginning"></param>
+        /// <param name="clearOtherWaypoints"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> Waypoint(long destination_id, bool add_to_beginning = false, bool clear_other_waypoints = false)
+        public async Task<EsiResponse<string>> Waypoint(long destinationId, bool addToBeginning = false, bool clearOtherWaypoints = false, EsiCallOptions options = null)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/ui/autopilot/waypoint/",
                 parameters: new string[]
                 {
-                    $"destination_id={destination_id}",
-                    $"add_to_beginning={add_to_beginning}",
-                    $"clear_other_waypoints={clear_other_waypoints}"
+                    $"destination_id={destinationId}",
+                    $"add_to_beginning={addToBeginning}",
+                    $"clear_other_waypoints={clearOtherWaypoints}"
                 },
-                token: _data.Token);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /ui/openwindow/newmail/
@@ -83,7 +80,7 @@ namespace ESI.NET.Logic
         /// <param name="to_mailing_list_id"></param>
         /// <param name="to_corp_or_alliance_id"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<string>> NewMail(string subject, string body, int[] recipients)
+        public async Task<EsiResponse<string>> NewMail(string subject, string body, long[] recipients, EsiCallOptions options)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/ui/openwindow/newmail/",
                 body: new
                 {
@@ -91,6 +88,6 @@ namespace ESI.NET.Logic
                     body,
                     recipients
                 },
-                token: _data.Token);
+                options: options).ConfigureAwait(false);
     }
 }

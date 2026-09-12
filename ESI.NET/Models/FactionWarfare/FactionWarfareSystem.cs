@@ -9,18 +9,18 @@ namespace ESI.NET.Models.FactionWarfare
         public Contested Contested { get; set; }
 
         [JsonProperty("occupier_faction_id")]
-        public int OccupierFactionId { get; set; }
+        public long OccupierFactionId { get; set; }
 
         [JsonProperty("owner_faction_id")]
-        public int OwnerFactionId { get; set; }
+        public long OwnerFactionId { get; set; }
 
         [JsonProperty("solar_system_id")]
-        public int SolarSystemId { get; set; }
+        public long SolarSystemId { get; set; }
 
         [JsonProperty("victory_points")]
-        public int VictoryPoints { get; set; }
+        public long VictoryPoints { get; set; }
 
         [JsonProperty("victory_points_threshold")]
-        public int VictoryPointsThreshold { get; set; }
+        public long VictoryPointsThreshold { get; set; }
     }
 }

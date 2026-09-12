@@ -1,0 +1,33 @@
+name: SpecCheck
+
+# Drift check: the live ESI OpenAPI document vs what ESI.NET/Logic implements
+# (coverage) and vs each EsiResponse<T> model (schema). Deliberately NOT a PR or
+# push gate - it runs daily and on demand, and a failed run emails the
+# maintainer as the nudge to come back to it. See tools/SpecCheck.
+#
+# A network blip reaching esi.evetech.net also fails the run; for a daily job
+# that is acceptable noise.
+on:
+  schedule:
+    - cron: '17 6 * * *' # daily 06:17 UTC
+  workflow_dispatch:
+
+concurrency:
+  group: spec-check-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  spec-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      # Restore + Release-build (+ test) the solution; SpecCheck reflects the
+      # built ESI.NET assembly, so it has to be compiled first.
+      - uses: ./.github/actions/ci-dotnet
+
+      - name: Spec check
+        run: dotnet run --project tools/SpecCheck --configuration Release --no-build

@@ -5,7 +5,7 @@ namespace ESI.NET.Models.Universe
     public class Group
     {
         [JsonProperty("group_id")]
-        public int GroupId { get; set; }
+        public long GroupId { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -14,9 +14,9 @@ namespace ESI.NET.Models.Universe
         public bool Published { get; set; }
 
         [JsonProperty("category_id")]
-        public int CategoryId { get; set; }
+        public long CategoryId { get; set; }
 
         [JsonProperty("types")]
-        public int[] Types { get; set; }
+        public long[] Types { get; set; }
     }
 }

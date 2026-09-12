@@ -5,7 +5,7 @@ namespace ESI.NET.Models.Universe
     public class Constellation
     {
         [JsonProperty("constellation_id")]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }

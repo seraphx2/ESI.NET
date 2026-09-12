@@ -9,16 +9,16 @@ namespace ESI.NET.Models.Calendar
         public DateTime Date { get; set; }
 
         [JsonProperty("duration")]
-        public int Duration { get; set; }
+        public long Duration { get; set; }
 
         [JsonProperty("event_id")]
-        public int EventId { get; set; }
+        public long EventId { get; set; }
 
         [JsonProperty("importance")]
-        public int Importance { get; set; }
+        public long Importance { get; set; }
 
         [JsonProperty("owner_id")]
-        public int OwnerId { get; set; }
+        public long OwnerId { get; set; }
 
         [JsonProperty("owner_name")]
         public string OwnerName { get; set; }

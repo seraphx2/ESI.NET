@@ -9,13 +9,13 @@ namespace ESI.NET.Models.Corporation
         public DateTime CreatedAt { get; set; }
 
         [JsonProperty("creator_id")]
-        public int CreatorId { get; set; }
+        public long CreatorId { get; set; }
 
         [JsonProperty("description")]
         public string Description { get; set; }
 
         [JsonProperty("medal_id")]
-        public int MedalId { get; set; }
+        public long MedalId { get; set; }
 
         [JsonProperty("title")]
         public string Title { get; set; }

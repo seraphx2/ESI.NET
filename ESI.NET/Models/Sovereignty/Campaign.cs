@@ -10,13 +10,13 @@ namespace ESI.NET.Models.Sovereignty
         public double AttackersScore { get; set; }
 
         [JsonProperty("campaign_id")]
-        public int CampaignId { get; set; }
+        public long CampaignId { get; set; }
 
         [JsonProperty("constellation_id")]
-        public int ConstellationId { get; set; }
+        public long ConstellationId { get; set; }
 
         [JsonProperty("defender_id")]
-        public int DefenderId { get; set; }
+        public long DefenderId { get; set; }
 
         [JsonProperty("defender_score")]
         public double DefenderScore { get; set; }
@@ -28,7 +28,7 @@ namespace ESI.NET.Models.Sovereignty
         public List<Participants> Participants { get; set; } = new List<Participants>();
 
         [JsonProperty("solar_system_id")]
-        public int SolarSystemId { get; set; }
+        public long SolarSystemId { get; set; }
 
         [JsonProperty("start_time")]
         public DateTime StartTime { get; set; }
@@ -40,7 +40,7 @@ namespace ESI.NET.Models.Sovereignty
     public class Participants
     {
         [JsonProperty("alliance_id")]
-        public int AllianceId { get; set; }
+        public long AllianceId { get; set; }
 
         [JsonProperty("score")]
         public double Score { get; set; }

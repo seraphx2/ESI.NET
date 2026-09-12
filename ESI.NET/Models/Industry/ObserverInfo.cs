@@ -9,13 +9,13 @@ namespace ESI.NET.Models.Industry
         public DateTime LastUpdated { get; set; }
 
         [JsonProperty("character_id")]
-        public int CharacterId { get; set; }
+        public long CharacterId { get; set; }
 
         [JsonProperty("recorded_corporation_id")]
-        public int RecordedCorporationId { get; set; }
+        public long RecordedCorporationId { get; set; }
 
         [JsonProperty("type_id")]
-        public int TypeId { get; set; }
+        public long TypeId { get; set; }
 
         [JsonProperty("quantity")]
         public long Quantity { get; set; }

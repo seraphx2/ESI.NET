@@ -5,7 +5,7 @@ namespace ESI.NET.Models.Universe
     public class Graphic
     {
         [JsonProperty("graphic_id")]
-        public int GraphicId { get; set; }
+        public long GraphicId { get; set; }
 
         [JsonProperty("graphic_file")]
         public string GraphicFile { get; set; }

@@ -1,6 +1,6 @@
 ﻿using ESI.NET.Models.Location;
-using ESI.NET.Models.SSO;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -11,53 +11,47 @@ namespace ESI.NET.Logic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
-        private readonly AuthorizedCharacterData _data;
-        private readonly int character_id;
 
-        public LocationLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
+        public LocationLogic(HttpClient client, EsiConfig config)
         {
             _client = client;
             _config = config;
-            _data = data;
-
-            if (data != null)
-                character_id = data.CharacterID;
         }
 
         /// <summary>
         /// /characters/{character_id}/location/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<Location>> Location()
+        public async Task<EsiResponse<Location>> Location(EsiCallOptions options)
             => await Execute<Location>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/location/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
-                token: _data.Token);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/ship/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<Ship>> Ship()
+        public async Task<EsiResponse<Ship>> Ship(EsiCallOptions options)
             => await Execute<Ship>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/ship/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
-                token: _data.Token);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/online/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<Activity>> Online()
+        public async Task<EsiResponse<Activity>> Online(EsiCallOptions options)
             => await Execute<Activity>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/online/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
-                token: _data.Token);
+                options: options).ConfigureAwait(false);
     }
 }

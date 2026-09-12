@@ -8,7 +8,7 @@ namespace ESI.NET.Models.Universe
         public long Id { get; set; }
 
         [JsonProperty("charisma")]
-        public int Charisma { get; set; }
+        public long Charisma { get; set; }
 
         [JsonProperty("corporation_id")]
         public long CorporationId { get; set; }
@@ -17,25 +17,26 @@ namespace ESI.NET.Models.Universe
         public string Description { get; set; }
 
         [JsonProperty("intelligence")]
-        public int Intelligence { get; set; }
+        public long Intelligence { get; set; }
 
         [JsonProperty("memory")]
-        public int Memory { get; set; }
+        public long Memory { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
 
         [JsonProperty("perception")]
-        public int Perception { get; set; }
+        public long Perception { get; set; }
 
         [JsonProperty("race_id")]
         public long RaceId { get; set; }
 
+        /// <summary>Null for bloodlines with no associated starter ship (the spec claims non-null; ESI sends null).</summary>
         [JsonProperty("ship_type_id")]
-        public long ShipTypeId { get; set; }
+        public long? ShipTypeId { get; set; }
 
         [JsonProperty("willpower")]
-        public int Willpower { get; set; }
+        public long Willpower { get; set; }
 
     }
 }

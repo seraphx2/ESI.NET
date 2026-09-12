@@ -1,6 +1,7 @@
 ﻿using ESI.NET.Models;
 using ESI.NET.Models.Alliance;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -18,43 +19,51 @@ namespace ESI.NET.Logic
         /// /alliances/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> All()
-            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/alliances/");
+        public async Task<EsiResponse<long[]>> All(EsiCallOptions options = null)
+            => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/alliances/",
+                options: options).ConfigureAwait(false);
+
 
         /// <summary>
         /// /alliances/{alliance_id}/
         /// </summary>
         /// <param name="allianceId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Alliance>> Information(int alliance_id)
+        public async Task<EsiResponse<Alliance>> Information(long allianceId, EsiCallOptions options = null)
             => await Execute<Alliance>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/alliances/{alliance_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "alliance_id", alliance_id.ToString() }
-                });
+                    { "alliance_id", allianceId.ToString(CultureInfo.InvariantCulture) }
+                },
+                options: options).ConfigureAwait(false);
+
 
         /// <summary>
         /// /alliances/{alliance_id}/corporations/
         /// </summary>
-        /// <param name="alliance_id"></param>
+        /// <param name="allianceId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Corporations(int alliance_id)
-            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/alliances/{alliance_id}/corporations/",
+        public async Task<EsiResponse<long[]>> Corporations(long allianceId, EsiCallOptions options = null)
+            => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/alliances/{alliance_id}/corporations/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "alliance_id", alliance_id.ToString() }
-                });
+                    { "alliance_id", allianceId.ToString(CultureInfo.InvariantCulture) }
+                },
+                options: options).ConfigureAwait(false);
+
 
         /// <summary>
         /// /alliances/{alliance_id}/icons/
         /// </summary>
-        /// <param name="alliance_id"></param>
+        /// <param name="allianceId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Images>> Icons(int alliance_id)
+        public async Task<EsiResponse<Images>> Icons(long allianceId, EsiCallOptions options = null)
             => await Execute<Images>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/alliances/{alliance_id}/icons/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "alliance_id", alliance_id.ToString() }
-                });
+                    { "alliance_id", allianceId.ToString(CultureInfo.InvariantCulture) }
+                },
+                options: options).ConfigureAwait(false);
+
     }
 }

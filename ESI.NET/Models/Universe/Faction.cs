@@ -5,7 +5,7 @@ namespace ESI.NET.Models.Universe
     public class Faction
     {
         [JsonProperty("faction_id")]
-        public int FactionId { get; set; }
+        public long FactionId { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -14,22 +14,22 @@ namespace ESI.NET.Models.Universe
         public string Description { get; set; }
 
         [JsonProperty("solar_system_id")]
-        public int SolarSystemId { get; set; }
+        public long SolarSystemId { get; set; }
 
         [JsonProperty("corporation_id")]
-        public int CorporationId { get; set; }
+        public long CorporationId { get; set; }
 
         [JsonProperty("militia_corporation_id")]
-        public int MilitiaCorporationId { get; set; }
+        public long MilitiaCorporationId { get; set; }
 
         [JsonProperty("size_factor")]
         public decimal SizeFactor { get; set; }
 
         [JsonProperty("station_count")]
-        public int StationCount { get; set; }
+        public long StationCount { get; set; }
 
         [JsonProperty("station_system_count")]
-        public int StationSystemCount { get; set; }
+        public long StationSystemCount { get; set; }
 
         [JsonProperty("is_unique")]
         public bool IsUnique { get; set; }

@@ -1,7 +1,7 @@
 ﻿using ESI.NET.Enumerations;
 using ESI.NET.Models.Market;
-using ESI.NET.Models.SSO;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -12,55 +12,48 @@ namespace ESI.NET.Logic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
-        private readonly AuthorizedCharacterData _data;
-        private readonly int character_id, corporation_id;
 
-        public MarketLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
+        public MarketLogic(HttpClient client, EsiConfig config)
         {
             _client = client;
             _config = config;
-            _data = data;
-
-            if (data != null)
-            {
-                corporation_id = data.CorporationID;
-                character_id = data.CharacterID;
-            }
         }
 
         /// <summary>
         /// /markets/prices/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Price>>> Prices()
-            => await Execute<List<Price>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/prices/");
+        public async Task<EsiResponse<List<Price>>> Prices(EsiCallOptions options = null)
+            => await Execute<List<Price>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/prices/",
+                options: options).ConfigureAwait(false);
+
 
         /// <summary>
         /// /markets/{region_id}/orders/
         /// </summary>
-        /// <param name="region_id"></param>
-        /// <param name="order_type"></param>
+        /// <param name="regionId"></param>
+        /// <param name="orderType"></param>
         /// <param name="page"></param>
-        /// <param name="type_id"></param>
+        /// <param name="typeId"></param>
         /// <returns></returns>
         public async Task<EsiResponse<List<Order>>> RegionOrders(
-            int region_id, 
-            MarketOrderType order_type = MarketOrderType.All, 
-            int page = 1, 
-            int? type_id = null)
+            long regionId,
+            MarketOrderType orderType = MarketOrderType.All,
+            long? typeId = null,
+            EsiCallOptions options = null)
         {
-            var parameters = new List<string>() { $"order_type={order_type.ToEsiValue()}" };
-            parameters.Add($"page={page}");
+            var parameters = new List<string>() { $"order_type={orderType.ToEsiValue()}" };
 
-            if (type_id != null)
-                parameters.Add($"type_id={type_id}");
+            if (typeId != null)
+                parameters.Add($"type_id={typeId}");
 
             var response = await Execute<List<Order>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/{region_id}/orders/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "region_id", region_id.ToString() }
+                    { "region_id", regionId.ToString(CultureInfo.InvariantCulture) }
                 },
-                parameters: parameters.ToArray());
+                parameters: parameters.ToArray(),
+                options: options).ConfigureAwait(false);
 
             return response;
         }
@@ -68,135 +61,122 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /markets/{region_id}/history/
         /// </summary>
-        /// <param name="region_id"></param>
-        /// <param name="type_id"></param>
+        /// <param name="regionId"></param>
+        /// <param name="typeId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Statistic>>> TypeHistoryInRegion(int region_id, int type_id)
+        public async Task<EsiResponse<List<Statistic>>> TypeHistoryInRegion(long regionId, long typeId, EsiCallOptions options = null)
             => await Execute<List<Statistic>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/{region_id}/history/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "region_id", region_id.ToString() }
+                    { "region_id", regionId.ToString(CultureInfo.InvariantCulture) }
                 },
                 parameters: new string[]
                 {
-                    $"type_id={type_id}"
-                });
+                    $"type_id={typeId}"
+                },
+                options: options).ConfigureAwait(false);
+
 
         /// <summary>
         /// /markets/structures/{structure_id}/
         /// </summary>
-        /// <param name="structure_id"></param>
+        /// <param name="structureId"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Order>>> StructureOrders(long structure_id, int page = 1)
+        public async Task<EsiResponse<List<Order>>> StructureOrders(long structureId, EsiCallOptions options)
             => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/markets/structures/{structure_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "structure_id", structure_id.ToString() }
+                    { "structure_id", structureId.ToString(CultureInfo.InvariantCulture) }
                 },
-                parameters: new string[]
-                {
-                    $"page={page}"
-                },
-                token: _data.Token);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /markets/groups/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Groups()
-            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/groups/");
+        public async Task<EsiResponse<long[]>> Groups(EsiCallOptions options = null)
+            => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/groups/",
+                options: options).ConfigureAwait(false);
+
 
         /// <summary>
         /// /markets/groups/{market_group_id}/
         /// </summary>
-        /// <param name="market_group_id"></param>
+        /// <param name="marketGroupId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<Group>> Group(int market_group_id)
+        public async Task<EsiResponse<Group>> Group(long marketGroupId, EsiCallOptions options = null)
             => await Execute<Group>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/groups/{market_group_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "market_group_id", market_group_id.ToString() }
-                });
+                    { "market_group_id", marketGroupId.ToString(CultureInfo.InvariantCulture) }
+                },
+                options: options).ConfigureAwait(false);
+
 
         /// <summary>
         /// /characters/{character_id}/orders/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Order>>> CharacterOrders()
+        public async Task<EsiResponse<List<Order>>> CharacterOrders(EsiCallOptions options)
             => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/orders/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
-                token: _data.Token);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/orders/history/
         /// </summary>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Order>>> CharacterOrderHistory(int page = 1)
+        public async Task<EsiResponse<List<Order>>> CharacterOrderHistory(EsiCallOptions options)
             => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/orders/history/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
-                parameters: new string[]
-                {
-                    $"page={page}"
-                },
-                token: _data.Token);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /markets/{region_id}/types/
         /// </summary>
-        /// <param name="region_id"></param>
+        /// <param name="regionId"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Types(int region_id, int page = 1)
-            => await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/{region_id}/types/",
+        public async Task<EsiResponse<long[]>> Types(long regionId, EsiCallOptions options = null)
+            => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/{region_id}/types/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "region_id", region_id.ToString() }
+                    { "region_id", regionId.ToString(CultureInfo.InvariantCulture) }
                 },
-                parameters: new string[]
-                {
-                    $"page={page}"
-                });
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/orders/
         /// </summary>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Order>>> CorporationOrders(int page = 1)
+        public async Task<EsiResponse<List<Order>>> CorporationOrders(EsiCallOptions options)
             => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/orders/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
-                parameters: new string[]
-                {
-                    $"page={page}"
-                },
-                token: _data.Token);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/orders/
         /// </summary>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Order>>> CorporationOrderHistory(int page = 1)
+        public async Task<EsiResponse<List<Order>>> CorporationOrderHistory(EsiCallOptions options)
             => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/orders/history/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
-                parameters: new string[]
-                {
-                    $"page={page}"
-                },
-                token: _data.Token);
+                options: options).ConfigureAwait(false);
     }
 }

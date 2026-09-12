@@ -1,6 +1,6 @@
 ﻿using ESI.NET.Models.Clones;
-using ESI.NET.Models.SSO;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -11,41 +11,35 @@ namespace ESI.NET.Logic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
-        private readonly AuthorizedCharacterData _data;
-        private readonly int character_id;
 
-        public ClonesLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
+        public ClonesLogic(HttpClient client, EsiConfig config)
         {
             _client = client;
             _config = config;
-            _data = data;
-
-            if (data != null)
-                character_id = data.CharacterID;
         }
 
         /// <summary>
         /// /characters/{character_id}/clones/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<Clones>> List()
+        public async Task<EsiResponse<Clones>> List(EsiCallOptions options)
             => await Execute<Clones>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/clones/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
-                token: _data.Token);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/implants/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Implants()
-            => await Execute<int[]>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/implants/",
+        public async Task<EsiResponse<long[]>> Implants(EsiCallOptions options)
+            => await Execute<long[]>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/implants/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
-                token: _data.Token);
+                options: options).ConfigureAwait(false);
     }
 }

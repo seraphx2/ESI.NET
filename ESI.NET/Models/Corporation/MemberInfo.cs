@@ -6,10 +6,10 @@ namespace ESI.NET.Models.Corporation
     public class MemberInfo
     {
         [JsonProperty("base_id")]
-        public int BaseId { get; set; }
+        public long BaseId { get; set; }
 
         [JsonProperty("character_id")]
-        public int CharacterId { get; set; }
+        public long CharacterId { get; set; }
 
         [JsonProperty("location_id")]
         public long LocationId { get; set; }
@@ -21,7 +21,7 @@ namespace ESI.NET.Models.Corporation
         public DateTime LogonDate { get; set; }
 
         [JsonProperty("ship_type_id")]
-        public int ShipTypeId { get; set; }
+        public long ShipTypeId { get; set; }
 
         [JsonProperty("start_date")]
         public DateTime StartDate { get; set; }

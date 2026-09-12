@@ -51,9 +51,9 @@ namespace ESI.NET.Models.Corporation
     public class Fuel
     {
         [JsonProperty("type_id")]
-        public int TypeId { get; set; }
+        public long TypeId { get; set; }
 
         [JsonProperty("quantity")]
-        public int Quantity { get; set; }
+        public long Quantity { get; set; }
     }
 }

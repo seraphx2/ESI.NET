@@ -8,7 +8,7 @@ namespace ESI.NET.Models.Corporation
     public class Structure
     {
         [JsonProperty("corporation_id")]
-        public int CorporationId { get; set; }
+        public long CorporationId { get; set; }
 
         [JsonProperty("fuel_expires")]
         public DateTime FuelExpires { get; set; }
@@ -20,13 +20,13 @@ namespace ESI.NET.Models.Corporation
         public DateTime NextReinforceApply { get; set; }
 
         [JsonProperty("next_reinforce_hour")]
-        public int NextReinforceHour { get; set; }
+        public long NextReinforceHour { get; set; }
 
         [JsonProperty("profile_id")]
-        public int ProfileId { get; set; }
+        public long ProfileId { get; set; }
 
         [JsonProperty("reinforce_hour")]
-        public int ReinforceHour { get; set; }
+        public long ReinforceHour { get; set; }
 
         [JsonProperty("services")]
         public List<Service> Services { get; set; } = new List<Service>();
@@ -44,10 +44,10 @@ namespace ESI.NET.Models.Corporation
         public long StructureId { get; set; }
 
         [JsonProperty("system_id")]
-        public int SystemId { get; set; }
+        public long SystemId { get; set; }
 
         [JsonProperty("type_id")]
-        public int TypeId { get; set; }
+        public long TypeId { get; set; }
 
         [JsonProperty("unanchors_at")]
         public DateTime UnanchorsAt { get; set; }

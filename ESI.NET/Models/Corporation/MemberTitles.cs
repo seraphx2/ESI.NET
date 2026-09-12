@@ -5,10 +5,10 @@ namespace ESI.NET.Models.Corporation
     public class MemberTitles
     {
         [JsonProperty("character_id")]
-        public int CharacterId { get; set; }
+        public long CharacterId { get; set; }
 
         [JsonProperty("titles")]
-        public int[] Titles { get; set; }
+        public long[] Titles { get; set; }
 
     }
 }

@@ -1,5 +1,8 @@
 ﻿using ESI.NET.Enumerations;
+using ESI.NET.Models.Routes;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -14,38 +17,41 @@ namespace ESI.NET.Logic
         public RoutesLogic(HttpClient client, EsiConfig config) { _client = client; _config = config; }
 
         /// <summary>
-        /// /route/{origin}/{destination}/
+        /// POST /route/{origin_system_id}/{destination_system_id}/
         /// </summary>
-        /// <param name="origin"></param>
-        /// <param name="destination"></param>
-        /// <param name="flag"></param>
-        /// <param name="avoid"></param>
-        /// <param name="connections"></param>
-        /// <returns></returns>
-        public async Task<EsiResponse<int[]>> Map(
-            int origin, 
-            int destination, 
-            RoutesFlag flag = RoutesFlag.Shortest, 
-            int[] avoid = null, 
-            int[] connections = null)
+        /// <param name="originSystemId">Origin solar system id</param>
+        /// <param name="destinationSystemId">Destination solar system id</param>
+        /// <param name="flag">Routing preference</param>
+        /// <param name="avoidSystems">Solar system ids to avoid</param>
+        /// <param name="connections">System-id pairs (<c>[from, to]</c>) to treat as connected</param>
+        /// <param name="securityPenalty">Penalty applied per low/null-sec jump (server default 50)</param>
+        public async Task<EsiResponse<RouteResult>> Map(
+            long originSystemId,
+            long destinationSystemId,
+            RoutePreference flag = RoutePreference.Shorter,
+            long[] avoidSystems = null,
+            long[][] connections = null,
+            int? securityPenalty = null,
+            EsiCallOptions options = null)
         {
-            var parameters = new List<string>() { $"flag={flag.ToEsiValue()}" };
+            var payload = new Dictionary<string, object> { ["preference"] = flag.ToEsiValue() };
 
-            if (avoid != null)
-                parameters.Add($"&avoid={string.Join(",", avoid)}");
-
+            if (avoidSystems != null)
+                payload["avoid_systems"] = avoidSystems;
             if (connections != null)
-                parameters.Add($"&connections={string.Join(",", connections)}");
+                payload["connections"] = connections.Select(c => new { from = c[0], to = c[1] });
+            if (securityPenalty.HasValue)
+                payload["security_penalty"] = securityPenalty.Value;
 
-            var response = await Execute<int[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/route/{origin}/{destination}/",
+            return await Execute<RouteResult>(_client, _config, RequestSecurity.Public, HttpMethod.Post,
+                "/route/{origin_system_id}/{destination_system_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "origin", origin.ToString() },
-                    { "destination", destination.ToString() }
+                    { "origin_system_id", originSystemId.ToString(CultureInfo.InvariantCulture) },
+                    { "destination_system_id", destinationSystemId.ToString(CultureInfo.InvariantCulture) }
                 },
-                parameters: parameters.ToArray());
-
-            return response;
+                body: payload,
+                options: options).ConfigureAwait(false);
         }
     }
 }

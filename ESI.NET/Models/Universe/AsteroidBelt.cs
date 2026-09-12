@@ -11,6 +11,6 @@ namespace ESI.NET.Models.Universe
         public Position Position { get; set; }
 
         [JsonProperty("system_id")]
-        public int SystemId { get; set; }
+        public long SystemId { get; set; }
     }
 }

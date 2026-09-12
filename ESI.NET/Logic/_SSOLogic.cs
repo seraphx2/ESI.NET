@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
@@ -12,6 +13,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ESI.NET
@@ -23,10 +25,14 @@ namespace ESI.NET
         private readonly string _clientKey;
         private readonly string _ssoUrl;
 
-        private static Random random = new Random();
+        // Cryptographically secure: the PKCE code_verifier's entire protection depends on being
+        // unpredictable (RFC 7636). System.Random is seeded and predictable and must not be used here.
+        private static readonly RandomNumberGenerator Rng = RandomNumberGenerator.Create();
 
         public SsoLogic(HttpClient client, EsiConfig config)
         {
+            Guard.NotNull(config, nameof(config));
+
             _client = client;
             _config = config;
             switch (_config.DataSource)
@@ -41,6 +47,67 @@ namespace ESI.NET
             _clientKey = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{config.ClientId}:{config.SecretKey}"));
         }
 
+        /// <summary>The SSO host for the configured <see cref="DataSource"/>.</summary>
+        internal static string SsoHost(DataSource dataSource)
+        {
+            switch (dataSource)
+            {
+                case DataSource.Serenity: return "login.evepc.163.com";
+                default: return "login.eveonline.com";
+            }
+        }
+
+        /// <summary>
+        /// POSTs <paramref name="requestBody"/> to the SSO <c>/v2/oauth/token</c> endpoint. Uses HTTP
+        /// Basic auth when <see cref="EsiConfig.SecretKey"/> is set (confidential client); otherwise
+        /// the caller is expected to have put <c>client_id</c> in the body (PKCE client).
+        /// </summary>
+        internal static async Task<SsoToken> RequestTokenAsync(Func<HttpRequestMessage, CancellationToken, Task<HttpResponseMessage>> send, EsiConfig config, string requestBody, CancellationToken cancellationToken = default)
+        {
+            var host = SsoHost(config.DataSource);
+            using var request = new HttpRequestMessage(HttpMethod.Post, $"https://{host}/v2/oauth/token")
+            {
+                Content = new StringContent(requestBody, Encoding.UTF8, "application/x-www-form-urlencoded"),
+            };
+
+            if (!string.IsNullOrEmpty(config.SecretKey))
+            {
+                request.Headers.Authorization = new AuthenticationHeaderValue(
+                    "Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"{config.ClientId}:{config.SecretKey}")));
+                request.Headers.Host = host;
+            }
+
+            using (var response = await send(request, cancellationToken).ConfigureAwait(false))
+            {
+#if NET
+                var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+#else
+                var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+#endif
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new ArgumentException(JsonConvert.DeserializeAnonymousType(content, new { error_description = string.Empty }).error_description);
+                return JsonConvert.DeserializeObject<SsoToken>(content);
+            }
+        }
+
+        /// <summary>
+        /// Exchanges <paramref name="character"/>'s refresh token for a new access token and updates
+        /// <see cref="AuthorizedCharacterData.Token"/>, <see cref="AuthorizedCharacterData.RefreshToken"/>
+        /// (EVE rotates it) and <see cref="AuthorizedCharacterData.ExpiresOn"/> in place.
+        /// </summary>
+        internal static async Task RefreshAccessTokenAsync(Func<HttpRequestMessage, CancellationToken, Task<HttpResponseMessage>> send, EsiConfig config, AuthorizedCharacterData character, CancellationToken cancellationToken = default)
+        {
+            var body = $"grant_type={GrantType.RefreshToken.ToEsiValue()}&refresh_token={Uri.EscapeDataString(character.RefreshToken)}";
+            if (string.IsNullOrEmpty(config.SecretKey))
+                body += $"&client_id={config.ClientId}";
+
+            var token = await RequestTokenAsync(send, config, body, cancellationToken).ConfigureAwait(false);
+
+            character.Token = token.AccessToken;
+            character.RefreshToken = token.RefreshToken;
+            character.ExpiresOn = DateTime.UtcNow.AddSeconds(token.ExpiresIn);
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -49,7 +116,7 @@ namespace ESI.NET
         /// <param name="code_challenge">All hashing/encryption will be done automatically. Just provide the code.</param>
         /// <param name=""></param>
         /// <returns></returns>
-        public string CreateAuthenticationUrl(List<string> scope = null, string state = null, string challengeCode = null)
+        public string CreateAuthenticationUrl(IReadOnlyList<string> scope = null, string state = null, string challengeCode = null)
         {
             var url = $"https://{_ssoUrl}/v2/oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}";
 
@@ -63,23 +130,40 @@ namespace ESI.NET
             {
                 url = $"{url}&code_challenge_method=S256";
 
-                using (var sha256 = SHA256.Create())
-                {
-                    var base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(challengeCode)).TrimEnd('=').Replace('+', '-').Replace('/', '_');
-                    var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(base64));
-                    var code_challenge = Convert.ToBase64String(bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+                var base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(challengeCode)).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+#if NET
+                var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(base64));
+#else
+                using var sha256 = SHA256.Create();
+                var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(base64));
+#endif
+                var code_challenge = Convert.ToBase64String(bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
 
-                    url = $"{url}&code_challenge={code_challenge}";
-                }
+                url = $"{url}&code_challenge={code_challenge}";
             }
 
             return url;
         }
         
-        public string GenerateChallengeCode()
+        public static string GenerateChallengeCode()
         {
             const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            return new string(Enumerable.Repeat(chars, 32).Select(s => s[random.Next(s.Length)]).ToArray());
+            // Reject-and-retry on bytes past the last full multiple of chars.Length (248 for 62
+            // chars), instead of a plain modulo, so every character is exactly equally likely.
+            var limit = (byte)(256 - 256 % chars.Length);
+            var result = new char[32];
+            var buffer = new byte[1];
+            for (var i = 0; i < result.Length; i++)
+            {
+                byte b;
+                do
+                {
+                    Rng.GetBytes(buffer);
+                    b = buffer[0];
+                } while (b >= limit);
+                result[i] = chars[b % chars.Length];
+            }
+            return new string(result);
         }
 
         /// <summary>
@@ -111,7 +195,7 @@ namespace ESI.NET
                     body += $"&client_id={_config.ClientId}";
             }
 
-            var request = new HttpRequestMessage(HttpMethod.Post, $"https://{_ssoUrl}/v2/oauth/token")
+            using var request = new HttpRequestMessage(HttpMethod.Post, $"https://{_ssoUrl}/v2/oauth/token")
             {
                 Content = new StringContent(body, Encoding.UTF8, "application/x-www-form-urlencoded"),
             };
@@ -121,8 +205,8 @@ namespace ESI.NET
                 request.Headers.Host = _ssoUrl;
             }
 
-            var response = await _client.SendAsync(request);
-            var content = await response.Content.ReadAsStringAsync();
+            var response = await _client.SendAsync(request).ConfigureAwait(false);
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
@@ -146,11 +230,11 @@ namespace ESI.NET
             var body = $"token_type_hint={GrantType.RefreshToken.ToEsiValue()}";
             body += $"&token={Uri.EscapeDataString(code)}";
 
-            HttpContent postBody = new StringContent(body, Encoding.UTF8, "application/x-www-form-urlencoded");
+            using HttpContent postBody = new StringContent(body, Encoding.UTF8, "application/x-www-form-urlencoded");
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", _clientKey);
 
-            var response = await _client.PostAsync($"https://{_ssoUrl}/v2/oauth/revoke", postBody);
-            var content = await response.Content.ReadAsStringAsync();
+            var response = await _client.PostAsync(new Uri($"https://{_ssoUrl}/v2/oauth/revoke"), postBody).ConfigureAwait(false);
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
@@ -160,70 +244,110 @@ namespace ESI.NET
         }
 
         /// <summary>
-        /// Verifies the Character information for the provided Token information.
-        /// While this method represents the oauth/verify request, in addition to the verified data that ESI returns, this object also stores the Token and Refresh token
-        /// and this method also uses ESI retrieves other information pertinent to making calls in the ESI.NET API. (alliance_id, corporation_id, faction_id)
-        /// You will need a record in your database that stores at least this information. Serialize and store this object for quick retrieval and token refreshing.
+        /// Validates <paramref name="token"/>'s access token against the SSO JWKS and projects the
+        /// identity claims (character id, name, owner hash, scopes, expiry) onto a fresh
+        /// <see cref="AuthorizedCharacterData"/>. Throws if the token fails validation.
+        /// Split out of <see cref="Verify"/> so the validation path can be exercised without a
+        /// live SSO endpoint. The affiliation lookup stays in <see cref="Verify"/>.
         /// </summary>
-        /// <param name="token"></param>
-        /// <returns></returns>
+        /// <param name="clientId">
+        /// This application's own OAuth client ID. Per CCP's documented JWT validation requirements
+        /// (docs.esi.evetech.net/docs/sso/validating_eve_jwt.html), a real EVE SSO access token's
+        /// <c>aud</c> claim is <c>[clientId, "EVE Online"]</c>, and both are required to be present -
+        /// this rejects a token that is well-formed and correctly signed by CCP but was issued for a
+        /// *different* registered application (client-confusion / cross-app token replay).
+        /// </param>
+        internal static AuthorizedCharacterData ValidateAccessToken(SsoToken token, string ssoUrl, string clientId, string jwksJson)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwks = new JsonWebKeySet(jwksJson);
+            var jwk = jwks.Keys.First();
+
+            var tokenValidationParams = new TokenValidationParameters
+            {
+                ValidateAudience = true,
+                AudienceValidator = (audiences, _, _) =>
+                    audiences.Contains("EVE Online", StringComparer.Ordinal) && audiences.Contains(clientId, StringComparer.Ordinal),
+                ValidateIssuer = true,
+                ValidIssuer = $"https://{ssoUrl}",
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = jwk,
+                ClockSkew = TimeSpan.FromSeconds(2), // CCP's servers seem slightly ahead (~1s)
+            };
+            tokenHandler.ValidateToken(token.AccessToken, tokenValidationParams, out var validatedToken);
+
+            var jwt = (JwtSecurityToken)validatedToken;
+
+            var subjectClaim = jwt.Claims.SingleOrDefault(c => c.Type == "sub").Value;
+            var nameClaim = jwt.Claims.SingleOrDefault(c => c.Type == "name").Value;
+            var ownerClaim = jwt.Claims.SingleOrDefault(c => c.Type == "owner").Value;
+            var scopesClaim = string.Join(" ", jwt.Claims.Where(c => c.Type == "scp").Select(s => s.Value));
+
+            return new AuthorizedCharacterData
+            {
+                RefreshToken = token.RefreshToken,
+                Token = token.AccessToken,
+                CharacterName = nameClaim,
+                CharacterOwnerHash = ownerClaim,
+                CharacterID = long.Parse(subjectClaim.Split(':').Last(), CultureInfo.InvariantCulture),
+                ExpiresOn = jwt.ValidTo,
+                Scopes = scopesClaim,
+            };
+        }
+
+        /// <summary>
+        /// Validates <paramref name="token"/>'s access token against the EVE SSO JWKS and returns an
+        /// <see cref="AuthorizedCharacterData"/> carrying the character identity, the granted scopes,
+        /// the token/refresh token, and (best-effort) the current alliance/corporation/faction.
+        /// Persist this per character; you need at least <c>RefreshToken</c> and
+        /// <c>CharacterOwnerHash</c> for the long term.
+        /// </summary>
+        /// <remarks>
+        /// Compare <see cref="AuthorizedCharacterData.CharacterOwnerHash"/> against your stored value
+        /// on every re-login: EVE reissues it when a character is transferred to another account, and
+        /// a mismatch means the stored token/data belongs to a previous owner and must be discarded.
+        /// </remarks>
+        /// <exception cref="InvalidOperationException">The access token failed validation.</exception>
         public async Task<AuthorizedCharacterData> Verify(SsoToken token)
         {
-            AuthorizedCharacterData authorizedCharacter = new AuthorizedCharacterData();
+            Guard.NotNull(token, nameof(token));
+
+            AuthorizedCharacterData authorizedCharacter;
 
             try
             {
-                var tokenHandler = new JwtSecurityTokenHandler();
+                // Get the EVE Online JWKS to validate the access token against
+                var jwksUrl = new Uri($"https://{_ssoUrl}/oauth/jwks");
+                string jwksJson;
+                using (var jwksResponse = await _client.GetAsync(jwksUrl).ConfigureAwait(false))
+                    jwksJson = await jwksResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-                // Get the eve online JWT to validate against
-                var jwtksUrl = $"https://{_ssoUrl}/oauth/jwks";
-                var response = await _client.GetAsync(jwtksUrl).Result.Content.ReadAsStringAsync();
-                var jwks = new JsonWebKeySet(response);
-                var jwk = jwks.Keys.First();
+                authorizedCharacter = ValidateAccessToken(token, _ssoUrl, _config.ClientId, jwksJson);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException(
+                    "SSO access-token verification failed. The token may be expired, malformed, issued for a " +
+                    "different SSO host, or issued for a different application (client_id mismatch).", ex);
+            }
 
-                SecurityToken validatedToken;
-
-                // Validate the token
-                TokenValidationParameters tokenValidationParams = new TokenValidationParameters
+            // Best-effort enrichment: a failure here does not invalidate the token.
+            try
+            {
+                var url = $"{_config.EsiUrl.TrimEnd('/')}/characters/affiliation/";
+                using var request = new HttpRequestMessage(HttpMethod.Post, url)
                 {
-                    ValidateAudience = false,
-                    ValidateIssuer = true,
-                    ValidIssuer = $"https://{_ssoUrl}",
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = jwk,
-                    ClockSkew = TimeSpan.FromSeconds(2), // CCP's servers seem slightly ahead (~1s)
+                    Content = new StringContent(JsonConvert.SerializeObject(new[] { authorizedCharacter.CharacterID }), Encoding.UTF8, "application/json"),
                 };
-                tokenHandler.ValidateToken(token.AccessToken, tokenValidationParams, out validatedToken);
+                request.Headers.Add("X-Compatibility-Date", EsiVersion.CompatibilityDate);
+                request.Headers.Add("X-Tenant", _config.DataSource.ToEsiValue());
 
-                JwtSecurityToken jwtValidatedToken = validatedToken as JwtSecurityToken;
+                var affiliationResponse = await _client.SendAsync(request).ConfigureAwait(false);
+                var affiliations = await EsiResponse<List<Affiliation>>.CreateAsync(affiliationResponse, "Post|/character/affiliations/").ConfigureAwait(false);
 
-                var subjectClaim = jwtValidatedToken.Claims.SingleOrDefault(c => c.Type == "sub").Value;
-                var nameClaim = jwtValidatedToken.Claims.SingleOrDefault(c => c.Type == "name").Value;
-                var ownerClaim = jwtValidatedToken.Claims.SingleOrDefault(c => c.Type == "owner").Value;
-                
-                var returnedScopes = jwtValidatedToken.Claims.Where(c => c.Type == "scp");
-                var scopesClaim = string.Join(" ", returnedScopes.Select(s => s.Value));
-
-                authorizedCharacter.RefreshToken = token.RefreshToken;
-                authorizedCharacter.Token = token.AccessToken;
-                authorizedCharacter.CharacterName = nameClaim;
-                authorizedCharacter.CharacterOwnerHash = ownerClaim;
-                authorizedCharacter.CharacterID = int.Parse(subjectClaim.Split(':').Last());
-                authorizedCharacter.ExpiresOn = jwtValidatedToken.ValidTo;
-                authorizedCharacter.Scopes = scopesClaim;
-
-                // Get more specifc details about authorized character to be used in API calls that require this data about the character
-                var url = $"{_config.EsiUrl}latest/characters/affiliation/?datasource={_config.DataSource.ToEsiValue()}";
-                var body = new StringContent(JsonConvert.SerializeObject(new int[] { authorizedCharacter.CharacterID }), Encoding.UTF8, "application/json");
-
-                var client = new HttpClient();
-                var characterResponse = await client.PostAsync(url, body).ConfigureAwait(false);
-
-                if (characterResponse.StatusCode == HttpStatusCode.OK)
+                if (affiliations.StatusCode == HttpStatusCode.OK && affiliations.Data?.Count > 0)
                 {
-                    EsiResponse<List<Affiliation>> affiliations = new EsiResponse<List<Affiliation>>(characterResponse, "Post|/character/affiliations/");
                     var characterData = affiliations.Data.First();
-
                     authorizedCharacter.AllianceID = characterData.AllianceId;
                     authorizedCharacter.CorporationID = characterData.CorporationId;
                     authorizedCharacter.FactionID = characterData.FactionId;
@@ -231,7 +355,7 @@ namespace ESI.NET
             }
             catch
             {
-                // validation failed
+                // affiliation enrichment is best-effort
             }
 
             return authorizedCharacter;

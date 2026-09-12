@@ -1,5 +1,5 @@
-﻿using ESI.NET.Logic;
-using ESI.NET.Models.SSO;
+﻿using ESI.NET.Http;
+using ESI.NET.Logic;
 using Microsoft.Extensions.Options;
 using System;
 using System.Net;
@@ -8,90 +8,101 @@ using System.Net.Http.Headers;
 
 namespace ESI.NET
 {
-    public class EsiClient : IEsiClient
+    public class EsiClient : IEsiClient, IDisposable
     {
-        readonly HttpClient client;
-        readonly EsiConfig config;
+        readonly HttpClient _client;
+        readonly EsiConfig _config;
+
+        // Only true when this instance created _client itself (the no-DI, no-supplied-client path).
+        // A caller-supplied client (including one vended by AddEsi's IHttpClientFactory pipeline) is
+        // not ours to dispose - the caller / factory owns its lifetime.
+        readonly bool _ownsClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EsiClient"/> class.
         /// </summary>
-        /// <param name="_config">The configuration parameters of the <see cref="EsiClient"/>.</param>
-        /// <param name="_client">The <see cref="HttpClient"/> to use for HTTP requests.</param>
-        public EsiClient(IOptions<EsiConfig> _config, HttpClient _client = null)
+        /// <param name="config">The configuration parameters of the <see cref="EsiClient"/>.</param>
+        /// <param name="client">
+        /// The <see cref="HttpClient"/> to use. When supplied (including via <c>AddEsi</c>'s
+        /// <see cref="System.Net.Http.IHttpClientFactory"/> pipeline) it is used as-is — the caller
+        /// / pipeline is responsible for the <c>X-User-Agent</c> and <c>Accept</c> headers and for
+        /// content decompression. When omitted, a default client is created and configured here.
+        /// </param>
+        public EsiClient(IOptions<EsiConfig> config, HttpClient client = null)
         {
-            config = _config.Value;
-            client = _client ?? new HttpClient(new HttpClientHandler
+            Guard.NotNull(config, nameof(config));
+
+            _config = config.Value;
+
+            if (client != null)
+                _client = client;
+            else
             {
+                if (string.IsNullOrWhiteSpace(_config.UserAgent))
+                    throw new ArgumentException("EsiConfig.UserAgent is required. Set it to something that identifies your app (character and/or project name) so CCP can contact you rather than cut off ESI access.");
+
+                // No DI pipeline here, so wire the token-refresh handler in manually. Without an
+                // IServiceScopeFactory it honours EsiCallOptions.OnTokenRefreshed but not a sink.
+                _client = new HttpClient(new EsiTokenRefreshHandler(config) { InnerHandler = CreateDefaultHandler() });
+                _client.DefaultRequestHeaders.Add("X-User-Agent", _config.UserAgent);
+                _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                _ownsClient = true;
+            }
 
 
-// Switch to All which adds brotli encoding for .net core due to https://github.com/ccpgames/sso-issues/issues/81
-#if NET
-                AutomaticDecompression = DecompressionMethods.All                
-#else
-                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
-#endif
-            });
-
-            // Enforce user agent value
-            if (string.IsNullOrEmpty(config.UserAgent))
-                throw new ArgumentException("For your protection, please provide an X-User-Agent value. This can be your character name and/or project name. CCP will be more likely to contact you rather than just cut off access to ESI if you provide something that can identify you within the New Eden galaxy.");
-            client.DefaultRequestHeaders.Add("X-User-Agent", config.UserAgent);
-
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
-            client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
-
-
-            SSO = new SsoLogic(client, config);
-            Alliance = new AllianceLogic(client, config);
-            Assets = new AssetsLogic(client, config);
-            Bookmarks = new BookmarksLogic(client, config);
-            Calendar = new CalendarLogic(client, config);
-            Character = new CharacterLogic(client, config);
-            Clones = new ClonesLogic(client, config);
-            Contacts = new ContactsLogic(client, config);
-            Contracts = new ContractsLogic(client, config);
-            Corporation = new CorporationLogic(client, config);
-            Dogma = new DogmaLogic(client, config);
-            FactionWarfare = new FactionWarfareLogic(client, config);
-            Fittings = new FittingsLogic(client, config);
-            Fleets = new FleetsLogic(client, config);
-            Incursions = new IncursionsLogic(client, config);
-            Industry = new IndustryLogic(client, config);
-            Insurance = new InsuranceLogic(client, config);
-            Killmails = new KillmailsLogic(client, config);
-            Location = new LocationLogic(client, config);
-            Loyalty = new LoyaltyLogic(client, config);
-            Mail = new MailLogic(client, config);
-            Market = new MarketLogic(client, config);
-            Opportunities = new OpportunitiesLogic(client, config);
-            PlanetaryInteraction = new PlanetaryInteractionLogic(client, config);
-            Routes = new RoutesLogic(client, config);
-            Search = new SearchLogic(client, config);
-            Skills = new SkillsLogic(client, config);
-            Sovereignty = new SovereigntyLogic(client, config);
-            Status = new StatusLogic(client, config);
-            Universe = new UniverseLogic(client, config);
-            UserInterface = new UserInterfaceLogic(client, config);
-            Wallet = new WalletLogic(client, config);
-            Wars = new WarsLogic(client, config);
+            SSO = new SsoLogic(_client, _config);
+            Alliance = new AllianceLogic(_client, _config);
+            Assets = new AssetsLogic(_client, _config);
+            Calendar = new CalendarLogic(_client, _config);
+            Character = new CharacterLogic(_client, _config);
+            Clones = new ClonesLogic(_client, _config);
+            Contacts = new ContactsLogic(_client, _config);
+            Cosmetics = new CosmeticsLogic(_client, _config);
+            Contracts = new ContractsLogic(_client, _config);
+            Corporation = new CorporationLogic(_client, _config);
+            Dogma = new DogmaLogic(_client, _config);
+            FactionWarfare = new FactionWarfareLogic(_client, _config);
+            Fittings = new FittingsLogic(_client, _config);
+            Fleets = new FleetsLogic(_client, _config);
+            FreelanceJobs = new FreelanceJobsLogic(_client, _config);
+            Incursions = new IncursionsLogic(_client, _config);
+            Industry = new IndustryLogic(_client, _config);
+            Insurance = new InsuranceLogic(_client, _config);
+            Killmails = new KillmailsLogic(_client, _config);
+            Location = new LocationLogic(_client, _config);
+            Loyalty = new LoyaltyLogic(_client, _config);
+            Mail = new MailLogic(_client, _config);
+            Market = new MarketLogic(_client, _config);
+            Meta = new MetaLogic(_client, _config);
+            MilitaryCampaigns = new MilitaryCampaignsLogic(_client, _config);
+            PlanetaryInteraction = new PlanetaryInteractionLogic(_client, _config);
+            Routes = new RoutesLogic(_client, _config);
+            Search = new SearchLogic(_client, _config);
+            Skills = new SkillsLogic(_client, _config);
+            Sovereignty = new SovereigntyLogic(_client, _config);
+            Status = new StatusLogic(_client, _config);
+            Structures = new StructuresLogic(_client, _config);
+            Universe = new UniverseLogic(_client, _config);
+            UserInterface = new UserInterfaceLogic(_client, _config);
+            Wallet = new WalletLogic(_client, _config);
+            Wars = new WarsLogic(_client, _config);
         }
 
         public SsoLogic SSO { get; set; }
         public AllianceLogic Alliance { get; set; }
         public AssetsLogic Assets { get; set; }
-        public BookmarksLogic Bookmarks { get; set; }
         public CalendarLogic Calendar { get; set; }
         public CharacterLogic Character { get; set; }
         public ClonesLogic Clones { get; set; }
         public ContactsLogic Contacts { get; set; }
+        public CosmeticsLogic Cosmetics { get; set; }
         public ContractsLogic Contracts { get; set; }
         public CorporationLogic Corporation { get; set; }
         public DogmaLogic Dogma { get; set; }
         public FactionWarfareLogic FactionWarfare { get; set; }
         public FleetsLogic Fleets { get; set; }
         public FittingsLogic Fittings { get; set; }
+        public FreelanceJobsLogic FreelanceJobs { get; set; }
         public IncursionsLogic Incursions { get; set; }
         public IndustryLogic Industry { get; set; }
         public InsuranceLogic Insurance { get; set; }
@@ -100,12 +111,14 @@ namespace ESI.NET
         public LoyaltyLogic Loyalty { get; set; }
         public MailLogic Mail { get; set; }
         public MarketLogic Market { get; set; }
-        public OpportunitiesLogic Opportunities { get; set; }
+        public MetaLogic Meta { get; set; }
+        public MilitaryCampaignsLogic MilitaryCampaigns { get; set; }
         public PlanetaryInteractionLogic PlanetaryInteraction { get; set; }
         public RoutesLogic Routes { get; set; }
         public SearchLogic Search { get; set; }
         public SkillsLogic Skills { get; set; }
         public StatusLogic Status { get; set; }
+        public StructuresLogic Structures { get; set; }
         public SovereigntyLogic Sovereignty { get; set; }
         public UniverseLogic Universe { get; set; }
         public UserInterfaceLogic UserInterface { get; set; }
@@ -113,36 +126,49 @@ namespace ESI.NET
         public WarsLogic Wars { get; set; }
 
 
-        public void SetCharacterData(AuthorizedCharacterData data)
+        /// <summary>
+        /// Creates the <see cref="HttpClientHandler"/> used when no <see cref="HttpClient"/> is supplied.
+        /// </summary>
+        /// <remarks>
+        /// Automatic decompression is only configured when the handler reports support for it.
+        /// On Blazor WebAssembly the underlying browser handler throws
+        /// <see cref="PlatformNotSupportedException"/> from the setter, because the browser's fetch
+        /// API performs content decoding itself. See https://github.com/seraphx2/ESI.NET/issues/77.
+        /// </remarks>
+        internal static HttpClientHandler CreateDefaultHandler()
         {
-            Assets = new AssetsLogic(client, config, data);
-            Bookmarks = new BookmarksLogic(client, config, data);
-            Calendar = new CalendarLogic(client, config, data);
-            Character = new CharacterLogic(client, config, data);
-            Clones = new ClonesLogic(client, config, data);
-            Contacts = new ContactsLogic(client, config, data);
-            Contracts = new ContractsLogic(client, config, data);
-            Corporation = new CorporationLogic(client, config, data);
-            FactionWarfare = new FactionWarfareLogic(client, config, data);
-            Fittings = new FittingsLogic(client, config, data);
-            Fleets = new FleetsLogic(client, config, data);
-            Industry = new IndustryLogic(client, config, data);
-            Killmails = new KillmailsLogic(client, config, data);
-            Location = new LocationLogic(client, config, data);
-            Loyalty = new LoyaltyLogic(client, config, data);
-            Mail = new MailLogic(client, config, data);
-            Market = new MarketLogic(client, config, data);
-            Opportunities = new OpportunitiesLogic(client, config, data);
-            PlanetaryInteraction = new PlanetaryInteractionLogic(client, config, data);
-            Search = new SearchLogic(client, config, data);
-            Skills = new SkillsLogic(client, config, data);
-            UserInterface = new UserInterfaceLogic(client, config, data);
-            Wallet = new WalletLogic(client, config, data);
-            Universe = new UniverseLogic(client, config, data);
+            var handler = new HttpClientHandler();
+
+            if (handler.SupportsAutomaticDecompression)
+            {
+                // Switch to All which adds brotli encoding for .net core due to https://github.com/ccpgames/sso-issues/issues/81
+#if NET
+                handler.AutomaticDecompression = DecompressionMethods.All;
+#else
+                handler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+#endif
+            }
+
+            return handler;
         }
 
-        public void SetIfNoneMatchHeader(string eTag)
-            => EsiRequest.ETag = eTag;
+        /// <summary>
+        /// Disposes the underlying <see cref="HttpClient"/> - but only when this <see cref="EsiClient"/>
+        /// created it itself (the no-DI, no-supplied-client constructor path). A caller-supplied client,
+        /// including one vended through <c>AddEsi</c>'s <see cref="System.Net.Http.IHttpClientFactory"/>
+        /// pipeline, is left alone; its lifetime belongs to whoever supplied it.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing && _ownsClient)
+                _client.Dispose();
+        }
     }
 
     public interface IEsiClient
@@ -150,17 +176,18 @@ namespace ESI.NET
         SsoLogic SSO { get; set; }
         AllianceLogic Alliance { get; set; }
         AssetsLogic Assets { get; set; }
-        BookmarksLogic Bookmarks { get; set; }
         CalendarLogic Calendar { get; set; }
         CharacterLogic Character { get; set; }
         ClonesLogic Clones { get; set; }
         ContactsLogic Contacts { get; set; }
+        CosmeticsLogic Cosmetics { get; set; }
         ContractsLogic Contracts { get; set; }
         CorporationLogic Corporation { get; set; }
         DogmaLogic Dogma { get; set; }
         FactionWarfareLogic FactionWarfare { get; set; }
         FittingsLogic Fittings { get; set; }
         FleetsLogic Fleets { get; set; }
+        FreelanceJobsLogic FreelanceJobs { get; set; }
         IncursionsLogic Incursions { get; set; }
         IndustryLogic Industry { get; set; }
         InsuranceLogic Insurance { get; set; }
@@ -169,19 +196,18 @@ namespace ESI.NET
         LoyaltyLogic Loyalty { get; set; }
         MailLogic Mail { get; set; }
         MarketLogic Market { get; set; }
-        OpportunitiesLogic Opportunities { get; set; }
+        MetaLogic Meta { get; set; }
+        MilitaryCampaignsLogic MilitaryCampaigns { get; set; }
         PlanetaryInteractionLogic PlanetaryInteraction { get; set; }
         RoutesLogic Routes { get; set; }
         SearchLogic Search { get; set; }
         SkillsLogic Skills { get; set; }
         SovereigntyLogic Sovereignty { get; set; }
         StatusLogic Status { get; set; }
+        StructuresLogic Structures { get; set; }
         UniverseLogic Universe { get; set; }
         UserInterfaceLogic UserInterface { get; set; }
         WalletLogic Wallet { get; set; }
         WarsLogic Wars { get; set; }
-
-        void SetCharacterData(AuthorizedCharacterData data);
-        void SetIfNoneMatchHeader(string eTag);
     }
 }

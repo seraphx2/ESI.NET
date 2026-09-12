@@ -7,13 +7,7 @@ namespace ESI.NET.Models.Assets
         [JsonProperty("item_id")]
         public long ItemId { get; set; }
 
-        [JsonProperty("x")]
-        public double X { get; set; }
-
-        [JsonProperty("y")]
-        public double Y { get; set; }
-
-        [JsonProperty("z")]
-        public double Z { get; set; }
+        [JsonProperty("position")]
+        public Position Position { get; set; }
     }
 }

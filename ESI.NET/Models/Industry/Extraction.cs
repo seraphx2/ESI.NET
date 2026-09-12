@@ -9,7 +9,7 @@ namespace ESI.NET.Models.Industry
         public long StructureId { get; set; }
 
         [JsonProperty("moon_id")]
-        public int MoonId { get; set; }
+        public long MoonId { get; set; }
 
         [JsonProperty("extraction_start_time")]
         public DateTime ExtractionStartTime { get; set; }

@@ -1,0 +1,36 @@
+# Dependabot version updates. Each ecosystem is grouped, so a run opens at most
+# one PR per ecosystem (plus stragglers that can't be grouped). PRs target `dev`
+# — the integration branch, where CI (ci-dev.yml) runs. Security alerts are a
+# separate repo setting and open PRs only for actual advisories.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    target-branch: dev
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: ci
+    groups:
+      actions:
+        patterns:
+          - "*"
+
+  - package-ecosystem: nuget
+    directory: "/ESI.NET"
+    target-branch: dev
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: deps
+    groups:
+      nuget:
+        patterns:
+          - "*"
+    # Majors (Microsoft.IdentityModel 7.x/8.x, Microsoft.Extensions.* 9.x, …)
+    # tend to need code changes — take those by hand; grouped minor/patch keep
+    # the package graph fresh in the meantime.
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - version-update:semver-major

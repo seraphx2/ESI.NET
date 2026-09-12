@@ -7,6 +7,9 @@ namespace ESI.NET.Models.Fleets
         [JsonProperty("fleet_id")]
         public long FleetId { get; set; }
 
+        [JsonProperty("fleet_boss_id")]
+        public long FleetBossId { get; set; }
+
         [JsonProperty("wing_id")]
         public long WingId { get; set; }
 

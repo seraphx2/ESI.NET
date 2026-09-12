@@ -17,21 +17,17 @@ namespace ESI.NET.Logic
         /// /sovereignty/campaigns/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Campaign>>> Campaigns()
-            => await Execute<List<Campaign>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/sovereignty/campaigns/");
+        public async Task<EsiResponse<List<Campaign>>> Campaigns(EsiCallOptions options = null)
+            => await Execute<List<Campaign>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/sovereignty/campaigns/",
+                options: options).ConfigureAwait(false);
+
 
         /// <summary>
-        /// /sovereignty/map/
+        /// /sovereignty/systems/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<SystemSovereignty>>> Systems()
-            => await Execute<List<SystemSovereignty>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/sovereignty/map/");
-
-        /// <summary>
-        /// /sovereignty/structures/
-        /// </summary>
-        /// <returns></returns>
-        public async Task<EsiResponse<List<Structure>>> Structures()
-            => await Execute<List<Structure>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/sovereignty/structures/");
+        public async Task<EsiResponse<SovereigntySystems>> Systems(EsiCallOptions options = null)
+            => await Execute<SovereigntySystems>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/sovereignty/systems/",
+                options: options).ConfigureAwait(false);
     }
 }

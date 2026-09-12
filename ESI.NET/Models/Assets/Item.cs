@@ -23,9 +23,9 @@ namespace ESI.NET.Models.Assets
         public string LocationType { get; set; }
 
         [JsonProperty("quantity")]
-        public int Quantity { get; set; }
+        public long Quantity { get; set; }
 
         [JsonProperty("type_id")]
-        public int TypeId { get; set; }
+        public long TypeId { get; set; }
     }
 }

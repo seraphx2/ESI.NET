@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Runtime.Serialization;
 
 namespace ESI.NET.Enumerations
 {
     [Flags]
+    [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
     public enum SearchCategory
     {
         [EnumMember(Value="agent")]          /**/ Agent = 1,

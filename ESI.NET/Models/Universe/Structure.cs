@@ -7,11 +7,14 @@ namespace ESI.NET.Models.Universe
         [JsonProperty("name")]
         public string Name { get; set; }
 
+        [JsonProperty("owner_id")]
+        public long OwnerId { get; set; }
+
         [JsonProperty("solar_system_id")]
-        public int SolarSystemId { get; set; }
+        public long SolarSystemId { get; set; }
 
         [JsonProperty("type_id")]
-        public int TypeId { get; set; }
+        public long TypeId { get; set; }
 
         [JsonProperty("position")]
         public Position Position { get; set; }

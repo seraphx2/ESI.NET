@@ -7,6 +7,6 @@ namespace ESI.NET.Enumerations
         [EnumMember(Value = "captured")]    /**/ Captured,
         [EnumMember(Value = "contested")]   /**/ Contested,
         [EnumMember(Value = "uncontested")] /**/ Uncontested,
-        [EnumMember(Value = "vulnerable ")] /**/ Vulnerable
+        [EnumMember(Value = "vulnerable")]  /**/ Vulnerable
     }
 }

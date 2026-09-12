@@ -1,6 +1,6 @@
-﻿using ESI.NET.Models.SSO;
-using ESI.NET.Models.Wallet;
+﻿using ESI.NET.Models.Wallet;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -11,78 +11,65 @@ namespace ESI.NET.Logic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
-        private readonly AuthorizedCharacterData _data;
-        private readonly int character_id, corporation_id;
 
-        public WalletLogic(HttpClient client, EsiConfig config, AuthorizedCharacterData data = null)
+        public WalletLogic(HttpClient client, EsiConfig config)
         {
             _client = client;
             _config = config;
-            _data = data;
-
-            if (data != null)
-            {
-                character_id = data.CharacterID;
-                corporation_id = data.CorporationID;
-            }
         }
 
         /// <summary>
         /// /characters/{character_id}/wallet/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<decimal>> CharacterWallet()
+        public async Task<EsiResponse<decimal>> CharacterWallet(EsiCallOptions options)
             => await Execute<decimal>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/wallet/", replacements: new Dictionary<string, string>()
             {
-                { "character_id", character_id.ToString() }
-            }, token: _data.Token);
+                { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
+            }, options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/wallet/journal/
         /// </summary>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<JournalEntry>>> CharacterJournal(int page = 1)
+        public async Task<EsiResponse<List<JournalEntry>>> CharacterJournal(EsiCallOptions options)
             => await Execute<List<JournalEntry>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/wallet/journal/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
-                parameters: new string[]
-                {
-                    $"page={page}"
-                },
-                token: _data.Token);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
         /// /characters/{character_id}/wallet/transactions/
         /// </summary>
-        /// <param name="from_id"></param>
+        /// <param name="fromId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Transaction>>> CharacterTransactions(long from_id)
+        public async Task<EsiResponse<List<Transaction>>> CharacterTransactions(long fromId, EsiCallOptions options)
             => await Execute<List<Transaction>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/wallet/transactions/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 parameters: new string[]
                 {
-                    $"from_id={from_id}"
+                    $"from_id={fromId}"
                 },
-                token: _data.Token);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/wallets/
         /// </summary>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Wallet>>> CorporationWallets()
+        public async Task<EsiResponse<List<Wallet>>> CorporationWallets(EsiCallOptions options)
             => await Execute<List<Wallet>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/wallets/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
-                token: _data.Token);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/wallets/{division}/journal/
@@ -90,36 +77,32 @@ namespace ESI.NET.Logic
         /// <param name="division"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<JournalEntry>>> CorporationJournal(int division, int page = 1)
+        public async Task<EsiResponse<List<JournalEntry>>> CorporationJournal(long division, EsiCallOptions options)
             => await Execute<List<JournalEntry>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/wallets/{division}/journal/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() },
-                    { "division", division.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) },
+                    { "division", division.ToString(CultureInfo.InvariantCulture) }
                 },
-                parameters: new string[]
-                {
-                    $"page={page}"
-                },
-                token: _data.Token);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/wallets/{division}/transactions/
         /// </summary>
         /// <param name="division"></param>
-        /// <param name="from_id"></param>
+        /// <param name="fromId"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<Transaction>>> CorporationTransactions(int division, long from_id)
+        public async Task<EsiResponse<List<Transaction>>> CorporationTransactions(long division, long fromId, EsiCallOptions options)
             => await Execute<List<Transaction>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/wallets/{division}/transactions/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() },
-                    { "division", division.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) },
+                    { "division", division.ToString(CultureInfo.InvariantCulture) }
                 },
                 parameters: new string[]
                 {
-                    $"from_id={from_id}"
+                    $"from_id={fromId}"
                 },
-                token: _data.Token);
+                options: options).ConfigureAwait(false);
     }
 }

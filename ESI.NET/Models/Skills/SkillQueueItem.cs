@@ -5,7 +5,7 @@ namespace ESI.NET.Models.Skills
     public class SkillQueueItem
     {
         [JsonProperty("skill_id")]
-        public int SkillId { get; set; }
+        public long SkillId { get; set; }
 
         [JsonProperty("finish_date")]
         public string FinishDate { get; set; }
@@ -14,18 +14,18 @@ namespace ESI.NET.Models.Skills
         public string StartDate { get; set; }
 
         [JsonProperty("finished_level")]
-        public int FinishedLevel { get; set; }
+        public long FinishedLevel { get; set; }
 
         [JsonProperty("queue_position")]
-        public int QueuePosition { get; set; }
+        public long QueuePosition { get; set; }
 
         [JsonProperty("training_start_sp")]
-        public int TrainingStartSp { get; set; }
+        public long TrainingStartSp { get; set; }
 
         [JsonProperty("level_end_sp")]
-        public int LevelEndSp { get; set; }
+        public long LevelEndSp { get; set; }
 
         [JsonProperty("level_start_sp")]
-        public int LevelStartSp { get; set; }
+        public long LevelStartSp { get; set; }
     }
 }

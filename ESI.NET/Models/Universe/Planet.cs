@@ -5,7 +5,7 @@ namespace ESI.NET.Models.Universe
     public class Planet
     {
         [JsonProperty("planet_id")]
-        public int PlanetId { get; set; }
+        public long PlanetId { get; set; }
 
         /// <summary>
         /// Only returned in /universe/planets/{planet_id}/
@@ -17,7 +17,7 @@ namespace ESI.NET.Models.Universe
         /// Only returned in /universe/planets/{planet_id}/
         /// </summary>
         [JsonProperty("type_id")]
-        public int TypeId { get; set; }
+        public long TypeId { get; set; }
 
         /// <summary>
         /// Only returned in /universe/planets/{planet_id}/
@@ -29,19 +29,19 @@ namespace ESI.NET.Models.Universe
         /// Only returned in /universe/planets/{planet_id}/
         /// </summary>
         [JsonProperty("system_id")]
-        public int SystemId { get; set; }
+        public long SystemId { get; set; }
 
 
         /// <summary>
         /// Only returned in /universe/systems/{system_id}/
         /// </summary>
         [JsonProperty("asteroid_belts")]
-        public int[] AsteroidBelts { get; set; }
+        public long[] AsteroidBelts { get; set; }
 
         /// <summary>
         /// Only returned in /universe/systems/{system_id}/
         /// </summary>
         [JsonProperty("moons")]
-        public int[] Moons { get; set; }
+        public long[] Moons { get; set; }
     }
 }

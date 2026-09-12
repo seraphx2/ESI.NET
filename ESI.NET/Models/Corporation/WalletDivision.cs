@@ -15,7 +15,7 @@ namespace ESI.NET.Models.Corporation
     public class Division
     {
         [JsonProperty("division")]
-        public int DivisionId { get; set; }
+        public long DivisionId { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }

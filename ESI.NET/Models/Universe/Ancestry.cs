@@ -5,13 +5,13 @@ namespace ESI.NET.Models.Universe
     public class Ancestry
     {
         [JsonProperty("id")]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
 
         [JsonProperty("bloodline_id")]
-        public int BloodlineId { get; set; }
+        public long BloodlineId { get; set; }
 
         [JsonProperty("description")]
         public string Description { get; set; }
@@ -20,7 +20,7 @@ namespace ESI.NET.Models.Universe
         public string ShortDescription { get; set; }
 
         [JsonProperty("icon_id")]
-        public int IconId { get; set; }
+        public long IconId { get; set; }
 
     }
 }

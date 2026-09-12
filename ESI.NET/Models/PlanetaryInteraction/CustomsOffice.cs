@@ -18,13 +18,13 @@ namespace ESI.NET.Models.PlanetaryInteraction
         public decimal BadStandingTaxRate { get; set; }
 
         [JsonProperty("corporation_tax_rate")]
-        public string CorporationTaxRate { get; set; }
+        public decimal CorporationTaxRate { get; set; }
 
         [JsonProperty("excellent_standing_tax_rate")]
-        public long ExcellentStandingTaxRate { get; set; }
+        public decimal ExcellentStandingTaxRate { get; set; }
 
         [JsonProperty("good_standing_tax_rate")]
-        public int GoodStandingTaxRate { get; set; }
+        public decimal GoodStandingTaxRate { get; set; }
 
         [JsonProperty("neutral_standing_tax_rate")]
         public decimal NeutralStandingTaxRate { get; set; }
@@ -33,10 +33,10 @@ namespace ESI.NET.Models.PlanetaryInteraction
         public long Id { get; set; }
 
         [JsonProperty("reinforce_exit_end")]
-        public int ReinforceExitEnd { get; set; }
+        public long ReinforceExitEnd { get; set; }
 
         [JsonProperty("reinforce_exit_start")]
-        public int ReinforceExitStart { get; set; }
+        public long ReinforceExitStart { get; set; }
 
         [JsonProperty("standing_level")]
         public string StandingLevel { get; set; }
@@ -46,5 +46,8 @@ namespace ESI.NET.Models.PlanetaryInteraction
 
         [JsonProperty("terrible_standing_tax_rate")]
         public decimal TerribleDtandingRate { get; set; }
+
+        [JsonProperty("type_id")]
+        public long TypeId { get; set; }
     }
 }

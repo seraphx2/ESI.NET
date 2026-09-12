@@ -7,19 +7,19 @@ namespace ESI.NET.Models.Contracts
     public class Contract
     {
         [JsonProperty("contract_id")]
-        public int ContractId { get; set; }
+        public long ContractId { get; set; }
 
         [JsonProperty("issuer_id")]
-        public int IssuerId { get; set; }
+        public long IssuerId { get; set; }
 
         [JsonProperty("issuer_corporation_id")]
-        public int IssuerCorporationId { get; set; }
+        public long IssuerCorporationId { get; set; }
 
         [JsonProperty("assignee_id")]
-        public int AssigneeId { get; set; }
+        public long AssigneeId { get; set; }
 
         [JsonProperty("acceptor_id")]
-        public int AcceptorId { get; set; }
+        public long AcceptorId { get; set; }
 
         [JsonProperty("start_location_id")]
         public long StartLocationId { get; set; }
@@ -52,7 +52,7 @@ namespace ESI.NET.Models.Contracts
         public DateTime DateAccepted { get; set; }
 
         [JsonProperty("days_to_complete")]
-        public int DaysToComplete { get; set; }
+        public long DaysToComplete { get; set; }
 
         [JsonProperty("date_completed")]
         public DateTime DateCompleted { get; set; }

@@ -27,27 +27,27 @@ namespace ESI.NET.Models.FactionWarfare
     public class FactionTotal
     {
         [JsonProperty("faction_id")]
-        public int FactionId { get; set; }
+        public long FactionId { get; set; }
 
         [JsonProperty("amount")]
-        public int Amount { get; set; }
+        public long Amount { get; set; }
     }
 
     public class CorporationTotal
     {
         [JsonProperty("corporation_id")]
-        public int CorporationId { get; set; }
+        public long CorporationId { get; set; }
 
         [JsonProperty("amount")]
-        public int Amount { get; set; }
+        public long Amount { get; set; }
     }
 
     public class CharacterTotal
     {
         [JsonProperty("character_id")]
-        public int CharacterId { get; set; }
+        public long CharacterId { get; set; }
 
         [JsonProperty("amount")]
-        public int Amount { get; set; }
+        public long Amount { get; set; }
     }
 }

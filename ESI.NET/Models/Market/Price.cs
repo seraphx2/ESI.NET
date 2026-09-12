@@ -5,7 +5,7 @@ namespace ESI.NET.Models.Market
     public class Price
     {
         [JsonProperty("type_id")]
-        public int TypeId { get; set; }
+        public long TypeId { get; set; }
 
         [JsonProperty("average_price")]
         public decimal AveragePrice { get; set; }

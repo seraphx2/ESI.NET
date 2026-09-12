@@ -14,18 +14,18 @@ namespace ESI.NET.Models.Character
         public long LocationId { get; set; }
 
         [JsonProperty("material_efficiency")]
-        public int MaterialEfficiency { get; set; }
+        public long MaterialEfficiency { get; set; }
 
         [JsonProperty("quantity")]
-        public int Quantity { get; set; }
+        public long Quantity { get; set; }
 
         [JsonProperty("runs")]
-        public int Runs { get; set; }
+        public long Runs { get; set; }
 
         [JsonProperty("time_efficiency")]
-        public int TimeEfficiency { get; set; }
+        public long TimeEfficiency { get; set; }
 
         [JsonProperty("type_id")]
-        public int TypeId { get; set; }
+        public long TypeId { get; set; }
     }
 }

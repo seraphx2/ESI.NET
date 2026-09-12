@@ -6,7 +6,7 @@ namespace ESI.NET.Models.Fittings
     public class Fitting
     {
         [JsonProperty("fitting_id")]
-        public int FittingId { get; set; }
+        public long FittingId { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -15,7 +15,7 @@ namespace ESI.NET.Models.Fittings
         public string Description { get; set; }
 
         [JsonProperty("ship_type_id")]
-        public int ShipTypeId { get; set; }
+        public long ShipTypeId { get; set; }
 
         [JsonProperty("items")]
         public List<Item> Items { get; set; } = new List<Item>();
@@ -24,12 +24,12 @@ namespace ESI.NET.Models.Fittings
     public class Item
     {
         [JsonProperty("type_id")]
-        public int TypeId { get; set; }
+        public long TypeId { get; set; }
 
         [JsonProperty("flag")]
         public string Flag { get; set; }
 
         [JsonProperty("quantity")]
-        public int Quantity { get; set; }
+        public long Quantity { get; set; }
     }
 }

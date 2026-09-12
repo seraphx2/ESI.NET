@@ -23,7 +23,7 @@ namespace ESI.NET.Models.PlanetaryInteraction
         public long DestinationPinId { get; set; }
 
         [JsonProperty("link_level")]
-        public int LinkLevel { get; set; }
+        public long LinkLevel { get; set; }
 
         [JsonProperty("source_pin_id")]
         public long SourcePinId { get; set; }
@@ -74,7 +74,7 @@ namespace ESI.NET.Models.PlanetaryInteraction
         public long DestinationPinId { get; set; }
 
         [JsonProperty("quantity")]
-        public long Quantity { get; set; }
+        public decimal Quantity { get; set; }
 
         [JsonProperty("route_id")]
         public long RouteId { get; set; }
@@ -91,7 +91,7 @@ namespace ESI.NET.Models.PlanetaryInteraction
     public class Content
     {
         [JsonProperty("amount")]
-        public int Amount { get; set; }
+        public long Amount { get; set; }
 
         [JsonProperty("type_id")]
         public long TypeId { get; set; }
@@ -100,7 +100,7 @@ namespace ESI.NET.Models.PlanetaryInteraction
     public class Extractor
     {
         [JsonProperty("cycle_time")]
-        public int CycleTime { get; set; }
+        public long CycleTime { get; set; }
 
         [JsonProperty("head_radius")]
         public decimal HeadRadius { get; set; }
@@ -112,7 +112,7 @@ namespace ESI.NET.Models.PlanetaryInteraction
         public long ProductTypeId { get; set; }
 
         [JsonProperty("qty_per_cycle")]
-        public int QuantityPerCycle { get; set; }
+        public long QuantityPerCycle { get; set; }
     }
     #endregion
 

@@ -1,0 +1,52 @@
+name: Integration (live)
+
+# Live tests against the real ESI API. Deliberately NOT a PR or push gate - it
+# makes ~25 real calls and needs secrets. Runs weekly and on demand; a failed
+# run emails the maintainer. Also the manual pre-release check: dispatch it,
+# confirm green, then merge dev -> master.
+#
+# Public smoke tests always run. The auth probe self-skips unless ALL of
+# ESI_CLIENT_ID / ESI_SECRET_KEY / ESI_REFRESH_TOKEN are set as repo secrets
+# (mint the refresh token with tools/MintToken). Fork PRs never get secrets and
+# this never runs on PRs, so that path does not arise.
+on:
+  schedule:
+    - cron: '41 6 * * 1' # Mondays 06:41 UTC (after spec-check)
+  workflow_dispatch:
+
+concurrency:
+  group: integration-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    env:
+      ESI_USER_AGENT: 'ESI.NET integration (github.com/seraphx2/ESI.NET)'
+      ESI_CLIENT_ID: ${{ secrets.ESI_CLIENT_ID }}
+      ESI_SECRET_KEY: ${{ secrets.ESI_SECRET_KEY }}
+      ESI_REFRESH_TOKEN: ${{ secrets.ESI_REFRESH_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Integration tests
+        shell: bash
+        run: >
+          dotnet test tests/ESI.NET.IntegrationTests/ESI.NET.IntegrationTests.csproj
+          --configuration Release --verbosity normal
+          --logger 'trx;LogFileName=integration.trx' --results-directory ./trx
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: integration-trx
+          path: ./trx/*.trx
+          if-no-files-found: ignore

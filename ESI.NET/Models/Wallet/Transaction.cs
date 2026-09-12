@@ -12,7 +12,7 @@ namespace ESI.NET.Models.Wallet
         public DateTime Date { get; set; }
 
         [JsonProperty("type_id")]
-        public int TypeId { get; set; }
+        public long TypeId { get; set; }
 
         [JsonProperty("location_id")]
         public long LocationId { get; set; }
@@ -21,10 +21,10 @@ namespace ESI.NET.Models.Wallet
         public decimal UnitPrice { get; set; }
 
         [JsonProperty("quantity")]
-        public int Quantity { get; set; }
+        public long Quantity { get; set; }
 
         [JsonProperty("client_id")]
-        public int ClientId { get; set; }
+        public long ClientId { get; set; }
 
         [JsonProperty("is_buy")]
         public bool IsBuy { get; set; }
