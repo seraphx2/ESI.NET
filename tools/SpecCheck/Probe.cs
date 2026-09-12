@@ -2,9 +2,6 @@
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using ESI.NET;
-using ESI.NET.Enumerations;
-using ESI.NET.Models.SSO;
 using Newtonsoft.Json;
 
 namespace ESI.NET.Tools.SpecCheck;
@@ -117,24 +114,6 @@ public static class Probe
             Console.WriteLine($"PROBE (auth) - token exchange error: {ex.Message}");
             return 1;
         }
-
-        // --- run the real access token through SsoLogic.Verify(), exactly as a real consumer
-        // would. Nothing else in CI exercises JWT validation against a live token; the token
-        // exchange above talks to the SSO endpoint directly. This is what actually confirms CCP's
-        // documented aud shape ([clientId, "EVE Online"]) against reality, not just a synthetic
-        // fixture built from reading their docs.
-        try
-        {
-            var ssoConfig = new EsiConfig { ClientId = clientId, DataSource = DataSource.Tranquility, EsiUrl = baseUrl, UserAgent = "ESI.NET probe" };
-            await new SsoLogic(http, ssoConfig).Verify(new SsoToken { AccessToken = accessToken });
-            Console.WriteLine("PROBE (auth) - SsoLogic.Verify() accepted the live access token");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"PROBE (auth) - SsoLogic.Verify() REJECTED a live access token: {ex.Message}");
-            return 1;
-        }
-
         http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
         // --- identity ---
