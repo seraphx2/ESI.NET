@@ -33,7 +33,7 @@ namespace ESI.NET
             if (query.Count > 0)
                 url += $"?{string.Join("&", query)}";
 
-            var request = new HttpRequestMessage(httpMethod, url);
+            using var request = new HttpRequestMessage(httpMethod, url);
 
             // ESI is versioned by a frozen dated snapshot, selected per request.
             request.Headers.Add("X-Compatibility-Date", EsiVersion.CompatibilityDate);

@@ -206,6 +206,13 @@ had changed short of a consumer filing a bug. That is now covered.
   under a non-default host locale); they now read `HttpContentHeaders`' own
   already-parsed `Expires` / `LastModified` properties. `Pages`,
   `ErrorLimitRemain`, and `ErrorLimitReset` parse with `CultureInfo.InvariantCulture`.
+- `DataSource` and `GrantType` declared `[EnumMember]` wire values but no
+  `StringEnumConverter` — a direct JSON serialization of either would have
+  emitted the underlying int, not the ESI string. `Extensions.ToEsiValue()`
+  (used to build query strings / headers / form bodies from an enum) is
+  rewritten to resolve through that converter instead of hand-rolled
+  reflection, so it can't silently drift from what real serialization
+  produces; `SearchCategory` gets the same converter for consistency.
 
 ### Migration
 

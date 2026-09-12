@@ -1,10 +1,9 @@
 ﻿using ESI.NET.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization;
 
 namespace ESI.NET
@@ -51,22 +50,24 @@ namespace ESI.NET
                 .AddHttpMessageHandler<EsiErrorLimitHandler>();
         }
 
+        /// <summary>
+        /// The ESI wire value for <paramref name="e"/> - its <see cref="EnumMemberAttribute.Value"/>,
+        /// resolved via the same <c>StringEnumConverter</c> every ESI.NET enum is decorated with (so
+        /// this can never drift from what actually serializing the enum would produce). For a
+        /// <see cref="FlagsAttribute"/> enum, each set flag is resolved individually and joined with
+        /// a comma - no space, matching ESI's comma-separated query parameters (Newtonsoft's own
+        /// flags serialization inserts ", " between values, which is not what ESI expects).
+        /// </summary>
         public static string ToEsiValue(this Enum e)
         {
-            var enums = e.ToString();
-            if (enums.Contains(", "))
-            {
-                var values = enums.Replace(" ", "").Split(',');
-                var newValues = new List<string>();
-                foreach (var item in values)
-                    newValues.Add(Enum.Parse(e.GetType(), item).GetType().GetTypeInfo().DeclaredMembers.SingleOrDefault(x => x.Name == item.ToString())
-                        ?.GetCustomAttribute<EnumMemberAttribute>(true)?.Value);
+            var type = e.GetType();
 
-                return string.Join(",", newValues);
-            }
-            else
-                return e.GetType().GetTypeInfo().DeclaredMembers.SingleOrDefault(x => x.Name == e.ToString())
-                    ?.GetCustomAttribute<EnumMemberAttribute>(false)?.Value;
+            if (Attribute.IsDefined(type, typeof(FlagsAttribute)))
+                return string.Join(",", Enum.GetValues(type).Cast<Enum>()
+                    .Where(e.HasFlag)
+                    .Select(flag => JsonConvert.SerializeObject(flag).Trim('"')));
+
+            return JsonConvert.SerializeObject(e).Trim('"');
         }
     }
 }
