@@ -138,9 +138,14 @@ cancellation, pagination) is passed. **Every consumer needs code changes** — s
   surfaced two ways, and both fire:
   - `IEsiTokenRefreshSink` — implement it, register one
     (`services.AddScoped<IEsiTokenRefreshSink, YourSink>()`), and it covers every
-    authenticated call. This is the DI-friendly "persist once" hook.
+    authenticated call. This is the DI-friendly "persist once" hook. It also
+    carries `OnRefreshFailedAsync(character, exception)`, called when the
+    refresh token itself is rejected (revoked/expired/rescoped) — the triggering
+    call still throws, but this is where you'd flag the character so other jobs
+    stop querying it until it's re-authorized.
   - `EsiCallOptions.OnTokenRefreshed` — a per-call `Func<AuthorizedCharacterData, Task>`
-    for one-offs or non-DI use.
+    for one-offs or non-DI use. There's no per-call failure equivalent: a
+    one-off caller already gets the exception directly.
 - `EsiErrorLimitHandler` — reads `X-Esi-Error-Limit-*` and blocks further sends
   on the client until the window resets; throws `EsiErrorLimitException` on
   `420`. Wired by `AddEsi`.

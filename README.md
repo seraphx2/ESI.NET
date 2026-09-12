@@ -182,7 +182,11 @@ An authenticated call whose access token is within a minute of expiry is
 refreshed automatically before the request goes out, and `authChar` is updated in
 place. **EVE rotates the refresh token, so you must persist the new value.**
 
-Handle that once, for every call, with an `IEsiTokenRefreshSink`:
+Handle that once, for every call, with an `IEsiTokenRefreshSink`. The interface
+also has an `OnRefreshFailedAsync`, called when the refresh token itself is no
+longer good (revoked, expired, or the app's scopes changed) — the request still
+fails, but this is your one place to notice *why* and flag the character before
+some other background job wastes a call on it:
 
 ```csharp
 public class DbTokenSink : IEsiTokenRefreshSink
@@ -195,11 +199,26 @@ public class DbTokenSink : IEsiTokenRefreshSink
         _db.Characters.Update(c);
         await _db.SaveChangesAsync();
     }
+
+    // Refresh token was rejected - stop other jobs from querying this character
+    // until it's re-authorized.
+    public async Task OnRefreshFailedAsync(AuthorizedCharacterData c, Exception ex)
+    {
+        await _db.Characters
+            .Where(x => x.CharacterId == c.CharacterID)
+            .ExecuteUpdateAsync(x => x.SetProperty(row => row.CanQueryEsi, false));
+    }
 }
 
 services.AddScoped<IEsiTokenRefreshSink, DbTokenSink>();
 services.AddEsi(builder.Configuration.GetSection("EsiConfig"));
 ```
+
+`OnRefreshFailedAsync` fires just before the triggering call's exception
+propagates, so it's for reacting (flag it, log it, alert on it), not recovering
+— the call in flight still throws either way. It has no per-call
+`EsiCallOptions` equivalent: a one-off caller already gets the exception
+directly from the failed call, so there's nothing to add there.
 
 The handler resolves the sink in a fresh scope each time it fires, so a scoped
 `DbContext` is safe. For one-offs or non-DI code, set `OnTokenRefreshed` on the

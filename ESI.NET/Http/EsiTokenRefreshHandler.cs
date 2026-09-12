@@ -15,7 +15,9 @@ namespace ESI.NET.Http
     /// <see cref="EsiRequest"/>.Execute); after a refresh the request's bearer header is swapped,
     /// the per-call callback runs, and — when a DI scope is available — a registered
     /// <see cref="IEsiTokenRefreshSink"/> is invoked so the rotated refresh token can be persisted
-    /// once, centrally.
+    /// once, centrally. If the refresh itself throws, the registered sink's
+    /// <see cref="IEsiTokenRefreshSink.OnRefreshFailedAsync"/> is invoked instead (still only when a
+    /// DI scope is available) and the exception is rethrown — the triggering call fails either way.
     /// </summary>
     public sealed class EsiTokenRefreshHandler : DelegatingHandler
     {
@@ -39,7 +41,24 @@ namespace ESI.NET.Http
                 && character.ExpiresOn != default
                 && character.ExpiresOn <= DateTime.UtcNow.Add(Skew))
             {
-                await SsoLogic.RefreshAccessTokenAsync((r, ct) => base.SendAsync(r, ct), _config, character, cancellationToken).ConfigureAwait(false);
+                try
+                {
+                    await SsoLogic.RefreshAccessTokenAsync((r, ct) => base.SendAsync(r, ct), _config, character, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    if (_scopeFactory != null)
+                    {
+                        using (var scope = _scopeFactory.CreateScope())
+                        {
+                            var failureSink = scope.ServiceProvider.GetService<IEsiTokenRefreshSink>();
+                            if (failureSink != null)
+                                await failureSink.OnRefreshFailedAsync(character, ex).ConfigureAwait(false);
+                        }
+                    }
+
+                    throw;
+                }
 
                 // the request was built with the stale token
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", character.Token);
