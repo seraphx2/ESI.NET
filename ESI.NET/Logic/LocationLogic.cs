@@ -22,8 +22,6 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/location/
         /// </summary>
         /// <returns></returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
-            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<Location>> Location(EsiCallOptions options)
             => await Execute<Location>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/location/",
                 replacements: new Dictionary<string, string>()
@@ -36,8 +34,6 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/ship/
         /// </summary>
         /// <returns></returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
-            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<Ship>> Ship(EsiCallOptions options)
             => await Execute<Ship>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/ship/",
                 replacements: new Dictionary<string, string>()
@@ -50,8 +46,6 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/online/
         /// </summary>
         /// <returns></returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
-            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<Activity>> Online(EsiCallOptions options)
             => await Execute<Activity>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/online/",
                 replacements: new Dictionary<string, string>()

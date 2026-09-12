@@ -8,10 +8,6 @@ using System.Runtime.Serialization;
 
 namespace ESI.NET
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1724:Type names should not match namespaces",
-        Justification = "Renaming this public static class is a breaking change for a purely cosmetic rule " +
-            "(it collides with the unrelated Microsoft.Extensions.* namespace family, not anything in this " +
-            "library). Not worth it for what CA1724 catches here.")]
     public static class Extensions
     {
         /// <summary>

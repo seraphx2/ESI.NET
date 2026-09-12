@@ -22,8 +22,6 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/mail/
         /// </summary>
         /// <returns></returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
-            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<List<Header>>> Headers(long[] labels = null, long lastMailId = 0, EsiCallOptions options = null)
         {
             var parameters = new List<string>();
@@ -53,8 +51,6 @@ namespace ESI.NET.Logic
         /// <param name="body"></param>
         /// <param name="approvedCost"></param>
         /// <returns></returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
-            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<long>> New(object[] recipients, string subject, string body, long approvedCost = 0, EsiCallOptions options = null)
             => await Execute<long>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/characters/{character_id}/mail/",
                 replacements: new Dictionary<string, string>()
@@ -74,8 +70,6 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/mail/labels/
         /// </summary>
         /// <returns></returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
-            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<LabelCounts>> Labels(EsiCallOptions options)
             => await Execute<LabelCounts>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/mail/labels/",
                 replacements: new Dictionary<string, string>()
@@ -90,8 +84,6 @@ namespace ESI.NET.Logic
         /// <param name="name"></param>
         /// <param name="color"></param>
         /// <returns></returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
-            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<long>> NewLabel(string name, string color, EsiCallOptions options)
             => await Execute<long>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/characters/{character_id}/mail/labels/",
                 replacements: new Dictionary<string, string>()
@@ -110,8 +102,6 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="labelId"></param>
         /// <returns></returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
-            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<string>> DeleteLabel(long labelId, EsiCallOptions options)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Delete, "/characters/{character_id}/mail/labels/{label_id}/",
                 replacements: new Dictionary<string, string>()
@@ -125,8 +115,6 @@ namespace ESI.NET.Logic
         /// /characters/{character_id}/mail/lists/
         /// </summary>
         /// <returns></returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
-            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<List<MailingList>>> MailingLists(EsiCallOptions options)
             => await Execute<List<MailingList>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/mail/lists/",
                 replacements: new Dictionary<string, string>()
@@ -140,8 +128,6 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="mailId"></param>
         /// <returns></returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
-            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<Message>> Retrieve(long mailId, EsiCallOptions options)
             => await Execute<Message>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/mail/{mail_id}/",
                 replacements: new Dictionary<string, string>()
@@ -158,8 +144,6 @@ namespace ESI.NET.Logic
         /// <param name="isRead"></param>
         /// <param name="labels"></param>
         /// <returns></returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
-            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<Message>> Update(long mailId, bool? isRead = null, long[] labels = null, EsiCallOptions options = null)
             => await Execute<Message>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Put, "/characters/{character_id}/mail/{mail_id}/",
                 replacements: new Dictionary<string, string>()
@@ -175,8 +159,6 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="mailId"></param>
         /// <returns></returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
-            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<Message>> Delete(long mailId, EsiCallOptions options)
             => await Execute<Message>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Delete, "/characters/{character_id}/mail/{mail_id}/",
                 replacements: new Dictionary<string, string>()

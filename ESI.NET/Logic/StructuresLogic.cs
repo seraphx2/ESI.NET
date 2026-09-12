@@ -21,16 +21,12 @@ namespace ESI.NET.Logic
         public StructuresLogic(HttpClient client, EsiConfig config) { _client = client; _config = config; }
 
         /// <summary>/corporations/{corporation_id}/structures/skyhooks/</summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
-            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<SkyhookList>> Skyhooks(EsiCallOptions options)
             => await Execute<SkyhookList>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/structures/skyhooks/",
                 replacements: new Dictionary<string, string>() { { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) } },
                 options: options).ConfigureAwait(false);
 
         /// <summary>/corporations/{corporation_id}/structures/skyhooks/{skyhook_id}/</summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
-            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<Skyhook>> Skyhook(long skyhookId, EsiCallOptions options)
             => await Execute<Skyhook>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/structures/skyhooks/{skyhook_id}/",
                 replacements: new Dictionary<string, string>()
@@ -41,16 +37,12 @@ namespace ESI.NET.Logic
                 options: options).ConfigureAwait(false);
 
         /// <summary>/corporations/{corporation_id}/structures/sovereignty-hubs/</summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
-            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<SovereigntyHubList>> SovereigntyHubs(EsiCallOptions options)
             => await Execute<SovereigntyHubList>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/structures/sovereignty-hubs/",
                 replacements: new Dictionary<string, string>() { { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) } },
                 options: options).ConfigureAwait(false);
 
         /// <summary>/corporations/{corporation_id}/structures/sovereignty-hubs/{sovereignty_hub_id}/</summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
-            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<SovereigntyHub>> SovereigntyHub(long sovereigntyHubId, EsiCallOptions options)
             => await Execute<SovereigntyHub>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/structures/sovereignty-hubs/{sovereignty_hub_id}/",
                 replacements: new Dictionary<string, string>()
@@ -61,16 +53,12 @@ namespace ESI.NET.Logic
                 options: options).ConfigureAwait(false);
 
         /// <summary>/characters/{character_id}/structures/mercenary-dens/</summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
-            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<MercenaryDenList>> MercenaryDens(EsiCallOptions options)
             => await Execute<MercenaryDenList>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/structures/mercenary-dens/",
                 replacements: new Dictionary<string, string>() { { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) } },
                 options: options).ConfigureAwait(false);
 
         /// <summary>/characters/{character_id}/structures/mercenary-dens/{mercenary_den_id}/</summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
-            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<MercenaryDen>> MercenaryDen(long mercenaryDenId, EsiCallOptions options)
             => await Execute<MercenaryDen>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/structures/mercenary-dens/{mercenary_den_id}/",
                 replacements: new Dictionary<string, string>()

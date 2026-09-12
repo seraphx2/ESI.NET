@@ -38,8 +38,6 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /characters/{character_id}/freelance-jobs/ - jobs the character is participating in.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
-            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<FreelanceJobList>> ForCharacter(EsiCallOptions options)
             => await Execute<FreelanceJobList>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/freelance-jobs/",
                 replacements: new Dictionary<string, string>() { { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) } },
@@ -48,8 +46,6 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /characters/{character_id}/freelance-jobs/{job_id}/participation/ - the character's participation record.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
-            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<FreelanceParticipation>> CharacterParticipation(string jobId, EsiCallOptions options)
             => await Execute<FreelanceParticipation>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/freelance-jobs/{job_id}/participation/",
                 replacements: new Dictionary<string, string>()
@@ -62,8 +58,6 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /corporations/{corporation_id}/freelance-jobs/ - jobs the corporation has posted.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
-            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<FreelanceJobList>> ForCorporation(string after = null, string before = null, int? limit = null, EsiCallOptions options = null)
             => await Execute<FreelanceJobList>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/freelance-jobs/",
                 replacements: new Dictionary<string, string>() { { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) } },
@@ -73,8 +67,6 @@ namespace ESI.NET.Logic
         /// <summary>
         /// /corporations/{corporation_id}/freelance-jobs/{job_id}/participants/ - a page of participants.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods",
-            Justification = "options is deliberately optional (= null) on every endpoint method - the vast majority of calls need no special options at all. EsiRequest.Execute<T> already substitutes a default when it's null; throwing here would turn the library's single most common call shape into a guaranteed crash.")]
         public async Task<EsiResponse<FreelanceParticipants>> CorporationParticipants(string jobId, string after = null, string before = null, int? limit = null, EsiCallOptions options = null)
             => await Execute<FreelanceParticipants>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/freelance-jobs/{job_id}/participants/",
                 replacements: new Dictionary<string, string>()

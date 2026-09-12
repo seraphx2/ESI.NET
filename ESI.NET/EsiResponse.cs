@@ -36,12 +36,6 @@ namespace ESI.NET
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types",
-            Justification = "Deliberate: this is the boundary between untrusted ESI response bytes and a typed " +
-                "object. Any parsing failure - a header format ESI didn't document, a future spec deviation, an " +
-                "unanticipated JSON shape - has to land on Exception/Message instead of throwing out of Execute<T>, " +
-                "or every caller has to wrap every call. Narrowing to a specific exception list would defeat that: " +
-                "the next ESI quirk nobody's hit yet would throw straight through instead of being caught here.")]
         private EsiResponse(HttpResponseMessage response, string path, string body)
         {
             try
