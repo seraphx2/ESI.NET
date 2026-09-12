@@ -1,10 +1,11 @@
-﻿using ESI.NET.Enumerations;
+using ESI.NET.Enumerations;
 using ESI.NET.Models.Character;
 using ESI.NET.Models.SSO;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
@@ -24,7 +25,9 @@ namespace ESI.NET
         private readonly string _clientKey;
         private readonly string _ssoUrl;
 
-        private static Random random = new Random();
+        // Cryptographically secure: the PKCE code_verifier's entire protection depends on being
+        // unpredictable (RFC 7636). System.Random is seeded and predictable and must not be used here.
+        private static readonly RandomNumberGenerator Rng = RandomNumberGenerator.Create();
 
         public SsoLogic(HttpClient client, EsiConfig config)
         {
@@ -137,7 +140,22 @@ namespace ESI.NET
         public string GenerateChallengeCode()
         {
             const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            return new string(Enumerable.Repeat(chars, 32).Select(s => s[random.Next(s.Length)]).ToArray());
+            // Reject-and-retry on bytes past the last full multiple of chars.Length (248 for 62
+            // chars), instead of a plain modulo, so every character is exactly equally likely.
+            var limit = (byte)(256 - 256 % chars.Length);
+            var result = new char[32];
+            var buffer = new byte[1];
+            for (var i = 0; i < result.Length; i++)
+            {
+                byte b;
+                do
+                {
+                    Rng.GetBytes(buffer);
+                    b = buffer[0];
+                } while (b >= limit);
+                result[i] = chars[b % chars.Length];
+            }
+            return new string(result);
         }
 
         /// <summary>
@@ -224,7 +242,14 @@ namespace ESI.NET
         /// Split out of <see cref="Verify"/> so the validation path can be exercised without a
         /// live SSO endpoint. The affiliation lookup stays in <see cref="Verify"/>.
         /// </summary>
-        internal static AuthorizedCharacterData ValidateAccessToken(SsoToken token, string ssoUrl, string jwksJson)
+        /// <param name="clientId">
+        /// This application's own OAuth client ID. Per CCP's documented JWT validation requirements
+        /// (docs.esi.evetech.net/docs/sso/validating_eve_jwt.html), a real EVE SSO access token's
+        /// <c>aud</c> claim is <c>[clientId, "EVE Online"]</c>, and both are required to be present -
+        /// this rejects a token that is well-formed and correctly signed by CCP but was issued for a
+        /// *different* registered application (client-confusion / cross-app token replay).
+        /// </param>
+        internal static AuthorizedCharacterData ValidateAccessToken(SsoToken token, string ssoUrl, string clientId, string jwksJson)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var jwks = new JsonWebKeySet(jwksJson);
@@ -232,7 +257,9 @@ namespace ESI.NET
 
             var tokenValidationParams = new TokenValidationParameters
             {
-                ValidateAudience = false,
+                ValidateAudience = true,
+                AudienceValidator = (audiences, _, _) =>
+                    audiences.Contains("EVE Online", StringComparer.Ordinal) && audiences.Contains(clientId, StringComparer.Ordinal),
                 ValidateIssuer = true,
                 ValidIssuer = $"https://{ssoUrl}",
                 ValidateIssuerSigningKey = true,
@@ -254,7 +281,7 @@ namespace ESI.NET
                 Token = token.AccessToken,
                 CharacterName = nameClaim,
                 CharacterOwnerHash = ownerClaim,
-                CharacterID = long.Parse(subjectClaim.Split(':').Last()),
+                CharacterID = long.Parse(subjectClaim.Split(':').Last(), CultureInfo.InvariantCulture),
                 ExpiresOn = jwt.ValidTo,
                 Scopes = scopesClaim,
             };
@@ -285,12 +312,13 @@ namespace ESI.NET
                 using (var jwksResponse = await _client.GetAsync(jwksUrl).ConfigureAwait(false))
                     jwksJson = await jwksResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-                authorizedCharacter = ValidateAccessToken(token, _ssoUrl, jwksJson);
+                authorizedCharacter = ValidateAccessToken(token, _ssoUrl, _config.ClientId, jwksJson);
             }
             catch (Exception ex)
             {
                 throw new InvalidOperationException(
-                    "SSO access-token verification failed. The token may be expired, malformed, or issued for a different SSO host.", ex);
+                    "SSO access-token verification failed. The token may be expired, malformed, issued for a " +
+                    "different SSO host, or issued for a different application (client_id mismatch).", ex);
             }
 
             // Best-effort enrichment: a failure here does not invalidate the token.

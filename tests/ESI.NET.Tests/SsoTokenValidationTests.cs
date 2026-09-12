@@ -26,6 +26,11 @@ namespace ESI.NET.Tests
         private const string Kid = "JWT-Signature-Key";
         private const int CharacterId = 2112625428;
 
+        // CCP's documented aud shape (docs.esi.evetech.net/docs/sso/validating_eve_jwt.html):
+        // "aud": [clientId, "EVE Online"]. ClientId here stands in for this application's own,
+        // configured registration.
+        private const string ClientId = "my3rdpartyclientid";
+
         private static readonly RSA SigningKey = RSA.Create(2048);
 
         private static string Jwks(RSA key = null)
@@ -50,6 +55,8 @@ namespace ESI.NET.Tests
             new Claim("owner", "8PmzCeTKb4VFUDrHLc/n4VWtx1M="),
             new Claim("scp", "esi-skills.read_skills.v1"),
             new Claim("scp", "esi-wallet.read_character_wallet.v1"),
+            new Claim("aud", ClientId),
+            new Claim("aud", "EVE Online"),
         };
 
         private static string SignToken(
@@ -75,7 +82,7 @@ namespace ESI.NET.Tests
         [Fact]
         public void Valid_token_projects_identity_claims()
         {
-            var result = SsoLogic.ValidateAccessToken(Token(SignToken()), Host, Jwks());
+            var result = SsoLogic.ValidateAccessToken(Token(SignToken()), Host, ClientId, Jwks());
 
             Assert.Equal(CharacterId, result.CharacterID);
             Assert.Equal("CCP Zoetrope", result.CharacterName);
@@ -92,7 +99,7 @@ namespace ESI.NET.Tests
             // likely silent breakage across the 6.x -> 8.x jump. Verify() reads "sub"/"name"/"owner"
             // /"scp" verbatim off the JwtSecurityToken, so finding the character id at all proves the
             // claim types survived unmapped.
-            var result = SsoLogic.ValidateAccessToken(Token(SignToken()), Host, Jwks());
+            var result = SsoLogic.ValidateAccessToken(Token(SignToken()), Host, ClientId, Jwks());
             Assert.Equal(CharacterId, result.CharacterID);
             Assert.NotEqual(0, result.CharacterID);
         }
@@ -101,7 +108,7 @@ namespace ESI.NET.Tests
         public void Wrong_issuer_is_rejected()
         {
             var token = Token(SignToken(issuer: "https://login.evil.example"));
-            Assert.ThrowsAny<SecurityTokenException>(() => SsoLogic.ValidateAccessToken(token, Host, Jwks()));
+            Assert.ThrowsAny<SecurityTokenException>(() => SsoLogic.ValidateAccessToken(token, Host, ClientId, Jwks()));
         }
 
         [Fact]
@@ -110,14 +117,14 @@ namespace ESI.NET.Tests
             using var attacker = RSA.Create(2048);
             var forged = Token(SignToken(key: attacker));           // signed by the attacker's key...
             Assert.ThrowsAny<SecurityTokenException>(
-                () => SsoLogic.ValidateAccessToken(forged, Host, Jwks()));  // ...validated against the real JWKS
+                () => SsoLogic.ValidateAccessToken(forged, Host, ClientId, Jwks()));  // ...validated against the real JWKS
         }
 
         [Fact]
         public void Expired_beyond_clock_skew_is_rejected()
         {
             var token = Token(SignToken(expires: DateTime.UtcNow.AddSeconds(-30)));
-            Assert.Throws<SecurityTokenExpiredException>(() => SsoLogic.ValidateAccessToken(token, Host, Jwks()));
+            Assert.Throws<SecurityTokenExpiredException>(() => SsoLogic.ValidateAccessToken(token, Host, ClientId, Jwks()));
         }
 
         [Fact]
@@ -125,8 +132,40 @@ namespace ESI.NET.Tests
         {
             // ValidateAccessToken allows a 2s skew for CCP's slightly-fast clocks.
             var token = Token(SignToken(expires: DateTime.UtcNow.AddSeconds(-1)));
-            var result = SsoLogic.ValidateAccessToken(token, Host, Jwks());
+            var result = SsoLogic.ValidateAccessToken(token, Host, ClientId, Jwks());
             Assert.Equal(CharacterId, result.CharacterID);
+        }
+
+        [Fact]
+        public void Token_issued_for_a_different_application_is_rejected()
+        {
+            // A real, correctly-signed CCP token, but its aud names a different registered
+            // application - this is exactly the client-confusion / cross-app replay case
+            // ValidateAudience is there to catch.
+            var claims = new[]
+            {
+                new Claim("sub", $"CHARACTER:EVE:{CharacterId}"),
+                new Claim("aud", "someone-elses-client-id"),
+                new Claim("aud", "EVE Online"),
+            };
+            var token = Token(SignToken(claims: claims));
+
+            Assert.ThrowsAny<SecurityTokenException>(() => SsoLogic.ValidateAccessToken(token, Host, ClientId, Jwks()));
+        }
+
+        [Fact]
+        public void Token_missing_the_EVE_Online_audience_is_rejected()
+        {
+            // Correct client_id present, but not CCP's documented fixed "EVE Online" audience
+            // value - still not the shape a real EVE SSO token has.
+            var claims = new[]
+            {
+                new Claim("sub", $"CHARACTER:EVE:{CharacterId}"),
+                new Claim("aud", ClientId),
+            };
+            var token = Token(SignToken(claims: claims));
+
+            Assert.ThrowsAny<SecurityTokenException>(() => SsoLogic.ValidateAccessToken(token, Host, ClientId, Jwks()));
         }
 
         [Fact]
