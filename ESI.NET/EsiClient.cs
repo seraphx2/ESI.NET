@@ -25,6 +25,8 @@ namespace ESI.NET
         /// </param>
         public EsiClient(IOptions<EsiConfig> config, HttpClient client = null)
         {
+            if (config == null) throw new ArgumentNullException(nameof(config));
+
             _config = config.Value;
 
             if (client != null)

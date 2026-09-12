@@ -64,6 +64,8 @@ namespace ESI.NET
         /// </summary>
         public static string ToEsiValue(this Enum e)
         {
+            if (e == null) throw new ArgumentNullException(nameof(e));
+
             var type = e.GetType();
 
             if (Attribute.IsDefined(type, typeof(FlagsAttribute)))

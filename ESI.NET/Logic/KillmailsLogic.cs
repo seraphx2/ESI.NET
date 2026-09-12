@@ -1,4 +1,5 @@
 ﻿using ESI.NET.Models.Killmails;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;
@@ -55,7 +56,7 @@ namespace ESI.NET.Logic
                 replacements: new Dictionary<string, string>()
                 {
                     { "killmail_id", killmailId.ToString(CultureInfo.InvariantCulture) },
-                    { "killmail_hash", killmailHash.ToString() }
+                    { "killmail_hash", killmailHash ?? throw new ArgumentNullException(nameof(killmailHash)) }
                 },
                 options: options).ConfigureAwait(false);
 

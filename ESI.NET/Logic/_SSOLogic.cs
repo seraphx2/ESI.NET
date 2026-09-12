@@ -31,6 +31,8 @@ namespace ESI.NET
 
         public SsoLogic(HttpClient client, EsiConfig config)
         {
+            if (config == null) throw new ArgumentNullException(nameof(config));
+
             _client = client;
             _config = config;
             switch (_config.DataSource)
@@ -302,6 +304,8 @@ namespace ESI.NET
         /// <exception cref="InvalidOperationException">The access token failed validation.</exception>
         public async Task<AuthorizedCharacterData> Verify(SsoToken token)
         {
+            if (token == null) throw new ArgumentNullException(nameof(token));
+
             AuthorizedCharacterData authorizedCharacter;
 
             try

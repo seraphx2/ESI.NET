@@ -182,6 +182,23 @@ namespace ESI.NET.Tests
             await Assert.ThrowsAsync<System.InvalidOperationException>(() => sso.Verify(Token("not-a-real-jwt")));
         }
 
+        [Fact]
+        public async System.Threading.Tasks.Task Verify_throws_ArgumentNullException_for_a_null_token()
+        {
+            // Distinct from a malformed token (InvalidOperationException, above) - this is a caller
+            // bug, not an SSO/network failure, and should say so clearly (CA1062) rather than get
+            // folded into the generic "verification failed" wrapper.
+            var sso = new SsoLogic(new System.Net.Http.HttpClient(), new EsiConfig
+            {
+                DataSource = ESI.NET.Enumerations.DataSource.Tranquility,
+                EsiUrl = "https://esi.evetech.net/",
+                ClientId = "id",
+                SecretKey = "secret",
+            });
+
+            await Assert.ThrowsAsync<ArgumentNullException>(() => sso.Verify(null));
+        }
+
         private sealed class StubResponder : System.Net.Http.HttpMessageHandler
         {
             private readonly System.Func<System.Net.Http.HttpRequestMessage, System.Net.Http.HttpResponseMessage> _fn;

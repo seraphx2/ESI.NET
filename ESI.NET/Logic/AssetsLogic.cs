@@ -1,4 +1,5 @@
 ﻿using ESI.NET.Models.Assets;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;
@@ -42,7 +43,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
-                body: itemIds.ToArray(),
+                body: (itemIds ?? throw new ArgumentNullException(nameof(itemIds))).ToArray(),
                 options: options).ConfigureAwait(false);
 
         /// <summary>
@@ -56,7 +57,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
-                body: itemIds.ToArray(),
+                body: (itemIds ?? throw new ArgumentNullException(nameof(itemIds))).ToArray(),
                 options: options).ConfigureAwait(false);
 
 
@@ -84,7 +85,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
-                body: itemIds.ToArray(),
+                body: (itemIds ?? throw new ArgumentNullException(nameof(itemIds))).ToArray(),
                 options: options).ConfigureAwait(false);
 
         /// <summary>
@@ -98,7 +99,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
-                body: itemIds.ToArray(),
+                body: (itemIds ?? throw new ArgumentNullException(nameof(itemIds))).ToArray(),
                 options: options).ConfigureAwait(false);
     }
 }

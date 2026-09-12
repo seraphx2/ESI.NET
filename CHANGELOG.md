@@ -222,6 +222,17 @@ had changed short of a consumer filing a bug. That is now covered.
   rewritten to resolve through that converter instead of hand-rolled
   reflection, so it can't silently drift from what real serialization
   produces; `SearchCategory` gets the same converter for consistency.
+- 15 public methods that dereferenced a required reference-type parameter
+  without checking it now throw a clear `ArgumentNullException` naming the
+  parameter instead of an unrelated `NullReferenceException` (or, for
+  `SsoLogic.Verify(null)` specifically, getting folded into the generic
+  `InvalidOperationException` wrapper meant for a malformed *token*, not a
+  caller bug): `EsiClient`/`EsiHeadersHandler`/`EsiTokenRefreshHandler`/
+  `SsoLogic`'s `config` constructor parameters, `EsiHeadersHandler`'s and
+  `EsiTokenRefreshHandler`'s `SendAsync(request, ...)`, `SsoLogic.Verify(token)`,
+  `Extensions.ToEsiValue(e)`, `AssetsLogic`'s four `itemIds` parameters,
+  `KillmailsLogic.Information(killmailHash, ...)`, and `UniverseLogic.Names(anyIds)`
+  / `.IDs(names)`.
 
 ### Migration
 
