@@ -60,7 +60,7 @@ namespace ESI.NET
         /// </summary>
         public static string ToEsiValue(this Enum e)
         {
-            if (e == null) throw new ArgumentNullException(nameof(e));
+            Guard.NotNull(e, nameof(e));
 
             var type = e.GetType();
 

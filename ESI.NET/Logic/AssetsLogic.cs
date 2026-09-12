@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -37,7 +38,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="itemIds"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<ItemLocation>>> LocationsForCharacter(List<long> itemIds, EsiCallOptions options)
+        public async Task<EsiResponse<List<ItemLocation>>> LocationsForCharacter(IReadOnlyList<long> itemIds, EsiCallOptions options)
             => await Execute<List<ItemLocation>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/characters/{character_id}/assets/locations/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -51,7 +52,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="itemIds"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<ItemName>>> NamesForCharacter(List<long> itemIds, EsiCallOptions options)
+        public async Task<EsiResponse<List<ItemName>>> NamesForCharacter(IReadOnlyList<long> itemIds, EsiCallOptions options)
             => await Execute<List<ItemName>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/characters/{character_id}/assets/names/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -79,7 +80,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="itemIds"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<ItemLocation>>> LocationsForCorporation(List<long> itemIds, EsiCallOptions options)
+        public async Task<EsiResponse<List<ItemLocation>>> LocationsForCorporation(IReadOnlyList<long> itemIds, EsiCallOptions options)
             => await Execute<List<ItemLocation>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/corporations/{corporation_id}/assets/locations/",
                 replacements: new Dictionary<string, string>()
                 {
@@ -93,7 +94,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="itemIds"></param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<ItemName>>> NamesForCorporation(List<long> itemIds, EsiCallOptions options)
+        public async Task<EsiResponse<List<ItemName>>> NamesForCorporation(IReadOnlyList<long> itemIds, EsiCallOptions options)
             => await Execute<List<ItemName>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/corporations/{corporation_id}/assets/names/",
                 replacements: new Dictionary<string, string>()
                 {

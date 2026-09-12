@@ -26,6 +26,10 @@ cancellation, pagination) is passed. **Every consumer needs code changes** — s
   named arguments (`Information(alliance_id: 123)` → `Information(allianceId: 123)`);
   positional calls are unaffected. `EsiClient`'s constructor parameters are
   `config` / `client` (were `_config` / `_client`).
+- `ESI.NET.Enumerations.RoutesFlag` (the `RoutesLogic.Map` `flag` parameter) is
+  renamed `RoutePreference` — it isn't actually a `[Flags]` enum and didn't
+  mirror any ESI concept name, so there was no reason to keep one that collides
+  with the reserved `Flag` type-name suffix.
 
 **Per-call options**
 
@@ -126,7 +130,7 @@ cancellation, pagination) is passed. **Every consumer needs code changes** — s
   stay on this contract until they upgrade the package.
 - `Routes.Map` is now a `POST` to `/route/{origin_system_id}/{destination_system_id}`
   with `avoid_systems` / `connections` in the body and an `EsiResponse<RouteResult>`
-  return; `RoutesFlag` values are `Shorter` / `Safer` / `LessSecure`.
+  return; `RoutePreference` values are `Shorter` / `Safer` / `LessSecure`.
 - `Sovereignty.Systems` → `/sovereignty/systems` (`EsiResponse<SovereigntySystems>`);
   `Sovereignty.Structures` removed.
 - `Information`: `title` removed, `AchievementScore` / `CharacterTitleId` /
@@ -235,11 +239,50 @@ had changed short of a consumer filing a bug. That is now covered.
   / `.IDs(names)`.
 - The remaining 123 "validate this parameter" analyzer hits were all the same
   parameter - every endpoint method's trailing `EsiCallOptions options = null`
-  - and are documented `[SuppressMessage]`s, not fixes: `options` is
-  deliberately optional, `null` is the correct value for the overwhelming
-  majority of calls, and the default is already substituted centrally in
+  - and, along with every other suppression in the library, are documented in
+  `GlobalSuppressions.cs` rather than fixed: `options` is deliberately
+  optional, `null` is the correct value for the overwhelming majority of
+  calls, and the default is already substituted centrally in
   `EsiRequest.Execute<T>`. Throwing here would break the library's single
   most common call shape.
+- `EsiErrorLimitException` gained the three constructors every custom
+  exception is expected to have (parameterless, `(message)`,
+  `(message, innerException)`) alongside its existing `(TimeSpan retryAfter)`.
+- Five more constructed `HttpRequestMessage` / `StringContent` objects across
+  `SsoLogic` and the manually-wired `EsiTokenRefreshHandler` inside
+  `EsiClient`'s no-DI constructor path are now disposed; `SsoLogic`'s
+  `RequestTokenAsync` forwards `cancellationToken` to `ReadAsStringAsync` on
+  net8.0 instead of silently dropping it.
+- PKCE's SHA-256 hashing uses `SHA256.HashData` on net8.0 instead of
+  `SHA256.Create().ComputeHash(...)` (identical result, less GC pressure);
+  `SsoLogic.RevokeToken` / `.Verify` call `HttpClient.PostAsync` / `.GetAsync`
+  with a `Uri` instead of a raw string.
+- `EsiClient` implements `IDisposable` and disposes the `HttpClient` it
+  created itself in its no-DI constructor path — never one a caller or
+  `AddEsi`'s `IHttpClientFactory` pipeline supplied, since that one isn't
+  this instance's to dispose.
+- `AssetsLogic`'s four `itemIds` parameters, `UniverseLogic.Names` / `.IDs`,
+  and `SsoLogic.CreateAuthenticationUrl`'s `scope` now accept
+  `IReadOnlyList<T>` instead of `List<T>`. Non-breaking: an existing caller
+  passing a `List<T>` is unaffected; anyone else can now pass an array or any
+  other read-only collection.
+- Centralized the 8 identical `if (x == null) throw new
+  ArgumentNullException(nameof(x))` null-guards added above behind an
+  internal `Guard.NotNull()` helper, which resolves to
+  `ArgumentNullException.ThrowIfNull` on net8.0.
+- 15 more analyzer hits across 7 rules are documented `GlobalSuppressions.cs`
+  suppressions rather than fixes: `Event` / `Module` / `Structure` (×2) /
+  `Models.Dogma.Attribute` mirror ESI's own concept names, the same reasoning
+  already used for `Extensions`'s CA1724 above; `EsiConfig.EsiUrl` /
+  `.CallbackUrl`, `Corporation.Url`, and `CreateAuthenticationUrl`'s return
+  type stay `string` rather than `System.Uri` (config/DTO surface used as
+  strings throughout; not worth the blast radius for a strict parser that can
+  throw where a lenient string never would); four `.Replace` / `.IndexOf`
+  calls skip an explicit `StringComparison` / `.Contains(char)` because those
+  overloads don't exist on netstandard2.0; and `SsoLogic.Verify`'s
+  best-effort affiliation-lookup `catch {}` joins `EsiResponse<T>`'s
+  constructor under the same "must not invalidate an otherwise-good token"
+  justification.
 
 ### Migration
 

@@ -258,6 +258,20 @@ Positional calls (`client.Alliance.Information(99005338)`, by far the common
 case) need no change. `EsiClient`'s own constructor parameters are `config` /
 `client` (were `_config` / `_client`).
 
+## 15. `RoutesFlag` is renamed `RoutePreference`
+
+`ESI.NET.Enumerations.RoutesFlag` (the `flag` parameter on `RoutesLogic.Map`)
+is renamed `RoutePreference` — it isn't actually a `[Flags]` enum, and the name
+didn't mirror anything in ESI's own API, so there was no reason to keep a name
+that collides with the reserved `Flag` type-name suffix:
+
+```csharp
+// before
+await client.Routes.Map(from, to, RoutesFlag.Safer);
+// after
+await client.Routes.Map(from, to, RoutePreference.Safer);
+```
+
 ---
 
 ## What did not change

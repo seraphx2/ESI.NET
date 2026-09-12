@@ -8,10 +8,15 @@ using System.Net.Http.Headers;
 
 namespace ESI.NET
 {
-    public class EsiClient : IEsiClient
+    public class EsiClient : IEsiClient, IDisposable
     {
         readonly HttpClient _client;
         readonly EsiConfig _config;
+
+        // Only true when this instance created _client itself (the no-DI, no-supplied-client path).
+        // A caller-supplied client (including one vended by AddEsi's IHttpClientFactory pipeline) is
+        // not ours to dispose - the caller / factory owns its lifetime.
+        readonly bool _ownsClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EsiClient"/> class.
@@ -25,7 +30,7 @@ namespace ESI.NET
         /// </param>
         public EsiClient(IOptions<EsiConfig> config, HttpClient client = null)
         {
-            if (config == null) throw new ArgumentNullException(nameof(config));
+            Guard.NotNull(config, nameof(config));
 
             _config = config.Value;
 
@@ -38,10 +43,10 @@ namespace ESI.NET
 
                 // No DI pipeline here, so wire the token-refresh handler in manually. Without an
                 // IServiceScopeFactory it honours EsiCallOptions.OnTokenRefreshed but not a sink.
-                var handler = new EsiTokenRefreshHandler(config) { InnerHandler = CreateDefaultHandler() };
-                _client = new HttpClient(handler);
+                _client = new HttpClient(new EsiTokenRefreshHandler(config) { InnerHandler = CreateDefaultHandler() });
                 _client.DefaultRequestHeaders.Add("X-User-Agent", _config.UserAgent);
                 _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                _ownsClient = true;
             }
 
 
@@ -145,6 +150,24 @@ namespace ESI.NET
             }
 
             return handler;
+        }
+
+        /// <summary>
+        /// Disposes the underlying <see cref="HttpClient"/> - but only when this <see cref="EsiClient"/>
+        /// created it itself (the no-DI, no-supplied-client constructor path). A caller-supplied client,
+        /// including one vended through <c>AddEsi</c>'s <see cref="System.Net.Http.IHttpClientFactory"/>
+        /// pipeline, is left alone; its lifetime belongs to whoever supplied it.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing && _ownsClient)
+                _client.Dispose();
         }
     }
 

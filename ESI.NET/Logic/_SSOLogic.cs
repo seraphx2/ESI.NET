@@ -31,7 +31,7 @@ namespace ESI.NET
 
         public SsoLogic(HttpClient client, EsiConfig config)
         {
-            if (config == null) throw new ArgumentNullException(nameof(config));
+            Guard.NotNull(config, nameof(config));
 
             _client = client;
             _config = config;
@@ -65,7 +65,7 @@ namespace ESI.NET
         internal static async Task<SsoToken> RequestTokenAsync(Func<HttpRequestMessage, CancellationToken, Task<HttpResponseMessage>> send, EsiConfig config, string requestBody, CancellationToken cancellationToken = default)
         {
             var host = SsoHost(config.DataSource);
-            var request = new HttpRequestMessage(HttpMethod.Post, $"https://{host}/v2/oauth/token")
+            using var request = new HttpRequestMessage(HttpMethod.Post, $"https://{host}/v2/oauth/token")
             {
                 Content = new StringContent(requestBody, Encoding.UTF8, "application/x-www-form-urlencoded"),
             };
@@ -79,7 +79,11 @@ namespace ESI.NET
 
             using (var response = await send(request, cancellationToken).ConfigureAwait(false))
             {
+#if NET
+                var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+#else
                 var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+#endif
                 if (response.StatusCode != HttpStatusCode.OK)
                     throw new ArgumentException(JsonConvert.DeserializeAnonymousType(content, new { error_description = string.Empty }).error_description);
                 return JsonConvert.DeserializeObject<SsoToken>(content);
@@ -112,7 +116,7 @@ namespace ESI.NET
         /// <param name="code_challenge">All hashing/encryption will be done automatically. Just provide the code.</param>
         /// <param name=""></param>
         /// <returns></returns>
-        public string CreateAuthenticationUrl(List<string> scope = null, string state = null, string challengeCode = null)
+        public string CreateAuthenticationUrl(IReadOnlyList<string> scope = null, string state = null, string challengeCode = null)
         {
             var url = $"https://{_ssoUrl}/v2/oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}";
 
@@ -126,20 +130,22 @@ namespace ESI.NET
             {
                 url = $"{url}&code_challenge_method=S256";
 
-                using (var sha256 = SHA256.Create())
-                {
-                    var base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(challengeCode)).TrimEnd('=').Replace('+', '-').Replace('/', '_');
-                    var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(base64));
-                    var code_challenge = Convert.ToBase64String(bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+                var base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(challengeCode)).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+#if NET
+                var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(base64));
+#else
+                using var sha256 = SHA256.Create();
+                var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(base64));
+#endif
+                var code_challenge = Convert.ToBase64String(bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
 
-                    url = $"{url}&code_challenge={code_challenge}";
-                }
+                url = $"{url}&code_challenge={code_challenge}";
             }
 
             return url;
         }
         
-        public string GenerateChallengeCode()
+        public static string GenerateChallengeCode()
         {
             const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             // Reject-and-retry on bytes past the last full multiple of chars.Length (248 for 62
@@ -189,7 +195,7 @@ namespace ESI.NET
                     body += $"&client_id={_config.ClientId}";
             }
 
-            var request = new HttpRequestMessage(HttpMethod.Post, $"https://{_ssoUrl}/v2/oauth/token")
+            using var request = new HttpRequestMessage(HttpMethod.Post, $"https://{_ssoUrl}/v2/oauth/token")
             {
                 Content = new StringContent(body, Encoding.UTF8, "application/x-www-form-urlencoded"),
             };
@@ -224,10 +230,10 @@ namespace ESI.NET
             var body = $"token_type_hint={GrantType.RefreshToken.ToEsiValue()}";
             body += $"&token={Uri.EscapeDataString(code)}";
 
-            HttpContent postBody = new StringContent(body, Encoding.UTF8, "application/x-www-form-urlencoded");
+            using HttpContent postBody = new StringContent(body, Encoding.UTF8, "application/x-www-form-urlencoded");
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", _clientKey);
 
-            var response = await _client.PostAsync($"https://{_ssoUrl}/v2/oauth/revoke", postBody).ConfigureAwait(false);
+            var response = await _client.PostAsync(new Uri($"https://{_ssoUrl}/v2/oauth/revoke"), postBody).ConfigureAwait(false);
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             if (response.StatusCode != HttpStatusCode.OK)
@@ -304,14 +310,14 @@ namespace ESI.NET
         /// <exception cref="InvalidOperationException">The access token failed validation.</exception>
         public async Task<AuthorizedCharacterData> Verify(SsoToken token)
         {
-            if (token == null) throw new ArgumentNullException(nameof(token));
+            Guard.NotNull(token, nameof(token));
 
             AuthorizedCharacterData authorizedCharacter;
 
             try
             {
                 // Get the EVE Online JWKS to validate the access token against
-                var jwksUrl = $"https://{_ssoUrl}/oauth/jwks";
+                var jwksUrl = new Uri($"https://{_ssoUrl}/oauth/jwks");
                 string jwksJson;
                 using (var jwksResponse = await _client.GetAsync(jwksUrl).ConfigureAwait(false))
                     jwksJson = await jwksResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -329,7 +335,7 @@ namespace ESI.NET
             try
             {
                 var url = $"{_config.EsiUrl.TrimEnd('/')}/characters/affiliation/";
-                var request = new HttpRequestMessage(HttpMethod.Post, url)
+                using var request = new HttpRequestMessage(HttpMethod.Post, url)
                 {
                     Content = new StringContent(JsonConvert.SerializeObject(new[] { authorizedCharacter.CharacterID }), Encoding.UTF8, "application/json"),
                 };

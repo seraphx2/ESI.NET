@@ -9,6 +9,12 @@ namespace ESI.NET.Http
     /// </summary>
     public sealed class EsiErrorLimitException : Exception
     {
+        public EsiErrorLimitException() { }
+
+        public EsiErrorLimitException(string message) : base(message) { }
+
+        public EsiErrorLimitException(string message, Exception innerException) : base(message, innerException) { }
+
         public EsiErrorLimitException(TimeSpan retryAfter)
             : base($"ESI error limit reached (HTTP 420). Retry after {retryAfter.TotalSeconds:0}s.")
         {

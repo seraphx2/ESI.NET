@@ -1,6 +1,7 @@
 ﻿using ESI.NET.Models.Universe;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -142,7 +143,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="anyIds">The ids to resolve; Supported IDs for resolving are: Characters, Corporations, Alliances, Stations, Solar Systems, Constellations, Regions, Types.</param>
         /// <returns></returns>
-        public async Task<EsiResponse<List<ResolvedInfo>>> Names(List<long> anyIds, EsiCallOptions options = null)
+        public async Task<EsiResponse<List<ResolvedInfo>>> Names(IReadOnlyList<long> anyIds, EsiCallOptions options = null)
             => await Execute<List<ResolvedInfo>>(_client, _config, RequestSecurity.Public, HttpMethod.Post, "/universe/names/", body: (anyIds ?? throw new System.ArgumentNullException(nameof(anyIds))).ToArray(),
                 options: options).ConfigureAwait(false);
 
@@ -152,7 +153,7 @@ namespace ESI.NET.Logic
         /// </summary>
         /// <param name="names">Resolve a set of names to IDs in the following categories: agents, alliances, characters, constellations, corporations factions, inventory_types, regions, stations, and systems. Only exact matches will be returned. All names searched for are cached for 12 hours.</param>
         /// <returns></returns>
-        public async Task<EsiResponse<IDLookup>> IDs(List<string> names, EsiCallOptions options = null)
+        public async Task<EsiResponse<IDLookup>> IDs(IReadOnlyList<string> names, EsiCallOptions options = null)
             => await Execute<IDLookup>(_client, _config, RequestSecurity.Public, HttpMethod.Post, "/universe/ids/", body: (names ?? throw new System.ArgumentNullException(nameof(names))).ToArray(),
                 options: options).ConfigureAwait(false);
 

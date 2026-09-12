@@ -28,7 +28,7 @@ namespace ESI.NET.Logic
         public async Task<EsiResponse<RouteResult>> Map(
             long originSystemId,
             long destinationSystemId,
-            RoutesFlag flag = RoutesFlag.Shorter,
+            RoutePreference flag = RoutePreference.Shorter,
             long[] avoidSystems = null,
             long[][] connections = null,
             int? securityPenalty = null,

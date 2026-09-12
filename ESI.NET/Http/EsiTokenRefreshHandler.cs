@@ -26,7 +26,7 @@ namespace ESI.NET.Http
 
         public EsiTokenRefreshHandler(IOptions<EsiConfig> config, IServiceScopeFactory scopeFactory = null)
         {
-            if (config == null) throw new ArgumentNullException(nameof(config));
+            Guard.NotNull(config, nameof(config));
 
             _config = config.Value;
             _scopeFactory = scopeFactory;
@@ -34,7 +34,7 @@ namespace ESI.NET.Http
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            if (request == null) throw new ArgumentNullException(nameof(request));
+            Guard.NotNull(request, nameof(request));
 
             var character = EsiRequestState.GetCharacter(request);
 

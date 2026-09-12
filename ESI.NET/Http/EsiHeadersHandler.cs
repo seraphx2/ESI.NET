@@ -19,7 +19,7 @@ namespace ESI.NET.Http
 
         public EsiHeadersHandler(IOptions<EsiConfig> config)
         {
-            if (config == null) throw new ArgumentNullException(nameof(config));
+            Guard.NotNull(config, nameof(config));
 
             _userAgent = config.Value?.UserAgent;
             if (string.IsNullOrWhiteSpace(_userAgent))
@@ -30,7 +30,7 @@ namespace ESI.NET.Http
 
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            if (request == null) throw new ArgumentNullException(nameof(request));
+            Guard.NotNull(request, nameof(request));
 
             if (!request.Headers.Contains("X-User-Agent"))
                 request.Headers.Add("X-User-Agent", _userAgent);
