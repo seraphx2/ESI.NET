@@ -50,7 +50,7 @@ namespace ESI.NET.Logic
                     { "destination_system_id", destination_system_id.ToString() }
                 },
                 body: payload,
-                options: options);
+                options: options).ConfigureAwait(false);
         }
     }
 }

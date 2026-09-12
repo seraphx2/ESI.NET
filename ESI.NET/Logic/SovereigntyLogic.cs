@@ -19,7 +19,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<List<Campaign>>> Campaigns(EsiCallOptions options = null)
             => await Execute<List<Campaign>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/sovereignty/campaigns/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -28,6 +28,6 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<SovereigntySystems>> Systems(EsiCallOptions options = null)
             => await Execute<SovereigntySystems>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/sovereignty/systems/",
-                options: options);
+                options: options).ConfigureAwait(false);
     }
 }

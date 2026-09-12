@@ -24,7 +24,7 @@ namespace ESI.NET.Logic
         public async Task<EsiResponse<FreelanceJobList>> All(long? corporation_id = null, string after = null, string before = null, int? limit = null, EsiCallOptions options = null)
             => await Execute<FreelanceJobList>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/freelance-jobs/",
                 parameters: Cursor(("corporation_id", corporation_id?.ToString()), ("after", after), ("before", before), ("limit", limit?.ToString())),
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /freelance-jobs/{job_id}/ - full public detail for one job.
@@ -32,7 +32,7 @@ namespace ESI.NET.Logic
         public async Task<EsiResponse<FreelanceJob>> Get(string job_id, EsiCallOptions options = null)
             => await Execute<FreelanceJob>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/freelance-jobs/{job_id}/",
                 replacements: new Dictionary<string, string>() { { "job_id", job_id } },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/freelance-jobs/ - jobs the character is participating in.
@@ -40,7 +40,7 @@ namespace ESI.NET.Logic
         public async Task<EsiResponse<FreelanceJobList>> ForCharacter(EsiCallOptions options)
             => await Execute<FreelanceJobList>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/freelance-jobs/",
                 replacements: new Dictionary<string, string>() { { "character_id", options.Character.CharacterID.ToString() } },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/freelance-jobs/{job_id}/participation/ - the character's participation record.
@@ -52,7 +52,7 @@ namespace ESI.NET.Logic
                     { "character_id", options.Character.CharacterID.ToString() },
                     { "job_id", job_id }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/freelance-jobs/ - jobs the corporation has posted.
@@ -61,7 +61,7 @@ namespace ESI.NET.Logic
             => await Execute<FreelanceJobList>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/freelance-jobs/",
                 replacements: new Dictionary<string, string>() { { "corporation_id", options.Character.CorporationID.ToString() } },
                 parameters: Cursor(("after", after), ("before", before), ("limit", limit?.ToString())),
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/freelance-jobs/{job_id}/participants/ - a page of participants.
@@ -74,7 +74,7 @@ namespace ESI.NET.Logic
                     { "job_id", job_id }
                 },
                 parameters: Cursor(("after", after), ("before", before), ("limit", limit?.ToString())),
-                options: options);
+                options: options).ConfigureAwait(false);
 
         private static string[] Cursor(params (string Key, string Value)[] pairs)
         {

@@ -28,7 +28,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/killmails/recent/
@@ -41,7 +41,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /killmails/{killmail_id}/{killmail_hash}/
@@ -56,7 +56,7 @@ namespace ESI.NET.Logic
                     { "killmail_id", killmail_id.ToString() },
                     { "killmail_hash", killmail_hash.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
     }
 }

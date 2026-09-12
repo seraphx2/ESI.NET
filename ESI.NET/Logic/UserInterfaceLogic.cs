@@ -26,7 +26,7 @@ namespace ESI.NET.Logic
                 {
                     $"type_id={type_id}"
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /ui/openwindow/contract/
@@ -39,7 +39,7 @@ namespace ESI.NET.Logic
                 {
                     $"contract_id={contract_id}"
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /ui/openwindow/information/
@@ -52,7 +52,7 @@ namespace ESI.NET.Logic
                 {
                     $"target_id={target_id}"
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /ui/autopilot/waypoint/
@@ -69,7 +69,7 @@ namespace ESI.NET.Logic
                     $"add_to_beginning={add_to_beginning}",
                     $"clear_other_waypoints={clear_other_waypoints}"
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /ui/openwindow/newmail/
@@ -88,6 +88,6 @@ namespace ESI.NET.Logic
                     body,
                     recipients
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
     }
 }

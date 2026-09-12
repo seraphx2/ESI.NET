@@ -41,7 +41,7 @@ namespace ESI.NET.Logic
                     $"categories={categoryList}",
                     $"strict={isStrict}",
                     $"language={language}"
-                });
+                }).ConfigureAwait(false);
 
             return response;
         }

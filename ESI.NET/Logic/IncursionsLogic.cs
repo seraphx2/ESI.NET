@@ -19,7 +19,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<List<Incursion>>> All(EsiCallOptions options = null)
             => await Execute<List<Incursion>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/incursions/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
     }
 }

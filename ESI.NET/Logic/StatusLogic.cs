@@ -14,7 +14,7 @@ namespace ESI.NET.Logic
 
         public async Task<EsiResponse<Status>> Retrieve(EsiCallOptions options = null)
             => await Execute<Status>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/status/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
     }
 }

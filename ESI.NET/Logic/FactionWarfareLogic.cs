@@ -23,7 +23,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<List<War>>> List(EsiCallOptions options = null)
             => await Execute<List<War>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/fw/wars/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<List<Stat>>> Stats(EsiCallOptions options = null)
             => await Execute<List<Stat>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/fw/stats/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<List<FactionWarfareSystem>>> Systems(EsiCallOptions options = null)
             => await Execute<List<FactionWarfareSystem>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/fw/systems/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<Leaderboards<FactionTotal>>> Leaderboads(EsiCallOptions options = null)
             => await Execute<Leaderboards<FactionTotal>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/fw/leaderboards/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<Leaderboards<CorporationTotal>>> LeaderboardsForCorporations(EsiCallOptions options = null)
             => await Execute<Leaderboards<CorporationTotal>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/fw/leaderboards/corporations/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<Leaderboards<CharacterTotal>>> LeaderboardsForCharacters(EsiCallOptions options = null)
             => await Execute<Leaderboards<CharacterTotal>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/fw/leaderboards/characters/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/fw/stats/
@@ -93,6 +93,6 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
     }
 }

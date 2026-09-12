@@ -28,7 +28,7 @@ namespace ESI.NET.Logic
                 {
                     { "region_id", region_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /contracts/public/items/{contract_id}/
@@ -41,7 +41,7 @@ namespace ESI.NET.Logic
                 {
                     { "contract_id", contract_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// "/contracts/public/bids/{contract_id}/
@@ -54,7 +54,7 @@ namespace ESI.NET.Logic
                 {
                     { "contract_id", contract_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/contracts/
@@ -66,7 +66,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/contracts/{contract_id}/items/
@@ -80,7 +80,7 @@ namespace ESI.NET.Logic
                     { "character_id", options.Character.CharacterID.ToString() },
                     { "contract_id", contract_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/contracts/{contract_id}/bids/
@@ -94,7 +94,7 @@ namespace ESI.NET.Logic
                     { "character_id", options.Character.CharacterID.ToString() },
                     { "contract_id", contract_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/contracts/
@@ -106,7 +106,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/contracts/{contract_id}/items/
@@ -120,7 +120,7 @@ namespace ESI.NET.Logic
                     { "corporation_id", options.Character.CorporationID.ToString() },
                     { "contract_id", contract_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/contracts/{contract_id}/bids/
@@ -134,6 +134,6 @@ namespace ESI.NET.Logic
                     { "corporation_id", options.Character.CorporationID.ToString() },
                     { "contract_id", contract_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
     }
 }

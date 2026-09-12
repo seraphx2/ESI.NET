@@ -23,7 +23,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<List<Bloodline>>> Bloodlines(EsiCallOptions options = null)
             => await Execute<List<Bloodline>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/bloodlines/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<long[]>> Categories(EsiCallOptions options = null)
             => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/categories/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace ESI.NET.Logic
             {
                 { "category_id", category_id.ToString() }
             },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<long[]>> Constellations(EsiCallOptions options = null)
             => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/constellations/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace ESI.NET.Logic
             {
                 { "constellation_id", constellation_id.ToString() }
             },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<List<Faction>>> Factions(EsiCallOptions options = null)
             => await Execute<List<Faction>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/factions/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<long[]>> Graphics(EsiCallOptions options = null)
             => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/graphics/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace ESI.NET.Logic
             {
                 { "graphic_id", graphic_id.ToString() }
             },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<long[]>> Groups(EsiCallOptions options = null)
             => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/groups/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /universe/groups/{group_id}/
@@ -120,7 +120,7 @@ namespace ESI.NET.Logic
             {
                 { "group_id", group_id.ToString() }
             },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace ESI.NET.Logic
             {
                 { "moon_id", moon_id.ToString() }
             },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<List<ResolvedInfo>>> Names(List<long> any_ids, EsiCallOptions options = null)
             => await Execute<List<ResolvedInfo>>(_client, _config, RequestSecurity.Public, HttpMethod.Post, "/universe/names/", body: any_ids.ToArray(),
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<IDLookup>> IDs(List<string> names, EsiCallOptions options = null)
             => await Execute<IDLookup>(_client, _config, RequestSecurity.Public, HttpMethod.Post, "/universe/ids/", body: names.ToArray(),
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace ESI.NET.Logic
             {
                 { "planet_id", planet_id.ToString() }
             },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<List<Race>>> Races(EsiCallOptions options = null)
             => await Execute<List<Race>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/races/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<long[]>> Regions(EsiCallOptions options = null)
             => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/regions/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace ESI.NET.Logic
             {
                 { "region_id", region_id.ToString() }
             },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -210,7 +210,7 @@ namespace ESI.NET.Logic
             {
                 { "station_id", station_id.ToString() }
             },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -219,7 +219,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<long[]>> Structures(EsiCallOptions options = null)
             => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/structures/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -231,7 +231,7 @@ namespace ESI.NET.Logic
             => await Execute<Structure>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/universe/structures/{structure_id}/", replacements: new Dictionary<string, string>()
             {
                 { "structure_id", structure_id.ToString() }
-            }, options: options);
+            }, options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /universe/systems/
@@ -239,7 +239,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<long[]>> Systems(EsiCallOptions options = null)
             => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/systems/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -252,7 +252,7 @@ namespace ESI.NET.Logic
             {
                 { "system_id", system_id.ToString() }
             },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -262,7 +262,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<long[]>> Types(EsiCallOptions options = null)
             => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/types/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /universe/types/{type_id}/
@@ -274,7 +274,7 @@ namespace ESI.NET.Logic
             {
                 { "type_id", type_id.ToString() }
             },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -287,7 +287,7 @@ namespace ESI.NET.Logic
             {
                 { "stargate_id", stargate_id.ToString() }
             },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -296,7 +296,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<List<Jumps>>> Jumps(EsiCallOptions options = null)
             => await Execute<List<Jumps>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/system_jumps/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -305,7 +305,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<List<Kills>>> Kills(EsiCallOptions options = null)
             => await Execute<List<Kills>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/system_kills/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -318,7 +318,7 @@ namespace ESI.NET.Logic
             {
                 { "star_id", star_id.ToString() }
             },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -327,7 +327,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<List<Ancestry>>> Ancestries(EsiCallOptions options = null)
             => await Execute<List<Ancestry>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/ancestries/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -339,7 +339,7 @@ namespace ESI.NET.Logic
             {
                 { "asteroid_belt_id", asteroid_belt_id.ToString() }
             },
-                options: options);
+                options: options).ConfigureAwait(false);
 
     }
 }

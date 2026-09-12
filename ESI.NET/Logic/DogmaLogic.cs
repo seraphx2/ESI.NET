@@ -19,7 +19,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<long[]>> Attributes(EsiCallOptions options = null)
             => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/dogma/attributes/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace ESI.NET.Logic
                 {
                     { "attribute_id", attribute_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<long[]>> Effects(EsiCallOptions options = null)
             => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/dogma/effects/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace ESI.NET.Logic
                 {
                     { "effect_id", effect_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace ESI.NET.Logic
                     { "type_id", type_id.ToString() },
                     { "item_id", item_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
     }
 }

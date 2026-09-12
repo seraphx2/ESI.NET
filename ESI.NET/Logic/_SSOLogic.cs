@@ -179,8 +179,8 @@ namespace ESI.NET
                 request.Headers.Host = _ssoUrl;
             }
 
-            var response = await _client.SendAsync(request);
-            var content = await response.Content.ReadAsStringAsync();
+            var response = await _client.SendAsync(request).ConfigureAwait(false);
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
@@ -207,8 +207,8 @@ namespace ESI.NET
             HttpContent postBody = new StringContent(body, Encoding.UTF8, "application/x-www-form-urlencoded");
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", _clientKey);
 
-            var response = await _client.PostAsync($"https://{_ssoUrl}/v2/oauth/revoke", postBody);
-            var content = await response.Content.ReadAsStringAsync();
+            var response = await _client.PostAsync($"https://{_ssoUrl}/v2/oauth/revoke", postBody).ConfigureAwait(false);
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             if (response.StatusCode != HttpStatusCode.OK)
             {

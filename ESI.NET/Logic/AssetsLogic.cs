@@ -28,7 +28,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/assets/locations/
@@ -42,7 +42,7 @@ namespace ESI.NET.Logic
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
                 body: item_ids.ToArray(),
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/assets/names/
@@ -56,7 +56,7 @@ namespace ESI.NET.Logic
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
                 body: item_ids.ToArray(),
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/assets/locations/
@@ -84,7 +84,7 @@ namespace ESI.NET.Logic
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
                 body: item_ids.ToArray(),
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/assets/names/
@@ -98,6 +98,6 @@ namespace ESI.NET.Logic
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
                 body: item_ids.ToArray(),
-                options: options);
+                options: options).ConfigureAwait(false);
     }
 }

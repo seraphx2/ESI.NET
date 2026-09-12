@@ -28,7 +28,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/calendar/{event_id}/
@@ -42,7 +42,7 @@ namespace ESI.NET.Logic
                     { "character_id", options.Character.CharacterID.ToString() },
                     { "event_id", event_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/calendar/{event_id}/
@@ -61,7 +61,7 @@ namespace ESI.NET.Logic
                 {
                     response = eventResponse.ToEsiValue()
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// 
@@ -75,6 +75,6 @@ namespace ESI.NET.Logic
                     { "character_id", options.Character.CharacterID.ToString() },
                     { "event_id", event_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
     }
 }

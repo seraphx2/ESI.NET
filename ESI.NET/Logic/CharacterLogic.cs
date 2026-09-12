@@ -26,7 +26,7 @@ namespace ESI.NET.Logic
         public async Task<EsiResponse<List<Affiliation>>> Affiliation(long[] character_ids, EsiCallOptions options = null)
             => await Execute<List<Affiliation>>(_client, _config, RequestSecurity.Public, HttpMethod.Post, "/characters/affiliation/",
                 body: character_ids,
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", character_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/blueprints/
@@ -66,7 +66,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/corporationhistory/
@@ -79,7 +79,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", character_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace ESI.NET.Logic
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
                 body: character_ids,
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/fatigue/
@@ -106,7 +106,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/medals/
@@ -118,7 +118,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/notifications/
@@ -130,7 +130,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/notifications/contacts/
@@ -142,7 +142,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/portrait/
@@ -155,7 +155,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", character_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/standings/
@@ -180,7 +180,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/titles/
@@ -192,7 +192,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/access-lists/{access_list_id}/ - scope esi-access.read_lists.v1
@@ -216,7 +216,7 @@ namespace ESI.NET.Logic
                     { "character_id", options.Character.CharacterID.ToString() },
                     { "access_list_id", access_list_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/mercenary-tactical-operations/ - scope esi-activities.read_character.v1
@@ -227,7 +227,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/mercenary-tactical-operations/{operation_id}/ - scope esi-activities.read_character.v1
@@ -239,6 +239,6 @@ namespace ESI.NET.Logic
                     { "character_id", options.Character.CharacterID.ToString() },
                     { "operation_id", operation_id }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
     }
 }

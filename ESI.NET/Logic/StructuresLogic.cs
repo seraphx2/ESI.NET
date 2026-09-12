@@ -23,7 +23,7 @@ namespace ESI.NET.Logic
         public async Task<EsiResponse<SkyhookList>> Skyhooks(EsiCallOptions options)
             => await Execute<SkyhookList>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/structures/skyhooks/",
                 replacements: new Dictionary<string, string>() { { "corporation_id", options.Character.CorporationID.ToString() } },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>/corporations/{corporation_id}/structures/skyhooks/{skyhook_id}/</summary>
         public async Task<EsiResponse<Skyhook>> Skyhook(long skyhook_id, EsiCallOptions options)
@@ -33,13 +33,13 @@ namespace ESI.NET.Logic
                     { "corporation_id", options.Character.CorporationID.ToString() },
                     { "skyhook_id", skyhook_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>/corporations/{corporation_id}/structures/sovereignty-hubs/</summary>
         public async Task<EsiResponse<SovereigntyHubList>> SovereigntyHubs(EsiCallOptions options)
             => await Execute<SovereigntyHubList>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/structures/sovereignty-hubs/",
                 replacements: new Dictionary<string, string>() { { "corporation_id", options.Character.CorporationID.ToString() } },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>/corporations/{corporation_id}/structures/sovereignty-hubs/{sovereignty_hub_id}/</summary>
         public async Task<EsiResponse<SovereigntyHub>> SovereigntyHub(long sovereignty_hub_id, EsiCallOptions options)
@@ -49,13 +49,13 @@ namespace ESI.NET.Logic
                     { "corporation_id", options.Character.CorporationID.ToString() },
                     { "sovereignty_hub_id", sovereignty_hub_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>/characters/{character_id}/structures/mercenary-dens/</summary>
         public async Task<EsiResponse<MercenaryDenList>> MercenaryDens(EsiCallOptions options)
             => await Execute<MercenaryDenList>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/structures/mercenary-dens/",
                 replacements: new Dictionary<string, string>() { { "character_id", options.Character.CharacterID.ToString() } },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>/characters/{character_id}/structures/mercenary-dens/{mercenary_den_id}/</summary>
         public async Task<EsiResponse<MercenaryDen>> MercenaryDen(long mercenary_den_id, EsiCallOptions options)
@@ -65,11 +65,11 @@ namespace ESI.NET.Logic
                     { "character_id", options.Character.CharacterID.ToString() },
                     { "mercenary_den_id", mercenary_den_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>/skyhooks/raidable/ - public list of skyhooks currently raidable.</summary>
         public async Task<EsiResponse<RaidableSkyhookList>> RaidableSkyhooks(EsiCallOptions options = null)
             => await Execute<RaidableSkyhookList>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/skyhooks/raidable/",
-                options: options);
+                options: options).ConfigureAwait(false);
     }
 }

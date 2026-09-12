@@ -23,7 +23,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<List<Facility>>> Facilities(EsiCallOptions options = null)
             => await Execute<List<Facility>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/industry/facilities/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<List<SolarSystem>>> SolarSystemCostIndices(EsiCallOptions options = null)
             => await Execute<List<SolarSystem>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/industry/systems/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace ESI.NET.Logic
                 {
                     $"include_completed={include_completed}"
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/mining/
@@ -63,7 +63,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporation/{corporation_id}/mining/observers/
@@ -76,7 +76,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporation/{corporation_id}/mining/observers/{observer_id}/
@@ -91,7 +91,7 @@ namespace ESI.NET.Logic
                     { "corporation_id", options.Character.CorporationID.ToString() },
                     { "observer_id", observer_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/industry/jobs/
@@ -109,7 +109,7 @@ namespace ESI.NET.Logic
                 {
                     $"include_completed={include_completed}"
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporation/{corporation_id}/mining/extractions/
@@ -121,6 +121,6 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
     }
 }

@@ -27,7 +27,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/planets/{planet_id}/
@@ -41,7 +41,7 @@ namespace ESI.NET.Logic
                     { "character_id", options.Character.CharacterID.ToString() },
                     { "planet_id", planet_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/customs_offices/
@@ -53,7 +53,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /universe/schematics/{schematic_id}/
@@ -66,7 +66,7 @@ namespace ESI.NET.Logic
                 {
                     { "schematic_id", schematic_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
     }
 }

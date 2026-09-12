@@ -26,7 +26,7 @@ namespace ESI.NET.Logic
 
             var response = await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/wars/",
                 parameters: parameters.ToArray(),
-                options: options);
+                options: options).ConfigureAwait(false);
 
             return response;
         }
@@ -42,7 +42,7 @@ namespace ESI.NET.Logic
                 {
                     { "war_id", war_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -57,6 +57,6 @@ namespace ESI.NET.Logic
                 {
                     { "war_id", war_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
     }
 }

@@ -24,7 +24,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<long[]>> NpcCorps(EsiCallOptions options = null)
             => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/corporations/npccorps/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", corporation_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", corporation_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/containers/logs/
@@ -79,7 +79,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/divisions/
@@ -91,7 +91,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/facilities/
@@ -103,7 +103,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/icons/
@@ -116,7 +116,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", corporation_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/medals/issued/
@@ -143,7 +143,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/members/
@@ -155,7 +155,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/members/limit/
@@ -167,7 +167,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/members/titles/
@@ -179,7 +179,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/membertracking/
@@ -191,7 +191,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/roles/
@@ -203,7 +203,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/roles/history/
@@ -215,7 +215,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/shareholders/
@@ -228,7 +228,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/standings/
@@ -241,7 +241,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/starbases/
@@ -254,7 +254,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/starbases/{starbase_id}/
@@ -273,7 +273,7 @@ namespace ESI.NET.Logic
                 {
                     $"system_id={system_id}"
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/structures/
@@ -285,7 +285,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/titles/
@@ -297,7 +297,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         // ---- Corporation Projects (scope: esi-corporations.read_projects.v1) ----
@@ -316,7 +316,7 @@ namespace ESI.NET.Logic
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
                 parameters: BuildCursorParams(("state", state), ("after", after), ("before", before), ("limit", limit?.ToString())),
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/projects/{project_id}/ - full detail for one project.
@@ -328,7 +328,7 @@ namespace ESI.NET.Logic
                     { "corporation_id", options.Character.CorporationID.ToString() },
                     { "project_id", project_id }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/projects/{project_id}/contributors/ - a page of contributors.
@@ -341,7 +341,7 @@ namespace ESI.NET.Logic
                     { "project_id", project_id }
                 },
                 parameters: BuildCursorParams(("after", after), ("before", before), ("limit", limit?.ToString())),
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/projects/{project_id}/contribution/{character_id}/ - one character's contribution.
@@ -354,7 +354,7 @@ namespace ESI.NET.Logic
                     { "project_id", project_id },
                     { "character_id", character_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         private static string[] BuildCursorParams(params (string Key, string Value)[] pairs)
         {

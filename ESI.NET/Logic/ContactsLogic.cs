@@ -29,7 +29,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/contacts/
@@ -42,7 +42,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /alliances/{alliance_id}/contacts/
@@ -55,7 +55,7 @@ namespace ESI.NET.Logic
                 {
                     { "alliance_id", options.Character.AllianceID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/contacts/
@@ -84,7 +84,7 @@ namespace ESI.NET.Logic
                 },
                 parameters: parameters.ToArray(),
                 body: body,
-                options: options);
+                options: options).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace ESI.NET.Logic
                 },
                 parameters: parameters.ToArray(),
                 body: body,
-                options: options);
+                options: options).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace ESI.NET.Logic
                 {
                     $"contact_ids={string.Join(",", contact_ids)}"
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/contacts/labels/
@@ -144,7 +144,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/contacts/labels/
@@ -156,7 +156,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /alliances/{alliance_id}/contacts/labels/
@@ -168,6 +168,6 @@ namespace ESI.NET.Logic
                 {
                     { "alliance_id", options.Character.AllianceID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
     }
 }

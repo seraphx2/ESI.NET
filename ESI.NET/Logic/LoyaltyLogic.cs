@@ -27,7 +27,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", corporation_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -40,6 +40,6 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
     }
 }

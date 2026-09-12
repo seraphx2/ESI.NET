@@ -37,7 +37,7 @@ namespace ESI.NET.Logic
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
                 parameters: parameters.ToArray(),
-                options: options);
+                options: options).ConfigureAwait(false);
 
             return response;
         }
@@ -63,7 +63,7 @@ namespace ESI.NET.Logic
                     body,
                     approved_cost
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/mail/labels/
@@ -75,7 +75,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/mail/labels/
@@ -94,7 +94,7 @@ namespace ESI.NET.Logic
                     name,
                     color
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/mail/labels/{label_id}/
@@ -108,7 +108,7 @@ namespace ESI.NET.Logic
                     { "character_id", options.Character.CharacterID.ToString() },
                     { "label_id", label_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/mail/lists/
@@ -120,7 +120,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/mail/{mail_id}/
@@ -134,7 +134,7 @@ namespace ESI.NET.Logic
                     { "character_id", options.Character.CharacterID.ToString() },
                     { "mail_id", mail_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/mail/{mail_id}/
@@ -151,7 +151,7 @@ namespace ESI.NET.Logic
                     { "mail_id", mail_id.ToString() }
                 },
                 body: BuildUpdateObject(is_read, labels),
-                options: options);
+                options: options).ConfigureAwait(false);
         
         /// <summary>
         /// /characters/{character_id}/mail/{mail_id}/
@@ -165,7 +165,7 @@ namespace ESI.NET.Logic
                     { "character_id", options.Character.CharacterID.ToString() },
                     { "mail_id", mail_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// 

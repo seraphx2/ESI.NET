@@ -27,7 +27,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/fittings/
@@ -41,7 +41,7 @@ namespace ESI.NET.Logic
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
                 body: fitting,
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/fittings/{fitting_id}/
@@ -55,6 +55,6 @@ namespace ESI.NET.Logic
                     { "character_id", options.Character.CharacterID.ToString() },
                     { "fitting_id", fitting_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
     }
 }

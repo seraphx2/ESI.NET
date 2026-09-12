@@ -25,7 +25,7 @@ namespace ESI.NET.Logic
             => await Execute<decimal>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/wallet/", replacements: new Dictionary<string, string>()
             {
                 { "character_id", options.Character.CharacterID.ToString() }
-            }, options: options);
+            }, options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/wallet/journal/
@@ -38,7 +38,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace ESI.NET.Logic
                 {
                     $"from_id={from_id}"
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/wallets/
@@ -68,7 +68,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/wallets/{division}/journal/
@@ -83,7 +83,7 @@ namespace ESI.NET.Logic
                     { "corporation_id", options.Character.CorporationID.ToString() },
                     { "division", division.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/wallets/{division}/transactions/
@@ -102,6 +102,6 @@ namespace ESI.NET.Logic
                 {
                     $"from_id={from_id}"
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
     }
 }

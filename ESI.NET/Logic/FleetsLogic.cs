@@ -29,7 +29,7 @@ namespace ESI.NET.Logic
                 {
                     { "fleet_id", fleet_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /fleets/{fleet_id}/
@@ -45,7 +45,7 @@ namespace ESI.NET.Logic
                     { "fleet_id", fleet_id.ToString() }
                 },
                 body: BuildUpdateSettingsObject(motd, is_free_move),
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/fleet/
@@ -57,7 +57,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /fleets/{fleet_id}/members/
@@ -70,7 +70,7 @@ namespace ESI.NET.Logic
                 {
                     { "fleet_id", fleet_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /fleets/{fleet_id}/members/
@@ -88,7 +88,7 @@ namespace ESI.NET.Logic
                     { "fleet_id", fleet_id.ToString() }
                 },
                 body: BuildFleetInviteObject(character_id, role, wing_id, squad_id),
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /fleets/{fleet_id}/members/{member_id}/
@@ -107,7 +107,7 @@ namespace ESI.NET.Logic
                     { "member_id", member_id.ToString() }
                 },
                 body: BuildFleetInviteObject(options.Character.CharacterID, role, wing_id, squad_id),
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /fleets/{fleet_id}/members/{member_id}/
@@ -122,7 +122,7 @@ namespace ESI.NET.Logic
                     { "fleet_id", fleet_id.ToString() },
                     { "member_id", member_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /fleets/{fleet_id}/wings/
@@ -135,7 +135,7 @@ namespace ESI.NET.Logic
                 {
                     { "fleet_id", fleet_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /fleets/{fleet_id}/wings/
@@ -148,7 +148,7 @@ namespace ESI.NET.Logic
                 {
                     { "fleet_id", fleet_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /fleets/{fleet_id}/wings/{wing_id}/
@@ -168,7 +168,7 @@ namespace ESI.NET.Logic
                 {
                     name
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /fleets/{fleet_id}/wings/{wing_id}/
@@ -183,7 +183,7 @@ namespace ESI.NET.Logic
                     { "fleet_id", fleet_id.ToString() },
                     { "wing_id", wing_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /fleets/{fleet_id}/wings/{wing_id}/squads/
@@ -198,7 +198,7 @@ namespace ESI.NET.Logic
                     { "fleet_id", fleet_id.ToString() },
                     { "wing_id", wing_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /fleets/{fleet_id}/squads/{squad_id}/
@@ -215,7 +215,7 @@ namespace ESI.NET.Logic
             }, body: new
             {
                 name
-            }, options: options);
+            }, options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /fleets/{fleet_id}/squads/{squad_id}/
@@ -228,7 +228,7 @@ namespace ESI.NET.Logic
             {
                 { "fleet_id", fleet_id.ToString() },
                 { "squad_id", squad_id.ToString() }
-            }, options: options);
+            }, options: options).ConfigureAwait(false);
         
         /// <summary>
         /// 

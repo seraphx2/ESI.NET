@@ -24,7 +24,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<List<Price>>> Prices(EsiCallOptions options = null)
             => await Execute<List<Price>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/prices/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace ESI.NET.Logic
                     { "region_id", region_id.ToString() }
                 },
                 parameters: parameters.ToArray(),
-                options: options);
+                options: options).ConfigureAwait(false);
 
             return response;
         }
@@ -73,7 +73,7 @@ namespace ESI.NET.Logic
                 {
                     $"type_id={type_id}"
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace ESI.NET.Logic
                 {
                     { "structure_id", structure_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /markets/groups/
@@ -96,7 +96,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<long[]>> Groups(EsiCallOptions options = null)
             => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/groups/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace ESI.NET.Logic
                 {
                     { "market_group_id", market_group_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /characters/{character_id}/orders/history/
@@ -136,7 +136,7 @@ namespace ESI.NET.Logic
                 {
                     { "character_id", options.Character.CharacterID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /markets/{region_id}/types/
@@ -150,7 +150,7 @@ namespace ESI.NET.Logic
                 {
                     { "region_id", region_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/orders/
@@ -163,7 +163,7 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
         /// <summary>
         /// /corporations/{corporation_id}/orders/
@@ -176,6 +176,6 @@ namespace ESI.NET.Logic
                 {
                     { "corporation_id", options.Character.CorporationID.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
     }
 }

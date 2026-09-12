@@ -20,7 +20,7 @@ namespace ESI.NET.Logic
         /// <returns></returns>
         public async Task<EsiResponse<long[]>> All(EsiCallOptions options = null)
             => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/alliances/",
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace ESI.NET.Logic
                 {
                     { "alliance_id", alliance_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace ESI.NET.Logic
                 {
                     { "alliance_id", alliance_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace ESI.NET.Logic
                 {
                     { "alliance_id", alliance_id.ToString() }
                 },
-                options: options);
+                options: options).ConfigureAwait(false);
 
     }
 }
