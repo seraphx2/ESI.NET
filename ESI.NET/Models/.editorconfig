@@ -1,0 +1,24 @@
+[*.cs]
+
+# These three rules assume a hand-authored public API surface, where a mutable
+# collection property/array-returning property is a design smell because a
+# caller can reach in and mutate what should be encapsulated state. Every type
+# under Models/ is instead a plain JSON-deserialization target for ESI response
+# bodies: Newtonsoft needs a settable property to populate it, there is no
+# encapsulation to violate, and swapping to Collection<T>/ReadOnlyCollection<T>
+# would just be ceremony around a bag of fields with zero behavioral benefit.
+# CA1002 stays fully armed everywhere else (Logic/*.cs still has 8 real
+# instances - a method parameter typed List<T> instead of IEnumerable<T> - a
+# different concern this justification doesn't cover).
+dotnet_diagnostic.CA2227.severity = none
+dotnet_diagnostic.CA1002.severity = none
+dotnet_diagnostic.CA1819.severity = none
+
+# Every type name under Models/ mirrors ESI's own terminology (Alliance,
+# Corporation, Market, Wallet, ...), which happens to collide with this
+# library's own namespace-per-category layout (ESI.NET.Models.Alliance,
+# ESI.NET.Models.Corporation, ...). Renaming any of these is a breaking public
+# API change for a purely cosmetic rule; not worth it for what CA1724 catches
+# here. (Extensions.cs, the one CA1724 hit outside Models/, is suppressed at
+# the class instead - this file only covers Models/.)
+dotnet_diagnostic.CA1724.severity = none
