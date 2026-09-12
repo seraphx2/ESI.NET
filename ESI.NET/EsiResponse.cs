@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -46,22 +47,22 @@ namespace ESI.NET
                     RequestId = Guid.Parse(response.Headers.GetValues("X-ESI-Request-ID").First());
 
                 if (response.Headers.Contains("X-Pages"))
-                    Pages = int.Parse(response.Headers.GetValues("X-Pages").First());
+                    Pages = int.Parse(response.Headers.GetValues("X-Pages").First(), CultureInfo.InvariantCulture);
 
                 if (response.Headers.Contains("ETag"))
                     ETag = response.Headers.GetValues("ETag").First().Replace("\"", string.Empty);
 
-                if (response.Content.Headers.Contains("Expires"))
-                    Expires = DateTime.Parse(response.Content.Headers.GetValues("Expires").First());
-
-                if (response.Content.Headers.Contains("Last-Modified"))
-                    LastModified = DateTime.Parse(response.Content.Headers.GetValues("Last-Modified").First());
+                // HttpContentHeaders already parses these RFC 1123 dates for us (and
+                // does it correctly - a raw DateTime.Parse(headerString) is culture-
+                // sensitive and can misparse or throw under a non-default locale).
+                Expires = response.Content.Headers.Expires?.UtcDateTime;
+                LastModified = response.Content.Headers.LastModified?.UtcDateTime;
 
                 if (response.Headers.Contains("X-Esi-Error-Limit-Remain"))
-                    ErrorLimitRemain = int.Parse(response.Headers.GetValues("X-Esi-Error-Limit-Remain").First());
+                    ErrorLimitRemain = int.Parse(response.Headers.GetValues("X-Esi-Error-Limit-Remain").First(), CultureInfo.InvariantCulture);
 
                 if (response.Headers.Contains("X-Esi-Error-Limit-Reset"))
-                    ErrorLimitReset = int.Parse(response.Headers.GetValues("X-Esi-Error-Limit-Reset").First());
+                    ErrorLimitReset = int.Parse(response.Headers.GetValues("X-Esi-Error-Limit-Reset").First(), CultureInfo.InvariantCulture);
 
                 if (response.StatusCode == HttpStatusCode.NoContent)
                     Message = "No Content";

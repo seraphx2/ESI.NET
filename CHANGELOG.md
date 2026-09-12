@@ -201,6 +201,11 @@ had changed short of a consumer filing a bug. That is now covered.
   `Contested.Vulnerable` (`"vulnerable "` → `"vulnerable"`),
   `StructureServiceState.Cleanup` (`"cleamup"` → `"cleanup"`), and a missing
   `EventResponse.NotResponded` (`"not_responded"`).
+- `EsiResponse<T>.Expires` / `.LastModified` no longer parse the raw header
+  string with a culture-sensitive `DateTime.Parse` (could misparse or throw
+  under a non-default host locale); they now read `HttpContentHeaders`' own
+  already-parsed `Expires` / `LastModified` properties. `Pages`,
+  `ErrorLimitRemain`, and `ErrorLimitReset` parse with `CultureInfo.InvariantCulture`.
 
 ### Migration
 
