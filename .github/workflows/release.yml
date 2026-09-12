@@ -114,6 +114,9 @@ jobs:
 
       # Mirror. Auth is the automatic GITHUB_TOKEN. Note: consuming from here
       # needs a PAT with read:packages - it is a backup feed, not the public one.
+      # --no-symbols: GitHub Packages' NuGet registry has no symbol server: it
+      # only documents pushing .nupkg. dotnet nuget push auto-pushes a matching
+      # .snupkg alongside its .nupkg by default, which would otherwise fail here.
       - name: Push to GitHub Packages
         shell: bash
         run: >-
@@ -121,6 +124,7 @@ jobs:
           --api-key ${{ secrets.GITHUB_TOKEN }}
           --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
           --skip-duplicate
+          --no-symbols
 
       - name: Create GitHub Release
         id: gh_release

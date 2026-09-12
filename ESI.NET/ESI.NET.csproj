@@ -13,12 +13,20 @@
     <RepositoryUrl>https://github.com/seraphx2/ESI.NET</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>https://github.com/seraphx2/ESI.NET</PackageProjectUrl>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>icon.png</PackageIcon>
     <PackageTags>eve-online;eve;esi;ccp;api;wrapper;sso</PackageTags>
     <Copyright>Copyright © Robert Burke</Copyright>
     <PackageReleaseNotes>See CHANGELOG.md and MIGRATION.md in the repository.</PackageReleaseNotes>
+    <!-- Symbol package (.snupkg) + Source Link, so a consumer can step into
+         ESI.NET's actual source while debugging. ContinuousIntegrationBuild is
+         passed in by release.yml's `dotnet pack -p:ContinuousIntegrationBuild=true`
+         (CI only, so it doesn't rewrite paths in local dev builds). -->
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,6 +38,7 @@
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.22.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.22.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <!-- In-box in the net8.0 shared framework; still needs a package on netstandard2.0. -->
@@ -39,10 +48,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\LICENSE.txt">
-      <Pack>True</Pack>
-      <PackagePath>LICENSE.txt</PackagePath>
-    </None>
     <None Include="..\README.md">
       <Pack>True</Pack>
       <PackagePath></PackagePath>

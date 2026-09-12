@@ -148,6 +148,11 @@ cancellation, pagination) is passed. **Every consumer needs code changes** — s
 - Resilience-ready: chain `.AddStandardResilienceHandler()` (Polly) off the
   `IHttpClientBuilder` that `AddEsi` returns, after referencing
   `Microsoft.Extensions.Http.Resilience`.
+- A symbol package (`.snupkg`) is now published alongside the `.nupkg`, with
+  Source Link - step into ESI.NET's actual source while debugging.
+- The package's license is now declared as the `MIT` SPDX expression (was a
+  packed `LICENSE.txt`) - nuget.org links straight to the canonical license
+  text. The repository's `LICENSE.txt` is unaffected.
 
 ### Tooling & tests
 
