@@ -1,6 +1,7 @@
-﻿using ESI.NET.Enumerations;
+using ESI.NET.Enumerations;
 using ESI.NET.Models.Calendar;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -26,7 +27,7 @@ namespace ESI.NET.Logic
             => await Execute<List<CalendarItem>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/calendar/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -39,8 +40,8 @@ namespace ESI.NET.Logic
             => await Execute<Event>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/calendar/{event_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() },
-                    { "event_id", event_id.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) },
+                    { "event_id", event_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -54,8 +55,8 @@ namespace ESI.NET.Logic
             => await Execute<Event>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Put, "/characters/{character_id}/calendar/{event_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() },
-                    { "event_id", event_id.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) },
+                    { "event_id", event_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 body: new
                 {
@@ -72,8 +73,8 @@ namespace ESI.NET.Logic
             => await Execute<List<Response>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/calendar/{event_id}/attendees/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() },
-                    { "event_id", event_id.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) },
+                    { "event_id", event_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
     }

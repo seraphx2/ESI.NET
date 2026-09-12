@@ -1,6 +1,7 @@
-﻿using ESI.NET.Models;
+using ESI.NET.Models;
 using ESI.NET.Models.Character;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -38,7 +39,7 @@ namespace ESI.NET.Logic
             => await Execute<Information>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/characters/{character_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    { "character_id", character_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -51,7 +52,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Agent>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/agents_research/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -64,7 +65,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Blueprint>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/blueprints/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -77,7 +78,7 @@ namespace ESI.NET.Logic
             => await Execute<List<CorporationHistory>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/characters/{character_id}/corporationhistory/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    { "character_id", character_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -91,7 +92,7 @@ namespace ESI.NET.Logic
             => await Execute<decimal>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/characters/{character_id}/cspa/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 body: character_ids,
                 options: options).ConfigureAwait(false);
@@ -104,7 +105,7 @@ namespace ESI.NET.Logic
             => await Execute<Fatigue>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/fatigue/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -116,7 +117,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Medal>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/medals/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -128,7 +129,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Notification>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/notifications/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -140,7 +141,7 @@ namespace ESI.NET.Logic
             => await Execute<List<ContactNotification>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/notifications/contacts/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -153,7 +154,7 @@ namespace ESI.NET.Logic
             => await Execute<Images>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/characters/{character_id}/portrait/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", character_id.ToString() }
+                    { "character_id", character_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -166,7 +167,7 @@ namespace ESI.NET.Logic
             => await Execute<Roles>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/roles/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -178,7 +179,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Standing>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/standings/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -190,7 +191,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Title>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/titles/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -202,7 +203,7 @@ namespace ESI.NET.Logic
             => await Execute<AccessListRefList>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/access-lists/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -213,8 +214,8 @@ namespace ESI.NET.Logic
             => await Execute<AccessList>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/access-lists/{access_list_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() },
-                    { "access_list_id", access_list_id.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) },
+                    { "access_list_id", access_list_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -225,7 +226,7 @@ namespace ESI.NET.Logic
             => await Execute<MercenaryTacticalOperationList>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/mercenary-tactical-operations/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -236,7 +237,7 @@ namespace ESI.NET.Logic
             => await Execute<MercenaryTacticalOperation>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/mercenary-tactical-operations/{operation_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() },
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) },
                     { "operation_id", operation_id }
                 },
                 options: options).ConfigureAwait(false);

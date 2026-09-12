@@ -1,6 +1,7 @@
-﻿using ESI.NET.Enumerations;
+using ESI.NET.Enumerations;
 using ESI.NET.Models.Routes;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -46,8 +47,8 @@ namespace ESI.NET.Logic
                 "/route/{origin_system_id}/{destination_system_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "origin_system_id", origin_system_id.ToString() },
-                    { "destination_system_id", destination_system_id.ToString() }
+                    { "origin_system_id", origin_system_id.ToString(CultureInfo.InvariantCulture) },
+                    { "destination_system_id", destination_system_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 body: payload,
                 options: options).ConfigureAwait(false);

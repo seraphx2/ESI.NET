@@ -1,6 +1,7 @@
-﻿using ESI.NET.Enumerations;
+using ESI.NET.Enumerations;
 using ESI.NET.Models.Fleets;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -27,7 +28,7 @@ namespace ESI.NET.Logic
             => await Execute<Settings>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/fleets/{fleet_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "fleet_id", fleet_id.ToString() }
+                    { "fleet_id", fleet_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -42,7 +43,7 @@ namespace ESI.NET.Logic
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Put, "/fleets/{fleet_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "fleet_id", fleet_id.ToString() }
+                    { "fleet_id", fleet_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 body: BuildUpdateSettingsObject(motd, is_free_move),
                 options: options).ConfigureAwait(false);
@@ -55,7 +56,7 @@ namespace ESI.NET.Logic
             => await Execute<FleetInfo>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/fleet/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -68,7 +69,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Member>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/fleets/{fleet_id}/members/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "fleet_id", fleet_id.ToString() }
+                    { "fleet_id", fleet_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -85,7 +86,7 @@ namespace ESI.NET.Logic
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/fleets/{fleet_id}/members/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "fleet_id", fleet_id.ToString() }
+                    { "fleet_id", fleet_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 body: BuildFleetInviteObject(character_id, role, wing_id, squad_id),
                 options: options).ConfigureAwait(false);
@@ -103,8 +104,8 @@ namespace ESI.NET.Logic
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Put, "/fleets/{fleet_id}/members/{member_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "fleet_id", fleet_id.ToString() },
-                    { "member_id", member_id.ToString() }
+                    { "fleet_id", fleet_id.ToString(CultureInfo.InvariantCulture) },
+                    { "member_id", member_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 body: BuildFleetInviteObject(options.Character.CharacterID, role, wing_id, squad_id),
                 options: options).ConfigureAwait(false);
@@ -119,8 +120,8 @@ namespace ESI.NET.Logic
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Delete, "/fleets/{fleet_id}/members/{member_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "fleet_id", fleet_id.ToString() },
-                    { "member_id", member_id.ToString() }
+                    { "fleet_id", fleet_id.ToString(CultureInfo.InvariantCulture) },
+                    { "member_id", member_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -133,7 +134,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Wing>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/fleets/{fleet_id}/wings/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "fleet_id", fleet_id.ToString() }
+                    { "fleet_id", fleet_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -146,7 +147,7 @@ namespace ESI.NET.Logic
             => await Execute<NewWing>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/fleets/{fleet_id}/wings/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "fleet_id", fleet_id.ToString() }
+                    { "fleet_id", fleet_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -161,8 +162,8 @@ namespace ESI.NET.Logic
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Put, "/fleets/{fleet_id}/wings/{wing_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "fleet_id", fleet_id.ToString() },
-                    { "wing_id", wing_id.ToString() }
+                    { "fleet_id", fleet_id.ToString(CultureInfo.InvariantCulture) },
+                    { "wing_id", wing_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 body: new
                 {
@@ -180,8 +181,8 @@ namespace ESI.NET.Logic
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Delete, "/fleets/{fleet_id}/wings/{wing_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "fleet_id", fleet_id.ToString() },
-                    { "wing_id", wing_id.ToString() }
+                    { "fleet_id", fleet_id.ToString(CultureInfo.InvariantCulture) },
+                    { "wing_id", wing_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -195,8 +196,8 @@ namespace ESI.NET.Logic
             => await Execute<NewSquad>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/fleets/{fleet_id}/wings/{wing_id}/squads/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "fleet_id", fleet_id.ToString() },
-                    { "wing_id", wing_id.ToString() }
+                    { "fleet_id", fleet_id.ToString(CultureInfo.InvariantCulture) },
+                    { "wing_id", wing_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -210,8 +211,8 @@ namespace ESI.NET.Logic
         public async Task<EsiResponse<string>> RenameSquad(long fleet_id, long squad_id, string name, EsiCallOptions options)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Put, "/fleets/{fleet_id}/squads/{squad_id}/", replacements: new Dictionary<string, string>()
             {
-                { "fleet_id", fleet_id.ToString() },
-                { "squad_id", squad_id.ToString() }
+                { "fleet_id", fleet_id.ToString(CultureInfo.InvariantCulture) },
+                { "squad_id", squad_id.ToString(CultureInfo.InvariantCulture) }
             }, body: new
             {
                 name
@@ -226,8 +227,8 @@ namespace ESI.NET.Logic
         public async Task<EsiResponse<string>> DeleteSquad(long fleet_id, long squad_id, EsiCallOptions options)
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Delete, "/fleets/{fleet_id}/squads/{squad_id}/", replacements: new Dictionary<string, string>()
             {
-                { "fleet_id", fleet_id.ToString() },
-                { "squad_id", squad_id.ToString() }
+                { "fleet_id", fleet_id.ToString(CultureInfo.InvariantCulture) },
+                { "squad_id", squad_id.ToString(CultureInfo.InvariantCulture) }
             }, options: options).ConfigureAwait(false);
         
         /// <summary>

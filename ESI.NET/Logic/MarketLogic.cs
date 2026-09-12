@@ -1,6 +1,7 @@
-﻿using ESI.NET.Enumerations;
+using ESI.NET.Enumerations;
 using ESI.NET.Models.Market;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -49,7 +50,7 @@ namespace ESI.NET.Logic
             var response = await Execute<List<Order>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/{region_id}/orders/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "region_id", region_id.ToString() }
+                    { "region_id", region_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 parameters: parameters.ToArray(),
                 options: options).ConfigureAwait(false);
@@ -67,7 +68,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Statistic>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/{region_id}/history/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "region_id", region_id.ToString() }
+                    { "region_id", region_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 parameters: new string[]
                 {
@@ -86,7 +87,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/markets/structures/{structure_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "structure_id", structure_id.ToString() }
+                    { "structure_id", structure_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -108,7 +109,7 @@ namespace ESI.NET.Logic
             => await Execute<Group>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/groups/{market_group_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "market_group_id", market_group_id.ToString() }
+                    { "market_group_id", market_group_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -121,7 +122,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/orders/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -134,7 +135,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/orders/history/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -148,7 +149,7 @@ namespace ESI.NET.Logic
             => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/markets/{region_id}/types/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "region_id", region_id.ToString() }
+                    { "region_id", region_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -161,7 +162,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/orders/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -174,7 +175,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Order>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/orders/history/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
     }

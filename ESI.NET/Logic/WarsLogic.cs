@@ -1,5 +1,6 @@
-﻿using ESI.NET.Models.Wars;
+using ESI.NET.Models.Wars;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -40,7 +41,7 @@ namespace ESI.NET.Logic
             => await Execute<War>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/wars/{war_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "war_id", war_id.ToString() }
+                    { "war_id", war_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -55,7 +56,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Models.Killmails.Killmail>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/wars/{war_id}/killmails/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "war_id", war_id.ToString() }
+                    { "war_id", war_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
     }

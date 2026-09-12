@@ -1,5 +1,6 @@
-﻿using ESI.NET.Models.Skills;
+using ESI.NET.Models.Skills;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -25,7 +26,7 @@ namespace ESI.NET.Logic
             => await Execute<Attributes>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/attributes/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -37,7 +38,7 @@ namespace ESI.NET.Logic
             => await Execute<SkillDetails>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/skills/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -49,7 +50,7 @@ namespace ESI.NET.Logic
             => await Execute<List<SkillQueueItem>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/skillqueue/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
     }

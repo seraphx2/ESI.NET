@@ -1,6 +1,7 @@
-﻿using ESI.NET.Models;
+using ESI.NET.Models;
 using ESI.NET.Models.Alliance;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -32,7 +33,7 @@ namespace ESI.NET.Logic
             => await Execute<Alliance>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/alliances/{alliance_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "alliance_id", alliance_id.ToString() }
+                    { "alliance_id", alliance_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -46,7 +47,7 @@ namespace ESI.NET.Logic
             => await Execute<long[]>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/alliances/{alliance_id}/corporations/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "alliance_id", alliance_id.ToString() }
+                    { "alliance_id", alliance_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -60,7 +61,7 @@ namespace ESI.NET.Logic
             => await Execute<Images>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/alliances/{alliance_id}/icons/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "alliance_id", alliance_id.ToString() }
+                    { "alliance_id", alliance_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 

@@ -1,5 +1,6 @@
-﻿using ESI.NET.Models.FactionWarfare;
+using ESI.NET.Models.FactionWarfare;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -79,7 +80,7 @@ namespace ESI.NET.Logic
             => await Execute<Stat>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/fw/stats/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -91,7 +92,7 @@ namespace ESI.NET.Logic
             => await Execute<Stat>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/fw/stats/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
     }

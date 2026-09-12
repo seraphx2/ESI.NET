@@ -1,5 +1,6 @@
-﻿using ESI.NET.Models.PlanetaryInteraction;
+using ESI.NET.Models.PlanetaryInteraction;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -25,7 +26,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Planet>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/planets/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -38,8 +39,8 @@ namespace ESI.NET.Logic
             => await Execute<ColonyLayout>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/planets/{planet_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() },
-                    { "planet_id", planet_id.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) },
+                    { "planet_id", planet_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -51,7 +52,7 @@ namespace ESI.NET.Logic
             => await Execute<List<CustomsOffice>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/customs_offices/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -64,7 +65,7 @@ namespace ESI.NET.Logic
             => await Execute<Schematic>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/schematics/{schematic_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "schematic_id", schematic_id.ToString() }
+                    { "schematic_id", schematic_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 

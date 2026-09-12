@@ -1,5 +1,6 @@
-﻿using ESI.NET.Models.Assets;
+using ESI.NET.Models.Assets;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -26,7 +27,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Item>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/assets/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -39,7 +40,7 @@ namespace ESI.NET.Logic
             => await Execute<List<ItemLocation>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/characters/{character_id}/assets/locations/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 body: item_ids.ToArray(),
                 options: options).ConfigureAwait(false);
@@ -53,7 +54,7 @@ namespace ESI.NET.Logic
             => await Execute<List<ItemName>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/characters/{character_id}/assets/names/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 body: item_ids.ToArray(),
                 options: options).ConfigureAwait(false);
@@ -68,7 +69,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Item>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/assets/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -81,7 +82,7 @@ namespace ESI.NET.Logic
             => await Execute<List<ItemLocation>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/corporations/{corporation_id}/assets/locations/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 body: item_ids.ToArray(),
                 options: options).ConfigureAwait(false);
@@ -95,7 +96,7 @@ namespace ESI.NET.Logic
             => await Execute<List<ItemName>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/corporations/{corporation_id}/assets/names/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 body: item_ids.ToArray(),
                 options: options).ConfigureAwait(false);

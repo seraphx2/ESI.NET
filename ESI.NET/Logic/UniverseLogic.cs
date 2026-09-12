@@ -1,5 +1,6 @@
-﻿using ESI.NET.Models.Universe;
+using ESI.NET.Models.Universe;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -43,7 +44,7 @@ namespace ESI.NET.Logic
         public async Task<EsiResponse<Category>> Category(long category_id, EsiCallOptions options = null)
             => await Execute<Category>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/categories/{category_id}/", replacements: new Dictionary<string, string>()
             {
-                { "category_id", category_id.ToString() }
+                { "category_id", category_id.ToString(CultureInfo.InvariantCulture) }
             },
                 options: options).ConfigureAwait(false);
 
@@ -65,7 +66,7 @@ namespace ESI.NET.Logic
         public async Task<EsiResponse<Constellation>> Constellation(long constellation_id, EsiCallOptions options = null)
             => await Execute<Constellation>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/constellations/{constellation_id}/", replacements: new Dictionary<string, string>()
             {
-                { "constellation_id", constellation_id.ToString() }
+                { "constellation_id", constellation_id.ToString(CultureInfo.InvariantCulture) }
             },
                 options: options).ConfigureAwait(false);
 
@@ -96,7 +97,7 @@ namespace ESI.NET.Logic
         public async Task<EsiResponse<Graphic>> Graphic(long graphic_id, EsiCallOptions options = null)
             => await Execute<Graphic>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/graphics/{graphic_id}/", replacements: new Dictionary<string, string>()
             {
-                { "graphic_id", graphic_id.ToString() }
+                { "graphic_id", graphic_id.ToString(CultureInfo.InvariantCulture) }
             },
                 options: options).ConfigureAwait(false);
 
@@ -118,7 +119,7 @@ namespace ESI.NET.Logic
         public async Task<EsiResponse<Group>> Group(long group_id, EsiCallOptions options = null)
             => await Execute<Group>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/groups/{group_id}/", replacements: new Dictionary<string, string>()
             {
-                { "group_id", group_id.ToString() }
+                { "group_id", group_id.ToString(CultureInfo.InvariantCulture) }
             },
                 options: options).ConfigureAwait(false);
 
@@ -131,7 +132,7 @@ namespace ESI.NET.Logic
         public async Task<EsiResponse<Moon>> Moon(long moon_id, EsiCallOptions options = null)
             => await Execute<Moon>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/moons/{moon_id}/", replacements: new Dictionary<string, string>()
             {
-                { "moon_id", moon_id.ToString() }
+                { "moon_id", moon_id.ToString(CultureInfo.InvariantCulture) }
             },
                 options: options).ConfigureAwait(false);
 
@@ -164,7 +165,7 @@ namespace ESI.NET.Logic
         public async Task<EsiResponse<Planet>> Planet(long planet_id, EsiCallOptions options = null)
             => await Execute<Planet>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/planets/{planet_id}/", replacements: new Dictionary<string, string>()
             {
-                { "planet_id", planet_id.ToString() }
+                { "planet_id", planet_id.ToString(CultureInfo.InvariantCulture) }
             },
                 options: options).ConfigureAwait(false);
 
@@ -195,7 +196,7 @@ namespace ESI.NET.Logic
         public async Task<EsiResponse<Region>> Region(long region_id, EsiCallOptions options = null)
             => await Execute<Region>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/regions/{region_id}/", replacements: new Dictionary<string, string>()
             {
-                { "region_id", region_id.ToString() }
+                { "region_id", region_id.ToString(CultureInfo.InvariantCulture) }
             },
                 options: options).ConfigureAwait(false);
 
@@ -208,7 +209,7 @@ namespace ESI.NET.Logic
         public async Task<EsiResponse<Station>> Station(long station_id, EsiCallOptions options = null)
             => await Execute<Station>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/stations/{station_id}/", replacements: new Dictionary<string, string>()
             {
-                { "station_id", station_id.ToString() }
+                { "station_id", station_id.ToString(CultureInfo.InvariantCulture) }
             },
                 options: options).ConfigureAwait(false);
 
@@ -230,7 +231,7 @@ namespace ESI.NET.Logic
         public async Task<EsiResponse<Structure>> Structure(long structure_id, EsiCallOptions options)
             => await Execute<Structure>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/universe/structures/{structure_id}/", replacements: new Dictionary<string, string>()
             {
-                { "structure_id", structure_id.ToString() }
+                { "structure_id", structure_id.ToString(CultureInfo.InvariantCulture) }
             }, options: options).ConfigureAwait(false);
 
         /// <summary>
@@ -250,7 +251,7 @@ namespace ESI.NET.Logic
         public async Task<EsiResponse<SolarSystem>> System(long system_id, EsiCallOptions options = null)
             => await Execute<SolarSystem>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/systems/{system_id}/", replacements: new Dictionary<string, string>()
             {
-                { "system_id", system_id.ToString() }
+                { "system_id", system_id.ToString(CultureInfo.InvariantCulture) }
             },
                 options: options).ConfigureAwait(false);
 
@@ -272,7 +273,7 @@ namespace ESI.NET.Logic
         public async Task<EsiResponse<Type>> Type(long type_id, EsiCallOptions options = null)
             => await Execute<Type>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/types/{type_id}/", replacements: new Dictionary<string, string>()
             {
-                { "type_id", type_id.ToString() }
+                { "type_id", type_id.ToString(CultureInfo.InvariantCulture) }
             },
                 options: options).ConfigureAwait(false);
 
@@ -285,7 +286,7 @@ namespace ESI.NET.Logic
         public async Task<EsiResponse<Stargate>> Stargate(long stargate_id, EsiCallOptions options = null)
             => await Execute<Stargate>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/stargates/{stargate_id}/", replacements: new Dictionary<string, string>()
             {
-                { "stargate_id", stargate_id.ToString() }
+                { "stargate_id", stargate_id.ToString(CultureInfo.InvariantCulture) }
             },
                 options: options).ConfigureAwait(false);
 
@@ -316,7 +317,7 @@ namespace ESI.NET.Logic
         public async Task<EsiResponse<Star>> Star(long star_id, EsiCallOptions options = null)
             => await Execute<Star>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/stars/{star_id}/", replacements: new Dictionary<string, string>()
             {
-                { "star_id", star_id.ToString() }
+                { "star_id", star_id.ToString(CultureInfo.InvariantCulture) }
             },
                 options: options).ConfigureAwait(false);
 
@@ -337,7 +338,7 @@ namespace ESI.NET.Logic
         public async Task<EsiResponse<AsteroidBelt>> AsteroidBelt(long asteroid_belt_id, EsiCallOptions options = null)
             => await Execute<AsteroidBelt>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/asteroid_belts/{asteroid_belt_id}/", replacements: new Dictionary<string, string>()
             {
-                { "asteroid_belt_id", asteroid_belt_id.ToString() }
+                { "asteroid_belt_id", asteroid_belt_id.ToString(CultureInfo.InvariantCulture) }
             },
                 options: options).ConfigureAwait(false);
 

@@ -1,6 +1,7 @@
-﻿using ESI.NET.Enumerations;
+using ESI.NET.Enumerations;
 using ESI.NET.Models;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -34,7 +35,7 @@ namespace ESI.NET.Logic
                 options: options,
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 parameters: new string[] {
                     $"search={search}",

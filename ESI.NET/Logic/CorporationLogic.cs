@@ -1,6 +1,7 @@
-﻿using ESI.NET.Models;
+using ESI.NET.Models;
 using ESI.NET.Models.Corporation;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -36,7 +37,7 @@ namespace ESI.NET.Logic
             => await Execute<Corporation>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/corporations/{corporation_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    { "corporation_id", corporation_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -50,7 +51,7 @@ namespace ESI.NET.Logic
             => await Execute<List<AllianceHistory>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/corporations/{corporation_id}/alliancehistory/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    { "corporation_id", corporation_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -64,7 +65,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Blueprint>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/blueprints/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -77,7 +78,7 @@ namespace ESI.NET.Logic
             => await Execute<List<ContainerLog>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/containers/logs/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -89,7 +90,7 @@ namespace ESI.NET.Logic
             => await Execute<Divisions>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/divisions/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -101,7 +102,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Facility>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/facilities/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -114,7 +115,7 @@ namespace ESI.NET.Logic
             => await Execute<Images>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/corporations/{corporation_id}/icons/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    { "corporation_id", corporation_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -128,7 +129,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Medal>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/medals/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -141,7 +142,7 @@ namespace ESI.NET.Logic
             => await Execute<List<IssuedMedal>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/medals/issued/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -153,7 +154,7 @@ namespace ESI.NET.Logic
             => await Execute<long[]>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/members/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -165,7 +166,7 @@ namespace ESI.NET.Logic
             => await Execute<long>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/members/limit/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -177,7 +178,7 @@ namespace ESI.NET.Logic
             => await Execute<List<MemberTitles>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/members/titles/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -189,7 +190,7 @@ namespace ESI.NET.Logic
             => await Execute<List<MemberInfo>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/membertracking/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -201,7 +202,7 @@ namespace ESI.NET.Logic
             => await Execute<List<CharacterRoles>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/roles/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -213,7 +214,7 @@ namespace ESI.NET.Logic
             => await Execute<List<CharacterRolesHistory>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/roles/history/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -226,7 +227,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Shareholder>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/shareholders/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -239,7 +240,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Standing>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/standings/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -252,7 +253,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Starbase>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/starbases/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -266,8 +267,8 @@ namespace ESI.NET.Logic
             => await Execute<StarbaseInfo>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/starbases/{starbase_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() },
-                    { "starbase_id", starbase_id.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) },
+                    { "starbase_id", starbase_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 parameters: new string[]
                 {
@@ -283,7 +284,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Structure>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/structures/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -295,7 +296,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Title>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/titles/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -313,9 +314,9 @@ namespace ESI.NET.Logic
             => await Execute<ProjectList>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/projects/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
-                parameters: BuildCursorParams(("state", state), ("after", after), ("before", before), ("limit", limit?.ToString())),
+                parameters: BuildCursorParams(("state", state), ("after", after), ("before", before), ("limit", limit?.ToString(CultureInfo.InvariantCulture))),
                 options: options).ConfigureAwait(false);
 
         /// <summary>
@@ -325,7 +326,7 @@ namespace ESI.NET.Logic
             => await Execute<Project>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/projects/{project_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() },
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) },
                     { "project_id", project_id }
                 },
                 options: options).ConfigureAwait(false);
@@ -337,10 +338,10 @@ namespace ESI.NET.Logic
             => await Execute<ProjectContributors>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/projects/{project_id}/contributors/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() },
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) },
                     { "project_id", project_id }
                 },
-                parameters: BuildCursorParams(("after", after), ("before", before), ("limit", limit?.ToString())),
+                parameters: BuildCursorParams(("after", after), ("before", before), ("limit", limit?.ToString(CultureInfo.InvariantCulture))),
                 options: options).ConfigureAwait(false);
 
         /// <summary>
@@ -350,9 +351,9 @@ namespace ESI.NET.Logic
             => await Execute<ProjectContribution>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/projects/{project_id}/contribution/{character_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() },
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) },
                     { "project_id", project_id },
-                    { "character_id", character_id.ToString() }
+                    { "character_id", character_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 

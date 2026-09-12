@@ -1,5 +1,6 @@
-﻿using ESI.NET.Models.Dogma;
+using ESI.NET.Models.Dogma;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -31,7 +32,7 @@ namespace ESI.NET.Logic
             => await Execute<AttributeInfo>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/dogma/attributes/{attribute_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "attribute_id", attribute_id.ToString() }
+                    { "attribute_id", attribute_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -54,7 +55,7 @@ namespace ESI.NET.Logic
             => await Execute<EffectInfo>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/dogma/effects/{effect_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "effect_id", effect_id.ToString() }
+                    { "effect_id", effect_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -69,8 +70,8 @@ namespace ESI.NET.Logic
             => await Execute<DynamicItem>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/dogma/dynamic/items/{type_id}/{item_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "type_id", type_id.ToString() },
-                    { "item_id", item_id.ToString() }
+                    { "type_id", type_id.ToString(CultureInfo.InvariantCulture) },
+                    { "item_id", item_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 

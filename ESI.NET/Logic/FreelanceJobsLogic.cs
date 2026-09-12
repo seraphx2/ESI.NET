@@ -1,5 +1,6 @@
-﻿using ESI.NET.Models.FreelanceJobs;
+using ESI.NET.Models.FreelanceJobs;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -23,7 +24,7 @@ namespace ESI.NET.Logic
         /// </summary>
         public async Task<EsiResponse<FreelanceJobList>> All(long? corporation_id = null, string after = null, string before = null, int? limit = null, EsiCallOptions options = null)
             => await Execute<FreelanceJobList>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/freelance-jobs/",
-                parameters: Cursor(("corporation_id", corporation_id?.ToString()), ("after", after), ("before", before), ("limit", limit?.ToString())),
+                parameters: Cursor(("corporation_id", corporation_id?.ToString(CultureInfo.InvariantCulture)), ("after", after), ("before", before), ("limit", limit?.ToString(CultureInfo.InvariantCulture))),
                 options: options).ConfigureAwait(false);
 
         /// <summary>
@@ -39,7 +40,7 @@ namespace ESI.NET.Logic
         /// </summary>
         public async Task<EsiResponse<FreelanceJobList>> ForCharacter(EsiCallOptions options)
             => await Execute<FreelanceJobList>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/freelance-jobs/",
-                replacements: new Dictionary<string, string>() { { "character_id", options.Character.CharacterID.ToString() } },
+                replacements: new Dictionary<string, string>() { { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) } },
                 options: options).ConfigureAwait(false);
 
         /// <summary>
@@ -49,7 +50,7 @@ namespace ESI.NET.Logic
             => await Execute<FreelanceParticipation>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/freelance-jobs/{job_id}/participation/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() },
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) },
                     { "job_id", job_id }
                 },
                 options: options).ConfigureAwait(false);
@@ -59,8 +60,8 @@ namespace ESI.NET.Logic
         /// </summary>
         public async Task<EsiResponse<FreelanceJobList>> ForCorporation(string after = null, string before = null, int? limit = null, EsiCallOptions options = null)
             => await Execute<FreelanceJobList>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/freelance-jobs/",
-                replacements: new Dictionary<string, string>() { { "corporation_id", options.Character.CorporationID.ToString() } },
-                parameters: Cursor(("after", after), ("before", before), ("limit", limit?.ToString())),
+                replacements: new Dictionary<string, string>() { { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) } },
+                parameters: Cursor(("after", after), ("before", before), ("limit", limit?.ToString(CultureInfo.InvariantCulture))),
                 options: options).ConfigureAwait(false);
 
         /// <summary>
@@ -70,10 +71,10 @@ namespace ESI.NET.Logic
             => await Execute<FreelanceParticipants>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/freelance-jobs/{job_id}/participants/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() },
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) },
                     { "job_id", job_id }
                 },
-                parameters: Cursor(("after", after), ("before", before), ("limit", limit?.ToString())),
+                parameters: Cursor(("after", after), ("before", before), ("limit", limit?.ToString(CultureInfo.InvariantCulture))),
                 options: options).ConfigureAwait(false);
 
         private static string[] Cursor(params (string Key, string Value)[] pairs)

@@ -1,5 +1,6 @@
-﻿using ESI.NET.Models.Fittings;
+using ESI.NET.Models.Fittings;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -25,7 +26,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Fitting>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/fittings/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -38,7 +39,7 @@ namespace ESI.NET.Logic
             => await Execute<NewFitting>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Post, "/characters/{character_id}/fittings/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 body: fitting,
                 options: options).ConfigureAwait(false);
@@ -52,8 +53,8 @@ namespace ESI.NET.Logic
             => await Execute<string>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Delete, "/characters/{character_id}/fittings/{fitting_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() },
-                    { "fitting_id", fitting_id.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) },
+                    { "fitting_id", fitting_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
     }

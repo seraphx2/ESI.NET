@@ -1,5 +1,6 @@
-﻿using ESI.NET.Models.Location;
+using ESI.NET.Models.Location;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -25,7 +26,7 @@ namespace ESI.NET.Logic
             => await Execute<Location>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/location/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -37,7 +38,7 @@ namespace ESI.NET.Logic
             => await Execute<Ship>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/ship/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -49,7 +50,7 @@ namespace ESI.NET.Logic
             => await Execute<Activity>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/online/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
     }

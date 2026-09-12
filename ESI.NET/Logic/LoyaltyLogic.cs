@@ -1,5 +1,6 @@
-﻿using ESI.NET.Models.Loyalty;
+using ESI.NET.Models.Loyalty;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -25,7 +26,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Offer>>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/loyalty/stores/{corporation_id}/offers/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", corporation_id.ToString() }
+                    { "corporation_id", corporation_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -38,7 +39,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Points>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/loyalty/points/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
     }

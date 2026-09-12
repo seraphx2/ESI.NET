@@ -1,5 +1,6 @@
-﻿using ESI.NET.Models.Industry;
+using ESI.NET.Models.Industry;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -44,7 +45,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Job>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/industry/jobs/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 parameters: new string[]
                 {
@@ -61,7 +62,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Entry>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/mining/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -74,7 +75,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Observer>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporation/{corporation_id}/mining/observers/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -88,8 +89,8 @@ namespace ESI.NET.Logic
             => await Execute<List<ObserverInfo>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporation/{corporation_id}/mining/observers/{observer_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() },
-                    { "observer_id", observer_id.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) },
+                    { "observer_id", observer_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
@@ -103,7 +104,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Job>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/industry/jobs/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 parameters: new string[]
                 {
@@ -119,7 +120,7 @@ namespace ESI.NET.Logic
             => await Execute<List<Extraction>>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporation/{corporation_id}/mining/extractions/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
     }

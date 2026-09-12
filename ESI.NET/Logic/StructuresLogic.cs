@@ -1,5 +1,6 @@
-﻿using ESI.NET.Models.Structures;
+using ESI.NET.Models.Structures;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -22,7 +23,7 @@ namespace ESI.NET.Logic
         /// <summary>/corporations/{corporation_id}/structures/skyhooks/</summary>
         public async Task<EsiResponse<SkyhookList>> Skyhooks(EsiCallOptions options)
             => await Execute<SkyhookList>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/structures/skyhooks/",
-                replacements: new Dictionary<string, string>() { { "corporation_id", options.Character.CorporationID.ToString() } },
+                replacements: new Dictionary<string, string>() { { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) } },
                 options: options).ConfigureAwait(false);
 
         /// <summary>/corporations/{corporation_id}/structures/skyhooks/{skyhook_id}/</summary>
@@ -30,15 +31,15 @@ namespace ESI.NET.Logic
             => await Execute<Skyhook>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/structures/skyhooks/{skyhook_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() },
-                    { "skyhook_id", skyhook_id.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) },
+                    { "skyhook_id", skyhook_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
         /// <summary>/corporations/{corporation_id}/structures/sovereignty-hubs/</summary>
         public async Task<EsiResponse<SovereigntyHubList>> SovereigntyHubs(EsiCallOptions options)
             => await Execute<SovereigntyHubList>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/structures/sovereignty-hubs/",
-                replacements: new Dictionary<string, string>() { { "corporation_id", options.Character.CorporationID.ToString() } },
+                replacements: new Dictionary<string, string>() { { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) } },
                 options: options).ConfigureAwait(false);
 
         /// <summary>/corporations/{corporation_id}/structures/sovereignty-hubs/{sovereignty_hub_id}/</summary>
@@ -46,15 +47,15 @@ namespace ESI.NET.Logic
             => await Execute<SovereigntyHub>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/corporations/{corporation_id}/structures/sovereignty-hubs/{sovereignty_hub_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "corporation_id", options.Character.CorporationID.ToString() },
-                    { "sovereignty_hub_id", sovereignty_hub_id.ToString() }
+                    { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) },
+                    { "sovereignty_hub_id", sovereignty_hub_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 
         /// <summary>/characters/{character_id}/structures/mercenary-dens/</summary>
         public async Task<EsiResponse<MercenaryDenList>> MercenaryDens(EsiCallOptions options)
             => await Execute<MercenaryDenList>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/structures/mercenary-dens/",
-                replacements: new Dictionary<string, string>() { { "character_id", options.Character.CharacterID.ToString() } },
+                replacements: new Dictionary<string, string>() { { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) } },
                 options: options).ConfigureAwait(false);
 
         /// <summary>/characters/{character_id}/structures/mercenary-dens/{mercenary_den_id}/</summary>
@@ -62,8 +63,8 @@ namespace ESI.NET.Logic
             => await Execute<MercenaryDen>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/structures/mercenary-dens/{mercenary_den_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() },
-                    { "mercenary_den_id", mercenary_den_id.ToString() }
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) },
+                    { "mercenary_den_id", mercenary_den_id.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
 

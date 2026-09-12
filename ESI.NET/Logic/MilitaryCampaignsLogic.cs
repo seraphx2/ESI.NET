@@ -1,5 +1,6 @@
-﻿using ESI.NET.Models.MilitaryCampaigns;
+using ESI.NET.Models.MilitaryCampaigns;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using static ESI.NET.EsiRequest;
@@ -32,7 +33,7 @@ namespace ESI.NET.Logic
         public async Task<EsiResponse<MilitaryObjectiveList>> Objectives(string campaign_id, string after = null, string before = null, int? limit = null, EsiCallOptions options = null)
             => await Execute<MilitaryObjectiveList>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/military-campaigns/{campaign_id}/objectives/",
                 replacements: new Dictionary<string, string>() { { "campaign_id", campaign_id } },
-                parameters: Cursor(("after", after), ("before", before), ("limit", limit?.ToString())),
+                parameters: Cursor(("after", after), ("before", before), ("limit", limit?.ToString(CultureInfo.InvariantCulture))),
                 options: options).ConfigureAwait(false);
 
         /// <summary>/military-campaigns/{campaign_id}/objectives/{objective_id}/</summary>
@@ -48,8 +49,8 @@ namespace ESI.NET.Logic
         /// <summary>/characters/{character_id}/military-campaigns/objectives/ - scope esi.activity.char:read</summary>
         public async Task<EsiResponse<CharacterMilitaryObjectiveList>> CharacterObjectives(string after = null, string before = null, int? limit = null, EsiCallOptions options = null)
             => await Execute<CharacterMilitaryObjectiveList>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/military-campaigns/objectives/",
-                replacements: new Dictionary<string, string>() { { "character_id", options.Character.CharacterID.ToString() } },
-                parameters: Cursor(("after", after), ("before", before), ("limit", limit?.ToString())),
+                replacements: new Dictionary<string, string>() { { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) } },
+                parameters: Cursor(("after", after), ("before", before), ("limit", limit?.ToString(CultureInfo.InvariantCulture))),
                 options: options).ConfigureAwait(false);
 
         /// <summary>/characters/{character_id}/military-campaigns/objectives/{objective_id}/ - scope esi.activity.char:read</summary>
@@ -57,7 +58,7 @@ namespace ESI.NET.Logic
             => await Execute<CharacterMilitaryObjective>(_client, _config, RequestSecurity.Authenticated, HttpMethod.Get, "/characters/{character_id}/military-campaigns/objectives/{objective_id}/",
                 replacements: new Dictionary<string, string>()
                 {
-                    { "character_id", options.Character.CharacterID.ToString() },
+                    { "character_id", options.Character.CharacterID.ToString(CultureInfo.InvariantCulture) },
                     { "objective_id", objective_id }
                 },
                 options: options).ConfigureAwait(false);
