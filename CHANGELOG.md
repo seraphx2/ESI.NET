@@ -63,6 +63,12 @@ cancellation, pagination) is passed. **Every consumer needs code changes** — s
   validation fails, instead of returning a blank `AuthorizedCharacterData`.
 - `EsiResponse<T>`'s public constructor is removed; it is built by an internal
   async factory. Consumers never constructed it.
+- `EsiResponse<T>.Message` on a `204 No Content` response is now always the
+  literal `"No Content"`. It used to look up a hand-maintained dictionary of
+  per-endpoint friendly strings (`"Fleet invitation sent"`, `"Mail deleted"`,
+  ...) that covered a small, already-stale fraction of endpoints and fell
+  further behind with every new one added; `StatusCode` + `Endpoint` already
+  say everything a consumer needs.
 
 **Removed endpoints** (CCP deleted them from ESI)
 

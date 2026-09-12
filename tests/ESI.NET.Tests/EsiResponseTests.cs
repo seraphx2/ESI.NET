@@ -97,22 +97,15 @@ namespace ESI.NET.Tests
         }
 
         [Fact]
-        public async Task NoContent_with_a_known_path_maps_to_its_message()
+        public async Task NoContent_sets_a_message()
         {
+            // Every 204 gets the same flat message regardless of path - there used
+            // to be a hand-maintained per-endpoint dictionary here, which only ever
+            // covered a handful of paths and had already gone stale (it never
+            // picked up any endpoint added since). StatusCode + Endpoint already
+            // say everything a consumer needs; this needs no maintenance.
             var r = await EsiResponse<object>.CreateAsync(
-                Message(HttpStatusCode.NoContent),
-                "DELETE|/characters/{character_id}/fittings/{fitting_id}/");
-
-            Assert.Equal("Fitting deleted", r.Message);
-        }
-
-        [Fact]
-        public async Task NoContent_with_an_unknown_path_falls_back_instead_of_throwing()
-        {
-            // Regression: the old code indexed the dictionary directly and threw
-            // KeyNotFoundException into the catch, leaving Message null.
-            var r = await EsiResponse<object>.CreateAsync(
-                Message(HttpStatusCode.NoContent), "DELETE|/some/new/endpoint/");
+                Message(HttpStatusCode.NoContent), "DELETE|/some/endpoint/");
 
             Assert.Equal("No Content", r.Message);
             Assert.Null(r.Exception);
