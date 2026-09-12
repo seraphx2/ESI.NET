@@ -11,7 +11,7 @@ cancellation, pagination) is passed. **Every consumer needs code changes** — s
 
 **Target frameworks & dependencies**
 
-- Targets are now `netstandard2.0;net8.0` (was `netcoreapp3.1;netstandard2.0;net462;net47;net471;net472;net48;net6.0;net7.0`).
+- Targets are now `netstandard2.0;net8.0;net10.0` (was `netcoreapp3.1;netstandard2.0;net462;net47;net471;net472;net48;net6.0;net7.0`).
   Consumers on a dropped runtime resolve the `netstandard2.0` assembly.
 - `Microsoft.IdentityModel.Tokens` / `System.IdentityModel.Tokens.Jwt` `6.14.1` → `8.22.0`.
 - `Microsoft.Extensions.*` `2.0.0` → `8.0.x`; added `Microsoft.Extensions.Http`.
@@ -139,6 +139,10 @@ cancellation, pagination) is passed. **Every consumer needs code changes** — s
 
 ### Added
 
+- **`net10.0` target** (a `beta` reviewer's app is `net10.0` and got the
+  `netstandard2.0` asset instead of `net8.0` — worth having an explicit
+  `net10.0` build rather than relying on NuGet's forward-compat resolution).
+  `net8.0` stays alongside it for now; it's supported through November 2026.
 - **Every ESI endpoint added since 2020 is now wrapped** (coverage 233/233 at
   compatibility date `2026-08-18`). New accessors: `FreelanceJobs`,
   `MilitaryCampaigns`, `Structures` (skyhooks / sovereignty hubs / mercenary

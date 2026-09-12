@@ -1,8 +1,8 @@
 name: CI — .NET
 description: >
   Restore, Release-build and test the solution. The library multi-targets
-  netstandard2.0 and net8.0; netstandard2.0 covers .NET Framework 4.6.1+
-  consumers. Runs on Linux. Assumes the repo is already checked out.
+  netstandard2.0, net8.0, and net10.0; netstandard2.0 covers .NET Framework
+  4.6.1+ consumers. Runs on Linux. Assumes the repo is already checked out.
 
 runs:
   using: composite
@@ -10,7 +10,10 @@ runs:
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v6
       with:
-        dotnet-version: '8.0.x'
+        # A 10.0.x SDK builds/tests net8.0 and netstandard2.0 targets fine too
+        # (a newer SDK always understands older TFMs) - the reverse isn't
+        # true, so this must stay at least as new as the highest TargetFramework.
+        dotnet-version: '10.0.x'
 
     - name: Restore
       shell: bash

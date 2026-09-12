@@ -57,7 +57,9 @@ jobs:
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '8.0.x'
+          # Must stay at least as new as the library's highest TargetFramework
+          # (net10.0) - a newer SDK builds older TFMs fine, not the reverse.
+          dotnet-version: '10.0.x'
 
       # A dispatch with prerelease=true (the default) appends -<label>.<run_number>
       # to the CalVer base. run_number is monotonic, so betas order correctly
