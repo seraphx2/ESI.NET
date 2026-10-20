@@ -3,7 +3,8 @@ name: Integration (live)
 # Live tests against the real ESI API. Deliberately NOT a PR or push gate - it
 # makes ~25 real calls and needs secrets. Runs weekly and on demand; a failed
 # run emails the maintainer. Also the manual pre-release check: dispatch it,
-# confirm green, then merge dev -> master.
+# confirm green, then merge dev -> master. spec-check.yml's keepalive job keeps
+# this schedule from being disabled for repository inactivity.
 #
 # Public smoke tests always run. The auth probe self-skips unless ALL of
 # ESI_CLIENT_ID / ESI_SECRET_KEY / ESI_REFRESH_TOKEN are set as repo secrets

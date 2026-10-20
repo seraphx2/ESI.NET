@@ -1,8 +1,9 @@
 ﻿# SpecCheck
 
 Compares the live ESI OpenAPI document against what `ESI.NET/Logic/*.cs` actually
-implements, and exits non-zero on drift. Run on a schedule by
-`.github/workflows/spec-check.yml`; a failed run emails the maintainer.
+implements, and exits non-zero on drift. Run daily by
+`.github/workflows/spec-check.yml`, which tracks drift in a single `spec-drift`
+issue (see [In CI](#in-ci)).
 
 **Any finding fails the run.** There is no strict/lenient split — the check only
 reports things worth acting on: an endpoint appeared or disappeared, or a
@@ -36,6 +37,30 @@ dotnet run --project tools/SpecCheck -- --probe       # + live-deserialize every
 | `--source <dir>` | auto-detected (`ESI.NET/Logic` under the repo root) | Logic sources to scan |
 | `--probe` | off | after the checks, fetch every public GET (path params from a fixture set) live and deserialize the real body into the wrapper's model — catches nullable fields the spec claims are non-null |
 | `--no-schema` | off | Tier 1 (coverage) only |
+| `--issue-body <path>` | off | on drift, write a GitHub issue body (the markdown report plus a drift fingerprint) to `<path>` |
+
+## In CI
+
+`spec-check.yml` passes `--issue-body` and keeps **one** open issue labelled
+`spec-drift`. The fingerprint is a hash of the failing findings (order-independent),
+stored in the issue body as `<!-- spec-drift-fingerprint: … -->`, so the same drift
+is never reported twice:
+
+| Run result | Issue | Run |
+| --- | --- | --- |
+| new drift | opened | fails |
+| drift changed | body rewritten + one comment | fails |
+| drift unchanged | untouched | passes (notice) |
+| drift matches an issue closed as *not planned* | untouched — muted | passes (notice) |
+| clean | open issue closed | passes |
+| build failure / spec unreachable | untouched | fails |
+
+Muting by closing as *not planned* covers that exact drift only. For a permanent
+exception, add the endpoint to `allowlist.txt`.
+
+The same workflow's `keepalive` job re-enables `spec-check.yml` and
+`integration.yml` daily via the API. GitHub disables scheduled workflows after 60
+days without repository activity, and a disabled workflow reports nothing.
 
 ## How it reads the wrapper
 
@@ -97,6 +122,6 @@ CLR type, so a nested shared type (`ResolvedInfo` inside both `IDLookup` and the
 | `Node.cs` | shared structural view of a type (object / array / scalar / unknown) |
 | `SchemaCheck.cs` | Tier 2 — schema→`Node`, CLR→`Node`, and the walk that compares them |
 | `Finding.cs` | severity + message |
-| `Report.cs` | stdout + `$GITHUB_STEP_SUMMARY`, exit code |
+| `Report.cs` | stdout + `$GITHUB_STEP_SUMMARY`, issue body + drift fingerprint, exit code |
 | `Program.cs` | argument parsing, allowlist load, orchestration |
 | `allowlist.txt` | spec endpoints the wrapper intentionally does not implement |

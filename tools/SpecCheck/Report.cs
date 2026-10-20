@@ -1,16 +1,21 @@
-﻿using System.Text;
+﻿using System.Security.Cryptography;
+using System.Text;
 
 namespace ESI.NET.Tools.SpecCheck;
 
 /// <summary>
 /// Renders the check results to stdout, appends a markdown summary to
-/// <c>$GITHUB_STEP_SUMMARY</c> when running in Actions, and returns the process
-/// exit code: non-zero if any finding is <see cref="Severity.Warning"/> or
-/// <see cref="Severity.Error"/>. <see cref="Severity.Info"/> never fails the run.
+/// <c>$GITHUB_STEP_SUMMARY</c> when running in Actions, optionally writes a
+/// GitHub issue body on drift, and returns the process exit code: non-zero if
+/// any finding is <see cref="Severity.Warning"/> or <see cref="Severity.Error"/>.
+/// <see cref="Severity.Info"/> never fails the run.
 /// </summary>
 public static class Report
 {
-    public static int Render(Spec spec, Wrapper wrapper, CoverageResult coverage, SchemaResult? schema)
+    // GitHub rejects issue bodies over 65,536 characters; leave headroom for the preamble.
+    private const int IssueBodyLimit = 60_000;
+
+    public static int Render(Spec spec, Wrapper wrapper, CoverageResult coverage, SchemaResult? schema, string? issueBodyPath = null)
     {
         var findings = coverage.Findings.Concat(schema?.Findings ?? Enumerable.Empty<Finding>()).ToList();
 
@@ -42,7 +47,61 @@ public static class Report
 
         var failed = errors > 0 || warnings > 0;
         Console.WriteLine(failed ? "RESULT: drift detected." : "RESULT: clean.");
+
+        if (failed && issueBodyPath is not null)
+            File.WriteAllText(issueBodyPath, BuildIssueBody(spec, coverage, schema, findings));
+
         return failed ? 1 : 0;
+    }
+
+    /// <summary>
+    /// Identity of the drift, not of the run: a hash of the failing findings,
+    /// independent of their order. spec-check.yml compares it with the one stored
+    /// in the open spec-drift issue, so drift that has not changed is not re-reported.
+    /// </summary>
+    private static string Fingerprint(IEnumerable<Finding> findings)
+    {
+        var lines = findings
+            .Where(f => f.Severity != Severity.Info)
+            .Select(f => $"{f.Severity}|{f.Category}|{f.Where}|{f.Message}")
+            .OrderBy(l => l, StringComparer.Ordinal);
+        var hash = SHA256.HashData(Encoding.UTF8.GetBytes(string.Join("\n", lines)));
+        return Convert.ToHexString(hash, 0, 8);
+    }
+
+    private static string BuildIssueBody(Spec spec, CoverageResult coverage, SchemaResult? schema, IReadOnlyList<Finding> findings)
+    {
+        var fingerprint = Fingerprint(findings);
+        var server = Environment.GetEnvironmentVariable("GITHUB_SERVER_URL");
+        var repo = Environment.GetEnvironmentVariable("GITHUB_REPOSITORY");
+        var runId = Environment.GetEnvironmentVariable("GITHUB_RUN_ID");
+        var runUrl = string.IsNullOrEmpty(server) || string.IsNullOrEmpty(repo) || string.IsNullOrEmpty(runId)
+            ? null
+            : $"{server}/{repo}/actions/runs/{runId}";
+
+        string Compose(bool schemaDetails)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"<!-- spec-drift-fingerprint: {fingerprint} -->");
+            sb.AppendLine("SpecCheck found drift between the live ESI spec and ESI.NET. "
+                          + "`.github/workflows/spec-check.yml` maintains this issue: it is rewritten (with a comment) "
+                          + "when the drift changes and closed when a run comes back clean. "
+                          + "Close it as **not planned** to mute this exact drift; anything new still files an issue.");
+            sb.AppendLine();
+            sb.AppendLine($"Drift fingerprint `{fingerprint}`" + (runUrl is null ? "." : $", reported by {runUrl}."));
+            sb.AppendLine();
+            sb.Append(BuildMarkdown(spec, coverage));
+            if (schema is not null)
+                sb.Append(BuildSchemaMarkdown(schema, schemaDetails));
+            return sb.ToString();
+        }
+
+        var body = Compose(schemaDetails: true);
+        if (body.Length > IssueBodyLimit)
+            body = Compose(schemaDetails: false);
+        if (body.Length > IssueBodyLimit)
+            body = body[..IssueBodyLimit] + "\n\n… truncated. The run's step summary has the full report.\n";
+        return body;
     }
 
     private static string BuildSchemaText(SchemaResult schema)
@@ -71,7 +130,7 @@ public static class Report
         return sb.ToString().TrimEnd();
     }
 
-    private static string BuildSchemaMarkdown(SchemaResult schema)
+    private static string BuildSchemaMarkdown(SchemaResult schema, bool includeDetails = true)
     {
         var sb = new StringBuilder();
         sb.AppendLine();
@@ -94,6 +153,12 @@ public static class Report
                      .OrderByDescending(g => g.Key.Severity).ThenByDescending(g => g.Count()))
             sb.AppendLine($"| {group.Key.Severity} | {group.Key.Category} | {group.Count()} |");
         sb.AppendLine();
+
+        if (!includeDetails)
+        {
+            sb.AppendLine($"{schema.Findings.Count} finding(s); the per-endpoint list is too long for an issue - see the run's step summary.");
+            return sb.ToString();
+        }
 
         sb.AppendLine($"<details><summary>{schema.Findings.Count} finding(s) by endpoint</summary>");
         sb.AppendLine();

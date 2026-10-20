@@ -2,11 +2,17 @@ name: SpecCheck
 
 # Drift check: the live ESI OpenAPI document vs what ESI.NET/Logic implements
 # (coverage) and vs each EsiResponse<T> model (schema). Deliberately NOT a PR or
-# push gate - it runs daily and on demand, and a failed run emails the
-# maintainer as the nudge to come back to it. See tools/SpecCheck.
+# push gate - it runs daily and on demand. See tools/SpecCheck.
 #
-# A network blip reaching esi.evetech.net also fails the run; for a daily job
-# that is acceptable noise.
+# Drift is tracked in a single open issue labelled spec-drift, keyed by a drift
+# fingerprint SpecCheck computes from the failing findings:
+#   - new drift            -> issue opened, run fails
+#   - drift changed        -> issue body rewritten + one comment, run fails
+#   - drift unchanged      -> nothing touched, run passes (already tracked)
+#   - closed as not planned with the same fingerprint -> muted, run passes
+#   - clean                -> open issue closed, run passes
+# Anything else (build failure, spec unreachable) fails the run with no issue;
+# a network blip reaching esi.evetech.net is acceptable noise for a daily job.
 on:
   schedule:
     - cron: '17 6 * * *' # daily 06:17 UTC
@@ -22,6 +28,9 @@ permissions:
 jobs:
   spec-check:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
     steps:
       - uses: actions/checkout@v7
 
@@ -29,5 +38,106 @@ jobs:
       # built ESI.NET assembly, so it has to be compiled first.
       - uses: ./.github/actions/ci-dotnet
 
+      # Exit 0 clean, 1 drift, anything else a broken run. Captured rather than
+      # failing here so the issue step can run first.
       - name: Spec check
-        run: dotnet run --project tools/SpecCheck --configuration Release --no-build
+        id: check
+        shell: bash
+        run: |
+          set +e
+          dotnet run --project tools/SpecCheck --configuration Release --no-build -- \
+            --issue-body "$RUNNER_TEMP/spec-drift.md"
+          echo "exit=$?" >> "$GITHUB_OUTPUT"
+
+      - name: Track drift in an issue
+        id: issue
+        if: steps.check.outputs.exit == '0' || steps.check.outputs.exit == '1'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          EXIT: ${{ steps.check.outputs.exit }}
+          BODY: ${{ runner.temp }}/spec-drift.md
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          label=spec-drift
+          gh label create "$label" --force --color D93F0B \
+            --description "ESI spec drift reported by SpecCheck"
+
+          open=$(gh issue list --label "$label" --state open --limit 1 \
+            --json number --jq '.[0].number // empty')
+
+          if [ "$EXIT" = 0 ]; then
+            if [ -n "$open" ]; then
+              gh issue close "$open" --reason completed \
+                --comment "SpecCheck is clean as of $RUN_URL."
+            fi
+            echo "outcome=clean" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          fingerprint=$(sed -n 's/^<!-- spec-drift-fingerprint: \([0-9A-F]*\) -->$/\1/p' "$BODY")
+          if [ -z "$fingerprint" ]; then
+            echo "::error::SpecCheck reported drift but wrote no fingerprint to $BODY"
+            exit 1
+          fi
+          marker="<!-- spec-drift-fingerprint: $fingerprint -->"
+
+          if [ -n "$open" ]; then
+            current=$(gh issue view "$open" --json body --jq .body)
+            if grep -qF "$marker" <<< "$current"; then
+              echo "::notice::Drift $fingerprint is unchanged and already tracked in #$open."
+              echo "outcome=unchanged" >> "$GITHUB_OUTPUT"
+            else
+              gh issue edit "$open" --body-file "$BODY"
+              gh issue comment "$open" \
+                --body "The drift changed (now \`$fingerprint\`, $RUN_URL); the description shows the current report."
+              echo "outcome=changed" >> "$GITHUB_OUTPUT"
+            fi
+            exit 0
+          fi
+
+          muted=$(gh issue list --label "$label" --state closed --limit 100 \
+            --json number,stateReason,body \
+            --jq "[.[] | select((.stateReason | ascii_upcase) == \"NOT_PLANNED\" and (.body | contains(\"$marker\")))][0].number // empty")
+          if [ -n "$muted" ]; then
+            echo "::notice::Drift $fingerprint was muted (#$muted closed as not planned)."
+            echo "outcome=muted" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          gh issue create --label "$label" --title "ESI spec drift detected" --body-file "$BODY"
+          echo "outcome=new" >> "$GITHUB_OUTPUT"
+
+      - name: Result
+        shell: bash
+        env:
+          EXIT: ${{ steps.check.outputs.exit }}
+          OUTCOME: ${{ steps.issue.outputs.outcome }}
+        run: |
+          case "$EXIT/$OUTCOME" in
+            0/clean | 1/unchanged | 1/muted) exit 0 ;;
+            1/new | 1/changed) echo "::error::New or changed ESI spec drift - see the spec-drift issue."; exit 1 ;;
+            *) echo "::error::SpecCheck did not complete (exit '$EXIT')."; exit 1 ;;
+          esac
+
+  # GitHub disables scheduled workflows in a public repo after 60 days without
+  # repository activity, and a disabled workflow sends no failure email - drift
+  # would go unreported. Re-enabling an already-enabled workflow restarts that
+  # clock (the same mechanism as gautamkrishnar/keepalive-workflow's API mode),
+  # so this daily job keeps both scheduled workflows alive without commits.
+  keepalive:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Keep scheduled workflows enabled
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for workflow in spec-check.yml integration.yml; do
+            gh api --method PUT "repos/${{ github.repository }}/actions/workflows/$workflow/enable"
+          done
