@@ -1,12 +1,15 @@
 ﻿namespace ESI.NET.Tools.SpecCheck;
 
-public enum NodeKind { Object, Array, Scalar, Unknown }
+// Map: string-keyed dictionary (CLR IDictionary / schema additionalProperties).
+// Any: accepts every JSON value (CLR object) - nothing to compare against.
+public enum NodeKind { Object, Array, Map, Scalar, Any, Unknown }
 
 /// <summary>
 /// A structural view of a type, built from either an OpenAPI schema
 /// (<see cref="SchemaCheck.FromSchema"/>) or a CLR type
 /// (<see cref="SchemaCheck.FromClr"/>). The two are then walked together by
-/// <see cref="SchemaCheck.Compare"/>.
+/// <see cref="SchemaCheck.Compare"/>. A recursive type yields a cyclic graph:
+/// the inner reference is the same node instance as the outer one.
 /// </summary>
 public sealed class Node
 {
@@ -25,6 +28,9 @@ public sealed class Node
     // Array
     public Node? Items { get; private set; }
 
+    // Map
+    public Node? Values { get; private set; }
+
     // Scalar
     public string? JsonType { get; private set; }        // integer | number | string | boolean
     public string? Format { get; private set; }          // int32 | int64 | date-time | float | double
@@ -36,6 +42,8 @@ public sealed class Node
 
     public static Node Object() => new() { Kind = NodeKind.Object };
     public static Node Array(Node items) => new() { Kind = NodeKind.Array, Items = items };
+    public static Node Map(Node values) => new() { Kind = NodeKind.Map, Values = values };
+    public static Node Any() => new() { Kind = NodeKind.Any };
     public static Node Scalar(string jsonType, string? format = null) =>
         new() { Kind = NodeKind.Scalar, JsonType = jsonType, Format = format };
     public static Node Unknown(string note) => new() { Kind = NodeKind.Unknown, Note = note };

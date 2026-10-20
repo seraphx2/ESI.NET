@@ -5,11 +5,13 @@ implements, and exits non-zero on drift. Run daily by
 `.github/workflows/spec-check.yml`, which tracks drift in a single `spec-drift`
 issue (see [In CI](#in-ci)).
 
-**Any finding fails the run.** There is no strict/lenient split — the check only
-reports things worth acting on: an endpoint appeared or disappeared, or a
-response's field set / shape / enum changed. Type width, `string`-vs-typed-enum,
-and date-as-string are not checked; a model authored from the spec gets those
-right, and they are not what "the API changed" looks like.
+**Any warning or error fails the run.** There is no strict/lenient split — the
+check only reports things worth acting on: an endpoint appeared or disappeared,
+a response's field set / shape / enum changed, or a field's type changed in a way
+that would make deserialization throw (a wider integer, a date that became a
+plain string, an enum that became free text). Info notes never fail a run. A
+model that is *looser* than the spec (a `string` for a date or an enum, `long`
+for `int32`) is not flagged: it cannot throw.
 
 **Target: the latest published ESI compatibility date.** SpecCheck reads
 `/meta/compatibility-dates`, takes the newest, and checks the wrapper against that
@@ -93,13 +95,29 @@ together.
 
 | Finding | Severity | |
 | --- | --- | --- |
-| `schema-shape` | error | model is an object where the spec is an array (or vice versa) |
-| `schema-type` | error | `string`↔`number`, `integer` where the spec is `number`, … |
+| `schema-shape` | error | model is an object / array / dictionary where the spec is something else |
+| `schema-type` | error | `string`↔`number`, `integer` where the spec is `number`, a `DateTime` where the spec is a plain string, … |
+| `schema-int-width` | error | model is 32-bit where the spec is `int64` |
+| `schema-enum-open` | error | model is a C# enum where the spec allows any string (`StringEnumConverter` throws on an undeclared value) |
+| `schema-nullable` | error | spec allows `null`; the model is a non-nullable value type |
 | `schema-missing-property` | warning | spec has a property the model does not bind |
 | `schema-extra-property` | warning | model has a property that is in **no** schema for **any** endpoint using that model class |
 | `schema-enum-drift` | warning | modelled enum values differ from the spec's |
 | `schema-number-widening` | info | model is floating-point where the spec is `integer` |
-| `schema-unverified` | info | `oneOf`/`anyOf`, dictionary, or a recursive `$ref` |
+| `schema-unverified` | info | the spec allows any value, a union has a non-object variant, or a `$ref` recurses before reaching an object |
+
+The walk goes through the structures ESI uses for variable data:
+
+- **Dictionaries.** A `Dictionary<string, T>` model is compared against the
+  spec's `additionalProperties` schema, or, where the spec has fixed properties,
+  each property against `T`. An `object`-typed value binds anything.
+- **Tagged unions.** ESI writes these as a `oneOf` of single-key objects. The
+  variants are merged into one object whose members are all optional, which is
+  what a typed union class (`SovereigntyClaim`) binds, and what a dictionary
+  model is checked against key by key.
+- **Recursive types.** A type that contains itself (killmail items) becomes a
+  cyclic graph rather than being cut off. The walk compares each (model, spec)
+  pair once.
 
 ### Shared models
 

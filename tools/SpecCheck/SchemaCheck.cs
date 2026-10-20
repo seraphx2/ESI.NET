@@ -50,8 +50,8 @@ public static class SchemaCheck
             }
 
             pairs.Add((endpoint.Key,
-                FromClr(clrType, 0, new HashSet<Type>()),
-                FromSchema(schemaElement, spec, 0, new HashSet<string>())));
+                FromClr(clrType, 0, new Dictionary<Type, Node>()),
+                FromSchema(schemaElement, spec, 0, new Dictionary<string, Node?>(StringComparer.Ordinal))));
         }
 
         // For each CLR object type, the union of every schema property name lined up
@@ -81,7 +81,19 @@ public static class SchemaCheck
     private static void CollectKnownProps(
         Node model, Node schema, Dictionary<Type, HashSet<string>> acc, HashSet<(Node, Node)> visited)
     {
-        if (model.Kind != schema.Kind || !visited.Add((model, schema)))
+        if (!visited.Add((model, schema)))
+            return;
+
+        // A dictionary model lined up against a fixed-property schema: every member
+        // lines up with the dictionary's value type (mirrors Walk).
+        if (model.Kind == NodeKind.Map && schema.Kind == NodeKind.Object)
+        {
+            foreach (var member in schema.Members.Values)
+                CollectKnownProps(model.Values!, member.Node, acc, visited);
+            return;
+        }
+
+        if (model.Kind != schema.Kind)
             return;
 
         switch (model.Kind)
@@ -103,12 +115,18 @@ public static class SchemaCheck
                 if (model.Items is not null && schema.Items is not null)
                     CollectKnownProps(model.Items, schema.Items, acc, visited);
                 break;
+
+            case NodeKind.Map:
+                CollectKnownProps(model.Values!, schema.Values!, acc, visited);
+                break;
         }
     }
 
     // ---- CLR type -> Node ---------------------------------------------------
 
-    public static Node FromClr(Type type, int depth, HashSet<Type> seen)
+    /// <param name="inProgress">Class types currently being built, so a recursive
+    /// reference closes a cycle onto the outer node instead of recursing forever.</param>
+    public static Node FromClr(Type type, int depth, Dictionary<Type, Node> inProgress)
     {
         // A property is null-tolerant if it is Nullable<T> or a reference type
         // (string, a class). A bare value type (long, bool, DateTime, an enum) is not.
@@ -121,31 +139,37 @@ public static class SchemaCheck
             return scalar;
         }
 
+        if (type == typeof(object))
+            return Node.Any();
+
         if (depth >= MaxDepth)
             return Node.Unknown("max depth");
 
-        if (typeof(IDictionary).IsAssignableFrom(type)
-            || (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IDictionary<,>)))
-            return Node.Unknown("dictionary / additionalProperties");
+        // Before ElementType: a dictionary is also an IEnumerable<KeyValuePair<,>>.
+        if (DictionaryValueType(type) is { } valueType)
+            return Node.Map(FromClr(valueType, depth + 1, inProgress));
+        if (typeof(IDictionary).IsAssignableFrom(type))
+            return Node.Map(Node.Any());
 
         if (ElementType(type) is { } element)
-            return Node.Array(FromClr(element, depth + 1, seen));
+            return Node.Array(FromClr(element, depth + 1, inProgress));
 
-        if (type.IsClass && type != typeof(object))
+        if (type.IsClass)
         {
-            if (!seen.Add(type))
-                return Node.Unknown("recursive type " + type.Name);
+            if (inProgress.TryGetValue(type, out var outer))
+                return outer;
 
             var node = Node.Object();
             node.ClrType = type;
+            inProgress[type] = node;
             foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 if (property.GetIndexParameters().Length > 0)
                     continue;
                 var name = property.GetCustomAttribute<JsonPropertyAttribute>()?.PropertyName ?? property.Name;
-                node.Members[name] = new NodeMember(FromClr(property.PropertyType, depth + 1, seen), Required: false);
+                node.Members[name] = new NodeMember(FromClr(property.PropertyType, depth + 1, inProgress), Required: false);
             }
-            seen.Remove(type);
+            inProgress.Remove(type);
             return node;
         }
 
@@ -181,6 +205,15 @@ public static class SchemaCheck
         return node is not null;
     }
 
+    private static Type? DictionaryValueType(Type type)
+    {
+        var interfaces = type.IsInterface ? type.GetInterfaces().Append(type) : type.GetInterfaces();
+        var dictionary = interfaces.FirstOrDefault(i => i.IsGenericType
+            && (i.GetGenericTypeDefinition() == typeof(IDictionary<,>)
+                || i.GetGenericTypeDefinition() == typeof(IReadOnlyDictionary<,>)));
+        return dictionary?.GetGenericArguments()[1];
+    }
+
     private static Type? ElementType(Type type)
     {
         if (type == typeof(string))
@@ -194,7 +227,10 @@ public static class SchemaCheck
 
     // ---- OpenAPI schema -> Node ------------------------------------------
 
-    public static Node FromSchema(JsonElement element, Spec spec, int depth, HashSet<string> seenRefs)
+    /// <param name="inProgress">$refs currently being built, mapped to their object node
+    /// once created, so a recursive $ref closes a cycle onto it. A ref that recurses
+    /// before reaching an object (null entry) cannot be represented and is Unknown.</param>
+    public static Node FromSchema(JsonElement element, Spec spec, int depth, Dictionary<string, Node?> inProgress)
     {
         if (depth >= MaxDepth)
             return Node.Unknown("max depth");
@@ -204,8 +240,12 @@ public static class SchemaCheck
             ? r.GetString()
             : null;
 
-        if (refName is not null && !seenRefs.Add(refName))
-            return Node.Unknown("recursive $ref");
+        if (refName is not null)
+        {
+            if (inProgress.TryGetValue(refName, out var outer))
+                return outer ?? Node.Unknown("recursive $ref");
+            inProgress[refName] = null;
+        }
 
         try
         {
@@ -219,7 +259,7 @@ public static class SchemaCheck
                 var merged = Node.Object();
                 foreach (var part in allOf.EnumerateArray())
                 {
-                    var partNode = FromSchema(part, spec, depth + 1, seenRefs);
+                    var partNode = FromSchema(part, spec, depth + 1, inProgress);
                     if (partNode.Kind == NodeKind.Object)
                         foreach (var (k, v) in partNode.Members)
                             merged.Members[k] = v;
@@ -227,22 +267,52 @@ public static class SchemaCheck
                 return merged.Members.Count > 0 ? merged : Node.Unknown("allOf");
             }
 
-            if (element.TryGetProperty("oneOf", out _) || element.TryGetProperty("anyOf", out _))
-                return Node.Unknown("oneOf / anyOf union");
+            // ESI writes a tagged union as a oneOf of single-key objects, exactly one key
+            // present. Merged into one object of optional members, it is checked as a typed
+            // union class binds it (SovereigntyClaim) and, per key, against a dictionary's
+            // value type (Dictionary<string, object>). A null variant just means nullable.
+            if (element.TryGetProperty("oneOf", out var union) || element.TryGetProperty("anyOf", out union))
+            {
+                var merged = Node.Object();
+                foreach (var variant in union.EnumerateArray())
+                {
+                    var variantNode = FromSchema(variant, spec, depth + 1, inProgress);
+                    if (variantNode is { Kind: NodeKind.Scalar, JsonType: "null" })
+                        continue;
+                    if (variantNode.Kind != NodeKind.Object)
+                        return Node.Unknown("oneOf / anyOf with a non-object variant");
+                    foreach (var (k, v) in variantNode.Members)
+                        merged.Members.TryAdd(k, v with { Required = false });
+                }
+                return merged;
+            }
 
             var (jsonType, nullable) = ReadType(element);
 
             if (jsonType == "array" || element.TryGetProperty("items", out _))
             {
                 var items = element.TryGetProperty("items", out var it)
-                    ? FromSchema(it, spec, depth + 1, seenRefs)
+                    ? FromSchema(it, spec, depth + 1, inProgress)
                     : Node.Unknown("array without items");
                 return Node.Array(items);
+            }
+
+            // A free-form object: arbitrary keys, each value matching additionalProperties.
+            if (!element.TryGetProperty("properties", out _)
+                && element.TryGetProperty("additionalProperties", out var additional)
+                && additional.ValueKind is JsonValueKind.Object or JsonValueKind.True)
+            {
+                var values = additional.ValueKind == JsonValueKind.True || !additional.EnumerateObject().Any()
+                    ? Node.Any()
+                    : FromSchema(additional, spec, depth + 1, inProgress);
+                return Node.Map(values);
             }
 
             if (jsonType == "object" || element.TryGetProperty("properties", out _))
             {
                 var node = Node.Object();
+                if (refName is not null)
+                    inProgress[refName] = node;
                 var required = element.TryGetProperty("required", out var req) && req.ValueKind == JsonValueKind.Array
                     ? req.EnumerateArray().Select(x => x.GetString()).Where(x => x is not null).ToHashSet()!
                     : new HashSet<string>();
@@ -250,7 +320,7 @@ public static class SchemaCheck
                 if (element.TryGetProperty("properties", out var props))
                     foreach (var p in props.EnumerateObject())
                         node.Members[p.Name] = new NodeMember(
-                            FromSchema(p.Value, spec, depth + 1, seenRefs),
+                            FromSchema(p.Value, spec, depth + 1, inProgress),
                             required.Contains(p.Name));
                 return node;
             }
@@ -267,7 +337,7 @@ public static class SchemaCheck
         finally
         {
             if (refName is not null)
-                seenRefs.Remove(refName);
+                inProgress.Remove(refName);
         }
     }
 
@@ -293,22 +363,40 @@ public static class SchemaCheck
 
     public static void Compare(
         Node model, Node spec, string crumb, string endpoint,
-        IReadOnlyDictionary<Type, HashSet<string>> knownByType, List<Finding> findings)
+        IReadOnlyDictionary<Type, HashSet<string>> knownByType, List<Finding> findings) =>
+        Walk(model, spec, crumb, endpoint, knownByType, findings, new HashSet<(Node, Node)>());
+
+    private static void Walk(
+        Node model, Node spec, string crumb, string endpoint,
+        IReadOnlyDictionary<Type, HashSet<string>> knownByType, List<Finding> findings,
+        HashSet<(Node, Node)> visited)
     {
         void Add(Severity sev, string category, string message) =>
             findings.Add(new Finding(sev, category, endpoint, $"{crumb}: {message}"));
 
-        if (model.Kind == NodeKind.Unknown || spec.Kind == NodeKind.Unknown)
+        // An object-typed model binds any JSON value. A pair already walked is a
+        // recursive type coming round again - its first occurrence covered it.
+        if (model.Kind == NodeKind.Any || !visited.Add((model, spec)))
+            return;
+
+        if (model.Kind == NodeKind.Unknown || spec.Kind is NodeKind.Unknown or NodeKind.Any)
         {
             Add(Severity.Info, "schema-unverified",
-                $"not compared ({model.Note ?? spec.Note})");
+                $"not compared ({model.Note ?? spec.Note ?? "spec allows any value"})");
+            return;
+        }
+
+        // A dictionary model binds any object; each spec property must fit its value type.
+        if (model.Kind == NodeKind.Map && spec.Kind == NodeKind.Object)
+        {
+            foreach (var (name, member) in spec.Members)
+                Walk(model.Values!, member.Node, $"{crumb}.{name}", endpoint, knownByType, findings, visited);
             return;
         }
 
         if (model.Kind != spec.Kind)
         {
-            Add(Severity.Error, "schema-shape",
-                $"model is {model.Kind.ToString().ToLowerInvariant()}, spec is {spec.Kind.ToString().ToLowerInvariant()}");
+            Add(Severity.Error, "schema-shape", $"model is {KindName(model.Kind)}, spec is {KindName(spec.Kind)}");
             return;
         }
 
@@ -336,13 +424,17 @@ public static class SchemaCheck
                 foreach (var (name, member) in spec.Members)
                 {
                     if (model.Members.TryGetValue(name, out var modelMember))
-                        Compare(modelMember.Node, member.Node, $"{crumb}.{name}", endpoint, knownByType, findings);
+                        Walk(modelMember.Node, member.Node, $"{crumb}.{name}", endpoint, knownByType, findings, visited);
                 }
                 break;
 
             case NodeKind.Array:
                 if (model.Items is not null && spec.Items is not null)
-                    Compare(model.Items, spec.Items, $"{crumb}[]", endpoint, knownByType, findings);
+                    Walk(model.Items, spec.Items, $"{crumb}[]", endpoint, knownByType, findings, visited);
+                break;
+
+            case NodeKind.Map:
+                Walk(model.Values!, spec.Values!, $"{crumb}{{*}}", endpoint, knownByType, findings, visited);
                 break;
 
             case NodeKind.Scalar:
@@ -350,6 +442,9 @@ public static class SchemaCheck
                 break;
         }
     }
+
+    private static string KindName(NodeKind kind) =>
+        kind == NodeKind.Map ? "dictionary" : kind.ToString().ToLowerInvariant();
 
     private static void CompareScalar(Node model, Node spec, Action<Severity, string, string> add)
     {
@@ -375,6 +470,19 @@ public static class SchemaCheck
                     add(Severity.Warning, "schema-enum-drift",
                         $"enum differs - model-only [{string.Join(", ", extra)}], spec-only [{string.Join(", ", gone)}]");
             }
+
+            // StringEnumConverter throws on a value the C# enum does not declare.
+            if (m == "string" && model.EnumValues is not null && spec.EnumValues is not { Count: > 0 })
+                add(Severity.Error, "schema-enum-open",
+                    "model is an enum, spec allows any string - an undeclared value will throw");
+
+            // Same JSON type, narrower CLR type: deserialization throws past the narrow range.
+            if (m == "integer" && model.Format == "int32" && spec.Format == "int64")
+                add(Severity.Error, "schema-int-width",
+                    "model is 32-bit, spec is int64 - values beyond 2,147,483,647 will throw");
+            if (m == "string" && model.Format == "date-time" && spec.Format is not ("date-time" or "date"))
+                add(Severity.Error, "schema-type",
+                    $"model is a date, spec is a {(spec.Format is null ? "plain" : spec.Format)} string - a non-date value will throw");
             return;
         }
 
