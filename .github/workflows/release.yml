@@ -4,8 +4,9 @@ name: Release
 #   a CalVer version (YYYY.(MM*100+DD).BUILD from today + existing tags), pushed
 #   to nuget.org via Trusted Publishing (OIDC, no stored key) and mirrored to
 #   GitHub Packages, a GitHub Release (which creates the tag), and a Discord
-#   embed. Doc-/CI-only merges are skipped (paths-ignore); put "[skip release]"
-#   in the merge commit to opt any other merge out.
+#   embed. Doc-/CI-/tooling-only merges are skipped (paths-ignore; nothing under
+#   tools/ is packed); put "[skip release]" in the merge commit to opt any other
+#   merge out.
 #
 # workflow_dispatch -> prerelease by default:
 #   packs <version>-<label>.<run_number>, pushes it to nuget.org + GitHub
@@ -19,6 +20,7 @@ on:
       - 'docs/**'
       - '**.md'
       - '.github/**'
+      - 'tools/**'
   workflow_dispatch:
     inputs:
       prerelease:
