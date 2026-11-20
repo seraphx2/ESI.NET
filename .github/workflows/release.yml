@@ -1,7 +1,7 @@
 name: Release
 
 # push to master (every dev->master merge) -> full release:
-#   a CalVer version (YYYY.(MM*100+DD).BUILD from today + existing tags), pushed
+#   a CalVer version (YYYY.(MM*100+DD).BUILD from the pinned ESI compatibility date + existing tags; see scripts/compute-version.sh), pushed
 #   to nuget.org via Trusted Publishing (OIDC, no stored key) and mirrored to
 #   GitHub Packages, a GitHub Release (which creates the tag), and a Discord
 #   embed. Doc-/CI-/tooling-only merges are skipped (paths-ignore; nothing under

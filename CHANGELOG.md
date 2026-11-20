@@ -1,5 +1,35 @@
 ﻿# Changelog
 
+## 2026.1119.1
+
+Moves to ESI compatibility date `2026-11-19`. **Breaking** if you use ESI's
+static-data routes — see [MIGRATION.md](MIGRATION.md#upgrading-to-20261119-1).
+
+### Breaking changes
+
+- CCP removed the static-data routes from ESI at `2026-11-19`; that data now
+  comes from the SDE at `https://sde.evetech.net`. Removed: `Universe.Ancestries`,
+  `AsteroidBelt`, `Bloodlines`, `Categories`, `Category`, `Constellations`,
+  `Constellation`, `Factions`, `Graphics`, `Graphic`, `Groups`, `Group`, `Moon`,
+  `Planet`, `Races`, `Regions`, `Region`, `Station`, `Stargate`, `Star`,
+  `Systems`, `System`, `Types`, `Type`, and
+  `PlanetaryInteraction.SchematicInformation`, with their models.
+- `EsiVersion.CompatibilityDate` is `2026-11-19` (was `2026-08-18`).
+
+### Changed
+
+- Package versions are built from the pinned compatibility date instead of the
+  release date (`YYYY.(MM*100+DD).N`, `N` = release count on that date).
+
+### Fixed
+
+- `SovereigntyAllianceClaim` gains `SovereigntyHub` and `Development`.
+
+### Tooling
+
+- SpecCheck compares through dictionaries, unions and recursive types, and the
+  drift workflow tracks drift in one deduplicated issue.
+
 ## Unreleased — next major
 
 The first release since `2023.12.12`. It modernizes the target frameworks and

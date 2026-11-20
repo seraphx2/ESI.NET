@@ -27,24 +27,11 @@ namespace ESI.NET.IntegrationTests
         }
 
         [Fact]
-        public async Task Universe_reference_lists()
+        public async Task Universe_dynamic_lists()
         {
-            Ok.NonEmpty(await LiveFixture.Call(() => Esi.Universe.Bloodlines()));
-            Ok.NonEmpty(await LiveFixture.Call(() => Esi.Universe.Races()));
-            Ok.NonEmpty(await LiveFixture.Call(() => Esi.Universe.Factions()));
-            Ok.NonEmpty(await LiveFixture.Call(() => Esi.Universe.Categories()));
-        }
-
-        [Fact]
-        public async Task Universe_system_type_region_by_id()
-        {
-            var system = Ok.Response(await LiveFixture.Call(() => Esi.Universe.System(_f.JitaSystemId)));
-            Assert.Equal("Jita", system.Data.Name);
-
-            var type = Ok.Response(await LiveFixture.Call(() => Esi.Universe.Type(_f.TritaniumTypeId)));
-            Assert.Equal("Tritanium", type.Data.Name);
-
-            Ok.Response(await LiveFixture.Call(() => Esi.Universe.Region(_f.TheForgeRegionId)));
+            Ok.NonEmpty(await LiveFixture.Call(() => Esi.Universe.Jumps()));
+            Ok.NonEmpty(await LiveFixture.Call(() => Esi.Universe.Kills()));
+            Ok.NonEmpty(await LiveFixture.Call(() => Esi.Universe.Structures()));
         }
 
         [Fact]
