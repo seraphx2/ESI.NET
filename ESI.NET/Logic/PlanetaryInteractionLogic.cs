@@ -55,19 +55,5 @@ namespace ESI.NET.Logic
                     { "corporation_id", options.Character.CorporationID.ToString(CultureInfo.InvariantCulture) }
                 },
                 options: options).ConfigureAwait(false);
-
-        /// <summary>
-        /// /universe/schematics/{schematic_id}/
-        /// </summary>
-        /// <param name="schematicId"></param>
-        /// <returns></returns>
-        public async Task<EsiResponse<Schematic>> SchematicInformation(long schematicId, EsiCallOptions options = null)
-            => await Execute<Schematic>(_client, _config, RequestSecurity.Public, HttpMethod.Get, "/universe/schematics/{schematic_id}/",
-                replacements: new Dictionary<string, string>()
-                {
-                    { "schematic_id", schematicId.ToString(CultureInfo.InvariantCulture) }
-                },
-                options: options).ConfigureAwait(false);
-
     }
 }

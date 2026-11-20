@@ -80,27 +80,6 @@ namespace ESI.NET.Tests
             Assert.True(effect.IsDefault);
         }
 
-        [Fact]
-        public void UniverseType_uses_the_same_Dogma_Attribute_and_Effect_pairs()
-        {
-            // /universe/types/{type_id}/ carries the same {attribute_id,value} / {effect_id,is_default}
-            // shape as the dynamic-items endpoint, so both bind to ESI.NET.Models.Dogma.Attribute/Effect.
-            const string json = @"{
-                ""type_id"": 2410, ""name"": ""Heavy Missile Launcher II"", ""group_id"": 510,
-                ""description"": ""..."", ""published"": true,
-                ""dogma_attributes"": [ { ""attribute_id"": 51, ""value"": 5.0 } ],
-                ""dogma_effects"": [ { ""effect_id"": 40, ""is_default"": false } ] }";
-
-            var type = JsonConvert.DeserializeObject<ESI.NET.Models.Universe.Type>(json);
-
-            Assert.Equal(2410, type.TypeId);
-            Attribute attr = Assert.Single(type.DogmaAttributes);
-            Assert.Equal(51, attr.AttributeId);
-            Assert.Equal(5.0, attr.Value);
-            Effect eff = Assert.Single(type.DogmaEffects);
-            Assert.Equal(40, eff.EffectId);
-        }
-
         [Theory]
         [InlineData(nameof(DogmaLogic.Attribute), typeof(AttributeInfo))]
         [InlineData(nameof(DogmaLogic.Effect), typeof(EffectInfo))]

@@ -1,16 +1,18 @@
 ﻿using ESI.NET;
 using ESI.NET.Tools.SpecCheck;
 
-// spec-check [--spec <url|path>] [--source <dir>] [--no-schema]
+// spec-check [--spec <url|path>] [--source <dir>] [--no-schema] [--probe] [--issue-body <path>]
 //
-//   --spec       OpenAPI document. Default: the live ESI meta spec.
-//   --source     ESI.NET/Logic directory. Default: auto-detected from the repo root.
-//   --no-schema  Tier 1 (coverage) only; skip Tier 2 (schema drift).
+//   --spec        OpenAPI document. Default: the live ESI meta spec.
+//   --source      ESI.NET/Logic directory. Default: auto-detected from the repo root.
+//   --no-schema   Tier 1 (coverage) only; skip Tier 2 (schema drift).
+//   --issue-body  On drift, write a GitHub issue body (markdown + drift fingerprint) here.
 //
 // Any finding fails the run. Deliberate exceptions go in tools/SpecCheck/allowlist.txt.
 
 var specSource = "https://esi.evetech.net/meta/openapi.json";
 string? sourceDir = null;
+string? issueBodyPath = null;
 var runSchema = true;
 var runProbe = false;
 
@@ -22,8 +24,9 @@ for (var i = 0; i < args.Length; i++)
         case "--source" when i + 1 < args.Length: sourceDir = args[++i]; break;
         case "--no-schema": runSchema = false; break;
         case "--probe": runProbe = true; break;
+        case "--issue-body" when i + 1 < args.Length: issueBodyPath = args[++i]; break;
         case "-h" or "--help":
-            Console.WriteLine("usage: spec-check [--spec <url|path>] [--source <dir>] [--no-schema] [--probe]");
+            Console.WriteLine("usage: spec-check [--spec <url|path>] [--source <dir>] [--no-schema] [--probe] [--issue-body <path>]");
             return 0;
         default:
             Console.Error.WriteLine($"unknown argument: {args[i]}");
@@ -88,7 +91,7 @@ var wrapper = Wrapper.Scan(sourceDir, typeof(EsiClient).Assembly);
 var notWrapped = LoadAllowlist(sourceDir);
 var coverage = CoverageCheck.Run(spec, wrapper, notWrapped);
 var schema = runSchema ? SchemaCheck.Run(spec, wrapper) : null;
-var exit = Report.Render(spec, wrapper, coverage, schema);
+var exit = Report.Render(spec, wrapper, coverage, schema, issueBodyPath);
 
 if (runProbe)
     exit |= await Probe.RunAsync(spec, wrapper, "https://esi.evetech.net", pinnedDate);

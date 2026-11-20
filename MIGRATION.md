@@ -6,6 +6,48 @@ the compiler finds nearly all of them.
 
 New to ESI.NET? Skip this file and start from the [README](README.md).
 
+Already on `2026.912.x`? Only [Upgrading to `2026.1119.1`](#upgrading-to-20261119-1)
+applies to you.
+
+---
+
+## Upgrading to `2026.1119.1`
+
+This release moves to ESI compatibility date **`2026-11-19`**, on which CCP
+removed the static-data routes from ESI. That data now comes from the SDE at
+`https://sde.evetech.net` (see CCP's
+[announcement](https://developers.eveonline.com/blog/the-sde-over-http-static-data-dynamically)).
+The matching ESI.NET methods and models are removed:
+
+| Removed | Route |
+| --- | --- |
+| `Universe.Ancestries`, `Bloodlines`, `Races`, `Factions` | `/universe/ancestries`, `/bloodlines`, `/races`, `/factions` |
+| `Universe.Categories`, `Category`, `Groups`, `Group`, `Types`, `Type` | `/universe/categories`, `/groups`, `/types` (+ `/{id}`) |
+| `Universe.Regions`, `Region`, `Constellations`, `Constellation`, `Systems`, `System` | `/universe/regions`, `/constellations`, `/systems` (+ `/{id}`) |
+| `Universe.Station`, `Stargate`, `Star`, `Planet`, `Moon`, `AsteroidBelt` | `/universe/stations`, `/stargates`, `/stars`, `/planets`, `/moons`, `/asteroid_belts` `/{id}` |
+| `Universe.Graphics`, `Graphic` | `/universe/graphics` (+ `/{id}`) |
+| `PlanetaryInteraction.SchematicInformation` | `/universe/schematics/{schematic_id}` |
+
+Models removed from `ESI.NET.Models.Universe`: `Ancestry`, `AsteroidBelt`,
+`Bloodline`, `Category`, `Constellation`, `Faction`, `Graphic`, `Group`, `Moon`,
+`Planet`, `Race`, `Region`, `SolarSystem`, `Star`, `Stargate`, `Station`, `Type`;
+and `ESI.NET.Models.PlanetaryInteraction.Schematic`.
+
+`Universe.Names`, `IDs`, `Structures`, `Structure`, `Jumps` and `Kills` are
+unchanged — those routes are dynamic data and stay on ESI.
+
+If you still need the removed methods, stay on `2026.912.2`: it pins
+`2026-08-18`, which ESI keeps serving until CCP raises the minimum compatibility
+date (announced on the dev blog).
+
+### Version numbers now track the compatibility date
+
+From this release the package version is built from the ESI compatibility date
+it pins, not the day it was published: `2026.1119.N` speaks
+`X-Compatibility-Date: 2026-11-19`, and `N` counts library releases on that
+contract. A change in the first two parts means ESI's contract moved (ESI only
+issues new dates for breaking changes) — read the notes before taking it.
+
 ---
 
 ## 1. Endpoint calls take a trailing `EsiCallOptions`
@@ -196,7 +238,7 @@ What the compiler flags is the other direction: a value you *read back* is now
 
 ESI is moving off the `/latest` route prefix and the `?datasource=` query
 parameter and onto a per-request **`X-Compatibility-Date`** header that pins a
-frozen dated snapshot of the API. This build targets **`2026-08-18`**
+frozen dated snapshot of the API. That release targeted **`2026-08-18`**
 (`ESI.NET.EsiVersion.CompatibilityDate`). It is not a config knob — you stay on
 this contract until you upgrade the package, and each bump ships with its own
 migration note. Nothing to do; every request now sends the header, and the

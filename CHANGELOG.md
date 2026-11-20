@@ -1,5 +1,35 @@
 ﻿# Changelog
 
+## 2026.1119.1
+
+Moves to ESI compatibility date `2026-11-19`. **Breaking** if you use ESI's
+static-data routes — see [MIGRATION.md](MIGRATION.md#upgrading-to-20261119-1).
+
+### Breaking changes
+
+- CCP removed the static-data routes from ESI at `2026-11-19`; that data now
+  comes from the SDE at `https://sde.evetech.net`. Removed: `Universe.Ancestries`,
+  `AsteroidBelt`, `Bloodlines`, `Categories`, `Category`, `Constellations`,
+  `Constellation`, `Factions`, `Graphics`, `Graphic`, `Groups`, `Group`, `Moon`,
+  `Planet`, `Races`, `Regions`, `Region`, `Station`, `Stargate`, `Star`,
+  `Systems`, `System`, `Types`, `Type`, and
+  `PlanetaryInteraction.SchematicInformation`, with their models.
+- `EsiVersion.CompatibilityDate` is `2026-11-19` (was `2026-08-18`).
+
+### Changed
+
+- Package versions are built from the pinned compatibility date instead of the
+  release date (`YYYY.(MM*100+DD).N`, `N` = release count on that date).
+
+### Fixed
+
+- `SovereigntyAllianceClaim` gains `SovereigntyHub` and `Development`.
+
+### Tooling
+
+- SpecCheck compares through dictionaries, unions and recursive types, and the
+  drift workflow tracks drift in one deduplicated issue.
+
 ## Unreleased — next major
 
 The first release since `2023.12.12`. It modernizes the target frameworks and
@@ -195,8 +225,11 @@ had changed short of a consumer filing a bug. That is now covered.
 - **Spec-drift check** (`tools/SpecCheck`, daily). Compares the wrapper against
   the live ESI OpenAPI document: endpoints it still exposes that ESI dropped,
   endpoints ESI added that it doesn't cover, and every `EsiResponse<T>` model
-  against its endpoint's 200 schema (type, integer width, enum values, missing
-  and extra properties, object-vs-array shape). API changes surface here.
+  against its endpoint's 200 schema (type, integer width, dates, enum values,
+  missing and extra properties, object/array/dictionary shape), including
+  inside dictionaries, `oneOf` tagged unions, and recursive types. Drift is
+  tracked in a single `spec-drift` issue that is only touched when the drift
+  changes. API changes surface here.
 - **CI and release automation.** GitHub Actions builds every PR and `dev`
   commit; a merge to `master` publishes a CalVer version to nuget.org via
   Trusted Publishing (OIDC, no stored key), mirrors it to GitHub Packages, tags
@@ -219,6 +252,11 @@ had changed short of a consumer filing a bug. That is now covered.
   Endpoints whose body ends in a newline no longer come back as a `200` with
   `Data` null and the payload in `Message`; bare-scalar bodies (a wallet
   balance, a CSPA cost) now bind to `Data`.
+- `Sovereignty.Systems`: an alliance claim (`SovereigntyAllianceClaim`) now has
+  `SovereigntyHub` (hub id + vulnerability window) and `Development` (activity
+  defense multiplier, military / industrial / strategic levels). Both are
+  required in the spec but were never modelled - the claim is a `oneOf` union,
+  which SpecCheck skipped until it learned to compare unions.
 - Enum values that never matched ESI: `ContractType.Loan` (`"loan "` → `"loan"`),
   `Contested.Vulnerable` (`"vulnerable "` → `"vulnerable"`),
   `StructureServiceState.Cleanup` (`"cleamup"` → `"cleanup"`), and a missing

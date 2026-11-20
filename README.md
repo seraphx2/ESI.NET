@@ -41,7 +41,10 @@ Add an `EsiConfig` section to `appsettings.json`:
 
 Every request pins an ESI **compatibility date** (`X-Compatibility-Date`), so the
 response shapes this package binds to stay fixed until you upgrade it. The
-current target is in `ESI.NET.EsiVersion.CompatibilityDate`.
+current target is in `ESI.NET.EsiVersion.CompatibilityDate`, and the package
+version is built from it: `2026.1119.N` speaks `X-Compatibility-Date: 2026-11-19`.
+Static data (types, systems, regions, ...) is not on ESI — use the
+[SDE](https://sde.evetech.net).
 
 Register it and take `IEsiClient` in your constructor:
 
@@ -114,7 +117,7 @@ Every method takes an optional trailing `EsiCallOptions`:
 
 ```csharp
 // a specific page, with cancellation
-var groups = await _esi.Universe.Groups(new() { Page = 2, CancellationToken = ct });
+var orders = await _esi.Market.RegionOrders(10000002, options: new() { Page = 2, CancellationToken = ct });
 
 // conditional request — 304 and no body if nothing changed
 var prices = await _esi.Market.Prices(new() { IfNoneMatch = cached.ETag });

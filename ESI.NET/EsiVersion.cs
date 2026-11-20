@@ -12,6 +12,6 @@ namespace ESI.NET
     /// </summary>
     public static class EsiVersion
     {
-        public const string CompatibilityDate = "2026-08-18";
+        public const string CompatibilityDate = "2026-11-19";
     }
 }
