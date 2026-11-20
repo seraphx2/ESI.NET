@@ -1,5 +1,36 @@
 ﻿# Changelog
 
+## Unreleased
+
+Same ESI contract (`2026-11-19`); no API removed.
+
+### Changed
+
+- A `200`/`201` body that doesn't fit the model now throws
+  `EsiDeserializationException` (with `Endpoint`, `StatusCode`, `RequestId`,
+  `TargetType`, the first 4 KB of `Body`, and the `JsonException` as
+  `InnerException`). It used to come back as `200 OK` with `Data == null` and
+  the error tucked away on `EsiResponse.Exception`, so it surfaced later as a
+  `NullReferenceException` far from the cause. A `string` model still accepts a
+  plain-text body as-is.
+- `EsiResponse.Exception` is never set any more and is marked `[Obsolete]`;
+  `EsiResponse.Version` (always `"latest"`) is `[Obsolete]` too. Both are removed
+  with the next compatibility-date release.
+
+### Fixed
+
+- A malformed response header (`X-ESI-Request-ID`, `X-Pages`,
+  `X-Esi-Error-Limit-*`) is now dropped instead of aborting the whole response
+  and leaving `Data` null.
+- A non-JSON error body (e.g. an HTML 502 from a gateway) is passed through on
+  `Message` as before, without setting an exception.
+
+### Dependencies
+
+- `Microsoft.IdentityModel.Tokens` / `System.IdentityModel.Tokens.Jwt` `8.22.0` → `8.23.0`.
+- `Microsoft.SourceLink.GitHub` `8.0.0` → `10.0.404` (build-time only), clearing
+  CVE-2026-62900 / GHSA-23fw-v26w-5fgq in `Microsoft.Build.Tasks.Git`.
+
 ## 2026.1119.1
 
 Moves to ESI compatibility date `2026-11-19`. **Breaking** if you use ESI's
