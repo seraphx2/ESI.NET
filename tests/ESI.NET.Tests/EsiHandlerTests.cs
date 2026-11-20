@@ -124,7 +124,7 @@ namespace ESI.NET.Tests
         [Fact]
         public async Task AddEsi_wires_the_pipeline_and_resolves_a_working_client()
         {
-            var stub = new StubHandler { Respond = () => new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("[1,2]") } };
+            var stub = new StubHandler { Respond = () => new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(@"{ ""players"": 21000, ""server_version"": ""2900000"", ""start_time"": ""2026-11-20T11:05:00Z"" }") } };
 
             var services = new ServiceCollection();
             services.AddEsi(c =>
@@ -138,6 +138,7 @@ namespace ESI.NET.Tests
             var client = provider.GetRequiredService<IEsiClient>();
 
             var response = await client.Status.Retrieve();   // public endpoint
+            Assert.Equal(21000, response.Data.Players);
 
             Assert.Equal("wiring-test", string.Join("", stub.Last.Headers.GetValues("X-User-Agent")));
             Assert.Contains("esi.evetech.net/status/", stub.Last.RequestUri.ToString());

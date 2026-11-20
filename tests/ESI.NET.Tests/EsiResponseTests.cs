@@ -39,7 +39,6 @@ namespace ESI.NET.Tests
             Assert.Equal("/x/", r.Endpoint);
             Assert.Equal(2, r.Data["b"]);
             Assert.Null(r.Message);
-            Assert.Null(r.Exception);
         }
 
         [Fact]
@@ -52,14 +51,38 @@ namespace ESI.NET.Tests
         }
 
         [Fact]
-        public async Task Ok_with_non_json_body_goes_to_Message()
+        public async Task Ok_with_non_json_body_throws_for_a_typed_model()
         {
-            var r = await EsiResponse<object>.CreateAsync(
-                Message(HttpStatusCode.OK, "just text"), "GET|/x/");
+            var ex = await Assert.ThrowsAsync<EsiDeserializationException>(() =>
+                EsiResponse<int[]>.CreateAsync(Message(HttpStatusCode.OK, "<html>gateway</html>"), "GET|/x/"));
 
-            Assert.Equal("just text", r.Message);
+            Assert.Equal("<html>gateway</html>", ex.Body);
+        }
+
+        [Fact]
+        public async Task Ok_with_plain_text_body_is_kept_for_a_string_model()
+        {
+            var r = await EsiResponse<string>.CreateAsync(
+                Message(HttpStatusCode.OK, "just text"), "POST|/x/");
+
+            Assert.Equal("just text", r.Data);
+        }
+
+        [Fact]
+        public async Task Ok_with_json_string_body_reads_the_string()
+        {
+            var r = await EsiResponse<string>.CreateAsync(
+                Message(HttpStatusCode.OK, "\"quoted\""), "POST|/x/");
+
+            Assert.Equal("quoted", r.Data);
+        }
+
+        [Fact]
+        public async Task Ok_with_empty_body_leaves_Data_default()
+        {
+            var r = await EsiResponse<int[]>.CreateAsync(Message(HttpStatusCode.OK, ""), "GET|/x/");
+
             Assert.Null(r.Data);
-            Assert.Null(r.Exception);
         }
 
         [Fact]
@@ -72,7 +95,6 @@ namespace ESI.NET.Tests
 
             Assert.Equal(1, r.Data["a"]);
             Assert.Null(r.Message);
-            Assert.Null(r.Exception);
         }
 
         [Fact]
@@ -93,7 +115,6 @@ namespace ESI.NET.Tests
 
             Assert.Equal(123456.78m, r.Data);
             Assert.Null(r.Message);
-            Assert.Null(r.Exception);
         }
 
         [Fact]
@@ -108,7 +129,6 @@ namespace ESI.NET.Tests
                 Message(HttpStatusCode.NoContent), "DELETE|/some/endpoint/");
 
             Assert.Equal("No Content", r.Message);
-            Assert.Null(r.Exception);
         }
 
         [Fact]
@@ -157,14 +177,63 @@ namespace ESI.NET.Tests
         }
 
         [Fact]
-        public async Task Deserialization_failure_is_captured_not_thrown()
+        public async Task Deserialization_failure_throws_with_the_details()
         {
-            // Body looks like JSON (starts { ends }) but does not fit the target type.
-            var r = await EsiResponse<int[]>.CreateAsync(
-                Message(HttpStatusCode.OK, @"{ ""not"": ""an array"" }"), "GET|/x/");
+            // Valid JSON that does not fit the model - what spec drift looks like.
+            // It used to come back as 200 OK with Data == null.
+            var ex = await Assert.ThrowsAsync<EsiDeserializationException>(() =>
+                EsiResponse<int[]>.CreateAsync(
+                    Message(HttpStatusCode.OK, @"{ ""not"": ""an array"" }", m =>
+                        m.Headers.TryAddWithoutValidation("X-ESI-Request-ID", "6f1b2c3d-0000-4000-8000-000000000000")),
+                    "GET|/x/{id}/"));
 
-            Assert.NotNull(r.Exception);
-            Assert.Equal(@"{ ""not"": ""an array"" }", r.Message);
+            Assert.Equal("/x/{id}/", ex.Endpoint);
+            Assert.Equal(HttpStatusCode.OK, ex.StatusCode);
+            Assert.Equal(Guid.Parse("6f1b2c3d-0000-4000-8000-000000000000"), ex.RequestId);
+            Assert.Equal(typeof(int[]), ex.TargetType);
+            Assert.Equal(@"{ ""not"": ""an array"" }", ex.Body);
+            Assert.IsAssignableFrom<Newtonsoft.Json.JsonException>(ex.InnerException);
+        }
+
+        [Fact]
+        public async Task Deserialization_failure_caps_the_body_it_keeps()
+        {
+            var huge = "{ \"x\": \"" + new string('a', 10_000) + "\" }";
+            var ex = await Assert.ThrowsAsync<EsiDeserializationException>(() =>
+                EsiResponse<int[]>.CreateAsync(Message(HttpStatusCode.OK, huge), "GET|/x/"));
+
+            Assert.Equal(EsiDeserializationException.MaxBodyLength, ex.Body.Length);
+        }
+
+        [Fact]
+        public async Task Non_json_error_body_is_passed_through_on_Message()
+        {
+            // e.g. an HTML 502 from a gateway in front of ESI.
+            var r = await EsiResponse<int[]>.CreateAsync(
+                Message(HttpStatusCode.BadGateway, "<html>502 Bad Gateway</html>"), "GET|/x/");
+
+            Assert.Equal(HttpStatusCode.BadGateway, r.StatusCode);
+            Assert.Equal("<html>502 Bad Gateway</html>", r.Message);
+            Assert.Null(r.Data);
+        }
+
+        [Fact]
+        public async Task Malformed_headers_are_dropped_and_the_body_still_reads()
+        {
+            // A bad header used to abort the whole projection and leave Data null.
+            var r = await EsiResponse<int[]>.CreateAsync(
+                Message(HttpStatusCode.OK, "[1, 2]", m =>
+                {
+                    m.Headers.TryAddWithoutValidation("X-ESI-Request-ID", "not-a-guid");
+                    m.Headers.TryAddWithoutValidation("X-Pages", "many");
+                    m.Headers.TryAddWithoutValidation("X-Esi-Error-Limit-Remain", "");
+                }),
+                "GET|/x/");
+
+            Assert.Equal(new[] { 1, 2 }, r.Data);
+            Assert.Equal(Guid.Empty, r.RequestId);
+            Assert.Null(r.Pages);
+            Assert.Null(r.ErrorLimitRemain);
         }
 
         [Fact]

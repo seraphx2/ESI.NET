@@ -93,7 +93,7 @@ namespace ESI.NET.IntegrationTests
             for (var attempt = 1; attempt <= 3; attempt++)
             {
                 response = await call();
-                if (response.Exception is null && (int)response.StatusCode < 500)
+                if ((int)response.StatusCode < 500)
                     return response;
                 await Task.Delay(attempt * 750);
             }
@@ -101,12 +101,11 @@ namespace ESI.NET.IntegrationTests
         }
     }
 
-    /// <summary>Asserts an <see cref="EsiResponse{T}"/> came back <c>200 OK</c> with a body and no exception.</summary>
+    /// <summary>Asserts an <see cref="EsiResponse{T}"/> came back <c>200 OK</c> with a body.</summary>
     internal static class Ok
     {
         public static EsiResponse<T> Response<T>(EsiResponse<T> r)
         {
-            Assert.Null(r.Exception);
             Assert.Equal(HttpStatusCode.OK, r.StatusCode);
             Assert.NotNull(r.Data);
             return r;
