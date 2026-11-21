@@ -8,7 +8,8 @@ Same ESI contract (`2026-11-19`); no API removed.
 
 - A `200`/`201` body that doesn't fit the model now throws
   `EsiDeserializationException` (with `Endpoint`, `StatusCode`, `RequestId`,
-  `TargetType`, the first 4 KB of `Body`, and the `JsonException` as
+  `TargetType`, the first 4 KB of `Body`, and the underlying error - a
+  `JsonException`, or whatever a converter or model setter threw - as
   `InnerException`). It used to come back as `200 OK` with `Data == null` and
   the error tucked away on `EsiResponse.Exception`, so it surfaced later as a
   `NullReferenceException` far from the cause. A `string` model still accepts a
@@ -19,6 +20,16 @@ Same ESI contract (`2026-11-19`); no API removed.
 
 ### Fixed
 
+- The SSO affiliation lookup in `Verify()` reported its endpoint as the
+  nonexistent `/character/affiliations/`; it is `/characters/affiliation/`.
+- `EsiConfig.DataSource` defaults to `Tranquility`. It defaulted to
+  `Singularity` (the enum's first value), so a config that didn't set it got
+  `400 Invalid tenant` on every call.
+- `EsiCallOptions.IfNoneMatch` sends weak ETags correctly. ESI uses weak
+  validators (`W/"..."`) on some routes; `EsiResponse.ETag` holds those as
+  `W/...`, which used to go back out as the invalid `"W/..."`. Any spelling is
+  now accepted (`abc`, `"abc"`, `W/abc`, `W/"abc"`), and `EsiResponse.ETag` is
+  unchanged, so stored ETags keep working.
 - A malformed response header (`X-ESI-Request-ID`, `X-Pages`,
   `X-Esi-Error-Limit-*`) is now dropped instead of aborting the whole response
   and leaving `Data` null.

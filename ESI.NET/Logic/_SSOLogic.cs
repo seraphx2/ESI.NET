@@ -343,7 +343,7 @@ namespace ESI.NET
                 request.Headers.Add("X-Tenant", _config.DataSource.ToEsiValue());
 
                 var affiliationResponse = await _client.SendAsync(request).ConfigureAwait(false);
-                var affiliations = await EsiResponse<List<Affiliation>>.CreateAsync(affiliationResponse, "Post|/character/affiliations/").ConfigureAwait(false);
+                var affiliations = await EsiResponse<List<Affiliation>>.CreateAsync(affiliationResponse, "POST|/characters/affiliation/").ConfigureAwait(false);
 
                 if (affiliations.StatusCode == HttpStatusCode.OK && affiliations.Data?.Count > 0)
                 {

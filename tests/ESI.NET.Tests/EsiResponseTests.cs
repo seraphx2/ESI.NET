@@ -196,6 +196,18 @@ namespace ESI.NET.Tests
         }
 
         [Fact]
+        public async Task Any_failure_reading_the_body_is_an_EsiDeserializationException()
+        {
+            // Not only JsonException: a model setter (or a converter from the app's
+            // JsonConvert.DefaultSettings) can throw anything.
+            var ex = await Assert.ThrowsAsync<EsiDeserializationException>(() =>
+                EsiResponse<ThrowingModel>.CreateAsync(Message(HttpStatusCode.OK, @"{ ""value"": ""x"" }"), "GET|/x/"));
+
+            Assert.Equal("/x/", ex.Endpoint);
+            Assert.NotNull(ex.InnerException);
+        }
+
+        [Fact]
         public async Task Deserialization_failure_caps_the_body_it_keeps()
         {
             var huge = "{ \"x\": \"" + new string('a', 10_000) + "\" }";
@@ -244,6 +256,25 @@ namespace ESI.NET.Tests
 
             // Reading the content of a disposed HttpResponseMessage throws.
             await Assert.ThrowsAnyAsync<Exception>(() => msg.Content.ReadAsStringAsync());
+        }
+    }
+}
+
+namespace ESI.NET.Tests
+{
+    /// <summary>A model whose setter rejects every value, as a strict converter or setter might.</summary>
+    public sealed class ThrowingModel
+    {
+        private string _value;
+
+        public string Value
+        {
+            get => _value;
+            set
+            {
+                _value = value;
+                throw new FormatException("rejected: " + value);
+            }
         }
     }
 }

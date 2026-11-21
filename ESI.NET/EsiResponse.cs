@@ -100,6 +100,13 @@ namespace ESI.NET
             {
                 throw new EsiDeserializationException(Endpoint, StatusCode, RequestId, typeof(T), body, ex);
             }
+            catch (Exception ex) when (!(ex is OperationCanceledException) && !(ex is EsiDeserializationException))
+            {
+                // Not only JsonException: a converter from the app's JsonConvert.DefaultSettings,
+                // or a model setter, can throw anything (FormatException, ...). The caller still
+                // gets the documented exception, with the endpoint, request id and body.
+                throw new EsiDeserializationException(Endpoint, StatusCode, RequestId, typeof(T), body, ex);
+            }
         }
 
         /// <summary>

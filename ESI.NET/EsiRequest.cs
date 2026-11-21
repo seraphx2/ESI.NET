@@ -39,6 +39,7 @@ namespace ESI.NET
             request.Headers.Add("X-Compatibility-Date", EsiVersion.CompatibilityDate);
             request.Headers.Add("X-Tenant", config.DataSource.ToEsiValue());
 
+
             //Attach token to request header if this endpoint requires an authorized character
             if (security == RequestSecurity.Authenticated)
             {
@@ -54,8 +55,8 @@ namespace ESI.NET
                     EsiRequestState.SetCallback(request, options.OnTokenRefreshed);
             }
 
-            if (!string.IsNullOrEmpty(options.IfNoneMatch))
-                request.Headers.Add("If-None-Match", $"\"{options.IfNoneMatch.Trim('"')}\"");
+            if (!string.IsNullOrWhiteSpace(options.IfNoneMatch))
+                request.Headers.Add("If-None-Match", ToEntityTag(options.IfNoneMatch));
 
             //Serialize post body data
             if (body != null)
@@ -66,10 +67,26 @@ namespace ESI.NET
             return await EsiResponse<T>.CreateAsync(response, path, options.CancellationToken).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Builds a valid <c>If-None-Match</c> value from an ETag in any of the spellings a caller
+        /// may hold: <c>abc</c> / <c>"abc"</c> become <c>"abc"</c>, and the weak forms
+        /// <c>W/abc</c> (what <see cref="EsiResponse{T}.ETag"/> holds, quotes stripped) /
+        /// <c>W/"abc"</c> become <c>W/"abc"</c>. Quoting the weak form whole (<c>"W/abc"</c>)
+        /// would be a different, strong tag.
+        /// </summary>
+        internal static string ToEntityTag(string etag)
+        {
+            var tag = etag.Trim();
+            var weak = tag.StartsWith("W/", StringComparison.Ordinal);
+            var opaque = (weak ? tag.Substring(2) : tag).Trim().Trim('"');
+            return (weak ? "W/" : string.Empty) + "\"" + opaque + "\"";
+        }
+
         public enum RequestSecurity
         {
             Public,
             Authenticated
+
         }
     }
 }
