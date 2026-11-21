@@ -192,7 +192,7 @@ namespace ESI.NET.Tests
             Assert.Equal(1, routing.TokenCalls);
             Assert.Same(character, sink.Received);
             Assert.Equal("NEW-ACCESS", routing.LastApiRequest.Headers.Authorization.Parameter);
-            Assert.Contains("esi.evetech.net/characters/42/clones/", routing.LastApiRequest.RequestUri.ToString());
+            Assert.Contains("esi.evetech.net/characters/42/clones/", routing.LastApiRequest.RequestUri.ToString(), StringComparison.Ordinal);
         }
     }
 }

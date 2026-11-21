@@ -94,7 +94,7 @@ namespace ESI.NET.Tests
             var options = new EsiCallOptions { Page = 4 };
             await Execute<object>(client, Config, RequestSecurity.Public, HttpMethod.Get, "/x/", options: options);
 
-            Assert.Contains("page=4", h.Last.RequestUri.ToString());
+            Assert.Contains("page=4", h.Last.RequestUri.ToString(), StringComparison.Ordinal);
         }
 
         [Fact]
@@ -112,7 +112,7 @@ namespace ESI.NET.Tests
         {
             var (client, _) = NewClient();
             using var cts = new CancellationTokenSource();
-            cts.Cancel();
+            await cts.CancelAsync();
 
             await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
                 Execute<object>(client, Config, RequestSecurity.Public, HttpMethod.Get, "/x/",

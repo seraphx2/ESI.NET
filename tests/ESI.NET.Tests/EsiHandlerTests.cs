@@ -33,8 +33,8 @@ namespace ESI.NET.Tests
         private static HttpResponseMessage WithHeaders(HttpStatusCode status, int remain, int reset)
         {
             var r = new HttpResponseMessage(status);
-            r.Headers.TryAddWithoutValidation("X-Esi-Error-Limit-Remain", remain.ToString());
-            r.Headers.TryAddWithoutValidation("X-Esi-Error-Limit-Reset", reset.ToString());
+            r.Headers.TryAddWithoutValidation("X-Esi-Error-Limit-Remain", remain.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            r.Headers.TryAddWithoutValidation("X-Esi-Error-Limit-Reset", reset.ToString(System.Globalization.CultureInfo.InvariantCulture));
             return r;
         }
 
@@ -141,7 +141,7 @@ namespace ESI.NET.Tests
             Assert.Equal(21000, response.Data.Players);
 
             Assert.Equal("wiring-test", string.Join("", stub.Last.Headers.GetValues("X-User-Agent")));
-            Assert.Contains("esi.evetech.net/status/", stub.Last.RequestUri.ToString());
+            Assert.Contains("esi.evetech.net/status/", stub.Last.RequestUri.ToString(), StringComparison.Ordinal);
         }
     }
 }

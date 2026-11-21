@@ -48,7 +48,7 @@ namespace ESI.NET.Tests
             return "{\"keys\":[" + JsonSerializer.Serialize(jwk) + "]}";
         }
 
-        private static IEnumerable<Claim> DefaultClaims() => new[]
+        private static Claim[] DefaultClaims() => new[]
         {
             new Claim("sub", $"CHARACTER:EVE:{CharacterId}"),
             new Claim("name", "CCP Zoetrope"),
