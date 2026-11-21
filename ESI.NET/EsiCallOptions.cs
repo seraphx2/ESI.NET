@@ -29,6 +29,12 @@ namespace ESI.NET
         /// </summary>
         public string IfNoneMatch { get; set; }
 
+        /// <summary>
+        /// With the response cache on (<c>AddEsiCaching()</c>): don't serve this call from the
+        /// cache - always ask ESI, then store the fresh response. Has no effect when caching is off.
+        /// </summary>
+        public bool BypassCache { get; set; }
+
         /// <summary>1-based page for paginated endpoints; sent as <c>?page=</c>.</summary>
         public int? Page { get; set; }
 

@@ -61,6 +61,9 @@ namespace ESI.NET
             ErrorLimitRemain = IntHeader(response, "X-Esi-Error-Limit-Remain");
             ErrorLimitReset = IntHeader(response, "X-Esi-Error-Limit-Reset");
 
+            if (Enum.TryParse(Header(response, Http.EsiCacheHandler.StatusHeader), out EsiCacheStatus cache))
+                Cache = cache;
+
             if (response.StatusCode == HttpStatusCode.NoContent)
                 Message = "No Content";
             else if (response.StatusCode == HttpStatusCode.OK ||
@@ -150,6 +153,13 @@ namespace ESI.NET
         public int? Pages { get; set; }
         public string Message { get; set; }
         public T Data { get; set; }
+
+        /// <summary>
+        /// Whether this response came from the response cache (<c>AddEsiCaching()</c>):
+        /// <see cref="EsiCacheStatus.Hit"/> or <see cref="EsiCacheStatus.Revalidated"/> mean ESI
+        /// sent no body. <see cref="EsiCacheStatus.None"/> when caching is off.
+        /// </summary>
+        public EsiCacheStatus Cache { get; set; }
 
         /// <summary>
         /// No longer set. A body that does not fit the model now throws

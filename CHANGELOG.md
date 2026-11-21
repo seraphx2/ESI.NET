@@ -4,6 +4,26 @@
 
 Same ESI contract (`2026-11-19`); no API removed.
 
+### Added
+
+- Opt-in response caching: `services.AddEsi(...).AddEsiCaching()`. `GET`
+  responses are reused until ESI's `Expires`, then revalidated with their `ETag`
+  (a `304` reuses the cached body). Entries live in the app's
+  `IDistributedCache` (in-memory by default, or Redis / SQL / anything else
+  registered), keyed per character for authenticated calls, per compatibility
+  date, tenant, language and URL. Concurrent misses share one request; a failing
+  store never fails a call. `EsiResponse.Cache` reports `Miss` / `Hit` /
+  `Revalidated` / `None`; `EsiCallOptions.BypassCache` skips it for one call;
+  `EsiCacheOptions` sets the key prefix, how long expired entries are kept for
+  revalidation, and the size cap of the default in-memory store (256 MB).
+  Freshness is judged on ESI's clock (learned from its `Date` header), so a
+  skewed local clock, or app instances with different clocks sharing one store,
+  never serve stale data. Only ESI API calls are cached (never SSO), only JSON
+  bodies are stored, `no-cache` responses are always revalidated, and a newer
+  4xx or uncacheable answer replaces the cached 200. The default in-memory store
+  is private to ESI.NET and never registered as the app's `IDistributedCache`.
+  New dependency: `Microsoft.Extensions.Caching.Memory`.
+
 ### Changed
 
 - A `200`/`201` body that doesn't fit the model now throws

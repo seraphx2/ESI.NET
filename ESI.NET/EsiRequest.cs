@@ -39,6 +39,9 @@ namespace ESI.NET
             request.Headers.Add("X-Compatibility-Date", EsiVersion.CompatibilityDate);
             request.Headers.Add("X-Tenant", config.DataSource.ToEsiValue());
 
+            EsiRequestState.MarkEsiRequest(request);
+            if (options.BypassCache)
+                EsiRequestState.SetBypassCache(request);
 
             //Attach token to request header if this endpoint requires an authorized character
             if (security == RequestSecurity.Authenticated)
