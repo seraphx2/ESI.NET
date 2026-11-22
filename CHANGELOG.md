@@ -37,6 +37,9 @@ Same ESI contract (`2026-11-19`); no API removed.
 - `EsiResponse.Exception` is never set any more and is marked `[Obsolete]`;
   `EsiResponse.Version` (always `"latest"`) is `[Obsolete]` too. Both are removed
   with the next compatibility-date release.
+- Debug symbols are embedded in `ESI.NET.dll` instead of a separate `.snupkg`,
+  so stepping into ESI.NET's source (via Source Link) works in any debugger
+  without configuring a symbol server.
 
 ### Fixed
 
