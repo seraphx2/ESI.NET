@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using ESI.NET;
 using ESI.NET.Enumerations;
@@ -84,29 +85,37 @@ namespace ESI.NET.IntegrationTests
         }
 
         /// <summary>
-        /// Retries an ESI call up to three times on a transport exception or a 5xx, so a
-        /// single blip does not fail the run.
+        /// Retries an ESI call up to three times on a 5xx, a transport exception, or a garbled
+        /// 200 (e.g. a gateway's HTML page, which now throws EsiDeserializationException), so a
+        /// single blip does not fail the run. The last attempt's exception is rethrown.
         /// </summary>
         public static async Task<EsiResponse<T>> Call<T>(Func<Task<EsiResponse<T>>> call)
         {
+            const int attempts = 3;
             EsiResponse<T> response = null;
-            for (var attempt = 1; attempt <= 3; attempt++)
+            for (var attempt = 1; attempt <= attempts; attempt++)
             {
-                response = await call();
-                if (response.Exception is null && (int)response.StatusCode < 500)
-                    return response;
+                try
+                {
+                    response = await call();
+                    if ((int)response.StatusCode < 500)
+                        return response;
+                }
+                catch (Exception ex) when (attempt < attempts && (ex is HttpRequestException || ex is EsiDeserializationException))
+                {
+                    // transient: try again
+                }
                 await Task.Delay(attempt * 750);
             }
             return response;
         }
     }
 
-    /// <summary>Asserts an <see cref="EsiResponse{T}"/> came back <c>200 OK</c> with a body and no exception.</summary>
+    /// <summary>Asserts an <see cref="EsiResponse{T}"/> came back <c>200 OK</c> with a body.</summary>
     internal static class Ok
     {
         public static EsiResponse<T> Response<T>(EsiResponse<T> r)
         {
-            Assert.Null(r.Exception);
             Assert.Equal(HttpStatusCode.OK, r.StatusCode);
             Assert.NotNull(r.Data);
             return r;

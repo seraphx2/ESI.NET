@@ -89,7 +89,6 @@ namespace ESI.NET.IntegrationTests
         {
             Skip.IfNot(_f.Enabled, SkipReason);
             var r = await LiveFixture.Call(() => _f.Client.Wallet.CharacterWallet(new EsiCallOptions { Character = _f.Character }));
-            Assert.Null(r.Exception);
             Assert.Equal(HttpStatusCode.OK, r.StatusCode);
         }
 
@@ -112,7 +111,6 @@ namespace ESI.NET.IntegrationTests
 
             var r = await LiveFixture.Call(() => _f.Client.Wallet.CharacterWallet(new EsiCallOptions { Character = stale }));
 
-            Assert.Null(r.Exception);
             Assert.Equal(HttpStatusCode.OK, r.StatusCode);
             Assert.NotEqual(tokenBefore, stale.Token); // EsiTokenRefreshHandler swapped the access token in place
         }

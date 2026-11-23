@@ -1,10 +1,17 @@
-﻿using Newtonsoft.Json;
+﻿// Obsolete and undocumented on purpose: removed with the next compatibility-date release.
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace ESI.NET.Models.Corporation
 {
+    /// <summary>
+    /// A player-owned outpost. CCP removed outposts from EVE in 2018 and no ESI.NET method returns
+    /// this.
+    /// </summary>
+    [Obsolete("No ESI endpoint returns this: CCP removed outposts in 2018. Will be removed with the next compatibility-date release.")]
     public class Outpost
     {
         [JsonProperty("owner_id")]
@@ -38,6 +45,9 @@ namespace ESI.NET.Models.Corporation
         public List<OutpostService> Services { get; set; } = new List<OutpostService>();
     }
 
+    /// <summary>Part of <see cref="ESI.NET.Models.Corporation.Outpost.Services"/>.</summary>
+    /// <summary>A service of an <see cref="Outpost"/>. CCP removed outposts from EVE in 2018.</summary>
+    [Obsolete("No ESI endpoint returns this: CCP removed outposts in 2018. Will be removed with the next compatibility-date release.")]
     public class OutpostService
     {
         [JsonProperty("service_name")]

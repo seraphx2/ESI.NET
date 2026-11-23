@@ -31,6 +31,8 @@ dotnet run --project tools/SpecCheck            # live spec, default source
 dotnet run --project tools/SpecCheck -- --spec ./openapi.json --source ./ESI.NET/Logic
 dotnet run --project tools/SpecCheck -- --no-schema   # Tier 1 only
 dotnet run --project tools/SpecCheck -- --probe       # + live-deserialize every public GET
+dotnet run --project tools/SpecCheck -- --write-docs  # regenerate the XML docs + scope table
+dotnet run --project tools/SpecCheck -- --check-docs  # fail if they are out of date
 ```
 
 | Flag | Default | |
@@ -40,6 +42,8 @@ dotnet run --project tools/SpecCheck -- --probe       # + live-deserialize every
 | `--probe` | off | after the checks, fetch every public GET (path params from a fixture set) live and deserialize the real body into the wrapper's model — catches nullable fields the spec claims are non-null |
 | `--no-schema` | off | Tier 1 (coverage) only |
 | `--issue-body <path>` | off | on drift, write a GitHub issue body (the markdown report plus a drift fingerprint) to `<path>` |
+| `--write-docs` | off | instead of the checks, write the XML docs and `EsiEndpointRequirements.g.cs` from the spec (see [Docs](#docs)) |
+| `--check-docs` | off | instead of the checks, exit 1 if `--write-docs` would change any file |
 
 ## In CI
 
@@ -130,6 +134,52 @@ with it. A field then only counts as `schema-extra-property` if it appears in
 CLR type, so a nested shared type (`ResolvedInfo` inside both `IDLookup` and the
 `/universe/names` list) is resolved correctly. No allowlist entry needed.
 
+## Docs
+
+`--write-docs` writes ESI.NET's XML doc comments from the spec, so IntelliSense says
+what ESI says - and keeps saying it as the spec moves. It uses the spec at the
+**pinned** compatibility date (`EsiVersion.CompatibilityDate`), since the docs
+describe the API the wrapper actually calls. Only `///` comments are touched; each
+edit replaces one member's comment block and nothing else.
+
+What it writes:
+
+- **Every Logic method** that calls an endpoint: the spec's summary and description,
+  then remarks for the route, the **required scope**, the **required corporation
+  roles** (`x-required-roles`), pagination, and ESI's cache time
+  (`x-client-cache-ttl`); a `<param>` per parameter (spec parameter or request-body
+  field, matched by name) and `<returns>`.
+- **Every model type and property** the endpoints return: the property's spec
+  description (with the allowed values, for a string with an `enum`), and for each
+  type which methods return it ("Returned by ...") or which model holds it ("Part of
+  ...").
+- **Each Logic class, its constructor, and its `EsiClient` / `IEsiClient` property**,
+  named after the endpoints' spec tag.
+- **`ESI.NET/EsiEndpointRequirements.g.cs`**: every authenticated route's scope and
+  roles. The runtime reads it to refuse (with a `403`, unsent) a call the
+  token cannot make, and to name the needed roles on a `403`.
+
+Hand-written text lives in [`docs.json`](docs.json), never in the generated
+comments (the next run would overwrite them). It is consulted where the spec has no
+description or one that only restates the name ("Alliance's name"):
+
+| Section | Key | Wins over |
+| --- | --- | --- |
+| `properties` | `Namespace.Type.Property` | everything |
+| `fields` | JSON field name, for every model | a weak or missing spec description |
+| `operations` | `"METHOD /path"`: `summary`, `remarks`, `returns`, `params` | the spec, for that operation |
+| `parameters` | C# parameter name, for every method | a weak or missing spec description |
+
+Each run writes `docs-report.txt` (ignored by git): members still undocumented, the
+ones documented only by a weak spec description, and hand-written comments it
+replaced. Anything outside the spec (`EsiClient`, `EsiConfig`, the handlers, SSO,
+the enums) is documented by hand in the source. ESI.NET builds with
+`GenerateDocumentationFile` and CS1591 on, so an undocumented public member is a
+build warning.
+
+The daily workflow runs `--check-docs`; it fails when a generated comment was edited
+by hand or the spec's text changed. Fix it by running `--write-docs` and committing.
+
 ## Files
 
 | | |
@@ -142,4 +192,9 @@ CLR type, so a nested shared type (`ResolvedInfo` inside both `IDLookup` and the
 | `Finding.cs` | severity + message |
 | `Report.cs` | stdout + `$GITHUB_STEP_SUMMARY`, issue body + drift fingerprint, exit code |
 | `Program.cs` | argument parsing, allowlist load, orchestration |
+| `Docs/DocPlan.cs` | joins spec operations and schemas to Logic methods and model properties |
+| `Docs/DocWriter.cs` | renders and splices the `///` comments; renders `EsiEndpointRequirements.g.cs` |
+| `Docs/DocText.cs` | weak-description test, XML escaping, line wrapping |
+| `Docs/DocOverrides.cs` | loads `docs.json` |
+| `docs.json` | hand-written doc text (see [Docs](#docs)) |
 | `allowlist.txt` | spec endpoints the wrapper intentionally does not implement |

@@ -1,5 +1,91 @@
 ﻿# Changelog
 
+## Unreleased
+
+Same ESI contract (`2026-11-19`); no API removed.
+
+### Added
+
+- Missing-scope check: an authenticated call whose token wasn't granted the
+  endpoint's SSO scope is not sent; it returns a `403` with the new
+  `EsiResponse.MissingScope` naming the required scope (and `Message` listing the
+  granted ones). ESI would answer `403` too, but every `403` it sends counts
+  against the error limit. Skipped when
+  `AuthorizedCharacterData.Scopes` is empty; `EsiConfig.ValidateScopes = false`
+  turns it off. A `403` from a route that needs a corporation role now says which
+  roles on `EsiResponse.Message`. The route -> scope / role table is generated
+  from ESI's spec.
+- XML documentation ships in the package (`ESI.NET.xml`), so IntelliSense shows
+  it. Every endpoint method documents what ESI says it does, its route, its
+  required scope and corporation roles, pagination, ESI's cache time, every
+  parameter and what it returns; every model property says what it holds. All of
+  it is generated from ESI's spec (`tools/SpecCheck --write-docs`), with
+  hand-written text where the spec has none.
+
+- Opt-in response caching: `services.AddEsi(...).AddEsiCaching()`. `GET`
+  responses are reused until ESI's `Expires`, then revalidated with their `ETag`
+  (a `304` reuses the cached body). Entries live in the app's
+  `IDistributedCache` (in-memory by default, or Redis / SQL / anything else
+  registered), keyed per character for authenticated calls, per compatibility
+  date, tenant, language and URL. Concurrent misses share one request; a failing
+  store never fails a call. `EsiResponse.Cache` reports `Miss` / `Hit` /
+  `Revalidated` / `None`; `EsiCallOptions.BypassCache` skips it for one call;
+  `EsiCacheOptions` sets the key prefix, how long expired entries are kept for
+  revalidation, and the size cap of the default in-memory store (256 MB).
+  Freshness is judged on ESI's clock (learned from its `Date` header), so a
+  skewed local clock, or app instances with different clocks sharing one store,
+  never serve stale data. Only ESI API calls are cached (never SSO), only JSON
+  bodies are stored, `no-cache` responses are always revalidated, and a newer
+  4xx or uncacheable answer replaces the cached 200. The default in-memory store
+  is private to ESI.NET and never registered as the app's `IDistributedCache`.
+  New dependency: `Microsoft.Extensions.Caching.Memory`.
+
+### Changed
+
+- A `200`/`201` body that doesn't fit the model now throws
+  `EsiDeserializationException` (with `Endpoint`, `StatusCode`, `RequestId`,
+  `TargetType`, the first 4 KB of `Body`, and the underlying error - a
+  `JsonException`, or whatever a converter or model setter threw - as
+  `InnerException`). It used to come back as `200 OK` with `Data == null` and
+  the error tucked away on `EsiResponse.Exception`, so it surfaced later as a
+  `NullReferenceException` far from the cause. A `string` model still accepts a
+  plain-text body as-is.
+- `EsiResponse.Exception` is never set any more and is marked `[Obsolete]`;
+  `EsiResponse.Version` (always `"latest"`) is `[Obsolete]` too. Both are removed
+  with the next compatibility-date release.
+- The models of ESI's removed character-statistics endpoint
+  (`Models.Character.CharacterInfo`, `Combat`, `Industry`, `Inventory`, `Isk`,
+  `Market`, `Mining`, `Module`, `Orbital`, `Pve`, `Social`, `Travel`) and of
+  outposts (`Models.Corporation.Outpost`, `OutpostService`) are `[Obsolete]`. No
+  method returns them; they are removed with the next compatibility-date release.
+- Debug symbols are embedded in `ESI.NET.dll` instead of a separate `.snupkg`,
+  so stepping into ESI.NET's source (via Source Link) works in any debugger
+  without configuring a symbol server.
+
+### Fixed
+
+- The SSO affiliation lookup in `Verify()` reported its endpoint as the
+  nonexistent `/character/affiliations/`; it is `/characters/affiliation/`.
+- `EsiConfig.DataSource` defaults to `Tranquility`. It defaulted to
+  `Singularity` (the enum's first value), so a config that didn't set it got
+  `400 Invalid tenant` on every call.
+- `EsiCallOptions.IfNoneMatch` sends weak ETags correctly. ESI uses weak
+  validators (`W/"..."`) on some routes; `EsiResponse.ETag` holds those as
+  `W/...`, which used to go back out as the invalid `"W/..."`. Any spelling is
+  now accepted (`abc`, `"abc"`, `W/abc`, `W/"abc"`), and `EsiResponse.ETag` is
+  unchanged, so stored ETags keep working.
+- A malformed response header (`X-ESI-Request-ID`, `X-Pages`,
+  `X-Esi-Error-Limit-*`) is now dropped instead of aborting the whole response
+  and leaving `Data` null.
+- A non-JSON error body (e.g. an HTML 502 from a gateway) is passed through on
+  `Message` as before, without setting an exception.
+
+### Dependencies
+
+- `Microsoft.IdentityModel.Tokens` / `System.IdentityModel.Tokens.Jwt` `8.22.0` → `8.23.0`.
+- `Microsoft.SourceLink.GitHub` `8.0.0` → `10.0.404` (build-time only), clearing
+  CVE-2026-62900 / GHSA-23fw-v26w-5fgq in `Microsoft.Build.Tasks.Git`.
+
 ## 2026.1119.1
 
 Moves to ESI compatibility date `2026-11-19`. **Breaking** if you use ESI's

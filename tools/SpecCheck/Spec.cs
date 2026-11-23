@@ -9,7 +9,8 @@ public sealed record SpecOperation(
     string Path,                 // "/alliances/{alliance_id}" - normalized, no trailing slash
     string OperationId,
     string Tag,
-    JsonElement? ResponseSchema) // resolved 200/201 application/json schema (Tier 2); null if none
+    JsonElement? ResponseSchema, // resolved 200/201 application/json schema (Tier 2); null if none
+    JsonElement Raw)             // the operation object itself (docs: summary, parameters, security, x-*)
 {
     public string Key => $"{Method} {Path}";
     public string LooseKey => $"{Method} {Spec.ParamAgnostic(Path)}";
@@ -72,7 +73,8 @@ public sealed class Spec
                     normalized,
                     operationId,
                     tag,
-                    ResolveResponseSchema(op));
+                    ResolveResponseSchema(op),
+                    op);
             }
         }
     }

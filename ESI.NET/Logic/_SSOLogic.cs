@@ -18,6 +18,11 @@ using System.Threading.Tasks;
 
 namespace ESI.NET
 {
+    /// <summary>
+    /// EVE SSO (OAuth 2): build the login URL, exchange the callback's code for tokens, refresh
+    /// them, and verify them into an <see cref="AuthorizedCharacterData"/> for authenticated calls.
+    /// Reach it through <see cref="EsiClient.SSO"/>.
+    /// </summary>
     public class SsoLogic
     {
         private readonly HttpClient _client;
@@ -29,6 +34,9 @@ namespace ESI.NET
         // unpredictable (RFC 7636). System.Random is seeded and predictable and must not be used here.
         private static readonly RandomNumberGenerator Rng = RandomNumberGenerator.Create();
 
+        /// <summary>Creates the SSO client. <see cref="EsiClient"/> does this; there is no need to call it.</summary>
+        /// <param name="client">The <see cref="HttpClient"/> requests are sent with.</param>
+        /// <param name="config">The ESI.NET configuration (client ID, secret, callback URL).</param>
         public SsoLogic(HttpClient client, EsiConfig config)
         {
             Guard.NotNull(config, nameof(config));
@@ -109,13 +117,20 @@ namespace ESI.NET
         }
 
         /// <summary>
-        /// 
+        /// Builds the EVE SSO login URL to send the user to. After login, SSO redirects to
+        /// <see cref="EsiConfig.CallbackUrl"/> with a <c>code</c>; exchange it with <see cref="GetToken"/>.
         /// </summary>
-        /// <param name="scope"></param>
-        /// <param name="state"></param>
-        /// <param name="code_challenge">All hashing/encryption will be done automatically. Just provide the code.</param>
-        /// <param name=""></param>
-        /// <returns></returns>
+        /// <param name="scope">
+        /// The scopes to request, e.g. <c>esi-wallet.read_character_wallet.v1</c>. Request every scope your
+        /// calls need: a token never gains scopes later, and a call whose scope is missing returns a
+        /// <c>403</c> with <see cref="EsiResponse{T}.MissingScope"/> set.
+        /// </param>
+        /// <param name="state">An unguessable value SSO echoes back to the callback; check it there to stop CSRF.</param>
+        /// <param name="challengeCode">
+        /// For PKCE (apps without a secret): the code from <see cref="GenerateChallengeCode"/>. It is
+        /// hashed and sent as <c>code_challenge</c>; pass the same code to <see cref="GetToken"/>.
+        /// </param>
+        /// <returns>The URL to redirect the user to.</returns>
         public string CreateAuthenticationUrl(IReadOnlyList<string> scope = null, string state = null, string challengeCode = null)
         {
             var url = $"https://{_ssoUrl}/v2/oauth/authorize/?response_type=code&redirect_uri={Uri.EscapeDataString(_config.CallbackUrl)}&client_id={_config.ClientId}";
@@ -144,7 +159,9 @@ namespace ESI.NET
 
             return url;
         }
-        
+
+        /// <summary>A new random PKCE code verifier, for <see cref="CreateAuthenticationUrl"/> and <see cref="GetToken"/>.</summary>
+        /// <returns>The code. Keep it for the token request; never reuse it.</returns>
         public static string GenerateChallengeCode()
         {
             const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -250,6 +267,9 @@ namespace ESI.NET
         /// Split out of <see cref="Verify"/> so the validation path can be exercised without a
         /// live SSO endpoint. The affiliation lookup stays in <see cref="Verify"/>.
         /// </summary>
+        /// <param name="token">The tokens from <see cref="GetToken"/>.</param>
+        /// <param name="ssoUrl">The SSO host the token must have been issued by (the <c>iss</c> claim).</param>
+        /// <param name="jwksJson">The SSO's signing keys (its <c>/oauth/jwks</c> document) to check the signature against.</param>
         /// <param name="clientId">
         /// This application's own OAuth client ID. Per CCP's documented JWT validation requirements
         /// (docs.esi.evetech.net/docs/sso/validating_eve_jwt.html), a real EVE SSO access token's
@@ -343,7 +363,7 @@ namespace ESI.NET
                 request.Headers.Add("X-Tenant", _config.DataSource.ToEsiValue());
 
                 var affiliationResponse = await _client.SendAsync(request).ConfigureAwait(false);
-                var affiliations = await EsiResponse<List<Affiliation>>.CreateAsync(affiliationResponse, "Post|/character/affiliations/").ConfigureAwait(false);
+                var affiliations = await EsiResponse<List<Affiliation>>.CreateAsync(affiliationResponse, "POST|/characters/affiliation/").ConfigureAwait(false);
 
                 if (affiliations.StatusCode == HttpStatusCode.OK && affiliations.Data?.Count > 0)
                 {

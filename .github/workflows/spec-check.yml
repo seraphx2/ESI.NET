@@ -110,14 +110,34 @@ jobs:
           gh issue create --label "$label" --title "ESI spec drift detected" --body-file "$BODY"
           echo "outcome=new" >> "$GITHUB_OUTPUT"
 
+      # The XML docs and EsiEndpointRequirements.g.cs (the scope check's table) are
+      # generated from the spec at the PINNED compatibility date. Out of date means
+      # someone edited a generated comment by hand or the spec text changed: rerun
+      # `dotnet run --project tools/SpecCheck -- --write-docs` and commit the result.
+      - name: Docs check
+        id: docs
+        shell: bash
+        run: |
+          set +e
+          dotnet run --project tools/SpecCheck --configuration Release --no-build -- --check-docs
+          echo "exit=$?" >> "$GITHUB_OUTPUT"
+
       - name: Result
         shell: bash
         env:
           EXIT: ${{ steps.check.outputs.exit }}
           OUTCOME: ${{ steps.issue.outputs.outcome }}
+          DOCS: ${{ steps.docs.outputs.exit }}
         run: |
+          # --check-docs: 0 = current, 1 = out of date, anything else = it could not run
+          # (spec unreachable, or a spec shape the generator refuses - see the step's log).
+          case "$DOCS" in
+            0) ;;
+            1) echo "::error::Generated docs / scope table are out of date - run spec-check --write-docs." ;;
+            *) echo "::error::The docs check did not complete (exit '$DOCS') - see the Docs check step's log." ;;
+          esac
           case "$EXIT/$OUTCOME" in
-            0/clean | 1/unchanged | 1/muted) exit 0 ;;
+            0/clean | 1/unchanged | 1/muted) [ "$DOCS" = 0 ] || exit 1; exit 0 ;;
             1/new | 1/changed) echo "::error::New or changed ESI spec drift - see the spec-drift issue."; exit 1 ;;
             *) echo "::error::SpecCheck did not complete (exit '$EXIT')."; exit 1 ;;
           esac

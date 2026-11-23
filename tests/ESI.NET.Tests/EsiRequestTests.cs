@@ -94,7 +94,7 @@ namespace ESI.NET.Tests
             var options = new EsiCallOptions { Page = 4 };
             await Execute<object>(client, Config, RequestSecurity.Public, HttpMethod.Get, "/x/", options: options);
 
-            Assert.Contains("page=4", h.Last.RequestUri.ToString());
+            Assert.Contains("page=4", h.Last.RequestUri.ToString(), StringComparison.Ordinal);
         }
 
         [Fact]
@@ -107,12 +107,33 @@ namespace ESI.NET.Tests
             Assert.Equal("\"already-quoted\"", h.Last.Headers.IfNoneMatch.ToString());
         }
 
+        [Theory]
+        [InlineData("abc", "\"abc\"")]
+        [InlineData("\"abc\"", "\"abc\"")]
+        [InlineData("W/abc", "W/\"abc\"")]          // what EsiResponse.ETag holds for a weak tag
+        [InlineData("W/\"abc\"", "W/\"abc\"")]      // the raw header form
+        [InlineData("  W/\"abc\"  ", "W/\"abc\"")]
+        public void An_ETag_in_any_spelling_becomes_a_valid_If_None_Match(string etag, string expected)
+            => Assert.Equal(expected, ToEntityTag(etag));
+
+        [Fact]
+        public async Task A_weak_ETag_from_a_response_round_trips_as_a_weak_validator()
+        {
+            var (client, h) = NewClient();
+            await Execute<object>(client, Config, RequestSecurity.Public, HttpMethod.Get, "/x/",
+                options: new EsiCallOptions { IfNoneMatch = "W/ecde45" });
+
+            var tag = Assert.Single(h.Last.Headers.IfNoneMatch);
+            Assert.True(tag.IsWeak);
+            Assert.Equal("\"ecde45\"", tag.Tag);
+        }
+
         [Fact]
         public async Task CancellationToken_flows_through_to_the_send()
         {
             var (client, _) = NewClient();
             using var cts = new CancellationTokenSource();
-            cts.Cancel();
+            await cts.CancelAsync();
 
             await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
                 Execute<object>(client, Config, RequestSecurity.Public, HttpMethod.Get, "/x/",

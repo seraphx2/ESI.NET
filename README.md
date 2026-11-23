@@ -166,6 +166,16 @@ serializes it.
    var wallet = await _esi.Wallet.CharacterWallet(new() { Character = authChar });
    ```
 
+   Each method's IntelliSense names the scope it needs (and any corporation role).
+   If the character's token wasn't granted that scope, the call is **not sent**: it
+   returns a `403` with `MissingScope` naming the scope (and `Message` listing the
+   granted ones). ESI would answer `403` too, but every `403` it sends counts against
+   your error limit. Request the scope
+   at login and have the character log in again; a token never gains scopes. The
+   check uses `authChar.Scopes` and is skipped when that is empty. Turn it off with
+   `EsiConfig.ValidateScopes = false`. A `403` from a route that needs a corporation
+   role says which roles in `Message`.
+
 ### Desktop, console, and GUI apps
 
 No web server receives the callback, so register a **loopback** callback
@@ -226,6 +236,46 @@ directly from the failed call, so there's nothing to add there.
 The handler resolves the sink in a fresh scope each time it fires, so a scoped
 `DbContext` is safe. For one-offs or non-DI code, set `OnTokenRefreshed` on the
 call's `EsiCallOptions` instead.
+
+## Caching
+
+ESI tells you how long each response is good for. Chain `AddEsiCaching()` and
+ESI.NET reuses `GET` responses until ESI's `Expires`, then revalidates them with
+their `ETag`, so an unchanged resource costs a `304` instead of a full download:
+
+```csharp
+services.AddEsi(builder.Configuration.GetSection("EsiConfig"))
+        .AddEsiCaching();
+
+var prices = await _esi.Market.Prices();
+// prices.Cache: Miss (fetched), Hit (from cache, ESI not contacted),
+//               Revalidated (ESI confirmed it unchanged), None (not cached)
+```
+
+Entries go in your app's `IDistributedCache`, in memory unless you register
+another one. The default in-memory store is capped at 256 MB of responses
+(`o.InMemorySizeLimit`); past that, new responses just aren't cached. To share one cache between several app instances, register Redis
+(or any other `IDistributedCache`) as usual:
+
+```csharp
+services.AddStackExchangeRedisCache(o => o.Configuration = "localhost:6379");
+services.AddEsi(builder.Configuration.GetSection("EsiConfig"))
+        .AddEsiCaching(o => o.KeyPrefix = "myapp:esi:");
+```
+
+- Only `GET`s are cached, and only `200` responses are stored.
+- Authenticated responses are stored **per character** (and per owning
+  account), so one character never gets another's data. They are stored in
+  your cache store, so secure it accordingly.
+- A lost corporation role or revoked token shows up once the cached response
+  expires (ESI caches it for that long too). Use `BypassCache` where you need
+  to know immediately.
+- `new() { BypassCache = true }` skips the cache for one call and refreshes the
+  entry. A call that sets its own `IfNoneMatch` bypasses the cache and gets
+  ESI's raw answer, including a `304`.
+- Concurrent requests for the same uncached resource share one ESI request.
+- If the cache store fails, the call still goes through to ESI; the failure is
+  logged.
 
 ## Resilience
 

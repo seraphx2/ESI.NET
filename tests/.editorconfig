@@ -1,0 +1,22 @@
+# Test projects only. The repo-wide analyzers (Directory.Build.props, AnalysisLevel
+# latest-all) are written for library code; these rules conflict with how tests are
+# written, so they are off here and stay on for ESI.NET itself.
+
+[*.cs]
+
+# Underscore-separated test names are the xUnit convention.
+dotnet_diagnostic.CA1707.severity = none
+
+# Stub handlers, responses and clients live exactly as long as the test that builds them.
+dotnet_diagnostic.CA2000.severity = none
+dotnet_diagnostic.CA2025.severity = none
+
+# ConfigureAwait(false) - tests have no synchronization context to escape, and xUnit
+# itself warns against using it in test methods (xUnit1030).
+dotnet_diagnostic.CA2007.severity = none
+
+# Inline constant arrays are the test data.
+dotnet_diagnostic.CA1861.severity = none
+
+# xUnit discovers test and collection classes by reflection; they are public by convention.
+dotnet_diagnostic.CA1515.severity = none

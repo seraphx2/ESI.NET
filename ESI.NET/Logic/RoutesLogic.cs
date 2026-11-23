@@ -9,22 +9,45 @@ using static ESI.NET.EsiRequest;
 
 namespace ESI.NET.Logic
 {
+    /// <summary>
+    /// ESI's Routes endpoints. Reach them through <see cref="EsiClient.Routes"/>.
+    /// </summary>
     public class RoutesLogic
     {
         private readonly HttpClient _client;
         private readonly EsiConfig _config;
 
+        /// <summary>
+        /// Creates the Routes endpoints. <see cref="EsiClient"/> does this; there is no need to
+        /// call it.
+        /// </summary>
+        /// <param name="client">The <see cref="System.Net.Http.HttpClient"/> requests are sent
+        /// with.</param>
+        /// <param name="config">The ESI.NET configuration.</param>
         public RoutesLogic(HttpClient client, EsiConfig config) { _client = client; _config = config; }
 
         /// <summary>
-        /// POST /route/{origin_system_id}/{destination_system_id}/
+        /// Get route between two systems. Calculate the systems between the given origin and
+        /// destination.
         /// </summary>
-        /// <param name="originSystemId">Origin solar system id</param>
-        /// <param name="destinationSystemId">Destination solar system id</param>
-        /// <param name="flag">Routing preference</param>
-        /// <param name="avoidSystems">Solar system ids to avoid</param>
-        /// <param name="connections">System-id pairs (<c>[from, to]</c>) to treat as connected</param>
-        /// <param name="securityPenalty">Penalty applied per low/null-sec jump (server default 50)</param>
+        /// <remarks>
+        /// <para>Calls <c>POST /route/{origin_system_id}/{destination_system_id}</c>.</para>
+        /// </remarks>
+        /// <param name="originSystemId">Origin system.</param>
+        /// <param name="destinationSystemId">Destination system.</param>
+        /// <param name="flag">Which route to prefer:
+        /// <see cref="ESI.NET.Enumerations.RoutePreference.Shorter"/>,
+        /// <see cref="ESI.NET.Enumerations.RoutePreference.Safer"/> (avoids low and null sec), or
+        /// <see cref="ESI.NET.Enumerations.RoutePreference.LessSecure"/> (prefers them).</param>
+        /// <param name="avoidSystems">Systems to avoid.</param>
+        /// <param name="connections">Additional one-way connections (like Jump Bridges) between
+        /// systems.</param>
+        /// <param name="securityPenalty">Strictness of the path preference.</param>
+        /// <param name="options">Per-call options: cancellation,
+        /// <see cref="EsiCallOptions.IfNoneMatch"/>,
+        /// <see cref="EsiCallOptions.BypassCache"/>.</param>
+        /// <returns>The response. On success, <see cref="EsiResponse{T}.Data"/> holds the
+        /// <see cref="RouteResult"/>.</returns>
         public async Task<EsiResponse<RouteResult>> Map(
             long originSystemId,
             long destinationSystemId,
