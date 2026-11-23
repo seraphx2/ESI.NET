@@ -26,6 +26,9 @@ namespace ESI.NET.Http
         private readonly EsiConfig _config;
         private readonly IServiceScopeFactory _scopeFactory;
 
+        /// <summary>Created by <c>AddEsi</c> (or <see cref="EsiClient"/> without DI); there is no need to construct it.</summary>
+        /// <param name="config">The ESI.NET configuration (for the SSO client ID and secret).</param>
+        /// <param name="scopeFactory">Resolves a registered refresh sink, when there is one; optional.</param>
         public EsiTokenRefreshHandler(IOptions<EsiConfig> config, IServiceScopeFactory scopeFactory = null)
         {
             Guard.NotNull(config, nameof(config));
@@ -34,6 +37,7 @@ namespace ESI.NET.Http
             _scopeFactory = scopeFactory;
         }
 
+        /// <inheritdoc/>
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             Guard.NotNull(request, nameof(request));

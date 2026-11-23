@@ -3,35 +3,54 @@ using System;
 
 namespace ESI.NET.Models.Calendar
 {
+    /// <summary>Returned by <see cref="ESI.NET.Logic.CalendarLogic.Event"/>.</summary>
     public class Event
     {
+        /// <summary>When the event starts.</summary>
         [JsonProperty("date")]
         public DateTime Date { get; set; }
 
+        /// <summary>Length in minutes.</summary>
         [JsonProperty("duration")]
         public long Duration { get; set; }
 
+        /// <summary>ID of the calendar event.</summary>
         [JsonProperty("event_id")]
         public long EventId { get; set; }
 
+        /// <summary>The event's importance: <c>0</c> normal, <c>1</c> important.</summary>
         [JsonProperty("importance")]
         public long Importance { get; set; }
 
+        /// <summary>
+        /// ID of whoever owns the event; <see cref="OwnerType"/> says what kind of entity it is.
+        /// </summary>
         [JsonProperty("owner_id")]
         public long OwnerId { get; set; }
 
+        /// <summary>Name of the event's owner.</summary>
         [JsonProperty("owner_name")]
         public string OwnerName { get; set; }
 
+        /// <summary>
+        /// What kind of entity owns the event: <c>eve_server</c>, <c>corporation</c>,
+        /// <c>faction</c>, <c>character</c>, or <c>alliance</c>.
+        /// </summary>
         [JsonProperty("owner_type")]
         public string OwnerType { get; set; }
 
+        /// <summary>
+        /// The character's response to the event: <c>accepted</c>, <c>declined</c>,
+        /// <c>tentative</c>, or <c>not_responded</c>.
+        /// </summary>
         [JsonProperty("response")]
         public string Response { get; set; }
 
+        /// <summary>The event's description, which may contain EVE client markup.</summary>
         [JsonProperty("text")]
         public string Text { get; set; }
 
+        /// <summary>The event's title.</summary>
         [JsonProperty("title")]
         public string Title { get; set; }
     }

@@ -19,10 +19,16 @@ namespace ESI.NET
         /// <summary>The longest slice of the body kept on <see cref="Body"/>.</summary>
         public const int MaxBodyLength = 4096;
 
+        /// <summary>Creates an exception with a default message.</summary>
         public EsiDeserializationException() { }
 
+        /// <summary>Creates an exception with <paramref name="message"/>.</summary>
+        /// <param name="message">The error message.</param>
         public EsiDeserializationException(string message) : base(message) { }
 
+        /// <summary>Creates an exception with <paramref name="message"/> and the exception that caused it.</summary>
+        /// <param name="message">The error message.</param>
+        /// <param name="innerException">The exception that caused this one.</param>
         public EsiDeserializationException(string message, Exception innerException) : base(message, innerException) { }
 
         internal EsiDeserializationException(

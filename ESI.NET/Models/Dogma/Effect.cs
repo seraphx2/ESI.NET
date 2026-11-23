@@ -9,9 +9,16 @@ namespace ESI.NET.Models.Dogma
     /// </summary>
     public class Effect
     {
+        /// <summary>
+        /// ID of the dogma effect. Details are in the SDE or
+        /// <see cref="ESI.NET.Logic.DogmaLogic.Effect"/>.
+        /// </summary>
         [JsonProperty("effect_id")]
         public long EffectId { get; set; }
 
+        /// <summary>
+        /// Whether this is the type's default effect (the one a module runs when activated).
+        /// </summary>
         [JsonProperty("is_default")]
         public bool IsDefault { get; set; }
     }

@@ -26,6 +26,10 @@
          passed in by release.yml's `dotnet pack -p:ContinuousIntegrationBuild=true`
          (CI only, so it doesn't rewrite paths in local dev builds). -->
     <DebugType>embedded</DebugType>
+    <!-- Ships ESI.NET.xml so IntelliSense shows the docs. Every public member must be
+         documented (CS1591 is not suppressed); Logic methods and models are generated from
+         ESI's spec by tools/SpecCheck (write-docs mode), see tools/SpecCheck/README.md. -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>

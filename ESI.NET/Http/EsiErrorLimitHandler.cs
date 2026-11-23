@@ -21,11 +21,14 @@ namespace ESI.NET.Http
 
         private readonly EsiErrorLimitState _state;
 
+        /// <summary>Created by <c>AddEsi</c>; there is no need to construct it.</summary>
+        /// <param name="state">The error-limit state shared by every handler instance.</param>
         public EsiErrorLimitHandler(EsiErrorLimitState state)
         {
             _state = state;
         }
 
+        /// <inheritdoc/>
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             var wait = _state.TimeUntilReset(DateTimeOffset.UtcNow);

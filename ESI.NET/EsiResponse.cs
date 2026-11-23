@@ -9,6 +9,12 @@ using System.Threading.Tasks;
 
 namespace ESI.NET
 {
+    /// <summary>
+    /// What an ESI call returned: the status, the body read into <see cref="Data"/> (or ESI's error
+    /// text on <see cref="Message"/>), and ESI's response headers. Every Logic method returns one.
+    /// A non-success status does not throw: check <see cref="StatusCode"/>.
+    /// </summary>
+    /// <typeparam name="T">The model the body is read into.</typeparam>
     public class EsiResponse<T>
     {
         /// <summary>
@@ -21,7 +27,7 @@ namespace ESI.NET
             {
                 string body = null;
 
-                if (response.StatusCode != HttpStatusCode.NoContent)
+                if (response.StatusCode != HttpStatusCode.NoContent && response.Content != null)
 #if NET
                     body = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 #else
@@ -35,6 +41,24 @@ namespace ESI.NET
                 response.Dispose();
             }
         }
+
+        /// <summary>
+        /// The <c>403</c> for a call refused before it was sent because the token lacks the route's
+        /// scope (see <see cref="EsiConfig.ValidateScopes"/>). It looks like ESI's own refusal, so
+        /// code that handles a 403 keeps working, and <see cref="MissingScope"/> says which scope.
+        /// </summary>
+        internal static EsiResponse<T> ForMissingScope(string method, string template, string scope, long characterId, string[] granted)
+            => new EsiResponse<T>
+            {
+                StatusCode = HttpStatusCode.Forbidden,
+                Endpoint = template,
+                MissingScope = scope,
+                Message = $"{method} {template} requires the '{scope}' scope, which the access token for character {characterId} was not granted. "
+                          + "Request it at SSO login and have the character log in again; ESI.NET did not send the request. "
+                          + $"Granted scopes: {(granted.Length == 0 ? "(none)" : string.Join(" ", granted))}.",
+            };
+
+        private EsiResponse() { }
 
         private EsiResponse(HttpResponseMessage response, string path, string body)
         {
@@ -55,8 +79,9 @@ namespace ESI.NET
             // HttpContentHeaders already parses these RFC 1123 dates for us (and
             // does it correctly - a raw DateTime.Parse(headerString) is culture-
             // sensitive and can misparse or throw under a non-default locale).
-            Expires = response.Content.Headers.Expires?.UtcDateTime;
-            LastModified = response.Content.Headers.LastModified?.UtcDateTime;
+            // Content can be null on .NET Framework (netstandard2.0), e.g. for a 204.
+            Expires = response.Content?.Headers.Expires?.UtcDateTime;
+            LastModified = response.Content?.Headers.LastModified?.UtcDateTime;
 
             ErrorLimitRemain = IntHeader(response, "X-Esi-Error-Limit-Remain");
             ErrorLimitReset = IntHeader(response, "X-Esi-Error-Limit-Reset");
@@ -73,6 +98,27 @@ namespace ESI.NET
                 Message = "Not Modified";
             else
                 Message = ReadError(body);
+
+            if (response.StatusCode == HttpStatusCode.Forbidden)
+                Message = WithRoleHint(path, Message);
+        }
+
+        /// <summary>
+        /// A <c>403</c> from a route that needs a corporation role is usually the role, not the
+        /// token: say which roles would do. (A missing scope never gets this far - see
+        /// <see cref="MissingScope"/>.)
+        /// </summary>
+        private static string WithRoleHint(string path, string message)
+        {
+            var parts = path.Split('|');
+            var requirement = parts.Length == 2 ? EsiEndpointRequirements.Find(parts[0], parts[1]) : null;
+            if (requirement == null || requirement.Roles.Count == 0)
+                return message;
+
+            var hint = requirement.Roles.Count == 1
+                ? $"This endpoint requires the character to hold the {requirement.Roles[0]} corporation role."
+                : $"This endpoint requires the character to hold one of these corporation roles: {string.Join(", ", requirement.Roles)}.";
+            return string.IsNullOrWhiteSpace(message) ? hint : $"{message} ({hint})";
         }
 
         /// <summary>
@@ -126,8 +172,10 @@ namespace ESI.NET
             {
                 return JsonConvert.DeserializeAnonymousType(body, new { error = (string)null })?.error ?? body;
             }
-            catch (JsonException)
+            catch (Exception ex) when (!(ex is OperationCanceledException))
             {
+                // Not only JsonException: a converter from the app's JsonConvert.DefaultSettings can
+                // throw anything. The error body is only detail, so fall back to it as-is.
                 return body;
             }
         }
@@ -138,21 +186,56 @@ namespace ESI.NET
         private static int? IntHeader(HttpResponseMessage response, string name)
             => int.TryParse(Header(response, name), NumberStyles.Integer, CultureInfo.InvariantCulture, out var value) ? value : (int?)null;
 
+        /// <summary>ESI's <c>X-ESI-Request-ID</c>; quote it when reporting a problem to CCP. <see cref="Guid.Empty"/> if ESI sent none.</summary>
         public Guid RequestId { get; set; }
+
+        /// <summary>The HTTP status ESI answered with.</summary>
         public HttpStatusCode StatusCode { get; set; }
+
+        /// <summary>The route template that was called, e.g. <c>/characters/{character_id}/wallet/</c>.</summary>
         public string Endpoint { get; set; }
 
         /// <summary>Always <c>"latest"</c>; it predates compatibility dates and means nothing now.</summary>
         [Obsolete("Meaningless since requests pin a compatibility date - see EsiVersion.CompatibilityDate. Will be removed with the next compatibility-date release.")]
         public string Version { get; set; } = "latest";
+        /// <summary>When ESI's cached copy of this response expires (UTC): asking again before then returns the same data.</summary>
         public DateTime? Expires { get; set; }
+
+        /// <summary>When the data last changed (UTC), if ESI says.</summary>
         public DateTime? LastModified { get; set; }
+
+        /// <summary>
+        /// ESI's entity tag for this response, without quotes (a weak tag keeps its <c>W/</c>). Pass it
+        /// back as <see cref="EsiCallOptions.IfNoneMatch"/> to get <c>304 Not Modified</c> if nothing changed.
+        /// </summary>
         public string ETag { get; set; }
+
+        /// <summary>Errors left in ESI's error budget for this window (<c>X-Esi-Error-Limit-Remain</c>).</summary>
         public int? ErrorLimitRemain { get; set; }
+
+        /// <summary>Seconds until ESI's error budget resets (<c>X-Esi-Error-Limit-Reset</c>).</summary>
         public int? ErrorLimitReset { get; set; }
+
+        /// <summary>For a paginated endpoint, the number of pages (<c>X-Pages</c>); request them with <see cref="EsiCallOptions.Page"/>.</summary>
         public int? Pages { get; set; }
+
+        /// <summary>
+        /// ESI's error text for a failed call (or the raw body when it was not ESI's JSON error), and
+        /// <c>No Content</c> / <c>Not Modified</c> for a <c>204</c> / <c>304</c>. Null on success.
+        /// </summary>
         public string Message { get; set; }
+
+        /// <summary>The body read into <typeparamref name="T"/>, for a <c>200</c> / <c>201</c>. Default otherwise.</summary>
         public T Data { get; set; }
+
+        /// <summary>
+        /// Set when ESI.NET refused the call itself, without sending it, because the access token
+        /// lacks this SSO scope (<see cref="StatusCode"/> is then <c>403</c> and <see cref="Message"/>
+        /// lists the scopes the token does carry). Add the scope to the ones you request at SSO
+        /// login and have the character log in again - an existing token never gains scopes.
+        /// Null for every response ESI actually sent. See <see cref="EsiConfig.ValidateScopes"/>.
+        /// </summary>
+        public string MissingScope { get; set; }
 
         /// <summary>
         /// Whether this response came from the response cache (<c>AddEsiCaching()</c>):

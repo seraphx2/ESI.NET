@@ -17,6 +17,7 @@ namespace ESI.NET
                 options = new EsiCallOptions();
 
             var path = $"{httpMethod}|{endpoint}";
+            var template = endpoint;
 
             if (replacements != null)
                 foreach (var property in replacements)
@@ -49,6 +50,9 @@ namespace ESI.NET
                 var token = options.Character?.Token;
                 if (string.IsNullOrEmpty(token))
                     throw new ArgumentException("The request endpoint requires SSO authentication; EsiCallOptions.Character (with a valid Token) has not been provided.");
+                if (config.ValidateScopes && MissingScope<T>(httpMethod, template, options.Character) is { } refused)
+                    return refused;
+
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
                 // Hand the character (and any per-call refresh callback) to EsiTokenRefreshHandler,
@@ -68,6 +72,25 @@ namespace ESI.NET
             //Output final object
             var response = await client.SendAsync(request, options.CancellationToken).ConfigureAwait(false);
             return await EsiResponse<T>.CreateAsync(response, path, options.CancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// When <paramref name="character"/>'s token lacks the scope the route needs, the
+        /// <c>403</c> ESI would answer - built here, before the request, so ESI never sees (and
+        /// never counts against the error limit) a call that can only be refused. Null when the
+        /// scope is granted, or when the character has no recorded scopes to check against.
+        /// </summary>
+        private static EsiResponse<T> MissingScope<T>(HttpMethod method, string template, Models.SSO.AuthorizedCharacterData character)
+        {
+            if (string.IsNullOrWhiteSpace(character.Scopes))
+                return null;
+
+            var requirement = EsiEndpointRequirements.Find(method, template);
+            if (requirement == null || EsiEndpointRequirements.IsGranted(character.Scopes, requirement.Scope))
+                return null;
+
+            return EsiResponse<T>.ForMissingScope(method.Method, template, requirement.Scope, character.CharacterID,
+                EsiEndpointRequirements.Split(character.Scopes));
         }
 
         /// <summary>

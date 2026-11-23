@@ -1,0 +1,560 @@
+// Hand-written doc text for tools/SpecCheck --write-docs (see Docs/DocOverrides.cs).
+//
+// The generator writes every Logic method's and model property's XML doc from ESI's spec.
+// Where the spec says nothing useful, the text comes from here - edit it here, never in the
+// generated comments, which the next run overwrites. Values are XML doc content: <c>, <see
+// cref>, &lt; etc. are fine. `spec-check --write-docs` reports anything still undocumented.
+//
+//   fields      by JSON field name, for every model that has it (used when the spec's own
+//               description is missing or only restates the name)
+//   properties  by Namespace.Type.Property, for one property of one model (always wins)
+//   parameters  by C# parameter name, for every Logic method that has it
+//   operations  by "METHOD /path" (the spec's path): summary / remarks / returns / params
+{
+  "fields": {
+    "type_id": "Type ID of the item: what kind of item it is. Names and details are in the SDE's types data.",
+    "location_flag": "Where within its location the item sits: a hangar, a fitting slot (<c>HiSlot0</c>), cargo, a drone bay, and so on.",
+    "is_singleton": "Whether the item is assembled. Packaged items stack; assembled ones (ships, containers) are singletons and can hold other items.",
+    "is_blueprint_copy": "Whether the item is a blueprint copy (BPC) rather than an original. Absent for anything that is not a blueprint.",
+    "solar_system_id": "ID of the solar system.",
+    "cursor": "Cursors for paging: pass <c>Before</c> or <c>After</c> to the next call's <c>before</c> / <c>after</c> parameter.",
+    "grantable_roles": "Corporation roles that may be granted to others, at every location.",
+    "grantable_roles_at_base": "Corporation roles that may be granted to others, at the member's base.",
+    "grantable_roles_at_hq": "Corporation roles that may be granted to others, at the corporation's headquarters.",
+    "grantable_roles_at_other": "Corporation roles that may be granted to others, at other locations.",
+    "roles_at_base": "Corporation roles that apply at the member's base.",
+    "roles_at_hq": "Corporation roles that apply at the corporation's headquarters.",
+    "roles_at_other": "Corporation roles that apply at other locations.",
+    "latitude": "Latitude of the pin on the planet's surface, in radians.",
+    "longitude": "Longitude of the pin on the planet's surface, in radians.",
+    "source_pin_id": "ID of the pin the link or route starts at.",
+    "destination_pin_id": "ID of the pin the link or route ends at.",
+    "schematic_id": "ID of the schematic (the recipe) the factory runs. Details are in the SDE.",
+    "importance": "The event's importance: <c>0</c> normal, <c>1</c> important.",
+    "event_response": "The character's response to the event: <c>accepted</c>, <c>declined</c>, <c>tentative</c>, or <c>not_responded</c>.",
+    "medal_id": "ID of the medal.",
+    "label_id": "ID of the label.",
+    "fitting_id": "ID of the saved fitting.",
+    "effect_id": "ID of the dogma effect. Details are in the SDE or <see cref=\"ESI.NET.Logic.DogmaLogic.Effect\"/>.",
+    "attribute_id": "ID of the dogma attribute. Details are in the SDE or <see cref=\"ESI.NET.Logic.DogmaLogic.Attribute\"/>.",
+    "icon_id": "ID of the icon the game client shows for it.",
+    "published": "Whether it is shown in the game client.",
+    "display_name": "The name the game client shows.",
+    "notification_id": "ID of the notification.",
+    "event_id": "ID of the calendar event.",
+    "title_id": "ID of the corporation title.",
+    "mail_id": "ID of the mail.",
+    "is_read": "Whether it has been read.",
+    "ship_type_id": "Type ID of the ship.",
+    "start_date": "When this period started.",
+    "last_updated": "When this was last updated.",
+    "x": "Position along the X axis, in metres.",
+    "y": "Position along the Y axis, in metres.",
+    "z": "Position along the Z axis, in metres.",
+    "px64x64": "URL of the 64 × 64 pixel image.",
+    "px128x128": "URL of the 128 × 128 pixel image.",
+    "px256x256": "URL of the 256 × 256 pixel image.",
+    "px512x512": "URL of the 512 × 512 pixel image."
+  },
+
+  "properties": {
+    // ---- Alliance / character / corporation basics (the spec only restates the names)
+    "ESI.NET.Models.Alliance.Alliance.CreatorCorporationId": "ID of the corporation that founded the alliance.",
+    "ESI.NET.Models.Alliance.Alliance.CreatorId": "ID of the character who founded the alliance.",
+    "ESI.NET.Models.Alliance.Alliance.ExecutorCorporationId": "ID of the executor corporation, which runs the alliance. Absent when the alliance has none (it is closed or disbanding).",
+    "ESI.NET.Models.Alliance.Alliance.FactionId": "ID of the faction the alliance is enlisted with in faction warfare, if any.",
+    "ESI.NET.Models.Character.Affiliation.CorporationId": "ID of the character's corporation.",
+    "ESI.NET.Models.Character.Information.BloodlineId": "ID of the character's bloodline. Bloodlines are in the SDE.",
+    "ESI.NET.Models.Character.Information.CorporationTitle": "The character's title in their corporation, if any.",
+    "ESI.NET.Models.Character.Information.FactionId": "ID of the faction the character is enlisted with in faction warfare, if any.",
+    "ESI.NET.Models.Character.Information.Gender": "The character's gender: <c>male</c> or <c>female</c>.",
+    "ESI.NET.Models.Character.Information.RaceId": "ID of the character's race. Races are in the SDE.",
+    "ESI.NET.Models.Character.Information.SecurityStatus": "The character's security status, from -10 to 10. Below -5 they are an outlaw in high-sec space.",
+    "ESI.NET.Models.Contacts.Contact.Standing": "The standing set for the contact, from -10 to 10.",
+    "ESI.NET.Models.Contracts.Contract.Title": "The contract's title, as written by its issuer.",
+    "ESI.NET.Models.Contracts.Contract.Type": "The kind of contract: <c>item_exchange</c>, <c>auction</c>, <c>courier</c>, <c>loan</c>, or <c>unknown</c>.",
+    "ESI.NET.Models.Corporation.Corporation.CeoId": "ID of the corporation's CEO.",
+    "ESI.NET.Models.Corporation.Corporation.CreatorId": "ID of the character who founded the corporation.",
+    "ESI.NET.Models.Corporation.Corporation.FriendlyFire": "Whether members may attack each other without it counting as aggression.",
+    "ESI.NET.Models.Corporation.Corporation.HomeStationId": "ID of the corporation's headquarters station, if it has one.",
+    "ESI.NET.Models.Corporation.Corporation.Shares": "Number of shares the corporation has issued.",
+    "ESI.NET.Models.Corporation.Corporation.WarEligible": "Whether the corporation can be at war: it can declare wars and be war-declared on.",
+    "ESI.NET.Models.Industry.Job.ActivityId": "The job's activity: <c>1</c> manufacturing, <c>3</c> time-efficiency research, <c>4</c> material-efficiency research, <c>5</c> copying, <c>8</c> invention, <c>9</c> or <c>11</c> reactions.",
+    "ESI.NET.Models.Incursions.Incursion.FactionId": "ID of the faction attacking (the Sansha's Nation for incursions).",
+    "ESI.NET.Models.Industry.Facility.OwnerId": "ID of the corporation that owns the facility.",
+
+    // ---- Assets
+    "ESI.NET.Models.Assets.Item.ItemId": "Unique ID of this item (or stack). Items inside it have this as their <see cref=\"LocationId\"/>.",
+    "ESI.NET.Models.Assets.Item.LocationId": "ID of what the item is in: a station, a structure, a solar system (in space), or another item such as a ship or container. <see cref=\"LocationType\"/> says which.",
+    "ESI.NET.Models.Assets.Item.LocationType": "What kind of thing <see cref=\"LocationId\"/> is: <c>station</c>, <c>solar_system</c>, <c>item</c>, or <c>other</c> (a structure is <c>item</c> or <c>other</c>).",
+    "ESI.NET.Models.Assets.Item.Quantity": "Number of items in the stack. Always 1 for an assembled (singleton) item.",
+    "ESI.NET.Models.Assets.ItemLocation.ItemId": "ID of the asset item, as passed in the request.",
+    "ESI.NET.Models.Assets.ItemLocation.Position": "The item's coordinates in space, in metres from the solar system's centre.",
+    "ESI.NET.Models.Assets.ItemName.ItemId": "ID of the asset item, as passed in the request.",
+    "ESI.NET.Models.Assets.ItemName.Name": "The name the player gave the item (a ship's or container's name).",
+
+    // ---- Calendar
+    "ESI.NET.Models.Calendar.CalendarItem.EventDate": "When the event starts.",
+    "ESI.NET.Models.Calendar.CalendarItem.Title": "The event's title.",
+    "ESI.NET.Models.Calendar.Event.Date": "When the event starts.",
+    "ESI.NET.Models.Calendar.Event.OwnerId": "ID of whoever owns the event; <see cref=\"OwnerType\"/> says what kind of entity it is.",
+    "ESI.NET.Models.Calendar.Event.OwnerName": "Name of the event's owner.",
+    "ESI.NET.Models.Calendar.Event.OwnerType": "What kind of entity owns the event: <c>eve_server</c>, <c>corporation</c>, <c>faction</c>, <c>character</c>, or <c>alliance</c>.",
+    "ESI.NET.Models.Calendar.Event.Response": "The character's response to the event: <c>accepted</c>, <c>declined</c>, <c>tentative</c>, or <c>not_responded</c>.",
+    "ESI.NET.Models.Calendar.Event.Text": "The event's description, which may contain EVE client markup.",
+    "ESI.NET.Models.Calendar.Event.Title": "The event's title.",
+    "ESI.NET.Models.Calendar.Response.CharacterId": "ID of the invited character.",
+
+    // ---- Character
+    "ESI.NET.Models.Character.Agent.AgentId": "ID of the research agent (an NPC character).",
+    "ESI.NET.Models.Character.Agent.PointsPerDay": "Research points the agent produces per day.",
+    "ESI.NET.Models.Character.Agent.RemainderPoints": "Research points accrued before <see cref=\"StartedAt\"/>. The current total is this plus <see cref=\"PointsPerDay\"/> times the days since <see cref=\"StartedAt\"/>.",
+    "ESI.NET.Models.Character.Agent.SkillTypeId": "Type ID of the science skill the agent researches.",
+    "ESI.NET.Models.Character.Agent.StartedAt": "When research with this agent started.",
+    "ESI.NET.Models.Character.Blueprint.TypeId": "Type ID of the blueprint.",
+    "ESI.NET.Models.Character.ContactNotification.Message": "The notification's message, which may contain EVE client markup.",
+    "ESI.NET.Models.Character.ContactNotification.SendDate": "When the notification was sent.",
+    "ESI.NET.Models.Character.ContactNotification.SenderCharacterId": "ID of the character who added this character as a contact.",
+    "ESI.NET.Models.Character.CorporationHistory.CorporationId": "ID of the corporation the character joined.",
+    "ESI.NET.Models.Character.CorporationHistory.StartDate": "When the character joined that corporation.",
+    "ESI.NET.Models.Character.GraphicLayer.Color": "Colour of this layer, as a packed ARGB integer.",
+    "ESI.NET.Models.Character.GraphicLayer.Graphic": "Name of the graphic drawn on this layer.",
+    "ESI.NET.Models.Character.GraphicLayer.Layer": "Draw order of this layer; higher layers are drawn on top.",
+    "ESI.NET.Models.Character.GraphicLayer.Part": "Which part of the medal the layer belongs to: <c>1</c> the ribbon, <c>2</c> the medal.",
+    "ESI.NET.Models.Character.Medal.CorporationId": "ID of the corporation that awarded the medal.",
+    "ESI.NET.Models.Character.Medal.Date": "When the medal was awarded.",
+    "ESI.NET.Models.Character.Medal.Description": "The medal's description.",
+    "ESI.NET.Models.Character.Medal.Graphics": "The layers the medal is drawn from.",
+    "ESI.NET.Models.Character.Medal.IssuerId": "ID of the character who awarded the medal.",
+    "ESI.NET.Models.Character.Medal.Reason": "The reason given when the medal was awarded.",
+    "ESI.NET.Models.Character.Medal.Status": "Whether the medal shows on the character's public profile: <c>public</c> or <c>private</c>.",
+    "ESI.NET.Models.Character.Medal.Title": "The medal's name.",
+    "ESI.NET.Models.Character.Notification.IsRead": "Whether the notification has been read.",
+    "ESI.NET.Models.Character.Notification.SenderId": "ID of the sender; <see cref=\"SenderType\"/> says what kind of entity it is.",
+    "ESI.NET.Models.Character.Notification.SenderType": "What kind of entity sent the notification: <c>character</c>, <c>corporation</c>, <c>alliance</c>, <c>faction</c>, or <c>other</c>.",
+    "ESI.NET.Models.Character.Notification.Text": "The notification's details as YAML-style text. Which fields appear depends on <see cref=\"Type\"/>.",
+    "ESI.NET.Models.Character.Notification.Timestamp": "When the notification was sent.",
+    "ESI.NET.Models.Character.Notification.Type": "The kind of notification, e.g. <c>StructureUnderAttack</c> or <c>WarDeclared</c>. It decides what <see cref=\"Text\"/> holds.",
+    "ESI.NET.Models.Character.Roles.MainRoles": "Corporation roles the character holds that apply at every location.",
+    "ESI.NET.Models.Character.Roles.RolesAtBase": "Corporation roles that apply at the character's base.",
+    "ESI.NET.Models.Character.Roles.RolesAtHq": "Corporation roles that apply at the corporation's headquarters.",
+    "ESI.NET.Models.Character.Roles.RolesAtOther": "Corporation roles that apply at other locations.",
+    "ESI.NET.Models.Character.Title.Id": "ID of the corporation title.",
+    "ESI.NET.Models.Character.Title.Name": "The title's name, which may contain EVE client markup.",
+
+    // ---- Clones
+    "ESI.NET.Models.Clones.Clones.HomeLocation": "The character's home station or structure, where a new clone wakes up after a pod loss.",
+    "ESI.NET.Models.Clones.Clones.JumpClones": "The character's jump clones.",
+    "ESI.NET.Models.Clones.Clones.LastCloneJumpDate": "When the character last jumped to a jump clone.",
+    "ESI.NET.Models.Clones.Clones.LastStationChangeDate": "When the character last changed home station.",
+    "ESI.NET.Models.Clones.HomeLocation.LocationId": "ID of the home station or structure.",
+    "ESI.NET.Models.Clones.HomeLocation.LocationType": "Whether <see cref=\"LocationId\"/> is a <c>station</c> or a <c>structure</c>.",
+    "ESI.NET.Models.Clones.JumpClone.Implants": "Type IDs of the implants plugged into this clone.",
+    "ESI.NET.Models.Clones.JumpClone.JumpCloneId": "ID of the jump clone.",
+    "ESI.NET.Models.Clones.JumpClone.LocationId": "ID of the station or structure the clone is in.",
+    "ESI.NET.Models.Clones.JumpClone.LocationType": "Whether <see cref=\"LocationId\"/> is a <c>station</c> or a <c>structure</c>.",
+    "ESI.NET.Models.Clones.JumpClone.Name": "The name the player gave the clone.",
+
+    // ---- Contacts
+    "ESI.NET.Models.Contacts.Contact.ContactId": "ID of the contact; <see cref=\"ContactType\"/> says what kind of entity it is.",
+    "ESI.NET.Models.Contacts.Contact.ContactType": "What kind of entity the contact is: <c>character</c>, <c>corporation</c>, <c>alliance</c>, or <c>faction</c>.",
+    "ESI.NET.Models.Contacts.Contact.LabelIds": "IDs of the contact labels applied to this contact.",
+    "ESI.NET.Models.Contacts.Label.LabelName": "The label's name.",
+
+    // ---- Contracts
+    "ESI.NET.Models.Contracts.Contract.ContractId": "ID of the contract.",
+
+    // ---- Corporation
+    "ESI.NET.Models.Corporation.AllianceHistory.AllianceId": "ID of the alliance the corporation joined. Absent for a period when it was in no alliance.",
+    "ESI.NET.Models.Corporation.AllianceHistory.StartDate": "When the corporation joined that alliance (or left its last one).",
+    "ESI.NET.Models.Corporation.Blueprint.TypeId": "Type ID of the blueprint.",
+    "ESI.NET.Models.Corporation.CharacterRoles.CharacterId": "ID of the member.",
+    "ESI.NET.Models.Corporation.CharacterRoles.Roles": "Corporation roles the member holds that apply at every location.",
+    "ESI.NET.Models.Corporation.CharacterRolesHistory.ChangedAt": "When the roles changed.",
+    "ESI.NET.Models.Corporation.CharacterRolesHistory.NewRoles": "The roles after the change.",
+    "ESI.NET.Models.Corporation.CharacterRolesHistory.OldRoles": "The roles before the change.",
+    "ESI.NET.Models.Corporation.CharacterRolesHistory.RoleType": "Which set of roles changed: <c>roles</c>, <c>grantable_roles</c>, or one of their <c>_at_hq</c> / <c>_at_base</c> / <c>_at_other</c> variants.",
+    "ESI.NET.Models.Corporation.ContainerLog.Action": "What was done to the container, e.g. <c>add</c>, <c>assemble</c>, <c>configure</c>, <c>lock</c>, <c>move</c>, <c>repackage</c>, <c>set_name</c>, <c>set_password</c>, or <c>unlock</c>.",
+    "ESI.NET.Models.Corporation.ContainerLog.LocationId": "ID of the station or structure the container is in.",
+    "ESI.NET.Models.Corporation.ContainerLog.NewConfigBitmask": "The container's access configuration after a <c>configure</c> action, as a bitmask.",
+    "ESI.NET.Models.Corporation.ContainerLog.OldConfigBitmask": "The container's access configuration before a <c>configure</c> action, as a bitmask.",
+    "ESI.NET.Models.Corporation.Division.DivisionId": "The division's number, 1 to 7.",
+    "ESI.NET.Models.Corporation.Division.Name": "The name the corporation gave the division.",
+    "ESI.NET.Models.Corporation.Divisions.Hangar": "The corporation's hangar divisions.",
+    "ESI.NET.Models.Corporation.Divisions.Wallet": "The corporation's wallet divisions.",
+    "ESI.NET.Models.Corporation.Facility.FacilityId": "ID of the station or structure that is the industry facility.",
+    "ESI.NET.Models.Corporation.Facility.SystemId": "ID of the solar system the facility is in.",
+    "ESI.NET.Models.Corporation.Facility.TypeId": "Type ID of the facility.",
+    "ESI.NET.Models.Corporation.Fuel.Quantity": "Units of this fuel in the starbase.",
+    "ESI.NET.Models.Corporation.Fuel.TypeId": "Type ID of the fuel.",
+    "ESI.NET.Models.Corporation.IssuedMedal.IssuedAt": "When the medal was awarded.",
+    "ESI.NET.Models.Corporation.IssuedMedal.Reason": "The reason given when the medal was awarded.",
+    "ESI.NET.Models.Corporation.IssuedMedal.Status": "Whether the recipient shows the medal publicly: <c>public</c> or <c>private</c>.",
+    "ESI.NET.Models.Corporation.Medal.CreatedAt": "When the medal was created.",
+    "ESI.NET.Models.Corporation.Medal.Description": "The medal's description.",
+    "ESI.NET.Models.Corporation.Medal.Title": "The medal's name.",
+    "ESI.NET.Models.Corporation.MemberInfo.BaseId": "ID of the member's base station.",
+    "ESI.NET.Models.Corporation.MemberInfo.CharacterId": "ID of the member.",
+    "ESI.NET.Models.Corporation.MemberInfo.LocationId": "Where the member is now: a station, a structure, or a solar system.",
+    "ESI.NET.Models.Corporation.MemberInfo.LogoffDate": "When the member last logged off.",
+    "ESI.NET.Models.Corporation.MemberInfo.LogonDate": "When the member last logged on.",
+    "ESI.NET.Models.Corporation.MemberInfo.ShipTypeId": "Type ID of the ship the member is in.",
+    "ESI.NET.Models.Corporation.MemberInfo.StartDate": "When the member joined the corporation.",
+    "ESI.NET.Models.Corporation.MemberTitles.CharacterId": "ID of the member.",
+    "ESI.NET.Models.Corporation.Project.Configuration": "The project's objective configuration. Its shape depends on the project type, so it is kept as a loose map: inspect the single populated key (e.g. <c>deliver_item</c>, <c>mine_material</c>).",
+    "ESI.NET.Models.Corporation.Service.Name": "The service module's name.",
+    "ESI.NET.Models.Corporation.Service.State": "Whether the service is <c>online</c>, <c>offline</c>, or in <c>cleanup</c>.",
+    "ESI.NET.Models.Corporation.Shareholder.ShareCount": "Number of shares held.",
+    "ESI.NET.Models.Corporation.Shareholder.ShareholderId": "ID of the shareholder; <see cref=\"ShareholderType\"/> says what kind of entity it is.",
+    "ESI.NET.Models.Corporation.Shareholder.ShareholderType": "Whether the shareholder is a <c>character</c> or a <c>corporation</c>.",
+    "ESI.NET.Models.Corporation.Starbase.State": "The starbase's state: <c>offline</c>, <c>online</c>, <c>onlining</c>, <c>reinforced</c>, or <c>unanchoring</c>.",
+    "ESI.NET.Models.Corporation.StarbaseInfo.AllowAllianceMembers": "Whether alliance members may use the starbase.",
+    "ESI.NET.Models.Corporation.StarbaseInfo.AllowCorporationMembers": "Whether corporation members may use the starbase.",
+    "ESI.NET.Models.Corporation.StarbaseInfo.AttackIfAtWar": "Whether the starbase's defences fire on war targets.",
+    "ESI.NET.Models.Corporation.StarbaseInfo.AttackIfOtherSecurityStatusDropping": "Whether the defences fire on anyone committing an act that would lower their security status.",
+    "ESI.NET.Models.Corporation.Structure.State": "Where the structure is in its reinforcement cycle, e.g. <c>shield_vulnerable</c>, <c>armor_reinforce</c>, <c>hull_vulnerable</c>, or <c>anchoring</c>.",
+    "ESI.NET.Models.Corporation.Title.Name": "The title's name, which may contain EVE client markup.",
+    "ESI.NET.Models.Corporation.Title.Roles": "Corporation roles the title gives, at every location.",
+    "ESI.NET.Models.Corporation.Title.TitleId": "ID of the title.",
+
+    // ---- Cosmetics: shapes ESI.NET flattens (from the old hand-written docs)
+    "ESI.NET.Models.Cosmetics.ParagonListing.Price": "Asking price of the listing: either <c>isk</c> (a number) or <c>plex</c> (an integer).",
+    "ESI.NET.Models.Cosmetics.ParagonListing.Target": "Who the listing is visible to. Only present on the caller's own listings: one of <c>character_id</c>, <c>corporation_id</c>, <c>alliance_id</c>, or <c>public</c>.",
+    "ESI.NET.Models.Cosmetics.SkinrSlot.Configuration": "Configuration of the cosmetic slot: either <c>nanocoating</c> or <c>pattern</c>.",
+    "ESI.NET.Models.Cosmetics.SkinrComponent.Runs": "Remaining uses of this license: either <c>remaining</c> (an integer) or <c>unlimited</c> (a boolean).",
+
+    // ---- Dogma
+    "ESI.NET.Models.Dogma.Attribute.Value": "The attribute's value on this item.",
+    "ESI.NET.Models.Dogma.AttributeInfo.DefaultValue": "The value an item has when it does not set this attribute.",
+    "ESI.NET.Models.Dogma.AttributeInfo.Description": "The attribute's description.",
+    "ESI.NET.Models.Dogma.AttributeInfo.HighIsGood": "Whether a higher value is better (the client colours improvements green).",
+    "ESI.NET.Models.Dogma.AttributeInfo.Name": "The attribute's internal name.",
+    "ESI.NET.Models.Dogma.AttributeInfo.Stackable": "Whether several modifiers of this attribute stack in full. When false, stacking penalties apply.",
+    "ESI.NET.Models.Dogma.AttributeInfo.UnitId": "ID of the unit the value is measured in (metres, seconds, percent, ...). Units are listed in the SDE.",
+    "ESI.NET.Models.Dogma.DynamicItem.DogmaAttributes": "The item's attribute values after mutation.",
+    "ESI.NET.Models.Dogma.DynamicItem.DogmaEffects": "The item's dogma effects.",
+    "ESI.NET.Models.Dogma.Effect.IsDefault": "Whether this is the type's default effect (the one a module runs when activated).",
+    "ESI.NET.Models.Dogma.EffectInfo.Description": "The effect's description.",
+    "ESI.NET.Models.Dogma.EffectInfo.DisallowAutoRepeat": "Whether a module with this effect cannot be set to repeat automatically.",
+    "ESI.NET.Models.Dogma.EffectInfo.DischargeAttributeId": "ID of the attribute that holds the capacitor cost per cycle.",
+    "ESI.NET.Models.Dogma.EffectInfo.DurationAttributeId": "ID of the attribute that holds the cycle time.",
+    "ESI.NET.Models.Dogma.EffectInfo.EffectCategory": "The effect's category number: passive, active, targeted, area, online, overload, and so on.",
+    "ESI.NET.Models.Dogma.EffectInfo.ElectronicChance": "Whether success is a chance roll, as for ECM.",
+    "ESI.NET.Models.Dogma.EffectInfo.FalloffAttributeId": "ID of the attribute that holds the falloff range.",
+    "ESI.NET.Models.Dogma.EffectInfo.IsAssistance": "Whether the effect helps its target (remote repair, for example).",
+    "ESI.NET.Models.Dogma.EffectInfo.IsOffensive": "Whether using the effect on someone is an act of aggression.",
+    "ESI.NET.Models.Dogma.EffectInfo.IsWarpSafe": "Whether the effect can be used while in warp.",
+    "ESI.NET.Models.Dogma.EffectInfo.Modifiers": "The attribute changes the effect applies.",
+    "ESI.NET.Models.Dogma.EffectInfo.Name": "The effect's internal name.",
+    "ESI.NET.Models.Dogma.EffectInfo.PostExpression": "ID of the dogma expression evaluated when the effect stops.",
+    "ESI.NET.Models.Dogma.EffectInfo.PreExpression": "ID of the dogma expression evaluated when the effect starts.",
+    "ESI.NET.Models.Dogma.EffectInfo.RangeAttributeId": "ID of the attribute that holds the optimal range.",
+    "ESI.NET.Models.Dogma.EffectInfo.RangeChance": "Whether the chance of success depends on range.",
+    "ESI.NET.Models.Dogma.EffectInfo.TrackingSpeedAttributeId": "ID of the attribute that holds the tracking speed.",
+    "ESI.NET.Models.Dogma.Modifier.Domain": "Whose attribute is changed, e.g. <c>shipID</c>, <c>charID</c>, <c>itemID</c>, or <c>targetID</c>.",
+    "ESI.NET.Models.Dogma.Modifier.EffectId": "ID of the effect involved, for modifiers whose <see cref=\"Func\"/> needs one.",
+    "ESI.NET.Models.Dogma.Modifier.Func": "How the modifier picks the items it changes, e.g. <c>ItemModifier</c>, <c>LocationGroupModifier</c>, or <c>LocationRequiredSkillModifier</c>.",
+    "ESI.NET.Models.Dogma.Modifier.ModifiedAttributeId": "ID of the attribute that is changed.",
+    "ESI.NET.Models.Dogma.Modifier.ModifyingAttributeId": "ID of the attribute whose value is applied.",
+    "ESI.NET.Models.Dogma.Modifier.Operator": "How the value is applied, as a dogma operator number (add, multiply, post-percent, and so on).",
+
+    // ---- Faction warfare
+    "ESI.NET.Models.FactionWarfare.CharacterTotal.CharacterId": "ID of the character.",
+    "ESI.NET.Models.FactionWarfare.CorporationTotal.CorporationId": "ID of the corporation.",
+    "ESI.NET.Models.FactionWarfare.FactionTotal.FactionId": "ID of the faction.",
+    "ESI.NET.Models.FactionWarfare.FactionWarfareSystem.Contested": "How contested the system is: <c>captured</c>, <c>contested</c>, <c>uncontested</c>, or <c>vulnerable</c>.",
+    "ESI.NET.Models.FactionWarfare.FactionWarfareSystem.OccupierFactionId": "ID of the faction occupying the system.",
+    "ESI.NET.Models.FactionWarfare.FactionWarfareSystem.OwnerFactionId": "ID of the faction that owns the system.",
+    "ESI.NET.Models.FactionWarfare.FactionWarfareSystem.SolarSystemId": "ID of the solar system.",
+    "ESI.NET.Models.FactionWarfare.FactionWarfareSystem.VictoryPoints": "Victory points the attackers have built up in the system.",
+    "ESI.NET.Models.FactionWarfare.FactionWarfareSystem.VictoryPointsThreshold": "Victory points at which the system becomes vulnerable.",
+    "ESI.NET.Models.FactionWarfare.War.FactionId": "ID of the faction at war with <see cref=\"AgainstId\"/>.",
+
+    "ESI.NET.Models.FactionWarfare.Leaderboards.Kills": "The top entries by ships destroyed.",
+    "ESI.NET.Models.FactionWarfare.Leaderboards.VictoryPoints": "The top entries by victory points earned.",
+    "ESI.NET.Models.FactionWarfare.Summary.Yesterday": "The top entries for yesterday.",
+    "ESI.NET.Models.FactionWarfare.Summary.LastWeek": "The top entries for the last 7 days.",
+    "ESI.NET.Models.FactionWarfare.Summary.ActiveTotal": "The top entries over all time (for characters and corporations: while enlisted in faction warfare).",
+
+    // ---- Fittings
+    "ESI.NET.Models.Fittings.Fitting.Description": "The fitting's description.",
+    "ESI.NET.Models.Fittings.Fitting.FittingId": "ID of the saved fitting.",
+    "ESI.NET.Models.Fittings.Fitting.Items": "The modules, charges, drones and cargo in the fitting.",
+    "ESI.NET.Models.Fittings.Fitting.Name": "The fitting's name.",
+    "ESI.NET.Models.Fittings.Fitting.ShipTypeId": "Type ID of the ship the fitting is for.",
+    "ESI.NET.Models.Fittings.Item.Flag": "The slot or bay the item goes in, e.g. <c>HiSlot0</c>, <c>MedSlot2</c>, <c>DroneBay</c>, or <c>Cargo</c>.",
+    "ESI.NET.Models.Fittings.Item.Quantity": "How many of the item.",
+    "ESI.NET.Models.Fittings.NewFitting.FittingId": "ID of the fitting that was created.",
+
+    // ---- Fleets
+    "ESI.NET.Models.Fleets.Member.CharacterId": "ID of the fleet member.",
+    "ESI.NET.Models.Fleets.Member.JoinTime": "When the member joined the fleet.",
+    "ESI.NET.Models.Fleets.Member.ShipTypeId": "Type ID of the ship the member is flying.",
+    "ESI.NET.Models.Fleets.Squad.Id": "ID of the squad.",
+    "ESI.NET.Models.Fleets.Squad.Name": "The squad's name.",
+    "ESI.NET.Models.Fleets.Wing.Id": "ID of the wing.",
+    "ESI.NET.Models.Fleets.Wing.Name": "The wing's name.",
+    "ESI.NET.Models.Fleets.Wing.Squads": "The wing's squads.",
+
+    // ---- Freelance jobs
+    "ESI.NET.Models.FreelanceJobs.FreelanceConfiguration.Parameters": "Parameter values for the contribution method. Their shape depends on <see cref=\"Method\"/>; the parameter definitions are in the SDE.",
+
+    // ---- Industry
+    "ESI.NET.Models.Industry.CostIndice.Activity": "The industry activity: <c>manufacturing</c>, <c>researching_time_efficiency</c>, <c>researching_material_efficiency</c>, <c>copying</c>, <c>invention</c>, or <c>reaction</c>.",
+    "ESI.NET.Models.Industry.CostIndice.CostIndex": "The system cost index for that activity, as a fraction (<c>0.05</c> is 5%).",
+    "ESI.NET.Models.Industry.Entry.Date": "The day the ore was mined.",
+    "ESI.NET.Models.Industry.Entry.Quantity": "Units mined that day.",
+    "ESI.NET.Models.Industry.Entry.SolarSystemId": "ID of the solar system it was mined in.",
+    "ESI.NET.Models.Industry.Entry.TypeId": "Type ID of the ore mined.",
+    "ESI.NET.Models.Industry.Extraction.MoonId": "ID of the moon being drilled.",
+    "ESI.NET.Models.Industry.Extraction.StructureId": "ID of the refinery running the extraction.",
+    "ESI.NET.Models.Industry.Job.BlueprintId": "Item ID of the blueprint used.",
+    "ESI.NET.Models.Industry.Job.BlueprintTypeId": "Type ID of the blueprint used.",
+    "ESI.NET.Models.Industry.Job.LocationId": "ID of the station or structure the job runs in. The corporation endpoint fills this rather than a station ID, since structures have none.",
+    "ESI.NET.Models.Industry.Job.Status": "The job's status: <c>active</c>, <c>paused</c>, <c>ready</c>, <c>delivered</c>, <c>cancelled</c>, or <c>reverted</c>.",
+    "ESI.NET.Models.Industry.Observer.LastUpdated": "When the observer's mining ledger last changed.",
+    "ESI.NET.Models.Industry.ObserverInfo.LastUpdated": "The day this mining was recorded.",
+    "ESI.NET.Models.Industry.ObserverInfo.Quantity": "Units mined.",
+    "ESI.NET.Models.Industry.ObserverInfo.TypeId": "Type ID of the ore mined.",
+    "ESI.NET.Models.Industry.SolarSystem.CostIndices": "The system's cost index for each industry activity.",
+    "ESI.NET.Models.Industry.SolarSystem.SolarSystemId": "ID of the solar system.",
+
+    // ---- Insurance
+    "ESI.NET.Models.Insurance.Insurance.TypeID": "Type ID of the ship.",
+    "ESI.NET.Models.Insurance.Levels.Cost": "What this level of insurance costs, in ISK.",
+    "ESI.NET.Models.Insurance.Levels.Payout": "What this level pays out if the ship is destroyed, in ISK.",
+
+    // ---- Killmails
+    "ESI.NET.Models.Killmails.Attacker.AllianceId": "ID of the attacker's alliance, if any.",
+    "ESI.NET.Models.Killmails.Attacker.CharacterId": "ID of the attacking character. Absent for NPCs and structures.",
+    "ESI.NET.Models.Killmails.Attacker.CorporationId": "ID of the attacker's corporation.",
+    "ESI.NET.Models.Killmails.Attacker.DamageDone": "Damage this attacker dealt to the victim.",
+    "ESI.NET.Models.Killmails.Attacker.FactionId": "ID of the attacker's faction (faction warfare or NPC), if any.",
+    "ESI.NET.Models.Killmails.Information.Attackers": "Everyone who damaged the victim.",
+    "ESI.NET.Models.Killmails.Information.Victim": "Who and what was destroyed.",
+    "ESI.NET.Models.Killmails.Item.ItemTypeId": "Type ID of the item.",
+    "ESI.NET.Models.Killmails.Item.Items": "Items inside this one, e.g. the contents of a container.",
+    "ESI.NET.Models.Killmails.Item.Singleton": "<c>0</c> packaged, <c>1</c> assembled, <c>2</c> a blueprint copy.",
+    "ESI.NET.Models.Killmails.Victim.AllianceId": "ID of the victim's alliance, if any.",
+    "ESI.NET.Models.Killmails.Victim.CharacterId": "ID of the victim. Absent when the victim was a structure or NPC.",
+    "ESI.NET.Models.Killmails.Victim.CorporationId": "ID of the victim's corporation.",
+    "ESI.NET.Models.Killmails.Victim.FactionId": "ID of the victim's faction, if any.",
+    "ESI.NET.Models.Killmails.Victim.Items": "Items fitted to or carried in the ship, with how many dropped and were destroyed.",
+
+    // ---- Loyalty
+    "ESI.NET.Models.Loyalty.Item.Quantity": "How many of the item must be handed in.",
+    "ESI.NET.Models.Loyalty.Item.TypeId": "Type ID of the item that must be handed in.",
+    "ESI.NET.Models.Loyalty.Offer.IskCost": "ISK cost of the offer.",
+    "ESI.NET.Models.Loyalty.Offer.LpCost": "Loyalty point cost of the offer.",
+    "ESI.NET.Models.Loyalty.Offer.OfferId": "ID of the offer.",
+    "ESI.NET.Models.Loyalty.Offer.Quantity": "How many of the item the offer gives.",
+    "ESI.NET.Models.Loyalty.Offer.RequiredItems": "Items that must be handed in along with the ISK and loyalty points.",
+    "ESI.NET.Models.Loyalty.Offer.TypeId": "Type ID of the item the offer gives.",
+    "ESI.NET.Models.Loyalty.Points.CorporationId": "ID of the NPC corporation the points are with.",
+    "ESI.NET.Models.Loyalty.Points.LoyaltyPoints": "Loyalty points the character has with that corporation.",
+
+    // ---- Mail
+    "ESI.NET.Models.Mail.Header.IsRead": "Whether the mail has been read.",
+    "ESI.NET.Models.Mail.Header.Labels": "IDs of the labels applied to the mail.",
+    "ESI.NET.Models.Mail.Label.Color": "The label's colour as a hex string, e.g. <c>#ffffff</c>.",
+    "ESI.NET.Models.Mail.Label.Name": "The label's name.",
+    "ESI.NET.Models.Mail.Label.UnreadCount": "Unread mails with this label.",
+    "ESI.NET.Models.Mail.LabelCounts.Labels": "The character's mail labels.",
+    "ESI.NET.Models.Mail.LabelCounts.TotalUnreadCount": "Unread mails across all labels.",
+    "ESI.NET.Models.Mail.MailingList.Name": "The mailing list's name.",
+    "ESI.NET.Models.Mail.Recipient.RecipientId": "ID of the recipient; <see cref=\"RecipientType\"/> says what kind of entity it is.",
+    "ESI.NET.Models.Mail.Recipient.RecipientType": "What kind of recipient: <c>character</c>, <c>corporation</c>, <c>alliance</c>, or <c>mailing_list</c>.",
+
+    // ---- Market
+    "ESI.NET.Models.Market.Group.Description": "The market group's description.",
+    "ESI.NET.Models.Market.Group.MarketGroupId": "ID of the market group.",
+    "ESI.NET.Models.Market.Group.Name": "The market group's name.",
+    "ESI.NET.Models.Market.Group.ParentGroupId": "ID of the parent market group. Absent for a top-level group.",
+    "ESI.NET.Models.Market.Group.Types": "Type IDs of the items in this group.",
+    "ESI.NET.Models.Market.Order.RegionId": "ID of the region the order was placed in. Only returned by the character orders endpoints.",
+    "ESI.NET.Models.Market.Order.IssuedBy": "ID of the character who placed the order. Only returned by the corporation orders endpoints.",
+    "ESI.NET.Models.Market.Order.WalletDivision": "The corporation wallet division the order uses. Only returned by the corporation orders endpoints.",
+    "ESI.NET.Models.Market.Price.AdjustedPrice": "CCP's adjusted price for the item. It is not a market price: the game uses it to work out industry job costs and some taxes.",
+    "ESI.NET.Models.Market.Price.AveragePrice": "The item's average market price across New Eden over recent days.",
+    "ESI.NET.Models.Market.Price.TypeId": "Type ID of the item.",
+    "ESI.NET.Models.Market.Statistic.Average": "Average price that day.",
+    "ESI.NET.Models.Market.Statistic.Highest": "Highest price that day.",
+    "ESI.NET.Models.Market.Statistic.Lowest": "Lowest price that day.",
+
+    // ---- Planetary interaction
+    "ESI.NET.Models.PlanetaryInteraction.ColonyLayout.Links": "The links between the colony's pins.",
+    "ESI.NET.Models.PlanetaryInteraction.ColonyLayout.Pins": "The colony's pins: its command center, extractors, factories, storage and launchpads.",
+    "ESI.NET.Models.PlanetaryInteraction.ColonyLayout.Routes": "The routes that move commodities between pins.",
+    "ESI.NET.Models.PlanetaryInteraction.Content.Amount": "How many units of the commodity are stored.",
+    "ESI.NET.Models.PlanetaryInteraction.Content.TypeId": "Type ID of the commodity.",
+    "ESI.NET.Models.PlanetaryInteraction.CustomsOffice.AllowAllianceAccess": "Whether alliance members may use the customs office.",
+    "ESI.NET.Models.PlanetaryInteraction.CustomsOffice.BadStandingTaxRate": "Tax rate for pilots with bad standing, as a fraction. Absent when they may not use it.",
+    "ESI.NET.Models.PlanetaryInteraction.CustomsOffice.CorporationTaxRate": "Tax rate for the owner's corporation members, as a fraction.",
+    "ESI.NET.Models.PlanetaryInteraction.CustomsOffice.GoodStandingTaxRate": "Tax rate for pilots with good standing, as a fraction. Absent when they may not use it.",
+    "ESI.NET.Models.PlanetaryInteraction.CustomsOffice.NeutralStandingTaxRate": "Tax rate for pilots with neutral standing, as a fraction. Absent when they may not use it.",
+    "ESI.NET.Models.PlanetaryInteraction.CustomsOffice.ReinforceExitEnd": "Hour of the day (0-23, EVE time) the reinforcement exit window ends.",
+    "ESI.NET.Models.PlanetaryInteraction.CustomsOffice.TerribleDtandingRate": "Tax rate for pilots with terrible standing, as a fraction. Absent when they may not use it.",
+    "ESI.NET.Models.PlanetaryInteraction.Extractor.HeadRadius": "Radius of the extractor heads' area.",
+    "ESI.NET.Models.PlanetaryInteraction.Extractor.Heads": "The extractor's heads.",
+    "ESI.NET.Models.PlanetaryInteraction.Extractor.ProductTypeId": "Type ID of the raw material being extracted.",
+    "ESI.NET.Models.PlanetaryInteraction.Extractor.QuantityPerCycle": "Units extracted per cycle.",
+    "ESI.NET.Models.PlanetaryInteraction.Factory.SchematicId": "ID of the schematic the factory runs. Details are in the SDE.",
+    "ESI.NET.Models.PlanetaryInteraction.Head.Id": "ID of the extractor head.",
+    "ESI.NET.Models.PlanetaryInteraction.Link.LinkLevel": "Upgrade level of the link, which sets how much it can carry.",
+    "ESI.NET.Models.PlanetaryInteraction.Pin.Contents": "Commodities stored in the pin.",
+    "ESI.NET.Models.PlanetaryInteraction.Pin.ExpirationTime": "When an extractor's program ends.",
+    "ESI.NET.Models.PlanetaryInteraction.Pin.Extractor": "Extractor settings, for an extractor pin.",
+    "ESI.NET.Models.PlanetaryInteraction.Pin.Factory": "Factory settings, for a factory pin.",
+    "ESI.NET.Models.PlanetaryInteraction.Pin.InstallTime": "When the pin was installed or its program started.",
+    "ESI.NET.Models.PlanetaryInteraction.Pin.LastCycleStart": "When the pin's current cycle started.",
+    "ESI.NET.Models.PlanetaryInteraction.Pin.PinId": "ID of the pin.",
+    "ESI.NET.Models.PlanetaryInteraction.Pin.TypeId": "Type ID of the pin's structure.",
+    "ESI.NET.Models.PlanetaryInteraction.Planet.LastUpdate": "When the colony last changed.",
+    "ESI.NET.Models.PlanetaryInteraction.Planet.NumberOfPins": "Number of pins in the colony.",
+    "ESI.NET.Models.PlanetaryInteraction.Planet.OwnerId": "ID of the character who owns the colony.",
+    "ESI.NET.Models.PlanetaryInteraction.Planet.PlanetId": "ID of the planet.",
+    "ESI.NET.Models.PlanetaryInteraction.Planet.PlanetType": "The planet's type: <c>temperate</c>, <c>barren</c>, <c>oceanic</c>, <c>ice</c>, <c>gas</c>, <c>lava</c>, <c>storm</c>, or <c>plasma</c>.",
+    "ESI.NET.Models.PlanetaryInteraction.Planet.SolarSystemId": "ID of the solar system the planet is in.",
+    "ESI.NET.Models.PlanetaryInteraction.Planet.UpgradeLevel": "The command center's upgrade level, 0 to 5.",
+    "ESI.NET.Models.PlanetaryInteraction.Route.ContentTypeId": "Type ID of the commodity the route moves.",
+    "ESI.NET.Models.PlanetaryInteraction.Route.Quantity": "Units moved per cycle.",
+    "ESI.NET.Models.PlanetaryInteraction.Route.RouteId": "ID of the route.",
+
+    // ---- SSO (not from ESI's spec)
+    "ESI.NET.Models.SSO.AuthorizedCharacterData.AllianceID": "ID of the character's alliance, or 0. Filled by <see cref=\"ESI.NET.SsoLogic.Verify\"/>.",
+    "ESI.NET.Models.SSO.AuthorizedCharacterData.CharacterID": "ID of the logged-in character, from the access token's <c>sub</c> claim.",
+    "ESI.NET.Models.SSO.AuthorizedCharacterData.CharacterName": "Name of the logged-in character.",
+    "ESI.NET.Models.SSO.AuthorizedCharacterData.CharacterOwnerHash": "Hash of the character and the account that owns it. It changes when the character is sold or transferred, so a stored token whose hash no longer matches belongs to someone else.",
+    "ESI.NET.Models.SSO.AuthorizedCharacterData.CorporationID": "ID of the character's corporation. Filled by <see cref=\"ESI.NET.SsoLogic.Verify\"/>.",
+    "ESI.NET.Models.SSO.AuthorizedCharacterData.ExpiresOn": "When <see cref=\"Token\"/> expires (UTC). ESI.NET refreshes it shortly before then when <see cref=\"ESI.NET.EsiCallOptions.OnTokenRefreshed\"/> is set.",
+    "ESI.NET.Models.SSO.AuthorizedCharacterData.FactionID": "ID of the character's faction warfare faction, or 0. Filled by <see cref=\"ESI.NET.SsoLogic.Verify\"/>.",
+    "ESI.NET.Models.SSO.AuthorizedCharacterData.RefreshToken": "The refresh token, used to get a new <see cref=\"Token\"/>. EVE SSO rotates it on every refresh: always store the newest one.",
+    "ESI.NET.Models.SSO.AuthorizedCharacterData.Scopes": "The scopes the access token was granted, space-separated. ESI.NET checks it before each authenticated call (see <see cref=\"ESI.NET.EsiConfig.ValidateScopes\"/>); when empty, nothing is checked.",
+    "ESI.NET.Models.SSO.AuthorizedCharacterData.Token": "The access token (a JWT) sent as the bearer token on authenticated calls.",
+    "ESI.NET.Models.SSO.AuthorizedCharacterData.TokenType": "The token type, <c>Bearer</c>.",
+    "ESI.NET.Models.SSO.SsoToken.AccessToken": "The access token (a JWT) for authenticated ESI calls.",
+    "ESI.NET.Models.SSO.SsoToken.ExpiresIn": "Seconds until the access token expires (usually 1200).",
+    "ESI.NET.Models.SSO.SsoToken.RefreshToken": "The refresh token. EVE SSO rotates it on every refresh: always store the newest one.",
+    "ESI.NET.Models.SSO.SsoToken.TokenType": "The token type, <c>Bearer</c>.",
+
+    // ---- Search / IDs
+    "ESI.NET.Models.SearchResults.Agents": "IDs of matching agents.",
+    "ESI.NET.Models.SearchResults.Alliances": "IDs of matching alliances.",
+    "ESI.NET.Models.SearchResults.Characters": "IDs of matching characters.",
+    "ESI.NET.Models.SearchResults.Constellations": "IDs of matching constellations.",
+    "ESI.NET.Models.SearchResults.Corporations": "IDs of matching corporations.",
+    "ESI.NET.Models.SearchResults.Factions": "IDs of matching factions.",
+    "ESI.NET.Models.SearchResults.InventoryTypes": "Type IDs of matching items.",
+    "ESI.NET.Models.SearchResults.Regions": "IDs of matching regions.",
+    "ESI.NET.Models.SearchResults.SolarSystems": "IDs of matching solar systems.",
+    "ESI.NET.Models.SearchResults.Stations": "IDs of matching stations.",
+    "ESI.NET.Models.SearchResults.Structures": "IDs of matching structures the character can see.",
+    "ESI.NET.Models.Universe.IDLookup.Agents": "Agents whose names matched, with their IDs.",
+    "ESI.NET.Models.Universe.IDLookup.Alliances": "Alliances whose names matched, with their IDs.",
+    "ESI.NET.Models.Universe.IDLookup.Characters": "Characters whose names matched, with their IDs.",
+    "ESI.NET.Models.Universe.IDLookup.Constellations": "Constellations whose names matched, with their IDs.",
+    "ESI.NET.Models.Universe.IDLookup.Corporations": "Corporations whose names matched, with their IDs.",
+    "ESI.NET.Models.Universe.IDLookup.Factions": "Factions whose names matched, with their IDs.",
+    "ESI.NET.Models.Universe.IDLookup.InventoryTypes": "Item types whose names matched, with their type IDs.",
+    "ESI.NET.Models.Universe.IDLookup.Regions": "Regions whose names matched, with their IDs.",
+    "ESI.NET.Models.Universe.IDLookup.Stations": "Stations whose names matched, with their IDs.",
+    "ESI.NET.Models.Universe.IDLookup.Systems": "Solar systems whose names matched, with their IDs.",
+    "ESI.NET.Models.Universe.Jumps.ShipJumps": "Ship jumps into the system in the last hour.",
+    "ESI.NET.Models.Universe.Jumps.SystemId": "ID of the solar system.",
+    "ESI.NET.Models.Universe.Kills.SystemId": "ID of the solar system.",
+    "ESI.NET.Models.Universe.ResolvedInfo.Category": "What kind of entity the ID is: <c>alliance</c>, <c>character</c>, <c>constellation</c>, <c>corporation</c>, <c>inventory_type</c>, <c>region</c>, <c>solar_system</c>, <c>station</c>, or <c>faction</c>.",
+    "ESI.NET.Models.Universe.ResolvedInfo.Id": "The ID that was looked up.",
+    "ESI.NET.Models.Universe.ResolvedInfo.Name": "Its name.",
+    "ESI.NET.Models.Universe.Structure.SolarSystemId": "ID of the solar system the structure is in.",
+    "ESI.NET.Models.Universe.Structure.TypeId": "Type ID of the structure (Astrahus, Fortizar, ...).",
+
+    // ---- Skills
+    "ESI.NET.Models.Skills.Attributes.Charisma": "The character's Charisma attribute, implants included.",
+    "ESI.NET.Models.Skills.Attributes.Intelligence": "The character's Intelligence attribute, implants included.",
+    "ESI.NET.Models.Skills.Attributes.Memory": "The character's Memory attribute, implants included.",
+    "ESI.NET.Models.Skills.Attributes.Perception": "The character's Perception attribute, implants included.",
+    "ESI.NET.Models.Skills.Attributes.Willpower": "The character's Willpower attribute, implants included.",
+
+    // ---- Sovereignty, standings
+    "ESI.NET.Models.Sovereignty.Participants.AllianceId": "ID of an alliance taking part in the campaign.",
+    "ESI.NET.Models.Sovereignty.Participants.Score": "The alliance's score in the campaign.",
+    "ESI.NET.Models.Standing.FromId": "ID of the agent, NPC corporation, or faction the standing is with.",
+    "ESI.NET.Models.Standing.FromType": "What <see cref=\"FromId\"/> is: <c>agent</c>, <c>npc_corp</c>, or <c>faction</c>.",
+    "ESI.NET.Models.Standing.Value": "The standing, from -10 to 10.",
+
+    // ---- Wallet
+    "ESI.NET.Models.Wallet.Transaction.ClientId": "ID of the other party in the transaction.",
+    "ESI.NET.Models.Wallet.Transaction.IsBuy": "Whether this side of the transaction bought the item (rather than sold it).",
+    "ESI.NET.Models.Wallet.Transaction.IsPersonal": "Whether the transaction was for the character personally rather than for their corporation.",
+    "ESI.NET.Models.Wallet.Transaction.LocationId": "ID of the station or structure the transaction happened in.",
+    "ESI.NET.Models.Wallet.Transaction.Quantity": "How many items changed hands.",
+    "ESI.NET.Models.Wallet.Transaction.TypeId": "Type ID of the item traded.",
+    "ESI.NET.Models.Wallet.Wallet.Balance": "ISK in the wallet division.",
+    "ESI.NET.Models.Wallet.Wallet.Division": "The wallet division's number, 1 to 7."
+  },
+
+  "parameters": {
+    "itemIds": "IDs of the asset items (at most 1000). Items of other owners, or that are not assembled, are rejected.",
+    "contactIds": "IDs of the characters, corporations or alliances (at most 100).",
+    "squadId": "ID of the squad to put the character in, or 0 for none. Which roles need it is set out under <c>role</c>.",
+    "wingId": "ID of the wing to put the character in, or 0 for none. Which roles need it is set out under <c>role</c>.",
+    "isRead": "Whether to mark the mail read (true) or unread (false). Leave null to keep it as it is."
+  },
+
+  "operations": {
+    "GET /characters/{character_id}/search": {
+      "params": {
+        "isStrict": "Only return exact matches of <c>search</c> when true; otherwise also match names that start with it.",
+        "language": "The language <c>search</c> is in, e.g. <c>en</c>, <c>de</c>, <c>fr</c>, <c>ja</c>, <c>ru</c>, <c>zh</c>, <c>ko</c>, <c>es</c>."
+      }
+    },
+    "GET /dogma/dynamic/items/{type_id}/{item_id}": {
+      "params": {
+        "typeId": "Type ID of the mutated (abyssal) item.",
+        "itemId": "Item ID of the mutated item."
+      }
+    },
+    "POST /characters/affiliation": {
+      "params": { "characterIds": "IDs of the characters to look up (at most 1000)." }
+    },
+    "POST /characters/{character_id}/fittings": {
+      "params": { "fitting": "The fitting to save: its name, description, ship type ID and items (see <see cref=\"ESI.NET.Models.Fittings.Fitting\"/>)." }
+    },
+    "POST /characters/{character_id}/mail": {
+      "params": {
+        "recipients": "Who to send the mail to (at most 50), each with its ID and type: characters, plus at most one corporation, alliance or mailing list.",
+        "subject": "The mail's subject (at most 1000 characters).",
+        "body": "The mail's body (at most 10000 characters). EVE client markup is allowed.",
+        "approvedCost": "The CSPA charge (ISK) you agree to pay to mail recipients who charge for unsolicited mail; get it from <see cref=\"ESI.NET.Logic.CharacterLogic.CSPA\"/>. 0 if none."
+      }
+    },
+    "POST /characters/{character_id}/mail/labels": {
+      "params": { "name": "The new label's name (at most 40 characters)." }
+    },
+    "POST /route/{origin_system_id}/{destination_system_id}": {
+      "params": { "flag": "Which route to prefer: <see cref=\"ESI.NET.Enumerations.RoutePreference.Shorter\"/>, <see cref=\"ESI.NET.Enumerations.RoutePreference.Safer\"/> (avoids low and null sec), or <see cref=\"ESI.NET.Enumerations.RoutePreference.LessSecure\"/> (prefers them)." }
+    },
+    "POST /ui/openwindow/newmail": {
+      "params": {
+        "recipients": "Character IDs to fill in as recipients.",
+        "subject": "The subject to fill in.",
+        "body": "The body to fill in."
+      }
+    },
+    "POST /universe/ids": {
+      "params": { "names": "Names to resolve (at most 500). Only exact matches are returned, in categories such as characters, corporations, alliances, systems, stations and item types." }
+    },
+    "POST /universe/names": {
+      "params": { "anyIds": "IDs of any kind (characters, corporations, alliances, stations, systems, regions, constellations, types, factions) to resolve to names (at most 1000)." }
+    },
+    "PUT /characters/{character_id}/calendar/{event_id}": {
+      "params": { "eventResponse": "The response to give: accepted, declined, or tentative." }
+    },
+    "PUT /fleets/{fleet_id}/squads/{squad_id}": {
+      "params": { "name": "The squad's new name (at most 10 characters)." }
+    },
+    "PUT /fleets/{fleet_id}/wings/{wing_id}": {
+      "params": { "name": "The wing's new name (at most 10 characters)." }
+    }
+  }
+}

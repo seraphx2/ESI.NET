@@ -6,6 +6,22 @@ Same ESI contract (`2026-11-19`); no API removed.
 
 ### Added
 
+- Missing-scope check: an authenticated call whose token wasn't granted the
+  endpoint's SSO scope is not sent; it returns a `403` with the new
+  `EsiResponse.MissingScope` naming the required scope (and `Message` listing the
+  granted ones). ESI would answer `403` too, but every `403` it sends counts
+  against the error limit. Skipped when
+  `AuthorizedCharacterData.Scopes` is empty; `EsiConfig.ValidateScopes = false`
+  turns it off. A `403` from a route that needs a corporation role now says which
+  roles on `EsiResponse.Message`. The route -> scope / role table is generated
+  from ESI's spec.
+- XML documentation ships in the package (`ESI.NET.xml`), so IntelliSense shows
+  it. Every endpoint method documents what ESI says it does, its route, its
+  required scope and corporation roles, pagination, ESI's cache time, every
+  parameter and what it returns; every model property says what it holds. All of
+  it is generated from ESI's spec (`tools/SpecCheck --write-docs`), with
+  hand-written text where the spec has none.
+
 - Opt-in response caching: `services.AddEsi(...).AddEsiCaching()`. `GET`
   responses are reused until ESI's `Expires`, then revalidated with their `ETag`
   (a `304` reuses the cached body). Entries live in the app's
@@ -37,6 +53,11 @@ Same ESI contract (`2026-11-19`); no API removed.
 - `EsiResponse.Exception` is never set any more and is marked `[Obsolete]`;
   `EsiResponse.Version` (always `"latest"`) is `[Obsolete]` too. Both are removed
   with the next compatibility-date release.
+- The models of ESI's removed character-statistics endpoint
+  (`Models.Character.CharacterInfo`, `Combat`, `Industry`, `Inventory`, `Isk`,
+  `Market`, `Mining`, `Module`, `Orbital`, `Pve`, `Social`, `Travel`) and of
+  outposts (`Models.Corporation.Outpost`, `OutpostService`) are `[Obsolete]`. No
+  method returns them; they are removed with the next compatibility-date release.
 - Debug symbols are embedded in `ESI.NET.dll` instead of a separate `.snupkg`,
   so stepping into ESI.NET's source (via Source Link) works in any debugger
   without configuring a symbol server.

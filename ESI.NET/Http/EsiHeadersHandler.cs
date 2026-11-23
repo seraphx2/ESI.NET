@@ -17,6 +17,8 @@ namespace ESI.NET.Http
     {
         private readonly string _userAgent;
 
+        /// <summary>Created by <c>AddEsi</c>; there is no need to construct it.</summary>
+        /// <param name="config">The ESI.NET configuration (for <see cref="EsiConfig.UserAgent"/>).</param>
         public EsiHeadersHandler(IOptions<EsiConfig> config)
         {
             Guard.NotNull(config, nameof(config));
@@ -28,6 +30,7 @@ namespace ESI.NET.Http
                     "(character and/or project name) so CCP can contact you rather than cut off ESI access.");
         }
 
+        /// <inheritdoc/>
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             Guard.NotNull(request, nameof(request));

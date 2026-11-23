@@ -166,6 +166,16 @@ serializes it.
    var wallet = await _esi.Wallet.CharacterWallet(new() { Character = authChar });
    ```
 
+   Each method's IntelliSense names the scope it needs (and any corporation role).
+   If the character's token wasn't granted that scope, the call is **not sent**: it
+   returns a `403` with `MissingScope` naming the scope (and `Message` listing the
+   granted ones). ESI would answer `403` too, but every `403` it sends counts against
+   your error limit. Request the scope
+   at login and have the character log in again; a token never gains scopes. The
+   check uses `authChar.Scopes` and is skipped when that is empty. Turn it off with
+   `EsiConfig.ValidateScopes = false`. A `403` from a route that needs a corporation
+   role says which roles in `Message`.
+
 ### Desktop, console, and GUI apps
 
 No web server receives the callback, so register a **loopback** callback
