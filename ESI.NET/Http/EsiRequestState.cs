@@ -18,6 +18,7 @@ namespace ESI.NET.Http
         private const string CallbackKey = "ESI.NET.OnTokenRefreshed";
         private const string BypassCacheKey = "ESI.NET.BypassCache";
         private const string EsiRequestKey = "ESI.NET.EsiRequest";
+        private const string SentAtKey = "ESI.NET.SentAt";
 
 #if NET
         private static readonly HttpRequestOptionsKey<AuthorizedCharacterData> Character = new(CharacterKey);
@@ -33,6 +34,9 @@ namespace ESI.NET.Http
         public static AuthorizedCharacterData GetCharacter(HttpRequestMessage request) => request.Options.TryGetValue(Character, out var v) ? v : null;
         public static Func<AuthorizedCharacterData, Task> GetCallback(HttpRequestMessage request) => request.Options.TryGetValue(Callback, out var v) ? v : null;
         public static bool GetBypassCache(HttpRequestMessage request) => request.Options.TryGetValue(BypassCache, out var v) && v;
+        private static readonly HttpRequestOptionsKey<long> SentAt = new(SentAtKey);
+        public static void SetSentAt(HttpRequestMessage request, long timestamp) => request.Options.Set(SentAt, timestamp);
+        public static long? GetSentAt(HttpRequestMessage request) => request.Options.TryGetValue(SentAt, out var v) ? v : (long?)null;
 #else
         public static void SetCharacter(HttpRequestMessage request, AuthorizedCharacterData character) => request.Properties[CharacterKey] = character;
         public static void SetCallback(HttpRequestMessage request, Func<AuthorizedCharacterData, Task> callback) => request.Properties[CallbackKey] = callback;
@@ -42,6 +46,8 @@ namespace ESI.NET.Http
         public static AuthorizedCharacterData GetCharacter(HttpRequestMessage request) => request.Properties.TryGetValue(CharacterKey, out var v) ? v as AuthorizedCharacterData : null;
         public static Func<AuthorizedCharacterData, Task> GetCallback(HttpRequestMessage request) => request.Properties.TryGetValue(CallbackKey, out var v) ? v as Func<AuthorizedCharacterData, Task> : null;
         public static bool GetBypassCache(HttpRequestMessage request) => request.Properties.TryGetValue(BypassCacheKey, out var v) && v is bool b && b;
+        public static void SetSentAt(HttpRequestMessage request, long timestamp) => request.Properties[SentAtKey] = timestamp;
+        public static long? GetSentAt(HttpRequestMessage request) => request.Properties.TryGetValue(SentAtKey, out var v) && v is long t ? t : (long?)null;
 #endif
     }
 }

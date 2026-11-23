@@ -12,6 +12,10 @@ using System.Runtime.Serialization;
 
 namespace ESI.NET
 {
+    /// <summary>
+    /// Registration: <c>services.AddEsi(...)</c> and <c>.AddEsiCaching()</c>, plus small helpers ESI.NET
+    /// uses for enum values.
+    /// </summary>
     public static class Extensions
     {
         /// <summary>
@@ -110,7 +114,11 @@ namespace ESI.NET
             return builder.ConfigureAdditionalHttpMessageHandlers((handlers, provider) =>
             {
                 if (!handlers.Any(h => h is EsiCacheHandler))
+                {
                     handlers.Insert(0, provider.GetRequiredService<EsiCacheHandler>());
+                    // Innermost: stamps when the request actually leaves, for the cache's ESI clock.
+                    handlers.Add(new EsiSendClockHandler());
+                }
             });
         }
 

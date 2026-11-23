@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -59,6 +60,11 @@ namespace ESI.NET.Http
         private readonly EsiCacheOptions _options;
         private readonly ILogger<EsiCacheHandler> _logger;
 
+        /// <summary>Created by <c>AddEsiCaching()</c>; there is no need to construct it.</summary>
+        /// <param name="cache">Where responses are stored.</param>
+        /// <param name="state">State shared by every handler instance: ESI's clock and the in-flight requests.</param>
+        /// <param name="options">The cache options.</param>
+        /// <param name="logger">Logs store failures; optional.</param>
         public EsiCacheHandler(IDistributedCache cache, EsiCacheState state, IOptions<EsiCacheOptions> options, ILogger<EsiCacheHandler> logger = null)
         {
             Guard.NotNull(cache, nameof(cache));
@@ -71,6 +77,7 @@ namespace ESI.NET.Http
             _logger = logger;
         }
 
+        /// <inheritdoc/>
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             Guard.NotNull(request, nameof(request));
@@ -107,10 +114,15 @@ namespace ESI.NET.Http
             if (cached?.ETag != null)
                 request.Headers.TryAddWithoutValidation("If-None-Match", cached.ETag);
 
-            var sent = System.Diagnostics.Stopwatch.StartNew();
+            var started = Stopwatch.GetTimestamp();
             using (var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false))
             {
-                _state.ObserveServerDate(response.Headers.Date, response.Headers.Age, sent.Elapsed);
+                // The round trip starts when the request left for ESI (EsiSendClockHandler, innermost),
+                // not here: the handlers in between can wait out the error budget or refresh a token,
+                // and that wait would push ESI's clock ahead until the next response.
+                var sentAt = EsiRequestState.GetSentAt(request) ?? started;
+                var roundTrip = TimeSpan.FromTicks((long)((Stopwatch.GetTimestamp() - sentAt) * ((double)TimeSpan.TicksPerSecond / Stopwatch.Frequency)));
+                _state.ObserveServerDate(response.Headers.Date, response.Headers.Age, roundTrip);
                 var now = _state.ServerNow();
 
                 if (response.StatusCode == HttpStatusCode.NotModified && cached != null)
@@ -271,7 +283,12 @@ namespace ESI.NET.Http
                 var freshFor = entry.Expires > now ? entry.Expires.Value - now : TimeSpan.Zero;
                 var keepFor = freshFor + _options.RetainAfterExpiry;
                 if (keepFor <= TimeSpan.Zero)
-                    return;   // stale already and nothing kept for revalidation: nothing to store
+                {
+                    // Stale already and nothing kept for revalidation: nothing to store, and an older
+                    // entry (with older headers) must not outlive the response that replaced it.
+                    await RemoveAsync(key, cancellationToken).ConfigureAwait(false);
+                    return;
+                }
 
                 await _cache.SetAsync(key, entry.ToBytes(), new DistributedCacheEntryOptions
                 {

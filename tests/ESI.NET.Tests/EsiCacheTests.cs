@@ -344,8 +344,9 @@ namespace ESI.NET.Tests
                     chain.Add(h.GetType());
 
             // Outermost: a hit must not trigger a token refresh or wait on the error-limit guard.
+            // Innermost: the send clock, so those waits stay out of the cache's ESI-clock estimate.
             Assert.Equal(
-                new[] { typeof(ESI.NET.Http.EsiCacheHandler), typeof(ESI.NET.Http.EsiTokenRefreshHandler), typeof(ESI.NET.Http.EsiHeadersHandler), typeof(ESI.NET.Http.EsiErrorLimitHandler) },
+                new[] { typeof(ESI.NET.Http.EsiCacheHandler), typeof(ESI.NET.Http.EsiTokenRefreshHandler), typeof(ESI.NET.Http.EsiHeadersHandler), typeof(ESI.NET.Http.EsiErrorLimitHandler), typeof(ESI.NET.Http.EsiSendClockHandler) },
                 chain);
         }
 
@@ -492,14 +493,15 @@ namespace ESI.NET.Tests
             private readonly MemoryDistributedCache _inner = new MemoryDistributedCache(
                 Microsoft.Extensions.Options.Options.Create(new Microsoft.Extensions.Caching.Memory.MemoryDistributedCacheOptions()));
             public int Sets;
+            public int Removes;
             public byte[] Get(string key) => _inner.Get(key);
             public Task<byte[]> GetAsync(string key, CancellationToken token = default) => _inner.GetAsync(key, token);
             public void Set(string key, byte[] value, DistributedCacheEntryOptions options) { Sets++; _inner.Set(key, value, options); }
             public Task SetAsync(string key, byte[] value, DistributedCacheEntryOptions options, CancellationToken token = default) { Interlocked.Increment(ref Sets); return _inner.SetAsync(key, value, options, token); }
             public void Refresh(string key) => _inner.Refresh(key);
             public Task RefreshAsync(string key, CancellationToken token = default) => _inner.RefreshAsync(key, token);
-            public void Remove(string key) => _inner.Remove(key);
-            public Task RemoveAsync(string key, CancellationToken token = default) => _inner.RemoveAsync(key, token);
+            public void Remove(string key) { Removes++; _inner.Remove(key); }
+            public Task RemoveAsync(string key, CancellationToken token = default) { Interlocked.Increment(ref Removes); return _inner.RemoveAsync(key, token); }
         }
 
         [Fact]
@@ -707,6 +709,76 @@ namespace ESI.NET.Tests
 
             Assert.Equal(HttpStatusCode.OK, r.StatusCode);
             Assert.Equal(0, store.Sets);   // already stale, nothing kept: no write attempted (none failing)
+        }
+
+        [Fact]
+        public async Task Zero_RetainAfterExpiry_drops_the_old_entry_when_a_304_comes_back_stale()
+        {
+            // Stored fresh (no-cache, so the next call revalidates); the 304 then says it is already
+            // stale. Nothing is kept, and the old entry with its old headers must not linger either.
+            var esi = new Esi
+            {
+                Respond = (_, __) =>
+                {
+                    var r = Status(100, TimeSpan.FromMinutes(5), "v1");
+                    r.Headers.TryAddWithoutValidation("Cache-Control", "no-cache");
+                    return Task.FromResult(r);
+                },
+            };
+            var store = new CountingStore();
+            var services = new ServiceCollection();
+            services.AddSingleton<IDistributedCache>(store);
+            services.AddEsi(c => { c.UserAgent = "cache-tests"; c.EsiUrl = "https://esi.evetech.net/"; })
+                .AddEsiCaching(o => o.RetainAfterExpiry = TimeSpan.Zero)
+                .ConfigurePrimaryHttpMessageHandler(() => esi);
+            var client = services.BuildServiceProvider().GetRequiredService<IEsiClient>();
+            await client.Status.Retrieve();
+            Assert.Equal(1, store.Sets);
+
+            esi.Respond = (_, __) =>
+            {
+                var notModified = new HttpResponseMessage(HttpStatusCode.NotModified) { Content = new ByteArrayContent(Array.Empty<byte>()) };
+                notModified.Headers.Date = DateTimeOffset.UtcNow;
+                notModified.Content.Headers.Expires = DateTimeOffset.UtcNow.AddSeconds(-1);
+                return Task.FromResult(notModified);
+            };
+            var second = await client.Status.Retrieve();
+
+            Assert.Equal(EsiCacheStatus.Revalidated, second.Cache);
+            Assert.Equal(1, store.Sets);
+            Assert.Equal(1, store.Removes);
+        }
+
+        private sealed class SlowHandler : DelegatingHandler
+        {
+            public TimeSpan Delay;
+
+            protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+            {
+                await Task.Delay(Delay, cancellationToken).ConfigureAwait(false);   // e.g. waiting out the error budget
+                return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            }
+        }
+
+        [Fact]
+        public async Task A_wait_before_the_send_does_not_push_ESIs_clock_ahead()
+        {
+            // Fresh for 3s on ESI's clock. A 4s wait inside the pipeline, before the request left,
+            // is not round trip: counted as one, ESI's clock would read past the expiry and the
+            // next call would miss.
+            var esi = new Esi { Respond = (_, __) => Task.FromResult(Status(100, TimeSpan.FromSeconds(3), "v1")) };
+            var services = new ServiceCollection();
+            services.AddEsi(c => { c.UserAgent = "cache-tests"; c.EsiUrl = "https://esi.evetech.net/"; })
+                .AddHttpMessageHandler(() => new SlowHandler { Delay = TimeSpan.FromSeconds(4) })
+                .AddEsiCaching()
+                .ConfigurePrimaryHttpMessageHandler(() => esi);
+            var client = services.BuildServiceProvider().GetRequiredService<IEsiClient>();
+
+            await client.Status.Retrieve();
+            var second = await client.Status.Retrieve();
+
+            Assert.Equal(EsiCacheStatus.Hit, second.Cache);
+            Assert.Equal(1, esi.Calls);
         }
 
         // ---- second review ----------------------------------------------------------------
